@@ -1,0 +1,125 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper, hmargin={2.8cm, 2.8cm}, vmargin={2.5cm, 2.5cm}]{geometry}
+\usepackage{eso-pic} % \AddToShipoutPicture
+\usepackage{graphicx} % \includegraPhics
+\usepackage{placeins}
+\usepackage{amsmath} % flere matematikkommandoer
+\usepackage[utf8]{inputenc} % æøå
+\usepackage[T1]{fontenc} % mere æøå
+\usepackage{verbatim} % så man kan skrive ren tekst
+\usepackage[all]{xy} % den sidste (avancerede) formel i dokumentet
+\usepackage{amssymb}
+\usepackage{listings}
+\usepackage{glossaries}
+\usepackage{hyperref}
+\usepackage{multicol}
+\usepackage{color}
+\usepackage{url}
+\usepackage{tcolorbox}
+\usepackage{enumerate}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{float}
+\usepackage{pdflscape}
+
+\newacronym{POS}{POS}{Parts-of-Speech}
+\newacronym{ISG}{ISG}{Integrated Syntactic Graph}
+\newacronym{UBM}{UBM}{Universal Background Model}
+\newacronym{AGS}{AGS}{Average Group Similarity}
+\newacronym{AUROC}{AUROC}{Area Under Receiver Operating Characteristic}
+\newacronym{ROC}{ROC}{Receiver Operating Characteristic}
+\newacronym{SCAP}{SCAP}{Source Code Author Profile}
+\newacronym{CNG}{CNG}{Common n-gram}
+\newacronym{LNG}{LNG}{Local n-gram}
+\newacronym{RLP}{RLP}{Recentred Local Profiles}
+\newacronym{KNN}{KNN}{K-Nearest Neighbours}
+\newacronym{SVM}{SVM}{Support Vector Machine}
+\newacronym{NLP}{NLP}{Natural Language Processing}
+
+\newacronym{TP}{TP}{True Positive}
+\newacronym{TN}{TN}{True Negative}
+\newacronym{FP}{FP}{False Positive}
+\newacronym{FN}{FN}{False Negative}
+\newacronym{TPR}{TPR}{True Positive Rate}
+\newacronym{TNR}{TNR}{True Negative Rate}
+\newacronym{FPR}{FPR}{False Positive Rate}
+\newacronym{FNR}{FNR}{False Negative Rate}
+
+\author{
+\begin{tabular}{ccc}
+\Large{August V. S\o rensen}    & \& & \Large{Magnus N. Stavngaard} \\
+august.vinkel@gmail.com &    & magnus@stavngaard.dk \\
+NCB360                  &    & MZC887              
+\end{tabular}
+    %\Large{August V. S\o rensen \& Magnus N. Stavngaard} \\\\
+    %\texttt{august.vinkel@gmail.com \& magnus@stavngaard.dk}\\
+    %\texttt{NCB360, ASD123}\\
+}
+
+
+
+\title{
+    \vspace{3cm}
+    \Huge{Authorship Verification} \\
+    \Large{Project Outside Course Scope}
+}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+
+\lhead{University of Copenhagen}
+\rhead{August V. S\o rensen \& Magnus N. Stavngaard}
+%\cfoot{}
+%\rfoot{\thepage}
+
+\begin{document}
+
+    \AddToShipoutPicture*{\put(0,0){\includegraphics*[viewport=0 0 700 600]{include/ku-farve}}}
+    \AddToShipoutPicture*{\put(0,602){\includegraphics*[viewport=0 600 700 1600]{include/ku-farve}}}
+    \AddToShipoutPicture*{\put(0,0){\includegraphics*{include/ku-en}}}
+    \clearpage\maketitle
+    \thispagestyle{empty}
+    \newpage
+
+    \pagenumbering{roman}
+    \setcounter{page}{1}
+
+    \input{./abstract.tex}
+
+    \newpage
+    \tableofcontents
+    \newpage
+
+    \pagenumbering{arabic}
+    \setcounter{page}{1}
+
+    \input{./introduction.tex}
+    \FloatBarrier
+
+    \input{./related_work.tex}
+    \FloatBarrier
+
+    \input{./method.tex}
+    \FloatBarrier
+
+    \input{./results.tex}
+    \FloatBarrier
+
+    \input{./discussion.tex}
+    \FloatBarrier
+
+    \input{./conclusion.tex}
+    \FloatBarrier
+
+    \input{./future_work.tex}
+    \FloatBarrier
+
+    \nocite{*}
+    \bibliographystyle{apalike}
+    \bibliography{literature}
+
+    \newpage
+    \appendix
+    \input{./appendix.tex}
+
+\end{document}

@@ -1,0 +1,596 @@
+\section{Method} \label{sec:method} 
+
+In this section we will describe the methods we have implemented to solve
+the PAN 2013 and PAN 2015 problems. Both problems are known as authorship
+verification problems. \cite{stamatos2009} describes the problem in a machine
+learning sense as a binary classification problem. Either the unknown texts
+are written by the same author or they are written by different authors. All
+our implemented methods solve that classification problem by answering either
+\textit{True} (unknown text is written by the same author as the known texts)
+or \textit{False} (unknown text is \textbf{not} written by the same author as
+the known texts). Since both PAN 2013 and PAN 2015 are a binary decision problem
+we can compute the number of \gls{TP}s, \gls{TN}s, \gls{FP}s and \gls{FN}s. In
+these problems we get,
+
+\begin{itemize}
+    \item a \gls{TP} whenever we answer \textit{True} and the texts are written
+        by the same author,
+    \item a \gls{TN} whenever we answer \textit{False} and the texts are
+        \textbf{not} written by the same author,
+    \item a \gls{FP} whenever we answer \textit{True} and the texts are
+        \textbf{not} written by the same author,
+    \item a \gls{FN} whenever we answer \textit{False} and the texts are written
+        by the same author.
+\end{itemize}
+
+Given those definitions the \gls{TPR}, \gls{FPR}, \gls{TNR} and \gls{FNR}
+describes.
+
+\begin{description}
+    \item[\gls{TPR}: ] The fraction of positives that we reported \textit{True}
+        on i.e. the fraction of texts written by the same author that we say are
+        written by the same author.
+    \item[\gls{FPR}: ] The fraction of negatives that we reported \textit{True}
+        on i.e. the fraction of texts written by different authors that we say
+        are written by the same author.
+    \item[\gls{TNR}: ] The fraction of negatives that we reported \textit{False}
+        on i.e. the fraction of texts written by different authors that we say
+        are written by different authors.
+    \item[\gls{FNR}: ] The fraction of positives that we reported \textit{False}
+        on i.e. the fraction of texts written by the same author that we say are
+        written by different authors.
+\end{description}
+
+And they can be computed as,
+
+\begin{align}
+    TPR &= \frac{TP}{TP + FN}, \\
+    FPR &= \frac{FP}{FP + TN}, \\
+    TNR &= \frac{TN}{TN + FP}, \\
+    FNR &= \frac{FN}{FN + TP}.
+\end{align}
+
+\cite{stamatos2009} describes instance based and profile based approaches for
+authorship attribution/verification. The instance based approach uses several
+texts from an author to create multiple different feature vectors representing
+the authors' writing style while the profile based approach concatenates all
+texts to a single text and creates only a single vector representing that text.
+The instance based approach corresponds to the PAN 2013 problem. In that problem
+we are given multiple texts to train from and the methods we have implemented to
+solve that problem will reflect that property. The profile based approach
+corresponds to the PAN 2015 dataset; here we are given only a single known text
+per author, which we can use to construct a profile of the author.
+
+\subsection{Text Features} \label{subsec:method:text_features} 
+
+Feature extraction from a text is the process of finding a vector that
+represents that text. Many different features can be extracted when performing
+\gls{NLP}. They can span many different linguistic layers, including but
+not limited to, layers such as the character layer, which describes a text
+on the character level, and the phonetic layer which describes a text based
+on the phonetic alphabet. We use features spanning several of these layers.
+Specifically we use some character level features, some word level features and
+some \gls{POS} tagging features. In this section we will define the different
+features we use. The specific features used in different experiments will be
+described at length under those experiments.
+
+N-grams are subsequences extracted from a sequence of tokens. For example,
+3-grams are all subsequences of length three of a given sequence. Using
+individual characters as tokens, all \textit{character 3-grams} of the string
+"hello" are "hel", "ell" and "llo". We use several different types of n-grams
+in different experiments including character n-grams, word n-grams, special
+character n-grams and \gls{POS}-tagging n-grams. Word n-grams are subsequences
+of words, special character n-grams are subsequences of characters with
+alphanumeric and space characters removed and \gls{POS} tagging n-grams are
+subsequences of \gls{POS} tags which are word classes such as nouns, verbs and
+adjectives. A special case of n-grams is 1-grams which is just a count of the
+different tokens in a sequence. We will refer to 1-grams as frequencies.
+
+\subsection{Delta Method} \label{subsec:method:delta_method}
+
+We have chosen to use the Delta method as a baseline for our other
+implementations. The Delta method is described by \cite{evert2015towards}
+and consists of first extracting word frequencies, then applying a linear
+transformation to those frequencies and finally using \gls{KNN} with different
+distance metrics. There are a number of parameters to choose. The main
+parameter, is choosing how many word we are going to consider when finding
+the word frequencies. The amount of words was originally chosen at 150 words
+\cite{evert2015towards}. Then the linear transformation can be chosen, the usual
+transformation is a normalization to zero mean unit variance. And finally the
+distance metric can be chosen. The distance metric used in the original Delta
+Method was the Manhattan distance \cite{evert2015towards}.
+
+\subsection{Generalising Random Forest} \label{subsec:method:generalising_random_forest}
+
+In addition to the Delta Method we chose to use the Random Forest approach
+suggested by \cite{pacheco2015}. In our implementation we use different features
+than in the their proposal. Their idea was to make a more generalized approach,
+which would base itself on the comparison of a general model rather than an
+author-specific one. The point was to get around the data constraints of the
+PAN 2015 dataset. This was to be be done, by combining the unknown text, the
+known text, and then a third general model of all known texts, using a specific
+encoding. Rewriting the encoding function used in \cite{pacheco2015}, we get the
+following combining function,
+
+\begin{equation} \label{eq:original_forest_equation}
+    R_{i_k} = \frac{(A_{i_k}-U_{i_k})^2+1}{(B_k-U_{i_k})^2+1}
+\end{equation}
+
+Where $A$ is a known text, $U$ is an unknown text, $B$ is a \gls{UBM} describing
+a general author independent text. $i$ denotes from which dataset-entry we get
+our known and unknown texts, and $k$ denotes a specific feature of a given text.
+As such $R_{i_k}$ describes the encoding of a specific feature for a specific
+data point.
+
+The \gls{UBM} is meant to represent the features of an author
+\textit{independent} text. It is computed by concatenating all known texts in
+the training dataset and computing features from that resulting text. Since
+multiple authors are then part of the text we are computing features from,
+the assumption is that the author specific features will be averaged out and
+the \gls{UBM} will represent the features of an author independent text. The
+addition of 1 in the model prevents division by zero. The squaring of $(A_i -
+U_i)$ and $(B - U_i)$ both prevents negative values and punishes values that are
+far away. Therefore each value in the resulting encoded feature vector is in the
+range $[0; \infty[$.
+
+Let's examine what the Equation \eqref{eq:original_forest_equation} describes.
+Fix any specific $i$ and let $A$ be $A_i$ and $U$ be $U_i$ then for each feature
+$k$ we compute,
+
+\begin{equation}
+\label{eq:rf-encode}
+    R_k = \frac{(A_k-U_k)^2+1}{(B_k-U_k)^2+1},
+\end{equation}
+
+The $k$'th feature in each of the vectors is the same feature just extracted
+from different texts. When the feature of the unknown text $U_k$ is closer to
+$A_k$ than $B_k$ the numerator in the fraction will be greater than the
+denominator giving us something in the range $[0; 1]$. When the feature of the
+unknown text $U_k$ is closer to $B_k$ than $A_k$ the numerator will be lesser
+than the denominator and we will therefore get a value in the interval
+$[1; \infty[$. That results in $R$ being a vector containing values from 0 to
+$\infty$ where it is between 0 and 1 whenever a feature is closer to the author
+specific text than the universal text and greater than 1 otherwise.
+
+The random forest algorithm is then trained on these encoded feature vectors
+where it is supposed to learn a general difference between feature vectors of
+the same author and feature vectors of different authors.
+
+\subsection{Extended Delta} \label{subsec:method:extended_delta}
+As described earlier there are many ways to extend and change the delta
+method. We tried both using different features and different distance
+measures to obtain better results than the Delta Method described in Section
+\ref{subsec:method:delta_method}. The different feature combinations were tried
+experimentally one after the other. If a feature combination did well on a
+dataset we tried adding or removing features from that feature set to maybe
+obtain something better. The features we tried were different combinations of
+character n-grams, word n-grams and \gls{POS}-tag n-grams.
+
+The different distance measures we tried were the Manhattan distance and
+the Euclidean distance. We chose the Manhattan distance since it has been
+shown to consistently perform well when compared to other distance metrics
+\cite{evert2015towards}. And we chose the Euclidean metric since it is very easy
+to implement and it performs about as well as the Manhattan distance, on a small
+amount of features \cite{evert2015towards}.
+
+\subsection{Author Specific SVM} \label{subsec:method:author_specific_svm}
+We implemented an approach using a \gls{SVM} inspired by \cite{hansen2014}. The
+approach is only applicable to problems with more than a single text per author.
+The classification in this approach is done by training an \gls{SVM} classifier
+on all known texts of an author and an equal number of texts from other authors.
+Then the unknown text is given to the \gls{SVM} and is classified either as
+belonging to the same author or as belonging to a different author.
+
+If there is only a single known text available for an author it does not make
+sense to train an \gls{SVM} since there is simply too little data for it
+to be a viable choice.
+
+\subsection{Experiments} \label{subsec:method:experiments}
+In this section we describe the different experiments we have performed.
+We have tested the different methods we have implemented with different
+features and on different datasets. In our experiments we use data from PAN
+2013 \footnote{http://pan.webis.de/clef13/pan13-web/index.html} and PAN 2015
+\footnote{http://pan.webis.de/clef15/pan15-web/index.html}.
+
+The PAN 2013 data consists of texts from English, Greek and Spanish authors. We
+work only on the English texts which, of which there are 10 authors. For each
+author there is (between 1 and 10) known texts and a single unknown text. The
+task is, given the known texts of an author, to determine whether the unknown
+text is written by the same author.
+
+The PAN 2015 data consists of texts by authors in English, Dutch, Greek and
+Spanish. Again we only work with English texts. Unlike the 2013 dataset there
+is only a single known text for each author and a single unknown text. There
+is therefore much less known data available for each author which makes the
+verification harder. In the 2015 dataset there are 100 \textit{problems} in
+which some of the known texts are the same (i.e. there are not 100 authors).
+The PAN 2013, and PAN 2015 text, have an average word count of 1038, and 460
+respectively.
+
+To generate metadata about English texts we use the Brown dataset
+\footnote{http://clu.uni.no/icame/brown/bcm-los.html}. The Brown dataset
+contains more than 1,000,000, words organized in sentences, across different
+genres and is therefore perfect to use for our datasets. We specifically use the
+dataset to identify the most frequently used n-grams (of all kinds). If we were
+to use our training data to generate that, we would risk having a bias towards
+our specific training dataset.
+
+We will evaluate the performance of the different algorithms on the training
+data with the accuracy of the algorithms. The accuracy is computed as the number
+of correct answers divided by the total number of problems. For some methods
+we will also report the \gls{TPR} and \gls{TNR}.
+
+\subsubsection{Delta Method} \label{subsubsec:method:delta_method}
+In the Delta Method we work only with word frequencies as originally proposed.
+As the linear function we normalize to 0 mean and unit variance and as features
+we use the word frequencies of the $n$ most frequent words. We get the most
+frequent words by using the Brown dataset. In the \gls{KNN} part we use the
+Manhatten distance and only a single nearest neighbour since in one of the
+datasets we have only 1 text for each author. To classify the unknown texts as
+either written by or not written by the author we train a \gls{KNN} for each
+unknown text. Each classifier is trained with a known text from the author
+in question and $m$ other random texts. If the unknown text is classified as
+belonging to one of the $m$ random authors instead of the author in question
+we report that the unknown text is not written by the author. If the text is
+classified as belonging to the author in question we classify it as being
+written by the author.
+
+We chose the number of most frequent words $n$ and number of opposing
+authors $m$ by trying different configurations in a grid and choosing the
+best values. Each configuration is tried 100 times since random authors are
+chosen in each run and averaged. On the training dataset we obtained the results shown in
+Table \ref{fig:delta_pan_2013_res} for the PAN 2013 data and in Table
+\ref{fig:delta_pan_2015_res} for the PAN 2015 data. For PAN 2013 the results are
+generally better since there is more text available and the best accuracy was
+obtained when using the 300 most frequent words and 4 opposing authors. For PAN
+2015 the best result is obtained when using the 200 most frequent words and 1
+opposing author.
+
+\begin{table}
+    \centering
+    \textbf{PAN 2013 Delta Method Results}\par\medskip
+    \begin{tabular}{c|lccccc}
+               &                   & $n=100$ & $n=200$ & $n=300$ & $n=400$ & $n=500$ \\
+        \hline
+        $m=1$  & \textbf{Accuracy} & 0.62093 & 0.64437 & 0.65062 & 0.66718 & 0.66281 \\
+               & \textbf{TPR}      & 0.75812 & 0.79562 & \textbf{0.80812} & 0.79750 & 0.77500 \\
+               & \textbf{TNR}      & 0.48375 & 0.49312 & 0.49312 & 0.53687 & 0.55062 \\
+        \hline
+        $m=2$  & \textbf{Accuracy} & 0.65375 & 0.68562 & 0.69593 & 0.68968 & 0.68250 \\
+               & \textbf{TPR}      & 0.63250 & 0.71875 & 0.74000 & 0.70062 & 0.67125 \\
+               & \textbf{TNR}      & 0.67500 & 0.65250 & 0.65187 & 0.67875 & 0.69375 \\
+        \hline
+        $m=3$  & \textbf{Accuracy} & 0.66250 & 0.68187 & 0.69687 & 0.69250 & 0.69843 \\
+               & \textbf{TPR}      & 0.55937 & 0.64125 & 0.68375 & 0.65437 & 0.63375 \\
+               & \textbf{TNR}      & 0.76562 & 0.72250 & 0.71000 & 0.73062 & 0.76312 \\
+        \hline
+        $m=4$  & \textbf{Accuracy} & 0.66312 & 0.68656 & \textbf{0.70062} & 0.68062 & 0.68281 \\
+               & \textbf{TPR}      & 0.49875 & 0.61125 & 0.65125 & 0.61875 & 0.57562 \\
+               & \textbf{TNR}      & 0.82750 & 0.76187 & 0.75000 & 0.74250 & 0.79000 \\
+        \hline
+        $m=5$  & \textbf{Accuracy} & 0.66343 & 0.69468 & 0.69250 & 0.66937 & 0.68437 \\
+               & \textbf{TPR}      & 0.46687 & 0.59375 & 0.61812 & 0.57500 & 0.54937 \\
+               & \textbf{TNR}      & 0.86000 & 0.79562 & 0.76687 & 0.76375 & 0.81937 \\
+        \hline
+        $m=6$  & \textbf{Accuracy} & 0.63531 & 0.67437 & 0.69406 & 0.67312 & 0.66718 \\
+               & \textbf{TPR}      & 0.39937 & 0.55125 & 0.59750 & 0.56750 & 0.50312 \\
+               & \textbf{TNR}      & 0.87125 & 0.79750 & 0.79062 & 0.77875 & 0.83125 \\
+        \hline
+        $m=7$  & \textbf{Accuracy} & 0.63843 & 0.67906 & 0.68437 & 0.67000 & 0.66562 \\
+               & \textbf{TPR}      & 0.37875 & 0.53812 & 0.58500 & 0.54687 & 0.49625 \\
+               & \textbf{TNR}      & 0.89812 & 0.82000 & 0.78375 & 0.79312 & 0.83500 \\
+        \hline
+        $m=8$  & \textbf{Accuracy} & 0.63406 & 0.69281 & 0.68156 & 0.65218 & 0.67156 \\
+               & \textbf{TPR}      & 0.36937 & 0.55062 & 0.56250 & 0.52250 & 0.50000 \\
+               & \textbf{TNR}      & 0.89875 & 0.83500 & 0.80062 & 0.78187 & 0.84312 \\
+        \hline
+        $m=9$  & \textbf{Accuracy} & 0.63781 & 0.68031 & 0.66437 & 0.66656 & 0.67031 \\
+               & \textbf{TPR}      & 0.36625 & 0.51937 & 0.53000 & 0.52562 & 0.47375 \\
+               & \textbf{TNR}      & \textbf{0.90937} & 0.84125 & 0.79875 & 0.80750 & 0.86687 \\
+        \hline
+        $m=10$ & \textbf{Accuracy} & 0.62562 & 0.68781 & 0.68343 & 0.67687 & 0.66000 \\
+               & \textbf{TPR}      & 0.34625 & 0.51375 & 0.54937 & 0.53125 & 0.46312 \\
+               & \textbf{TNR}      & 0.90500 & 0.86187 & 0.81750 & 0.82250 & 0.85687
+    \end{tabular}
+    \caption{Accuracy, \gls{TPR} and \gls{TNR} on different amounts of most
+        frequent words $n$ and different numbers of opposing authors $m$ for the
+        Delta Method. Each number is an average of 100 runs since there is
+        randomness involved when picking the opposing authors. The test is run
+        on the PAN 2013 training dataset. Maximum values for both Accuracy,
+        \gls{TPR} and \gls{TNR} is shown in bold.}
+    \label{fig:delta_pan_2013_res}
+\end{table}
+
+\begin{table}
+    \centering
+    \textbf{PAN 2015 Delta Method Results}\par\medskip
+    \begin{tabular}{c|lccccc}
+               &                   & $n=100$ & $n=200$ & $n=300$ & $n=400$ & $n=500$ \\
+        \hline
+        $m=1$  & \textbf{Accuracy} & 0.56950 & \textbf{0.60239} & 0.56210 & 0.57269 & 0.56170 \\
+               & \textbf{TPR}      & 0.58740 & \textbf{0.64660} & 0.61759 & 0.62200 & 0.61020 \\
+               & \textbf{TNR}      & 0.55160 & 0.55820 & 0.50659 & 0.52340 & 0.51320 \\
+        \hline
+        $m=2$  & \textbf{Accuracy} & 0.56810 & 0.58970 & 0.56470 & 0.57290 & 0.56030 \\
+               & \textbf{TPR}      & 0.42219 & 0.46740 & 0.45720 & 0.45340 & 0.44640 \\
+               & \textbf{TNR}      & 0.71400 & 0.71200 & 0.67220 & 0.69239 & 0.67420 \\
+        \hline
+        $m=3$  & \textbf{Accuracy} & 0.55399 & 0.57510 & 0.56220 & 0.56850 & 0.55380 \\
+               & \textbf{TPR}      & 0.32480 & 0.36880 & 0.36060 & 0.36660 & 0.33820 \\
+               & \textbf{TNR}      & 0.78319 & 0.78140 & 0.76379 & 0.77040 & 0.76940 \\
+        \hline
+        $m=4$  & \textbf{Accuracy} & 0.54589 & 0.56390 & 0.54560 & 0.55580 & 0.54710 \\
+               & \textbf{TPR}      & 0.25920 & 0.29940 & 0.29460 & 0.29000 & 0.27800 \\
+               & \textbf{TNR}      & 0.83260 & 0.82840 & 0.79660 & 0.82160 & 0.81620 \\
+        \hline
+        $m=5$  & \textbf{Accuracy} & 0.53520 & 0.55430 & 0.54150 & 0.56290 & 0.54960 \\
+               & \textbf{TPR}      & 0.21000 & 0.24920 & 0.24420 & 0.25860 & 0.24220 \\
+               & \textbf{TNR}      & 0.86040 & 0.85939 & 0.83880 & 0.86720 & 0.85700 \\
+        \hline
+        $m=6$  & \textbf{Accuracy} & 0.52749 & 0.54820 & 0.53709 & 0.55530 & 0.54260 \\
+               & \textbf{TPR}      & 0.17980 & 0.21840 & 0.21800 & 0.23100 & 0.20739 \\
+               & \textbf{TNR}      & 0.87520 & 0.87800 & 0.85620 & 0.87959 & 0.87780 \\
+        \hline
+        $m=7$  & \textbf{Accuracy} & 0.52790 & 0.54189 & 0.53240 & 0.54550 & 0.54530 \\
+               & \textbf{TPR}      & 0.16240 & 0.19160 & 0.19440 & 0.18660 & 0.19020 \\
+               & \textbf{TNR}      & 0.89340 & 0.89220 & 0.87040 & 0.90440 & 0.90040 \\
+        \hline
+        $m=8$  & \textbf{Accuracy} & 0.52340 & 0.53570 & 0.52459 & 0.54899 & 0.53419 \\
+               & \textbf{TPR}      & 0.14820 & 0.17440 & 0.16180 & 0.17760 & 0.15560 \\
+               & \textbf{TNR}      & 0.89860 & 0.89700 & 0.88740 & 0.92040 & 0.91280 \\
+        \hline
+        $m=9$  & \textbf{Accuracy} & 0.51930 & 0.53340 & 0.52060 & 0.54229 & 0.53460 \\
+               & \textbf{TPR}      & 0.13040 & 0.15220 & 0.15200 & 0.15700 & 0.15060 \\
+               & \textbf{TNR}      & 0.90819 & 0.91460 & 0.88920 & 0.92760 & 0.91860 \\
+        \hline
+        $m=10$ & \textbf{Accuracy} & 0.51780 & 0.52550 & 0.52260 & 0.54080 & 0.53150 \\
+               & \textbf{TPR}      & 0.11860 & 0.13760 & 0.13960 & 0.13660 & 0.12940 \\
+               & \textbf{TNR}      & 0.91700 & 0.91340 & 0.90560 & \textbf{0.94500} & 0.93360
+    \end{tabular}
+    \caption{Accuracy, \gls{TPR} and \gls{TNR} on different amount of most
+        frequent words $n$ and different numbers of opposing authors $m$ for the
+        Delta Method. Each number is an average of 100 runs since there is
+        randomness involved when picking the opposing authors. The test is run
+        on the PAN 2015 training dataset. Maximum values for both Accuracy,
+        \gls{TPR} and \gls{TNR} is shown in bold.}
+    \label{fig:delta_pan_2015_res}
+\end{table}
+
+\subsubsection{Generalising Random Forest} \label{subsubsec:method:generalising_random_forest}
+
+When applying the Generalising Random Forest algorithm, we have the possibility
+to use many features, since the Random Forest algorithm selects the best
+features from a given set of features. Therefore we could provide it with a
+large set of features, and let the algorithm filter away the bad ones. This
+however comes at the cost of runtime. Thus the task of finding a good/perfect
+input to train our forest on is quite extensive.
+
+The \texttt{sklearn} library
+\footnote{http://scikit-learn.org/stable/modules/generated/sklearn.ensemble.Rand
+omForestClassifier.html} offers a wide variety of configurations with regards
+to how our forest is built. Most configuration was set to their default value,
+with the exception of \texttt{n\_estimators}. \texttt{n\_estimators} denotes how
+many decision trees are in our forest, and due to the ensemble nature of the
+algorithm, we can increase this parameter to create an average classification
+prediction based on a larger set of individual predictions, thus decreasing the
+overall variance our model. In the following experiments, \texttt{n\_estimators}
+is set to 1000. The payoff when increasing the number of trees used is the
+runtime. The increase in trees also have diminishing returns on the decrease of
+variance, so at some point increasing the trees don't make any sense, as the
+variance is only altered very little with each new tree. 1000 trees were the
+number we deemed appropriate to adequately decrease the variance of the forest,
+while still running at an acceptable speed.
+
+The dataset in these experiments was split into a training and a validation set.
+The selection was done by randomly shuffling the entire data set and taking
+the first 80\% of the dataset as the training set, and the last 20\% as the
+validation set. As that introduces randomness we run the algorithm 100 times and
+take the average.
+
+In the following, we created our \gls{UBM} using the concatenation of all
+author-specific texts, from our training dataset.
+
+In terms of features, we chose to feed our random forest algorithm a large set
+of features with different focuses. The algorithm is going to pick features,
+based on their impact on the actual classification. The low-impact features
+aren't adding any noise, so we might as well feed the algorithm as many features
+as possible, and then let it make the decision based on their individual impact.
+We chose to use the following features:
+
+\begin{itemize}
+    \item The 50 most frequent word-n-grams for $n \in \{1, \dots, 5\}$.
+    \item The 50 most frequent character-n-grams for $n \in \{2, \dots, 5\}$.
+    \item The 50 most frequent \gls{POS}-tag-n-grams for $n \in \{2, \dots, 5\}$.
+    \item The 5 most frequent special-character-n-grams for $n \in \{2, 3\}$.
+\end{itemize}
+
+In order to achieve better generalization, the Brown corpus was used as the
+basis for the feature generation.
+
+In addition to the \gls{UBM} based encoding we also tried another encoding. The
+method is exactly the same as described above except Equation
+\eqref{eq:rf-encode} was replaced with
+
+\begin{equation}
+    R_k = A_k - U_k.
+\end{equation}
+
+That yielded an accuracy of 0.5675. 
+
+\subsubsection{Extended Delta} \label{subsubsec:method:extended_delta}
+We tried different feature combinations and distances. The
+results of running on the training data is shown in Table
+\ref{fig:extended_delta_method_manhattan_result} for the Manhattan distance and
+in Table \ref{fig:extended_delta_method_euclidean_result} for the Euclidean
+distance.
+
+\begin{landscape}
+\begin{table}
+    \centering
+    \textbf{Manhattan Distance Extended Delta Method}\par\medskip
+    \small
+    \begin{tabular}{llll|ll}
+        % Header.
+        \textbf{Character n-grams} & \textbf{Word n-grams} &
+        \textbf{POS-tag n-grams} & \textbf{Special character n-grams} &
+        \textbf{PAN 2015 result} & \textbf{PAN 2013 result} \\
+        \hline
+        % Test 1.
+        100 2-, 3-, 4-, 5-grams & 5 1-, 2-, 3-, 4-grams &
+        10 1-, 2-, 3-, 4-grams & 5 1-, 2-, 3-grams & 0.54680, 3 & 0.68031, 3 \\
+        % Test 2.
+        100 2-, 3-, 4-grams & 300 1-grams & NONE & NONE & 0.56340, 2 &
+        \textbf{0.73718, 5} \\
+        % Test 3.
+        100 2-, 3-, 4-grams & NONE & NONE & 20 2-, 3-, 4-grams &
+        0.56980, 2 & 0.68500, 3 \\
+        % Test 4.
+        100 2-, 3-, 4-grams & NONE & 15 1-, 2-, 3-grams & 20 2-, 3-, 4-grams &
+        0.58029, 3 & 0.67718, 8 \\
+        % Test 5.
+        NONE & NONE & 15 1-, 2-, 3-grams & NONE & 0.51470, 10 & 0.62062, 8 \\
+        % Test 6.
+        20 2-, 3-, 4-, 5-, 6-grams & NONE & NONE & NONE & 0.54640, 4 &
+        0.69000, 8 \\
+        % Test 7.
+        150 2-, 3-grams & NONE & NONE & NONE & 0.56370, 4 &
+        \textbf{0.70531, 4} \\
+        % Test 8.
+        NONE & 50 2-, 3-grams & NONE & NONE & 0.52120, 9 & 0.60812, 3 \\
+        % Test 9.
+        NONE & 20 2-, 3-grams & NONE & NONE & 0.48409, 10 & 0.58187, 4 \\
+        % Test 10.
+        500 4-grams & NONE & NONE & NONE & 0.57400, 3 & \textbf{0.72125, 3} \\
+        % Test 11.
+        300 4-grams & NONE & NONE & NONE & 0.55450, 4 & \textbf{0.72937, 3} \\
+        % Test 12.
+        150 4-grams & NONE & NONE & NONE & 0.52630, 9 & 0.65093, 4 \\
+        % Test 13.
+        500 3-grams & 300 1-grams & NONE & NONE & 0.59750, 2 & 0.70031, 4 \\
+        % Test 14.
+        300 3-grams & 300 1-grams & NONE & NONE & 0.57139, 1 & 0.69218, 2 \\
+        % Test 15.
+        1000 3-grams & NONE & NONE & NONE & 0.59390, 2 & \textbf{0.70812, 10} \\
+        % Test 16.
+        1000 4-grams & NONE & NONE & NONE & 0.57480, 3 & \textbf{0.72125, 5} \\
+        % Test 17.
+        1000 3-, 4-, 5-grams & NONE & NONE & NONE & 0.56220, 2 & 0.69625, 3 \\
+        % Test 18.
+        NONE & NONE & NONE & 20 1-, 2-, 3-grams & \textbf{0.62780, 2} &
+        0.64312, 10 \\
+        % Test 19.
+        NONE & NONE & NONE & 10 1-, 2-, 3-grams & \textbf{0.61879, 3} &
+        0.549375, 8 \\
+        % Test 20.
+        10 2-, 3-, 4-grams & NONE & NONE & 10 1-, 2-, 3-grams & 0.58980, 3 &
+        0.69406, 8
+    \end{tabular}
+    \caption{Results of different feature combinations with the Delta method
+    using the Manhattan distance. The results consist of 2 numbers in the format
+    $a, b$. $a$ corresponds to the accuracy obtained with the configuration and
+    $b$ is the number of opponents that obtained that accuracy. Results that
+    beat our baseline results are shown in bold.}
+    \label{fig:extended_delta_method_manhattan_result}
+\end{table}
+\end{landscape}
+
+\begin{landscape}
+\begin{table}
+    \centering
+    \textbf{Euclidean Distance Extended Delta Method}\par\medskip
+    \small
+    \begin{tabular}{llll|ll}
+        % Header.
+        \textbf{Character n-grams} & \textbf{Word n-grams} &
+        \textbf{POS-tag n-grams} & \textbf{Special character n-grams} &
+        \textbf{PAN 2015 result} & \textbf{PAN 2013 result} \\
+        \hline
+        % Test 1.
+        100 2-, 3-, 4-, 5-grams & 5 1-, 2-, 3-, 4-grams &
+        10 1-, 2-, 3-, 4-grams & 5 1-, 2-, 3-grams & 0.54570, 7 & 0.67750, 5 \\
+        % Test 2.
+        100 2-, 3-, 4-grams & 300 1-grams & NONE & NONE & 0.54080, 2 &
+        \textbf{0.72125, 4} \\
+        % Test 3.
+        100 2-, 3-, 4-grams & NONE & NONE & 20 2-, 3-, 4-grams &
+        0.5618, 3 & 0.65812, 5 \\
+        % Test 4.
+        100 2-, 3-, 4-grams & NONE & 15 1-, 2-, 3-grams & 20 2-, 3-, 4-grams &
+        0.56500, 6 & 0.68031, 4 \\
+        % Test 5.
+        NONE & NONE & 15 1-, 2-, 3-grams & NONE & 0.52110, 10 & 0.61156, 3 \\
+        % Test 6.
+        20 2-, 3-, 4-, 5-, 6-grams & NONE & NONE & NONE & 0.555, 3 &
+        0.66656, 2 \\
+        % Test 7.
+        150 2-, 3-grams & NONE & NONE & NONE & 0.55460, 3 &
+        \textbf{0.70343, 9} \\
+        % Test 8.
+        NONE & 50 2-, 3-grams & NONE & NONE & 0.52200, 9 & 0.56687, 3 \\
+        % Test 9.
+        NONE & 20 2-, 3-grams & NONE & NONE & 0.48530, 9 & 0.58718, 3 \\
+        % Test 10.
+        500 4-grams & NONE & NONE & NONE & 0.55830, 3 & \textbf{0.70468, 8} \\
+        % Test 11.
+        300 4-grams & NONE & NONE & NONE & 0.52680, 3 & \textbf{0.71875, 6} \\
+        % Test 12.
+        150 4-grams & NONE & NONE & NONE & 0.53669, 6 & 0.64281, 7 \\
+        % Test 13.
+        500 3-grams & 300 1-grams & NONE & NONE & 0.5538, 2 & 0.69343, 6 \\
+        % Test 14.
+        300 3-grams & 300 1-grams & NONE & NONE & 0.53400, 2 &
+        \textbf{0.71437, 6} \\
+        % Test 15.
+        1000 3-grams & NONE & NONE & NONE & 0.54910, 2 & \textbf{0.72156, 4} \\
+        % Test 16.
+        1000 4-grams & NONE & NONE & NONE & 0.57100, 2 & \textbf{0.72125, 3} \\
+        % Test 17.
+        1000 3-, 4-, 5-grams & NONE & NONE & NONE & 0.54579, 4 &
+        \textbf{0.71968, 4} \\
+        % Test 18.
+        NONE & NONE & NONE & 20 1-, 2-, 3-grams & \textbf{0.61200, 2} &
+        0.59375, 8 \\
+        % Test 19.
+        NONE & NONE & NONE & 10 1-, 2-, 3-grams & \textbf{0.61370, 3} &
+        0.550625, 9 \\
+        % Test 20.
+        10 2-, 3-, 4-grams & NONE & NONE & 10 1-, 2-, 3-grams & 0.57980, 3 &
+        0.68125, 10
+    \end{tabular}
+    \caption{Results of different feature combinations with the Delta method
+    using the Euclidean distance.  The results consist of 2 numbers in the format
+    $a, b$. $a$ corresponds to the accuracy obtained with the configuration and
+    $b$ is the number of opponents that obtained that accuracy. Results that
+    beat our baseline results are shown in bold.}
+    \label{fig:extended_delta_method_euclidean_result}
+\end{table}
+\end{landscape}
+
+\subsubsection{Author Specific SVM} \label{subsubsec:method:author_specific_svm}
+
+In this approach we have experimented with a couple of different feature
+configurations. Configuration (A) consists of the 500 most frequent character-3,
+-4 and -5-grams, the 100 most frequent word-3 and -4-grams, the 20 most frequent
+postag-2, -3 and -4-grams. Configuration (B) consists of the frequencies of
+the 300 most frequent words. The most frequent n-grams are found in the Brown
+text corpus. We test only on the PAN 2013 dataset since the PAN 2015 dataset
+contains only a single known text per author and an SVM cannot train with a
+single datapoint in each class. We use the \textit{sklearn} implementation of
+\gls{SVM}s which internally use \textit{libsvm}.
+
+We use the RBF kernel and we choose hyperparameters via cross validation.
+Each configuration of features will use different hyperparameters. The cross
+validation is performed by looping through the list of authors. For each
+author we perform a grid search for value of $C \in \{10^{-2}, 10^{0}, \dots,
+10^{10}\}$ and $\gamma \in \{10^{-9}, 10^{-7}, \dots, 10^{3}\}$. The best values
+for each author are found via leave one out cross validation. The final $C$ and
+$\gamma$ values are chosen as the configurations used most often by the authors.
+After we have found the best hyperparameters we run the classifier over all
+authors 100 times with those hyperparameters. The mean accuracy over the 100
+runs is then computed.
+
+Configuration (A) used the hyperparameters $C = 100$ and $\gamma = 0.00001$
+and obtained an average accuracy of 0.84599 with a \gls{TPR} of 0.95 and a
+\gls{TNR} of 0.634. Configuration (B) used the hyperparameters $C = 100$ and
+$\gamma = 0.001$ and obtained an average accuracy of 0.84799 with a \gls{TPR}
+of 0.99899 and a \gls{TNR} of 0.632.
