@@ -6,7 +6,7 @@ import random
 SEED = 7
 NEWLINE = '$NL$'
 SEMI = '$SC$'
-PATH = '/home/smazle/Desktop/danske.csv'
+PATH = '/home/smazle/Desktop/danske2.csv'
 MAX_LENGTH = 0
 
 random.seed(SEED)
@@ -33,7 +33,11 @@ MAX_LENGTH = max([len(x[-1]) for x in data])
 class Author:
     def __init__(self, texts):
         self.texts = texts
-        self.ordTexts = np.array([[ord(y) for y in x] for x in texts])
+        self.ordTexts = [list(map(ord, x)) for x in texts]
+
+    def addText(self, text):
+        self.texts.append(text)
+        self.ordTexts.append(list(map(ord, text)))
 
     def oneHotEncode(self, vocab):
         # Create oneHot encoding map, and add one for
@@ -43,6 +47,7 @@ class Author:
         self.encoded = np.array(
             [[self.oneHotMap[vocab.index(x)] for x in y]
                 for y in self.ordTexts])
+        # print(self.encoded.shape)
 
     def pad(self, max_length):
         temp = []
@@ -75,12 +80,12 @@ def GetProblems(authors, n):
         author1 = authors[randomKey]
         author2 = authors[random.choice(keys)]
 
-        print(author1.randomText().shape)
-        print(author2.randomText().shape)
-        print(author2.encoded.shape)
-        print(author2.ordTexts.shape)
+        # print(author1.randomText().shape)
+        # print(author2.randomText().shape)
+        # print(author2.encoded.shape)
+        # print(author2.ordTexts.shape)
 
-        print()
+        # print()
 
         same_sample = np.concatenate(
             (author1.randomText(), author1.randomText()))
@@ -92,30 +97,45 @@ def GetProblems(authors, n):
         y.append(1)
         y.append(0)
 
+    print(len(X), len(y))
+    print(np.array(X).shape, np.array(y).shape)
     return np.array(X), np.array(y)
 
 
 def genVocabulary(data):
     master_text = ''.join(data)
-    master_text = [ord(x) for x in master_text]
+    master_text = list(map(ord, master_text))
     vocabulary = list(set(master_text))
     return vocabulary
 
 
 authors = {}
 
+i = 0
 for x in data:
-    student = x[1]
+    student = int(x[1])
     if student in authors:
-        authors[student].texts.append(x[-1])
+        authors[student].addText(x[-1])
     else:
+        i += 1
+        print(len(data), i)
         authors[student] = Author([x[-1]])
+
+
+print([len(x.texts) for x in authors.values()])
 
 vocabulary = genVocabulary(data[:, -1])
 
-for q, author in authors.items():
+for author in authors.values():
     author.oneHotEncode(vocabulary)
     author.pad(MAX_LENGTH)
 
-X, y = GetProblems(authors, 1)
+print([len(x.encoded) for x in authors.values()])
+print([len(x.ordTexts) for x in authors.values()])
+
+X, y = GetProblems(authors, 90)
+np.save('X', X)
+np.save('y', y)
+
 print(y)
+print(X.shape)
