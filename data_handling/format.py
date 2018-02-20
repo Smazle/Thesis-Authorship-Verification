@@ -51,14 +51,17 @@ class Author:
         self.encoded = np.array([[self.oneHotMap[vocab.index(x)] for x in y] for y in self.ordTexts])
 
     def pad(self, max_length):
+        temp = []
         padValue = self.oneHotMap[-1,:]
 
-
         for i, item in enumerate(self.encoded):
+            item = list(item)
             diff = max_length - len(item)
 
+            if diff != 0:
+                temp.append(list(np.concatenate((item, ([padValue] * diff))).shape))
 
-            self.encoded[i] = np.stack((item, ([padValue]*diff)))
+            self.encoded = np.array(temp)
 
 
 
@@ -81,9 +84,6 @@ def GetProblems(authors, n):
         author1 = authors[randomKey]
         author2 = authors[random.choice(keys)]
 
-        print(author1.randomText().shape)
-        print(author2.randomText().shape)
-
         same_sample = np.concatenate((author1.randomText(), author1.randomText(), [1]))
         different_sample = np.concatenate((author1.randomText(), author2.randomText(), [0]))
 
@@ -100,25 +100,24 @@ def GetProblems(authors, n):
 
 authors = {}
 
-for x in data:
-    student = x[1]
-    if student in authors:
-        authors[student].texts.append(x[-1])
-    else:
-        authors[student] = Author([x[-1]])
+for i in range(3):
+    authors[i] = Author(data[:,-1])
+
+
+#for x in data:
+#    student = x[1]
+#    if student in authors:
+#        authors[student].texts.append(x[-1])
+#    else:
+#        authors[student] = Author([x[-1]])
 
 master_text = np.concatenate([[x[-1]] for x in data])
 master_text = "".join(master_text)
 master_text = [ord(x) for x in master_text]
 vocabulary = list(set(master_text))
 
-test = Author(data[:,-1])
-test.oneHotEncode(vocabulary)
-test.pad(MAX_LENGTH)
-
-
 for _, author in authors.items():
     author.oneHotEncode(vocabulary)
     author.pad(MAX_LENGTH)
 
-GetProblems(authors, 1)
+temp = GetProblems(authors, 1)
