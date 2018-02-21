@@ -61,3 +61,16 @@ increased or the number of tweets was decreased, the accuracy quickly worsened.
 In order to extract some sort of meaning from the predictions they made using
 this approach, they made use of the saliency score to determine the impact each
 n-gram had on the final decision.
+
+\cite{qian:2018} performed a study of different deep learning methods for
+authorship attribution. They used both a \gls{GRU} network and a \gls{LSTM}
+network. They implement 4 different networks, sentence-level-\gls{GRU},
+article-level-\gls{GRU}, article-level-\gls{LSTM} and
+article-level-Siamese-network. Of those 4 networks the Siamese network is of
+special interest to our project. The Siamese network solves the authorship
+verification problem and not the authorship attribution problem. A Siamese
+network is a network that use the same weights and parameters in multiple parts
+of the network. The architecture for authorship verification chosen by
+\cite{qian:2018} started by using a \gls{GRU} network on the two texts to verify
+authorship on. On top of the \gls{GRU} network they used an average pool. The
+output of the average pool is then seen as
