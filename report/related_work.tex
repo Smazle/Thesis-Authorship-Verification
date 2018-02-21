@@ -98,19 +98,22 @@ essays of 119,202 sentences and 2,781,425 tokens, they got the best results
 using only the combined lexical topical network, which produced an average
 accuracy of 0.7950.
 
-\cite{qian:2018} performed a study of different deep learning methods for
-authorship attribution. They used both a \gls{GRU} network and a \gls{LSTM}
-network. They implement 4 different networks, sentence-level-\gls{GRU},
-article-level-\gls{GRU}, article-level-\gls{LSTM} and
-article-level-Siamese-network. Of those 4 networks the Siamese network is of
-special interest to our project. The Siamese network solves the authorship
+\cite{qian:2018} performed a study of different deep learning methods
+for authorship attribution. They used both a \gls{GRU} network
+and a \gls{LSTM} network. They implement 4 different networks,
+sentence-level-\gls{GRU}, article-level-\gls{GRU}, article-level-\gls{LSTM}
+and article-level-Siamese-network. Of those 4 networks the Siamese network is
+of special interest to our project. The Siamese network solves the authorship
 verification problem and not the authorship attribution problem. A Siamese
-network is a network that use the same weights and parameters in multiple parts
-of the network. The architecture for authorship verification chosen by
-\cite{qian:2018} started by using a \gls{GRU} network on the two texts to verify
-authorship on. On top of the \gls{GRU} network they used an average pool. The
-output of the average pool is then seen as features extracted from the two
-texts. They then use a softmax layer to get a distribution over the probability
-of who has written the two texts. These probabilities are then used to see
-whether or not the same author is predicted for both texts. On top of the
-softmax output TODO: continue
+network is a network that use the same weights and parameters in multiple
+parts of the network. The architecture for authorship verification chosen by
+\cite{qian:2018} started by using a \gls{GRU} network on the two texts to
+verify authorship on. On top of the \gls{GRU} network they used an average
+pool. The output of the average pool is then seen as features extracted from
+the two texts. They then use a softmax layer to get a distribution over the
+probability of who has written the two texts. These probabilities are then used
+to see whether or not the same author is predicted for both texts. On top of
+the softmax output they added the cosine similarity between the probability
+distributions outputted by the softmax layer. From that cosine similarity they
+can get a binary output saying whether or not the texts are written by the same
+author or by different authors.
