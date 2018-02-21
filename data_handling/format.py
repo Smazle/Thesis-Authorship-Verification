@@ -12,31 +12,11 @@ MAX_LENGTH = 0
 random.seed(SEED)
 
 
-def Fix(text):
-    # Replace escapes
-    data = list(map(lambda x:
-                    x.replace(NEWLINE, '\n').replace(SEMI, '\n'), text))
-    return np.array(data)
-
-
-def toOrd(string):
-    return list(map(ord, string))
-
-
-student, text = np.loadtxt(
-    PATH, delimiter=';', skiprows=1, dtype=str, unpack=True)
-ids = list(map(str, range(0, len(student))))
-
-data = np.c_[ids, student, Fix(text)]
-data = np.array(sorted(data, key=lambda x: int(x[1])))
-
-MAX_LENGTH = max([len(x[-1]) for x in data])
-
-
 class Author:
+
     def __init__(self, texts):
         self.texts = texts
-        self.ordTexts = [toOrd(x) for x in texts]
+        self.ordTexts = [to_ord(x) for x in texts]
 
     def addText(self, texts):
         # Add text after intialization
@@ -45,21 +25,19 @@ class Author:
         if t is list or t is np.ndarray:
             for text in texts:
                 self.texts.append(text)
-                self.ordTexts.append(toOrd(text))
+                self.ordTexts.append(to_ord(text))
 
         else:
             self.texts.append(texts)
-            self.ordTexts.append(toOrd(texts))
+            self.ordTexts.append(to_ord(texts))
 
     def oneHotEncode(self, vocab):
-        # Create oneHot encoding map, and add one for
-        # padding purposes
+        # Create oneHot encoding map, and add one for padding.
         self.oneHotMap = np.diag(np.ones(len(vocab) + 1))
 
         self.encoded = np.array(
             [[self.oneHotMap[vocab.index(x)] for x in y]
                 for y in self.ordTexts])
-        # print(self.encoded.shape)
 
     def pad(self, max_length):
         temp = []
@@ -80,7 +58,18 @@ class Author:
         return random.choice(self.encoded)
 
 
-def GetProblems(authors, n):
+# Replace escapes in the string from the MaCom dataset.
+def unescape(text):
+    data = list(map(lambda x:
+                    x.replace(NEWLINE, '\n').replace(SEMI, '\n'), text))
+    return np.array(data)
+
+
+def to_ord(string):
+    return list(map(ord, string))
+
+
+def get_problems(authors, n):
     X = []
     y = []
 
@@ -107,12 +96,22 @@ def GetProblems(authors, n):
     return np.array(X, dtype=np.uint8), np.array(y, dtype=np.uint8)
 
 
-def genVocabulary(data):
+def generate_vocabulary(data):
     master_text = ''.join(data)
     master_text = list(map(ord, master_text))
     vocabulary = list(set(master_text))
+
     return vocabulary
 
+
+student, text = np.loadtxt(
+    PATH, delimiter=';', skiprows=1, dtype=str, unpack=True)
+ids = list(map(str, range(0, len(student))))
+
+data = np.c_[ids, student, unescape(text)]
+data = np.array(sorted(data, key=lambda x: int(x[1])))
+
+MAX_LENGTH = max([len(x[-1]) for x in data])
 
 authors = {}
 
@@ -126,13 +125,13 @@ for x in data:
         print(len(data), i)
         authors[student] = Author([x[-1]])
 
-vocabulary = genVocabulary(data[:, -1])
+vocabulary = generate_vocabulary(data[:, -1])
 
 for author in authors.values():
     author.oneHotEncode(vocabulary)
     author.pad(MAX_LENGTH)
 
-X, y = GetProblems(authors, 90)
+X, y = get_problems(authors, 90)
 np.save('X', X)
 np.save('y', y)
 
