@@ -1,1 +1,38 @@
 \section{Method} \label{sec:method} 
+
+\begin{itemize}
+    \item Replace escaped characters in MaCom data.
+    \item Convert all characters in text to numbers such that we have lists of
+        numbers.
+    \item Convert list of numbers to list of one hot encoded vector where each
+        character has a different vector.
+    \item Pad all texts with zeroes such that all texts has the same length.
+    \item Make random dataset of size n by making (n/2) rows containing two
+        padded texts from the same author and the class 1 and making (n/2) rows
+        containing two texts from different authors and the class 0.
+    \item Feed the problems to a neural network that looks like this,
+
+        \begin{lstlisting}
+     |Text 1|          |Text 2|
+        |                 |
+        |                 |
+      | Convolutional Layer(s) |
+          |                 |
+          |                 |
+  | GlobalMaxPool | | GlobalMaxPool |
+          |                 |
+          |                 |
+
+    |     Dense Layer(s)        |
+                |
+                |
+| Same/Different Author Probabilities |
+        \end{lstlisting}
+
+        The number of filters in the convolutional layers determines the number
+        of outputs of the GlobalMaxPools. The output of the GlobalMaxPools
+        represents the input text and the dense layers then have to compare the
+        two representations to find whether or not they are written by the same
+        author.
+
+\end{itemize}
