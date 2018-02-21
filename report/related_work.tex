@@ -1,4 +1,5 @@
 \section{Related Work} \label{sec:related_work}
+%The problem of authorship verification
 
 Our work in this thesis is inspired by the previous work of several researchers.
 \cite{DBLP:journals/corr/RuderGB16c} shows a Neural Network for authorship
@@ -38,3 +39,25 @@ used networks with the following channels
 \end{description}
 
 The best performing configuration was the CNN-char.
+
+The method implemented by \cite{shrestha2017}, was their attempt at \gls{AA}
+on short texts. The reasoning behind the only focusing on short texts was the
+advent of social media, and the great usage of E-mail. Their approach makes use
+of a \gls{CNN}. This \gls{CNN} only takes in a sequence of character-n-grams.
+The reasoning for this usage of only char-n-grams was the small amount of text
+in each sample. By passing these N-grams through a Embedding layer, a 25\%
+dropout layer, 3 convolutional layers and then using max-over-time, they get
+a compact representation of the text. They hypothesize this representation
+captures the morphological, lexical and syntactic level of the supplied text.
+This compact representation is then parsed through a fully connected soft-max
+layer, to produce a probabilistic distribution over all authors. In order to
+test their method they made use of a twitter data set, containing approximately
+9000 user, all having over a 1000 tweets to their name. They made use of two
+different configurations of their networks. One using character-1-grams and one
+using character-2-grams. After removing bot-like authors, they got an accuracy
+of 0.678, and 0.683 respectively. This however, was only with 35 authors used,
+and 1000 tweets per author. In the case where either the authors count was
+increased or the number of tweets was decreased, the accuracy quickly worsened.
+In order to extract some sort of meaning from the predictions they made using
+this approach, they made use of the saliency score to determine the impact each
+n-gram had on the final decision.
