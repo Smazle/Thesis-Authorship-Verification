@@ -40,37 +40,39 @@ used networks with the following channels
 
 The best performing configuration was the CNN-char.
 
-The method implemented by \cite{shrestha2017}, was their attempt at \gls{AA}
-on short texts. The reasoning behind the only focusing on short texts was the
-advent of social media, and the great usage of E-mail. Their approach makes use
-of a \gls{CNN}. This \gls{CNN} only takes in a sequence of character-n-grams.
-The reasoning for this usage of only char-n-grams was the small amount of text
-in each sample. By passing these N-grams through a Embedding layer, a 25\%
+%The method implemented by \cite{shrestha2017}, was their attempt at \gls{AA}
+%on short texts. The reasoning behind the only focusing on short texts was the
+
+\cite{shrestha2017} experimented with classifying the author of short texts
+such as messages on social media, and emails. Their approach makes use of a
+\gls{CNN}. This \gls{CNN} only takes in a sequence of character-n-grams. The
+reasoning for this usage of only char-n-grams was the small amount of text
+in each sample. By passing these N-grams through a embedding layer, a 25\%
 dropout layer, 3 convolutional layers and then using max-over-time, they get
 a compact representation of the text. They hypothesize this representation
 captures the morphological, lexical and syntactic level of the supplied text.
 This compact representation is then parsed through a fully connected soft-max
 layer, to produce a probabilistic distribution over all authors. In order to
-test their method they made use of a twitter data set, containing approximately
-9000 user, all having over a 1000 tweets to their name. They made use of two
-different configurations of their networks. One using character-1-grams and one
-using character-2-grams. After removing bot-like authors, they got an accuracy
-of 0.678, and 0.683 respectively. This however, was only with 35 authors used,
+test their method they used a twitter data set, containing approximately 9000
+user, all having written more than 1000 tweets. They made use of two different
+configurations of their networks. One using character-1-grams and one using
+character-2-grams. After removing bot-like authors, they got an accuracy of
+0.678, and 0.683 respectively. This however, was only with 35 authors used,
 and 1000 tweets per author. In the case where either the authors count was
 increased or the number of tweets was decreased, the accuracy quickly worsened.
 In order to extract some sort of meaning from the predictions they made using
 this approach, they made use of the saliency score to determine the impact each
 n-gram had on the final decision.
 
-The approach proposed by \cite{ding2016} was somewhat more complex. While they
-too made use of a \gls{CNN}, the application of this \gls{CNN} was split up into
-four different modalities. They describe their approach as "Mining stylometric
-representations for authorship analysis". This is done by having 4 different
-\gls{CNN}s, one that focuses on 1 (or 2) stylometric levels of the text. The
-points of having it split up, was so one could pick and choose which modality
-one wanted to use on the specific example. The first network looks that the
-word level, and topical modalities of the text. In doing so it makes use of
-3 different author word biases. The topical bias describes a texts tendency
+The approach proposed by \cite{ding2016} was somewhat more complex. While
+they too made use of a \gls{CNN}, the application of this \gls{CNN} was split
+up into four different modalities. They describe their approach as "Mining
+stylometric representations for authorship analysis". This is done by having 4
+different \gls{CNN}s, one that focuses on 1 (or 2) stylometric levels of the
+text. The points of having it split up, was so one could pick and choose which
+modality one wanted to use on the specific example. The first network looks at
+the word level, and topical modalities of the text. In doing so it makes use
+of 3 different author word biases. The topical bias describes a texts tendency
 towards words that are specific to the topic of the entire text. The local
 contextual bias describes the texts tendency towards specific words based on the
 topic of a specific part of the text, as the overall topic is rarely consistent
@@ -118,3 +120,6 @@ distributions outputted by the softmax layer. From that cosine similarity they
 can get a binary output saying whether or not the texts are written by the same
 author or by different authors. \cite{qian:2018} obtained excellent results in
 the authorship attribution case on the Siamese network.
+
+TODO: Use Stamatos Survey to describe modern authorship verification/attribution
+in general.
