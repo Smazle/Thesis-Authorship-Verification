@@ -9,3 +9,4 @@
 *.gz
 
 *__pycache__
+*.csv
