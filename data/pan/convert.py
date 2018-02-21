@@ -25,4 +25,4 @@ for pan in os.listdir('.'):
             author += 1
 
 output = np.array(output)
-np.savetxt('formattedPan.csv', output, delimiter=';', fmt='%s')
+np.savetxt('formattedPan.csv', output, delimiter=';', fmt='%s', encoding='utf8')
