@@ -109,4 +109,8 @@ network is a network that use the same weights and parameters in multiple parts
 of the network. The architecture for authorship verification chosen by
 \cite{qian:2018} started by using a \gls{GRU} network on the two texts to verify
 authorship on. On top of the \gls{GRU} network they used an average pool. The
-output of the average pool is then seen as
+output of the average pool is then seen as features extracted from the two
+texts. They then use a softmax layer to get a distribution over the probability
+of who has written the two texts. These probabilities are then used to see
+whether or not the same author is predicted for both texts. On top of the
+softmax output TODO: continue
