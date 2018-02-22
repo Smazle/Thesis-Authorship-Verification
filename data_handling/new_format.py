@@ -5,30 +5,46 @@ import sys
 
 class MacomReader:
 
-    max_len = 0  # The maximal length of any of the texts.
-    vocabulary = set()
-    vocabulary_map = {}
-    padding = None
-    filepath = None
-    problems = []
+    # The maximal length of any of the texts.
+    max_len = 0
 
-    line_seek_positions = []
+    # A set containing all the different characters used in the input file.
+    vocabulary = set()
+
+    # Mapping from a character to its one-hot encoding.
+    vocabulary_map = {}
+
+    # The one hot encoding we use to represent padding of texts.
+    padding = None
+
+    # The path of the datafile.
+    filepath = None
+
+    # Open datafile.
+    f = None
+
+    # List of offsets the lines in the datafile start on.
+    line_offset = []
+
+    # List of lines each new author start on.
+    authors = []
 
     def __init__(self, filepath, batch_size=32, newline='$NL$',
             semicolon='$SC$'):
 
         self.filepath = filepath
+        self.f = open(self.filepath, 'r')
 
         self.generate_seek_positions()
+        self.generate_author_start()
 
-        with open(filepath) as f:
-            for line in f:
-                author, text = line.split(';')
-                decoded = unescape(text, newline, semicolon)
+        for line in self.f:
+            author, text = line.split(';')
+            decoded = unescape(text, newline, semicolon)
 
-                if len(decoded) > self.max_len:
-                    self.max_len = len(decoded)
-                    self.vocabulary = self.vocabulary.union(set(decoded))
+            if len(decoded) > self.max_len:
+                self.max_len = len(decoded)
+                self.vocabulary = self.vocabulary.union(set(decoded))
 
         one_hot = np.diag(np.ones(len(self.vocabulary) + 1))
 
@@ -37,23 +53,38 @@ class MacomReader:
 
         padding = one_hot[-1]
 
+        print(self.authors)
+        self.f.seek(self.line_offset[4])
+        print(self.f.read(80))
+        self.f.seek(self.line_offset[5])
+        print(self.f.read(80))
+
     # Read in the file once and build a list of line offsets.
     def generate_seek_positions(self):
-        line_offset = []
         offset = 0
-        for line in file:
-            line_offset.append(offset)
-            offset += len(line)
-        file.seek(0)
+        for line in self.f:
+            self.line_offset.append(offset)
+            offset += len(line.encode('utf-8'))
+        self.f.seek(0)
 
-    def close():
+    def generate_author_start(self):
+        self.f.seek(self.line_offset[1])
+
+        prev_author = None
+        for i, line in enumerate(self.f):
+            i = i + 1
+            author, text = line.split(';')
+            if author != prev_author:
+                self.authors.append(i)
+
+            prev_author = author
+        self.f.seek(0)
 
     def __enter__(self):
+        pass
 
-    def __exit__(self, exc_type, exc_value, traceback)
-
-# Now, to skip to line n (with the first line being line 0), just do
-file.seek(line_offset[n])
+    def __exit__(self, exc_type, exc_value, traceback):
+        self.f.close()
 
     # Generate batches of samples.
     def generate(self):
@@ -64,4 +95,5 @@ def unescape(text, newline, semicolon):
     return text.replace(newline, '\n').replace(semicolon, ';')
 
 if __name__ == '__main__':
-    reader = MacomReader(sys.argv[1])
+    with MacomReader(sys.argv[1]) as generator:
+        pass
