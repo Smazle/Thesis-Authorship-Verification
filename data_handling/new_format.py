@@ -2,7 +2,10 @@
 
 import numpy as np
 import sys
+import random
 
+# Class assume that authors are in order. It will not work if they are not in
+# order.
 class MacomReader:
 
     # The maximal length of any of the texts.
@@ -26,8 +29,13 @@ class MacomReader:
     # List of offsets the lines in the datafile start on.
     line_offset = []
 
-    # List of lines each new author start on.
-    authors = []
+    # Map from author identifier to list of line numbers.
+    authors = {}
+
+    # List of problems which consist of two line indices to two texts and either
+    # 1 or 0. If 1 the texts are from the same author and if 0 they are from
+    # different authors.
+    problems = []
 
     def __init__(self, filepath, batch_size=32, newline='$NL$',
             semicolon='$SC$'):
@@ -36,7 +44,8 @@ class MacomReader:
         self.f = open(self.filepath, 'r')
 
         self.generate_seek_positions()
-        self.generate_author_start()
+        self.generate_authors()
+        self.generate_problems()
 
         for line in self.f:
             author, text = line.split(';')
@@ -53,11 +62,7 @@ class MacomReader:
 
         padding = one_hot[-1]
 
-        print(self.authors)
-        self.f.seek(self.line_offset[4])
-        print(self.f.read(80))
-        self.f.seek(self.line_offset[5])
-        print(self.f.read(80))
+        print(self.problems)
 
     # Read in the file once and build a list of line offsets.
     def generate_seek_positions(self):
@@ -67,18 +72,31 @@ class MacomReader:
             offset += len(line.encode('utf-8'))
         self.f.seek(0)
 
-    def generate_author_start(self):
+    def generate_authors(self):
+
         self.f.seek(self.line_offset[1])
 
-        prev_author = None
         for i, line in enumerate(self.f):
-            i = i + 1
             author, text = line.split(';')
-            if author != prev_author:
-                self.authors.append(i)
+            try:
+                self.authors[author].append(i + 1)
+            except KeyError:
+                self.authors[author] = [i + 1]
 
-            prev_author = author
-        self.f.seek(0)
+    # TODO: Make sure the same file is not returned for the same author.
+    def generate_problems(self):
+
+        for author in self.authors:
+            same1 = random.choice(self.authors[author])
+            same2 = random.choice(self.authors[author])
+
+            all_authors = set(self.authors.keys())
+            all_authors.remove(author)
+
+            different = random.choice(self.authors[random.choice(list(all_authors))])
+
+            self.problems.append((same1, same2, 1))
+            self.problems.append((same1, different, 0))
 
     def __enter__(self):
         pass
