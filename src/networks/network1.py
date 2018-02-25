@@ -45,9 +45,12 @@ with reader as generator:
                   loss='categorical_crossentropy',
                   metrics=['accuracy'])
 
-    steps_n = len(generator.problems) / generator.batch_size
+    steps_n = len(generator.training_problems) / generator.batch_size
+    val_steps_n = len(generator.validation_problems) / generator.batch_size
     model.fit_generator(
-        generator=generator.generate(),
+        generator=generator.generate_training(),
         steps_per_epoch=steps_n,
-        epochs=100
+        epochs=100,
+        validation_data=generator.generate_validation(),
+        validation_steps=val_steps_n
     )

@@ -52,8 +52,17 @@ class MacomReader:
     # Which encoding to encode the characters in.
     encoding = None
 
+    # If 0..8 80% is training data and 20% are validation data.
+    validation_split = None
+
+    # List of training problems.
+    training_problems = None
+
+    # List of validation problems.
+    validation_problems = None
+
     def __init__(self, filepath, batch_size=32, newline='$NL$',
-                 semicolon='$SC$', encoding='one-hot'):
+                 semicolon='$SC$', encoding='one-hot', validation_split=0.8):
 
         # Save parameters.
         self.filepath = filepath
@@ -61,6 +70,7 @@ class MacomReader:
         self.newline = newline
         self.semicolon = semicolon
         self.encoding = encoding
+        self.validation_split = validation_split
 
         self.f = open(self.filepath, 'r')
 
@@ -127,15 +137,27 @@ class MacomReader:
             self.problems.append((same1, same2, 1))
             self.problems.append((same1, different, 0))
 
+        random.shuffle(self.problems)
+
+        split_point = int(len(self.problems) * self.validation_split)
+        self.training_problems = self.problems[:split_point]
+        self.validation_problems = self.problems[split_point:]
+
     def __enter__(self):
         return self
 
     def __exit__(self, exc_type, exc_value, traceback):
         self.f.close()
 
+    def generate_training(self):
+        return self.generate(self.training_problems)
+
+    def generate_validation(self):
+        return self.generate(self.validation_problems)
+
     # Generate batches of samples.
-    def generate(self):
-        problems = itertools.cycle(self.problems)
+    def generate(self, problems):
+        problems = itertools.cycle(problems)
 
         while True:
             batch = itertools.islice(problems, self.batch_size)
