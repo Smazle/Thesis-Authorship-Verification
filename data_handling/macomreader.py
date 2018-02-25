@@ -49,14 +49,18 @@ class MacomReader:
     # different authors.
     problems = []
 
+    # Which encoding to encode the characters in.
+    encoding = None
+
     def __init__(self, filepath, batch_size=32, newline='$NL$',
-            semicolon='$SC$'):
+                 semicolon='$SC$', encoding='one-hot'):
 
         # Save parameters.
         self.filepath = filepath
         self.batch_size = batch_size
         self.newline = newline
         self.semicolon = semicolon
+        self.encoding = encoding
 
         self.f = open(self.filepath, 'r')
 
@@ -78,12 +82,15 @@ class MacomReader:
             if len(decoded) > self.max_len:
                 self.max_len = len(decoded)
 
-        one_hot = np.diag(np.ones(len(self.vocabulary) + 1))
+        if self.encoding == 'one-hot':
+            encoding = np.diag(np.ones(len(self.vocabulary) + 1))
+        elif self.encoding == 'numbers':
+            encoding = list(range(0, len(self.vocabulary) + 1))
 
         for i, c in enumerate(self.vocabulary):
-            self.vocabulary_map[c] = one_hot[i]
+            self.vocabulary_map[c] = encoding[i]
 
-        self.padding = one_hot[-1]
+        self.padding = encoding[-1]
 
     # Read in the file once and build a list of line offsets.
     def generate_seek_positions(self):
@@ -133,18 +140,26 @@ class MacomReader:
         while True:
             batch = itertools.islice(problems, self.batch_size)
 
-            X_known = np.zeros((self.batch_size, self.max_len,
-                               len(self.vocabulary) + 1, 1))
-            X_unknown = np.zeros((self.batch_size, self.max_len,
-                                 len(self.vocabulary) + 1, 1))
-            y = np.zeros((self.batch_size))
+            if self.encoding == 'one-hot':
+                X_known = np.zeros((self.batch_size, self.max_len,
+                                   len(self.vocabulary) + 1))
+                X_unknown = np.zeros((self.batch_size, self.max_len,
+                                     len(self.vocabulary) + 1))
+                y = np.zeros((self.batch_size, 2))
+            elif self.encoding == 'numbers':
+                X_known = np.zeros((self.batch_size, self.max_len))
+                X_unknown = np.zeros((self.batch_size, self.max_len))
+                y = np.zeros((self.batch_size, 2))
 
             for (i, (line1, line2, label)) in enumerate(batch):
-                print(line1, line2)
                 (text1, text2) = (self.read_line(line1), self.read_line(line2))
-                X_known[i] = np.expand_dims(text1, axis=2)
-                X_unknown[i] = np.expand_dims(text2, axis=2)
-                y[i] = label
+                X_known[i] = text1
+                X_unknown[i] = text2
+
+                if label == 0:
+                    y[i] = np.array([1, 0])
+                else:
+                    y[i] = np.array([0, 1])
 
             yield [X_known, X_unknown], y
 
@@ -152,10 +167,10 @@ class MacomReader:
         self.f.seek(self.line_offset[line])
         author, text = self.f.readline().split(';')
         unescaped = unescape(text, self.newline, self.semicolon)
-        one_hot_encoded = list(map(lambda x: self.vocabulary_map[x], unescaped))
+        encoded = list(map(lambda x: self.vocabulary_map[x], unescaped))
 
-        len_diff = self.max_len - len(one_hot_encoded)
-        padded = one_hot_encoded + ([self.padding] * len_diff)
+        len_diff = self.max_len - len(encoded)
+        padded = encoded + ([self.padding] * len_diff)
 
         return np.array(padded)
 
@@ -166,7 +181,7 @@ def unescape(text, newline, semicolon):
 
 
 if __name__ == '__main__':
-    with MacomReader(sys.argv[1], 64) as generator:
+    with MacomReader(sys.argv[1], 64, encoding='numbers') as generator:
         t = time.time()
         for batch in generator.generate():
             print(time.time() - t)
