@@ -178,11 +178,3 @@ class MacomReader:
 # Replace escapes in the string from the MaCom dataset.
 def unescape(text, newline, semicolon):
     return text.replace(newline, '\n').replace(semicolon, ';')
-
-
-if __name__ == '__main__':
-    with MacomReader(sys.argv[1], 64, encoding='numbers') as generator:
-        t = time.time()
-        for batch in generator.generate():
-            print(time.time() - t)
-            t = time.time()
