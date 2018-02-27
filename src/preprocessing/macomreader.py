@@ -3,8 +3,6 @@
 import itertools
 import numpy as np
 import random
-import sys
-import time
 
 
 # Class assume that authors are in order. It will not work if they are not in
@@ -38,15 +36,18 @@ class MacomReader:
     # Open datafile.
     f = None
 
+    # Open datafile in binary mode.
+    fb = None
+
     # List of offsets the lines in the datafile start on.
     line_offset = []
 
     # Map from author identifier to list of line numbers.
     authors = {}
 
-    # List of problems which consist of two line indices to two texts and either
-    # 1 or 0. If 1 the texts are from the same author and if 0 they are from
-    # different authors.
+    # List of problems which consist of two line indices to two texts and
+    # either 1 or 0. If 1 the texts are from the same author and if 0 they are
+    # from different authors.
     problems = []
 
     # Which encoding to encode the characters in.
@@ -73,6 +74,7 @@ class MacomReader:
         self.validation_split = validation_split
 
         self.f = open(self.filepath, 'r')
+        self.fb = open(self.filepath, 'rb')
 
         # Generate representation used to generate training data.
         self.generate_seek_positions()
@@ -104,13 +106,13 @@ class MacomReader:
 
     # Read in the file once and build a list of line offsets.
     def generate_seek_positions(self):
-        self.f.seek(0)
+        self.fb.seek(0)
 
         offset = 0
-        for line in self.f:
+        for line in self.fb:
             self.line_offset.append(offset)
-            offset += len(line.encode('utf-8'))
-        self.f.seek(0)
+            offset += len(line)
+        self.fb.seek(0)
 
     def generate_authors(self):
         self.f.seek(self.line_offset[1])
@@ -148,6 +150,7 @@ class MacomReader:
 
     def __exit__(self, exc_type, exc_value, traceback):
         self.f.close()
+        self.fb.close()
 
     def generate_training(self):
         return self.generate(self.training_problems)
