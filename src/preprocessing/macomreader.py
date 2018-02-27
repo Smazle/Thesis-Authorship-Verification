@@ -4,7 +4,7 @@ import itertools
 import numpy as np
 import random
 import sys
-import time
+from collections import Counter, defaultdict
 
 
 # Class assume that authors are in order. It will not work if they are not in
@@ -14,11 +14,28 @@ class MacomReader:
     # The maximal length of any of the texts.
     max_len = 0
 
+    # Number between 0 and 1 (inclusive) cutoff point for when a character is
+    # replaced with the default character.
+    vocabulary_frequency_cutoff = 0.0
+
     # A set containing all the different characters used in the input file.
     vocabulary = set()
 
     # Mapping from a character to its one-hot encoding.
     vocabulary_map = {}
+
+    # Mapping from a characters to the number of times it is used in the
+    # dataset given.
+    vocabulary_usage = Counter()
+
+    # Mapping from a character to its frequency.
+    vocabulary_frequencies = {}
+
+    # Set of characters that are above the cutoff given.
+    vocabulary_above_cutoff = {}
+
+    # Set of characters that are below the cutoff given (they are ignored).
+    vocabulary_below_cutoff = {}
 
     # The one hot encoding we use to represent padding of texts.
     padding = None
@@ -38,15 +55,18 @@ class MacomReader:
     # Open datafile.
     f = None
 
+    # Open datafile in binary mode.
+    fb = None
+
     # List of offsets the lines in the datafile start on.
     line_offset = []
 
     # Map from author identifier to list of line numbers.
     authors = {}
 
-    # List of problems which consist of two line indices to two texts and either
-    # 1 or 0. If 1 the texts are from the same author and if 0 they are from
-    # different authors.
+    # List of problems which consist of two line indices to two texts and
+    # either 1 or 0. If 1 the texts are from the same author and if 0 they are
+    # from different authors.
     problems = []
 
     # Which encoding to encode the characters in.
@@ -61,8 +81,22 @@ class MacomReader:
     # List of validation problems.
     validation_problems = None
 
+    # TODO: Take argument specifying whether or not to ignore first line in
+    # file.
     def __init__(self, filepath, batch_size=32, newline='$NL$',
-                 semicolon='$SC$', encoding='one-hot', validation_split=0.8):
+                 semicolon='$SC$', encoding='one-hot', validation_split=0.8,
+                 vocabulary_frequency_cutoff=0.0):
+
+        if encoding != 'one-hot' and encoding != 'numbers':
+            raise ValueError('encoding should be "one-hot" or "numbers"')
+
+        if validation_split > 1.0 or validation_split < 0.0:
+            raise ValueError('validation_split between 0 and 1 required')
+
+        if vocabulary_frequency_cutoff > 1.0 or\
+                vocabulary_frequency_cutoff < 0.0:
+            raise ValueError('vocabulary_frequency_cutoff between 0 and 1 ' +
+                             'required')
 
         # Save parameters.
         self.filepath = filepath
@@ -71,14 +105,31 @@ class MacomReader:
         self.semicolon = semicolon
         self.encoding = encoding
         self.validation_split = validation_split
+        self.vocabulary_frequency_cutoff = vocabulary_frequency_cutoff
 
-        self.f = open(self.filepath, 'r')
+    def generate_training(self):
+        return self.generate(self.training_problems, self.f)
+
+    def generate_validation(self):
+        return self.generate(self.validation_problems, self.f_val)
+
+    def __enter__(self):
+        self.f = open(self.filepath, mode='r', encoding='utf-8')
+        self.fb = open(self.filepath, mode='rb')
+        self.f_val = open(self.filepath, mode='r', encoding='utf-8')
 
         # Generate representation used to generate training data.
         self.generate_seek_positions()
         self.generate_authors()
         self.generate_problems()
         self.generate_vocabulary_map()
+
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        self.f.close()
+        self.fb.close()
+        self.f_val.close()
 
     def generate_vocabulary_map(self):
         self.f.seek(self.line_offset[1])
@@ -88,29 +139,43 @@ class MacomReader:
             decoded = unescape(text, self.newline, self.semicolon)
 
             self.vocabulary = self.vocabulary.union(decoded)
+            self.vocabulary_usage = self.vocabulary_usage + Counter(decoded)
 
             if len(decoded) > self.max_len:
                 self.max_len = len(decoded)
 
-        if self.encoding == 'one-hot':
-            encoding = np.diag(np.ones(len(self.vocabulary) + 1))
-        elif self.encoding == 'numbers':
-            encoding = list(range(0, len(self.vocabulary) + 1))
+        total_chars = sum(self.vocabulary_usage.values())
+        self.vocabulary_frequencies = {k: v / total_chars for k, v in
+                                       self.vocabulary_usage.items()}
 
-        for i, c in enumerate(self.vocabulary):
+        self.vocabulary_above_cutoff =\
+            {k for k, v in self.vocabulary_frequencies.items()
+             if v > self.vocabulary_frequency_cutoff}
+        self.vocabulary_below_cutoff =\
+            {k for k, v in self.vocabulary_frequencies.items()
+             if v < self.vocabulary_frequency_cutoff}
+
+        if self.encoding == 'one-hot':
+            encoding = np.diag(np.ones(len(self.vocabulary_above_cutoff) + 2))
+        elif self.encoding == 'numbers':
+            encoding = list(range(0, len(self.vocabulary_above_cutoff) + 2))
+
+        self.vocabulary_map = defaultdict(lambda: encoding[-2])
+
+        for i, c in enumerate(self.vocabulary_above_cutoff):
             self.vocabulary_map[c] = encoding[i]
 
         self.padding = encoding[-1]
 
     # Read in the file once and build a list of line offsets.
     def generate_seek_positions(self):
-        self.f.seek(0)
+        self.fb.seek(0)
 
         offset = 0
-        for line in self.f:
+        for line in self.fb:
             self.line_offset.append(offset)
-            offset += len(line.encode('utf-8'))
-        self.f.seek(0)
+            offset += len(line)
+        self.fb.seek(0)
 
     def generate_authors(self):
         self.f.seek(self.line_offset[1])
@@ -143,20 +208,19 @@ class MacomReader:
         self.training_problems = self.problems[:split_point]
         self.validation_problems = self.problems[split_point:]
 
-    def __enter__(self):
-        return self
+    def read_line(self, line, f):
+        f.seek(self.line_offset[line])
+        author, text = f.readline().split(';')
+        unescaped = unescape(text, self.newline, self.semicolon)
+        encoded = list(map(lambda x: self.vocabulary_map[x], unescaped))
 
-    def __exit__(self, exc_type, exc_value, traceback):
-        self.f.close()
+        len_diff = self.max_len - len(encoded)
+        padded = encoded + ([self.padding] * len_diff)
 
-    def generate_training(self):
-        return self.generate(self.training_problems)
-
-    def generate_validation(self):
-        return self.generate(self.validation_problems)
+        return np.array(padded)
 
     # Generate batches of samples.
-    def generate(self, problems):
+    def generate(self, problems, f):
         problems = itertools.cycle(problems)
 
         while True:
@@ -174,7 +238,7 @@ class MacomReader:
                 y = np.zeros((self.batch_size, 2))
 
             for (i, (line1, line2, label)) in enumerate(batch):
-                (text1, text2) = (self.read_line(line1), self.read_line(line2))
+                (text1, text2) = (self.read_line(line1, f), self.read_line(line2, f))
                 X_known[i] = text1
                 X_unknown[i] = text2
 
@@ -185,18 +249,22 @@ class MacomReader:
 
             yield [X_known, X_unknown], y
 
-    def read_line(self, line):
-        self.f.seek(self.line_offset[line])
-        author, text = self.f.readline().split(';')
-        unescaped = unescape(text, self.newline, self.semicolon)
-        encoded = list(map(lambda x: self.vocabulary_map[x], unescaped))
-
-        len_diff = self.max_len - len(encoded)
-        padded = encoded + ([self.padding] * len_diff)
-
-        return np.array(padded)
-
 
 # Replace escapes in the string from the MaCom dataset.
 def unescape(text, newline, semicolon):
     return text.replace(newline, '\n').replace(semicolon, ';')
+
+
+if __name__ == '__main__':
+    reader = MacomReader(
+        sys.argv[1],
+        vocabulary_frequency_cutoff=1 / 100000,
+        encoding='numbers'
+    )
+
+    with reader as generator:
+        print(len(generator.vocabulary_above_cutoff))
+        print(generator.vocabulary_above_cutoff)
+        print(len(generator.vocabulary_below_cutoff))
+        print(generator.vocabulary_below_cutoff)
+        print(generator.read_line(10))
