@@ -108,14 +108,15 @@ class MacomReader:
         self.vocabulary_frequency_cutoff = vocabulary_frequency_cutoff
 
     def generate_training(self):
-        return self.generate(self.training_problems)
+        return self.generate(self.training_problems, self.f)
 
     def generate_validation(self):
-        return self.generate(self.validation_problems)
+        return self.generate(self.validation_problems, self.f_val)
 
     def __enter__(self):
         self.f = open(self.filepath, mode='r', encoding='utf-8')
         self.fb = open(self.filepath, mode='rb')
+        self.f_val = open(self.filepath, mode='r', encoding='utf-8')
 
         # Generate representation used to generate training data.
         self.generate_seek_positions()
@@ -128,6 +129,7 @@ class MacomReader:
     def __exit__(self, exc_type, exc_value, traceback):
         self.f.close()
         self.fb.close()
+        self.f_val.close()
 
     def generate_vocabulary_map(self):
         self.f.seek(self.line_offset[1])
@@ -206,9 +208,9 @@ class MacomReader:
         self.training_problems = self.problems[:split_point]
         self.validation_problems = self.problems[split_point:]
 
-    def read_line(self, line):
-        self.f.seek(self.line_offset[line])
-        author, text = self.f.readline().split(';')
+    def read_line(self, line, f):
+        f.seek(self.line_offset[line])
+        author, text = f.readline().split(';')
         unescaped = unescape(text, self.newline, self.semicolon)
         encoded = list(map(lambda x: self.vocabulary_map[x], unescaped))
 
@@ -218,7 +220,7 @@ class MacomReader:
         return np.array(padded)
 
     # Generate batches of samples.
-    def generate(self, problems):
+    def generate(self, problems, f):
         problems = itertools.cycle(problems)
 
         while True:
@@ -236,7 +238,7 @@ class MacomReader:
                 y = np.zeros((self.batch_size, 2))
 
             for (i, (line1, line2, label)) in enumerate(batch):
-                (text1, text2) = (self.read_line(line1), self.read_line(line2))
+                (text1, text2) = (self.read_line(line1, f), self.read_line(line2, f))
                 X_known[i] = text1
                 X_unknown[i] = text2
 
