@@ -5,6 +5,15 @@ from keras.layers import Dense, Convolution1D, GlobalMaxPooling1D, Input,\
 from keras.models import Model
 from ..preprocessing import MacomReader
 import argparse
+import resource
+
+
+gb4 = 4000000000  # 4 GB in bytes.
+gb6 = 6000000000  # 6 GB in bytes.
+
+# Limit memory usage of the script so we don't crash a computer.
+soft, hard = resource.getrlimit(resource.RLIMIT_AS)
+resource.setrlimit(resource.RLIMIT_AS, (gb6, hard))
 
 # Parse arguments.
 parser = argparse.ArgumentParser(
@@ -15,7 +24,7 @@ args = parser.parse_args()
 
 reader = MacomReader(
     args.datafile,
-    batch_size=32,
+    batch_size=1,
     encoding='numbers'
 )
 
