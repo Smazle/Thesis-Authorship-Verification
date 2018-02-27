@@ -51,12 +51,13 @@ class CharacterNGramFeatureExtractor:
         grams = find_ngrams(corpus, self.n)
         most_common = grams.most_common()
         most_common.sort(key=lambda x: (x[1], x[0]), reverse=True)
-        most_common = [key for (key, val) in most_common[0:self.size]]
+        self.max = len(most_common)
 
-        if len(most_common) != self.size:
+        if self.max < self.size:
             raise RuntimeError(
                 'Could not find ' + str(self.size) + ' different grams.')
 
+        most_common = [key for (key, val) in most_common[0:self.size]]
         self.grams = most_common
 
     def extract(self, text):
@@ -134,12 +135,13 @@ class SpecialCharacterNGramFeatureExtractor:
         grams = special_character_n_grams(full_text, self.n)
         most_common = grams.most_common()
         most_common.sort(key=lambda x: (x[1], x[0]), reverse=True)
-        most_common = [key for (key, val) in most_common[0:self.size]]
+        self.max = len(most_common)
 
-        if len(most_common) != self.size:
+        if self.max < self.size:
             raise RuntimeError(
                 'Could not find ' + str(self.size) + ' different grams.')
 
+        most_common = [key for (key, val) in most_common[0:self.size]]
         self.grams = most_common
 
     def extract(self, text):

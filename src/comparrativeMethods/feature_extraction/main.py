@@ -2,6 +2,9 @@
 import argparse
 from feature_extractor import analyze_input_folder, FeatureExtractor
 
+print('REMEMBER TO CLEAN UP SAVED FILES, FOR CLEAN RUN!')
+
+
 # Parse command line arguments.
 parser = argparse.ArgumentParser(description='Extract features.')
 
