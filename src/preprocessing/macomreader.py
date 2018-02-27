@@ -114,8 +114,8 @@ class MacomReader:
         return self.generate(self.validation_problems)
 
     def __enter__(self):
-        self.f = open(self.filepath, 'r')
-        self.fb = open(self.filepath, 'rb')
+        self.f = open(self.filepath, mode='r', encoding='utf-8')
+        self.fb = open(self.filepath, mode='rb')
 
         # Generate representation used to generate training data.
         self.generate_seek_positions()
