@@ -6,9 +6,9 @@ from keras.models import Model
 from keras.callbacks import ModelCheckpoint, CSVLogger, Callback
 from ..preprocessing import MacomReader
 import argparse
-import resource
 import math
 import numpy as np
+import resource
 
 
 gb4 = 4000000000  # 4 GB in bytes.
@@ -55,13 +55,11 @@ class MyCallback(Callback):
             X, y = next(self.validation_generator)
             prediction = self.model.predict(X)
 
-            prediction = prediction[:,1] - prediction[:,0]
+            prediction = prediction[:, 1] - prediction[:, 0]
             prediction = prediction > 0
 
-            y = y[:,1] - y[:,0]
+            y = y[:, 1] - y[:, 0]
             y = y > 0
-
-            tp = np.logical_and(prediction == y, y)
 
             tps += np.sum(np.logical_and(prediction == y, y))
             tns += np.sum(np.logical_and(prediction == y, np.logical_not(y)))
@@ -93,7 +91,7 @@ with reader as generator:
     known_in = Input(shape=inshape)
     unknown_in = Input(shape=inshape)
 
-    embedding = Embedding(len(generator.vocabulary) + 1, 5,
+    embedding = Embedding(len(generator.vocabulary_above_cutoff) + 2, 5,
                           input_length=generator.max_len)
 
     conv = Convolution1D(filters=1000, kernel_size=10, strides=1,
@@ -124,7 +122,8 @@ with reader as generator:
             save_weights_only=True
         ),
         CSVLogger('history.csv'),
-        MyCallback(generator.generate_validation(), val_steps_n, 'history2.csv')
+        MyCallback(generator.generate_validation(), val_steps_n,
+                   'history2.csv')
     ]
 
     model.fit_generator(
