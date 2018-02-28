@@ -14,29 +14,29 @@ as well on Danish texts.
 
 \subsubsection{Extended Delta Method}
 
-One of the best performing methods of \cite{US}, was the extended delta method.
-As the name suggests, the methods serves to extend the already existing delta
-method described by \cite{evert2015towards}. The normal delta methods consists
-of first extracting the word frequencies from a newly introduced text, using
-these as the describing feature. After doing this to the entire sample-space of
-texts, and applying a linear transformation to their respective feature-sets,
-\gls{KNN} is then used to determine the author of the introduced texts, based on
-its' neighbors in the word-frequency feature-space. The extended delta method,
-simply expands on the set possible features to pick from, rather than being
-limited to only using the word-frequencies of the text.
+One of the best performing methods of \cite{US} was the extended delta method.
+As the name suggests the method extends the already existing delta method
+described by \cite{evert2015towards}. The normal delta methods consists of first
+extracting word frequencies from all texts and using these as the describing
+features. After doing this to the entire sample-space of texts, and applying a
+linear transformation to their respective feature-sets, \gls{KNN} is then used
+to determine the author of the introduced texts based on its closest neighbors
+in the word-frequency feature-space. The extended delta method, simply expands
+on the set of possible features to pick from, rather than being limited to only
+using the word-frequencies of the text.
 
 
 \subsubsection{Author Specific SVM}
 
-Another efficient algorithm used in \cite{US}. Heavily inspired by
-\cite{hansen2014}, the approach starts out by fetching all texts known the
-written by a specific author, and a equal number of texts known not to be
-written by that same author. It is upon the feature-set extracted from these
-texts, that a \gls{SVM} is trained, allowing it to learn the specifics authors
-writing style from the known texts supplied, and, in contrast, what the writing
-style of someone not him is. When a new text, with disputed authorship, is then
-set forth the ambition is that the trained \gls{SVM} will be able to determine
-if the author it was trained on, is in fact the author of this new text as well.
+Another algorithm used in \cite{US}. Heavily inspired by \cite{hansen2014}
+starts out by fetching all texts known to be written by a specific author and an
+equal number of texts known not to be written by that same author. It is upon
+the feature-set extracted from these texts that a \gls{SVM} is trained, allowing
+it to learn the specifics authors writing style from the known texts supplied
+and in contrast what the writing style of someone not him is. When a new text,
+with disputed authorship is presented the hope is that the trained \gls{SVM}
+will be able to determine if the author it was trained on, is in fact the author
+of this new text as well.
 
 
 \subsection{Siamese Neural Network}
