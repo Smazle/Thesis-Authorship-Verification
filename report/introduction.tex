@@ -12,68 +12,64 @@ is the ability to distinguish between texts, and their associated author,
 based on a set of extracted textual features. The automation of this has been
 a lively branch of research ever since the entering the digital age, giving
 birth to online digital forensics tasks, such as \cite{pan:2015}. Initial
-attempts at quantifying the writing style can be seen by Mendenhall (1887),
-who attempted to determine the authorship of several shakespeare texts, as the
-whole shakespeare authorship question describes a theory that shakespeare didn't
-write some or all of his texts, or that he was at least a front for one or more
-unknown authors. Mendenhall attempted this classification, using the frequency
-distribution of words of different lengths. Throughout the year, the approaches
-to this problem has changed quite a bit. When author attribution started
-peaking researchers interest, the approaches applied, were more stylometric in
-nature. In addition to that it fully automated systems were a rarity as author
-verification/attribution was used mostly in an assistive manner. It was during
-the 1990s that fully automated systems, became more prevalent. The main reason
-for this was the internet. Before the internet, the data available simply wasn't
-suitable for authorship attribution tasks. Books were too big, resulting in
-a lack in homogeneity, and the amount of authors, and bench-marking data was
-simply to small. The internet paved the way for insurmountable amount of data,
-and variations of that data, impacting areas such as information retrieval,
-machine learning and \gls{NLP}.
+attempts at quantifying the writing style can be seen by Mendenhall (1887), who
+attempted to determine the authorship of several of Shakespeares texts. There
+is a theory that Shakespeare didn't write some or all of his texts, or that he
+was at least a front for one or more unknown authors. Mendenhall attempted this
+classification, using the frequency distribution of words of different lengths.
+Throughout the years the approaches to this problem has changed quite a bit.
+When authorship attribution started interesting researchers the approaches were
+more Stylometric in nature. In addition to that fully automated systems were
+rare as authorship verification/attribution was used mostly in an supporting
+manner. It was during the 1990's that fully automated systems became more
+prevalent. The main reason for this was the internet. Before the internet, the
+data available simply wasn't suitable for authorship attribution tasks. Books
+were too big, resulting in a lack in homogeneity, and the amount of authors, and
+bench-marking data was to small. The internet paved the way for insurmountable
+amount of data, and variations of that data, impacting areas such as information
+retrieval, machine learning and \gls{NLP}.
 
-This is where authorship verification as we know it enters the picture, along
-with author \gls{NLP} approaches such as authorship attribution and plagiarism
-detection. Authorship verification is, as the name suggests, the task of
-determining whether or not a person i indeed the author of a proposed text. As
-such author verification is a sub-problem of what is called authors attribution.
-Authorship attribution describes the task of determine the author of a text
-from a set of proposed authors. In order to perform one or more of these
-approaches one can go back to Mendenhall and the pre-internet days again. In
-order for any fully automatic authorship verification to work, stylometric
-features describing the text has to be extracted. These features a plethora of
-linguistic layers, ranging from the low level character n-grams, to the high
-level application specfic features such as text creation date, and number of
-edits. It is using these features many of the current day state-of-the-art
-approaches are based.eatures many of the current day state-of-the-art approaches
-are based.
+This is where authorship verification as we know it enters the picture. Along
+with authorship \gls{NLP} approaches such as authorship attribution and
+plagiarism detection. Authorship verification is, as the name suggests, the task
+of determining whether or not a person is the author of a proposed text. As such
+author verification is a sub-problem of what is called authorship attribution.
+Authorship attribution describes the task of determining the authorship of a
+text from a set of proposed authors. In order for any fully automatic authorship
+verification to work, stylometric features describing the text has to be
+automatically extracted. These features span multiple linguistic layers, ranging
+from the low level character n-grams, to the high level application specific
+features such as text creation date, and number of edits. It is using these
+features many of the current day state-of-the-art approaches are based.
 
-Some of these are profile-based approaches, where a author represented by
-a concatenation of all the texts in the his library of work. It is this
-concatenation one then extracts the features from, thus giving one a set of
-features describing the authors writing style rather than each individual text,
-which would be called a instance-based approach.
+Some of these are profile-based approaches where an author is represented by
+a concatenation of all the texts in the his library of work. It is from the
+concatenation one then extracts the features. That gives a set of features
+describing the authors writing style rather than each individual text, which
+would be called an instance-based approach.
 
 The most successful example of a profile-based approach make use of a
 compression. This works, not by having represented each author library as a
 set of features, but rather makes use of compression to do so. In the initial
-scenario, we have a set of author-profiles, which is the concatenation of all
-their individual work. When a new text is then introduced, and wanted placed
-with an author, it loop through each author, adding it library and in turn their
-concatenated profile. The profile is then compressed, both with and without the
-new text included in its' library. The bit-wise difference is then computed,
+scenario, we have a set of author-profiles, which is the concatenation of
+all their individual work. When a new text is then introduced the authorship
+is determined by looping through each author, adding it library (their
+concatenated profile). The profile is then compressed, both with and without
+the new text included in its library. The bit-wise difference is then computed,
 by subtracting them from one another, resulting in what is essentially the
 cross-entropy between the two texts. The author which the lowest cross-entropy
 is then considered to be the author of this new text.
 
-As for instance-based approaches, they lean more towards classic machine
-learning approach. Given that texts are represented as a set of features, one
-can use each text as a training sample, with a given feature set associated with it.
-Thus several simple machine learning approaches can be applied to the data as either
-a binary classification problem, in the case of authorship verification, and a 
-multi-class classification problem in the case of authorship attribution.
+As for instance-based approaches they use a more classic machine learning
+approach. Texts are again represented as a set of features. Then each texts
+features is used as a training sample. Thus several simple machine learning
+approaches can be applied to the data as either a binary classification problem,
+in the case of authorship verification, and a multi-class classification problem
+in the case of authorship attribution.
 
 It is using this instance-based approach that we will attempt, in the following
 paper, to device a deep learning approach which can solve the authorship
-verification for the danish company MaCom.
+verification for the Danish company MaCom.
 
 
 \begin{itemize}
