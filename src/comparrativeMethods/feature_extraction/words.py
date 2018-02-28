@@ -53,12 +53,13 @@ class WordFrequencyExtractor:
         words = find_word_count(text)
         most_common = words.most_common()
         most_common.sort(key=lambda x: (x[1], x[0]), reverse=True)
-        most_common = [key for (key, value) in most_common[0:self.size]]
+        self.max = len(most_common)
 
-        if len(most_common) != self.size:
+        if self.max < self.size:
             raise RuntimeError(
                 'Could not find ' + str(self.size) + ' different grams.')
 
+        most_common = [key for (key, value) in most_common[0:self.size]]
         self.words = most_common
 
     def extract(self, text):
@@ -143,12 +144,13 @@ class WordNGramsFeatureExtractor:
         grams = find_word_n_grams(text, self.n)
         most_common = grams.most_common()
         most_common.sort(key=lambda x: (x[1], x[0]), reverse=True)
-        most_common = [key for (key, value) in most_common[0:self.size]]
+        self.max = len(most_common)
 
-        if len(most_common) != self.size:
+        if self.max < self.size:
             raise RuntimeError(
                 'Could not find ' + str(self.size) + ' different grams.')
 
+        most_common = [key for (key, value) in most_common[0:self.size]]
         self.grams = most_common
 
     def extract(self, text):

@@ -5,7 +5,7 @@ from posTag import PosTagNGramsExtractor
 from words import WordFrequencyExtractor, WordNGramsFeatureExtractor
 import numpy as np
 from sklearn.preprocessing import scale
-from nltk.corpus import brown
+from nltk.corpus import europarl_raw
 
 
 # TODO: description.
@@ -24,8 +24,6 @@ class FeatureExtractor:
         # all files are concatenated.
         self.corpus = gen_corpus()
 
-        print(len(authors))
-
         # Create feature extractors for the types of features requested.
         self.extractors = []
         self.featureNames = []
@@ -36,6 +34,9 @@ class FeatureExtractor:
             extractor.fit(self.corpus)
             self.featureNames += extractor.chosen_features()
 
+            print('Char-%d-grams fitted, %d of total %d' %
+                  (n, size, extractor.max))
+
             self.extractors.append(extractor)
 
         # Handle special character n-grams.
@@ -43,6 +44,9 @@ class FeatureExtractor:
             extractor = SpecialCharacterNGramFeatureExtractor(n, size)
             extractor.fit(self.corpus)
             self.featureNames += extractor.chosen_features()
+
+            print('Special-%d-grams fitted, %d of total %d' %
+                  (n, size, extractor.max))
 
             self.extractors.append(extractor)
 
@@ -52,6 +56,9 @@ class FeatureExtractor:
             extractor.fit(self.corpus)
             self.featureNames += extractor.chosen_features()
 
+            print('Word Frequencies fitted, %d of total %d' %
+                  (word_frequencies, extractor.max))
+
             self.extractors.append(extractor)
 
         # Handle POS tagging n-grams.
@@ -60,6 +67,9 @@ class FeatureExtractor:
             extractor.fit(self.corpus)
             self.featureNames += extractor.chosen_features()
 
+            print('POS-Tag-%d-grams fitted, %d of total %d' %
+                  (n, size, extractor.max))
+
             self.extractors.append(extractor)
 
         # Handle word n-grams.
@@ -67,6 +77,9 @@ class FeatureExtractor:
             extractor = WordNGramsFeatureExtractor(n, size)
             extractor.fit(self.corpus)
             self.featureNames += extractor.chosen_features()
+
+            print('Word-%d-grams fitted, %d of total %d' %
+                  (n, size, extractor.max))
 
             self.extractors.append(extractor)
 
@@ -167,29 +180,64 @@ def analyze_input_folder(data_folder):
     return texts
 
 
+def check(inp, vals):
+    return inp in vals
+
+
 def gen_corpus():
-    if 'brown' not in os.listdir('.'):
-        paragraphs = brown.paras()
+    if 'corpus' not in os.listdir('.'):
+        chapters = europarl_raw.danish.chapters()
+        vals = ['%', ',', ':', ')', '(']
 
-        paragraph_txt = ''
-        for paragraph in paragraphs:
+        txt = ''
 
-            sentence_txt = ''
-            for sentence in paragraph:
+        for chapter in chapters:
 
-                word_txt = ''
-                for word in sentence:
-                    if word == '.' or word == ',' or word == '!'\
-                            or word == '?':
-                        word_txt = word_txt[:-1] + word + ' '
-                    else:
-                        word_txt += word + ' '
+            for sentence in chapter:
+                start = True
 
-                sentence_txt += word_txt
+                if len(sentence) == 1:
+                    txt += ' ' + sentence[0]
+                else:
+                    start = True
+                    skip = False
+                    for i, word in enumerate(sentence[:-1]):
 
-            paragraph_txt += sentence_txt + '\n\n'
+                        if skip:
+                            skip = False
+                            continue
 
-        open('brown', 'w').write(paragraph_txt)
-        return paragraph_txt
+                        if word in vals:
+                            continue
+
+                        if sentence[i-1] == '(':
+                            txt += ' ' + '(' + word
+                            continue
+
+                        if word == "\"":
+                            if start:
+                                txt += ' ' + "\"" + sentence[i+1]
+                                skip = True
+                            else:
+                                txt += "\""
+                            start = not start
+                            # import pdb; pdb.set_trace()
+                            continue
+
+                        if i+1 < len(sentence) and sentence[i+1] in vals:
+                            txt += ' ' + word + sentence[i+1]
+                            if sentence[i+1] == "\"":
+                                start = not start
+
+                            continue
+
+                        txt += ' ' + word
+
+                    txt += sentence[-1]
+
+            txt += '\n'
+
+        open('corpus', 'w').write(txt)
+        return txt
     else:
-        return open('brown', 'r').read()
+        return open('corpus', 'r').read()
