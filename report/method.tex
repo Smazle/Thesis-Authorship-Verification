@@ -114,3 +114,17 @@ embeddings will be learned while the network is training.
 \end{figure}
 
 The results of the network with the best validation accuracy is,
+
+TODO:
+\begin{itemize}
+    \item We would like to experiment more with different functions to combine
+        the features outputted from the convolutional layers. Currently we
+        concattenate them maybe we could combine them with an absolute
+        difference or something else.
+    \item We would like to experiment with convolutional filters that does not
+        look at 10 characters at a time. And maybe include both "longer" and
+        "shorter" filters which can learn from different levels.
+    \item We would like to not use a dense layer on the top of the feature
+        generation but a simple distance metric as some of the other articles
+        did.
+\end{itemize}
