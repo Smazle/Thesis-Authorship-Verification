@@ -8,9 +8,18 @@ class CSVWriter(Callback):
     def __init__(self, validation_generator, validation_steps, outfile):
         self.validation_generator = validation_generator
         self.validation_steps = validation_steps
+
         self.outfile = open(outfile, 'w')
-        self.outfile.write('accuracy,validation_accuracy,true_positives,' +
-            'true_negatives,false_positives,false_negatives\r\n')
+
+        self.outfile.write(
+            'epoch,' +
+            'accuracy,' +
+            'validation_accuracy,' +
+            'true_positives,' +
+            'true_negatives,' +
+            'false_positives,' +
+            'false_negatives\r\n')
+
         self.outfile.flush()
 
     def on_train_begin(self, logs={}):
@@ -45,7 +54,7 @@ class CSVWriter(Callback):
             fns += np.sum(np.logical_and(prediction != y, np.logical_not(y)))
 
         self.outfile.write('{},{},{},{},{},{}\r\n'.format(
-            logs['acc'], logs['val_acc'], tps, tns, fps, fns))
+            epoch, logs['acc'], logs['val_acc'], tps, tns, fps, fns))
         self.outfile.flush()
 
         return
