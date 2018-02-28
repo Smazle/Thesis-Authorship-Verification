@@ -44,12 +44,12 @@ The best performing configuration was the CNN-char.
 %on short texts. The reasoning behind the only focusing on short texts was the
 
 \cite{shrestha2017} experimented with classifying the author of short texts
-such as messages on social media, and emails. Their approach makes use of a
+such as messages on social media, and emails. Their approach made use of a
 \gls{CNN}. This \gls{CNN} only takes in a sequence of character-n-grams. The
 reasoning for this usage of only char-n-grams was the small amount of text
 in each sample. By passing these N-grams through a embedding layer, a 25\%
-dropout layer, 3 convolutional layers and then using max-over-time, they get
-a compact representation of the text. They hypothesize this representation
+dropout layer, 3 convolutional layers and then using max-over-time, they got
+a compact representation of the text. They hypothesized this representation
 captures the morphological, lexical and syntactic level of the supplied text.
 This compact representation is then parsed through a fully connected soft-max
 layer, to produce a probabilistic distribution over all authors. In order to
@@ -81,22 +81,19 @@ the author has towards words that have a similar meaning, such as "nice day"
 vs "wonderfull day". Using these thee biases, where the local contextual bias
 is derived from a numerical representation of a sequence of words, the network
 predicts the word most likely to fit into the local context. The second network
-looks and the character modality, and works in a somewhat similar fashion,
+looks at the character modality, and works in a somewhat similar fashion,
 but on the character level. It represents each word in the text as a set of
 character bigrams. After converting each of these bigrams to the numerical
-representation, it is fed through a fully connected sigmoid layers, establishing
+representation, it is fed through a fully connected sigmoid layer, establishing
 the relation between the bigrams and the word they come together to represent.
 The third and last network addresses the syntactic modality. This focuses on
 the \gls{POS}-tags of the text. By looking at the N neighboring \gls{POS}-tag
 bigrams, the network determines the most likely \gls{POS} of that word. All
 these three modality-network attempts to optimize the forward log probability of
 its' prediction. After training each of these models on the texts of a specific
-author, they are applied in turn to a two texts. The similarity of each of these
+author, they are applied in turn to two texts. The similarity of each of these
 two texts, is then computed using a simple cosine distance. When applying this
-approach to the training set consisting of english novels of 28,054 sentences,
-and 705,751 tokens, and english essays of 30,038 sentences and 676,966 tokens,
-and a testing set of novels containing 29,375 sequences and 653,981 tokens and
-essays of 119,202 sentences and 2,781,425 tokens, they got the best results
+to a set of set of long English novels and essays, they got the best results
 using only the combined lexical topical network, which produced an average
 accuracy of 0.7950.
 
@@ -120,6 +117,17 @@ distributions outputted by the softmax layer. From that cosine similarity they
 can get a binary output saying whether or not the texts are written by the same
 author or by different authors. \cite{qian:2018} obtained excellent results in
 the authorship attribution case on the Siamese network.
+
+\cite{hansen2014} and \cite{aalykke2016} both describe approaches very
+applicable to our specific scenario, as they use danish texts as the basis of
+their authorship-attribution task. \cite{aalykke2016} made use of a distance
+based approach. After extracting a set of features from the text, he made
+use of different distance measured, on which the attribution was based.
+\cite{hansen2014} on the other hand, started by extracting character-n-grams
+from the texts and used those as the features. Using these features, some
+5-fold cross validation, and weighting the features based on the submission 
+date of the text, they trained a SVM classifier, which ended up with an
+accuracy of 84\%
 
 TODO: Use Stamatos Survey to describe modern authorship verification/attribution
 in general.
