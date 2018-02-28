@@ -191,16 +191,17 @@ class MacomReader:
     def generate_problems(self):
 
         for author in self.authors:
-            same1 = random.choice(self.authors[author])
-            same2 = random.choice(self.authors[author])
+            other = set(self.authors.keys())
+            other.remove(author)
 
-            all_authors = set(self.authors.keys())
-            all_authors.remove(author)
+            for line in self.authors[author]:
+                same = random.choice(self.authors[author])
 
-            different = random.choice(self.authors[random.choice(list(all_authors))])
+                different = random.choice(self.authors
+                                          [random.choice(list(other))])
 
-            self.problems.append((same1, same2, 1))
-            self.problems.append((same1, different, 0))
+                self.problems.append((line, same, 1))
+                self.problems.append((line, different, 0))
 
         random.shuffle(self.problems)
 
@@ -238,9 +239,8 @@ class MacomReader:
                 y = np.zeros((self.batch_size, 2))
 
             for (i, (line1, line2, label)) in enumerate(batch):
-                (text1, text2) = (self.read_line(line1, f), self.read_line(line2, f))
-                X_known[i] = text1
-                X_unknown[i] = text2
+                X_known[i] = self.read_line(line1, f)
+                X_unknown[i] = self.read_line(line2, f)
 
                 if label == 0:
                     y[i] = np.array([1, 0])
@@ -263,8 +263,5 @@ if __name__ == '__main__':
     )
 
     with reader as generator:
-        print(len(generator.vocabulary_above_cutoff))
-        print(generator.vocabulary_above_cutoff)
-        print(len(generator.vocabulary_below_cutoff))
-        print(generator.vocabulary_below_cutoff)
-        print(generator.read_line(10))
+        print(len(reader.training_problems))
+        print(len(reader.validation_problems))
