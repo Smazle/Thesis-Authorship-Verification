@@ -1,7 +1,13 @@
 \section{Related Work} \label{sec:related_work}
 %The problem of authorship verification
 
-Our work in this thesis is inspired by the previous work of several researchers.
+In this section we will describe previous work in authorship verification and
+authorship attribution with a special focus on methods that use deep learning.
+
+
+% TODO: Add description of general CNN based on some article.
+\subsection{Neural Network Based Authorship Verification/Attribution}
+
 \cite{DBLP:journals/corr/RuderGB16c} shows a Neural Network for authorship
 attribution. Authorship attribution is closely connected to authorship
 verification as every authorship attribution problem can be transformed into a
@@ -39,9 +45,6 @@ used networks with the following channels
 \end{description}
 
 The best performing configuration was the CNN-char.
-
-%The method implemented by \cite{shrestha2017}, was their attempt at \gls{AA}
-%on short texts. The reasoning behind the only focusing on short texts was the
 
 \cite{shrestha2017} experimented with classifying the author of short texts
 such as messages on social media, and emails. Their approach made use of a
@@ -97,9 +100,44 @@ to a set of set of long English novels and essays, they got the best results
 using only the combined lexical topical network, which produced an average
 accuracy of 0.7950.
 
-\cite{qian:2018} performed a study of different deep learning methods
-for authorship attribution. They used both a \gls{GRU} network
-and a \gls{LSTM} network. They implement 4 different networks,
+
+\subsection{Siamese Neural Networks}
+
+Siamese Neural Networks are networks that shares weights across multiple parts
+of the network. Siamese Networks were first introduced by \cite{NIPS1993_769}
+for signature verification. The idea behind Siamese Networks is that the parts
+of the networks that share weights will give similar output for similar input.
+That makes Siamese Networks very good at comparing objects. \cite{NIPS1993_769}
+used a device for getting data from the signatures which were able to give $x$
+and $y$ coordinates for a pens position in different time steps. Their network
+were set up to take two inputs. Each input was a series of feature extractions
+from 200 timesteps. The features extracted were for example if the pen were on
+the board or in the air at the time step. The time input were given to the
+Siamese Network which used convolutions to look at multiple timesteps at a time.
+After the convolutions the two inputs were reduced to a higher level 18 element
+long feature vector. The output of the Siamese Network is therefore 2 feature
+vectors representing the two signatures given as input. \cite{NIPS1993_769} then
+used a distance function on the two feature vectors and a threshold to verify
+whether or not the signatures were written by the same person.
+
+We can see that it is natural to use Siamese networks for verification tasks.
+The network takes two signals as input and will output features extracted from
+the two signals. The features will be similar if the signals are similar since
+the same function is computed by both parts of the network.
+
+Siamese networks has also been used by \cite{Koch2015SiameseNN} for one-shot
+image classification. One-shot classification is a task that humans are very
+good at but machines tend to be very bad at. If you show a single picture to a
+human of a camel he/she will be able to almost instantly classify images into
+images containing camels and images that don't. \cite{Koch2015SiameseNN} trained
+a Siamese Network to learn to compare images and say whether or not they contain
+the same object. Then when presented with a single instance that instance can be
+given as one of the inputs to the Siamese Network. The network is then able to
+compare the single sample given to any other image.
+
+Most relevant for this thesis \cite{qian:2018} performed a study of different
+deep learning methods for authorship attribution. They used both a \gls{GRU}
+network and a \gls{LSTM} network. They implement 4 different networks,
 sentence-level-\gls{GRU}, article-level-\gls{GRU}, article-level-\gls{LSTM}
 and article-level-Siamese-network. Of those 4 networks the Siamese network is
 of special interest to our project. The Siamese network solves the authorship
@@ -118,6 +156,9 @@ can get a binary output saying whether or not the texts are written by the same
 author or by different authors. \cite{qian:2018} obtained excellent results in
 the authorship attribution case on the Siamese network.
 
+
+\subsection{Other Previous Work in Authorship Verification}
+
 \cite{hansen2014} and \cite{aalykke2016} both describe approaches very
 applicable to our specific scenario, as they use danish texts as the basis of
 their authorship-attribution task. \cite{aalykke2016} made use of a distance
@@ -131,3 +172,6 @@ accuracy of 84\%
 
 TODO: Use Stamatos Survey to describe modern authorship verification/attribution
 in general.
+
+% TODO: Add subsection explaining our choices based on this related work
+% section.
