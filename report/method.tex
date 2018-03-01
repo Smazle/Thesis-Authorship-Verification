@@ -94,22 +94,8 @@ to the same dense vector. The embedding is trainable meaning that better
 embeddings will be learned while the network is training.
 
 \begin{figure}[htb]
-\begin{lstlisting}
-     |Text 1|          |Text 2|
-        |                 |
-        |                 |
-      | Convolutional Layer(s) |
-          |                 |
-          |                 |
-  | GlobalMaxPool | | GlobalMaxPool |
-          |                 |
-          |                 |
-
-    |     Dense Layer(s)        |
-                |
-                |
-| Same/Different Author Probabilities |
-\end{lstlisting}
+\centering
+\includegraphics[scale=.4]{./graphs/method/siamese.png}
 \caption{Don't worry, this will be prettier later. Shows the structure of our
     first Siamese Neural Network implementation.}
 \label{fig:network_one}
@@ -117,15 +103,15 @@ embeddings will be learned while the network is training.
 
 The results of the network with the best validation accuracy is,
 
-validation accuracy 0.6868421052631579
+Validation accuracy 0.6868421052631579
 
-validation true positives 269
+Validation true positives 269
 
-validation true negatives 253
+Validation true negatives 253
 
-validation false positives 109
+Validation false positives 109
 
-validation false negatives 129
+Validation false negatives 129
 
 TODO:
 \begin{itemize}
