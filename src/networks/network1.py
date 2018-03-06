@@ -7,17 +7,9 @@ from keras.models import Model
 from ..preprocessing import MacomReader
 from keras.utils import plot_model
 import argparse
-import resource
 from ..util import CSVWriter
 from keras.callbacks import ModelCheckpoint
 
-
-gb4 = 4000000000  # 4 GB in bytes.
-gb6 = 6000000000  # 6 GB in bytes.
-
-# Limit memory usage of the script so we don't crash a computer.
-soft, hard = resource.getrlimit(resource.RLIMIT_AS)
-resource.setrlimit(resource.RLIMIT_AS, (gb6, hard))
 
 # Parse arguments.
 parser = argparse.ArgumentParser(
@@ -50,9 +42,8 @@ with reader as generator:
 
     full_input = Concatenate()([repr_known, repr_unknown])
 
-    dense1 = Dense(500, activation='relu')(full_input)
-    dense2 = Dense(500, activation='relu')(dense1)
-    output = Dense(2, activation='softmax')(dense2)
+    dense = Dense(500, activation='relu')(full_input)
+    output = Dense(2, activation='softmax')(dense)
 
     model = Model(inputs=[known_in, unknown_in], outputs=output)
     model.compile(optimizer='adam',
