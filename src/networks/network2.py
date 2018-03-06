@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from keras.layers import Dense, Convolution1D, GlobalMaxPooling1D, Input,\
-    Concatenate, Embedding, Dropout
+    Concatenate, Embedding, Dropout, merge
 from keras.models import Model
 from ..preprocessing import MacomReader
 import argparse
@@ -68,10 +68,17 @@ with reader as generator:
     repr_unknown2 = GlobalMaxPooling1D(name='unknown_repr_4')(
         conv4(unknown_embed))
 
-    full_input = Concatenate()(
-        [repr_known1, repr_known2, repr_unknown1, repr_unknown2])
+    repr_known = Concatenate()([repr_known1, repr_known2])
+    repr_unknown = Concatenate()([repr_unknown1, repr_unknown2])
 
-    dense1 = Dense(500, activation='relu')(full_input)
+    abs_diff = merge(
+        inputs=[repr_known, repr_unknown],
+        mode=lambda x: abs(x[0] - x[1]),
+        output_shape=lambda x: x[0],
+        name='absolute_difference'
+    )
+
+    dense1 = Dense(500, activation='relu')(abs_diff)
     dense2 = Dense(500, activation='relu')(dense1)
 
     pruned = Dropout(0.3)(dense2)
