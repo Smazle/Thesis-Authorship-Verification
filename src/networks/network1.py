@@ -48,11 +48,11 @@ with reader as generator:
 
     full_input = Concatenate()([repr_known, repr_unknown])
 
-    dense = Dense(500, activation='relu')(full_input)
-    dense = Dense(500, activation='relu')(full_input)
-    dense = Dense(2, activation='softmax')(dense)
+    dense1 = Dense(500, activation='relu')(full_input)
+    dense2 = Dense(500, activation='relu')(dense1)
+    output = Dense(2, activation='softmax')(dense2)
 
-    model = Model(inputs=[known_in, unknown_in], outputs=dense)
+    model = Model(inputs=[known_in, unknown_in], outputs=output)
     model.compile(optimizer='adam',
                   loss='categorical_crossentropy',
                   metrics=['accuracy'])
