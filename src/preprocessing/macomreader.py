@@ -132,17 +132,17 @@ class MacomReader:
         self.f_val.close()
 
     def generate_vocabulary_map(self):
-        self.f.seek(self.line_offset[1])
+        for author in self.authors:
+            for line in self.authors[author]:
+                self.f.seek(self.line_offset[line])
+                text = self.f.readline()
+                decoded = unescape(text, self.newline, self.semicolon)
 
-        for line in self.f:
-            author, text = line.split(';')
-            decoded = unescape(text, self.newline, self.semicolon)
+                self.vocabulary = self.vocabulary.union(decoded)
+                self.vocabulary_usage = self.vocabulary_usage + Counter(decoded)
 
-            self.vocabulary = self.vocabulary.union(decoded)
-            self.vocabulary_usage = self.vocabulary_usage + Counter(decoded)
-
-            if len(decoded) > self.max_len:
-                self.max_len = len(decoded)
+                if len(decoded) > self.max_len:
+                    self.max_len = len(decoded)
 
         total_chars = sum(self.vocabulary_usage.values())
         self.vocabulary_frequencies = {k: v / total_chars for k, v in
