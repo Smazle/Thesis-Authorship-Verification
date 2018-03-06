@@ -1,0 +1,4 @@
+graphviz
+python3-pip
+libicu-dev
+python3-icu
