@@ -2,21 +2,22 @@
 # -*- coding: utf-8 -*-
 import random
 import sys
-from feature_extractor import analyze_input_folder, FeatureExtractor
+from feature_extractor import FeatureExtractor
+import csv
 
-
+skip = True
 random.seed = 7
 
 dataFolder = sys.argv[1]
 outfile = sys.argv[2]
 
-
-authors = analyze_input_folder(dataFolder)
+csvfile = open(dataFolder, 'r', encoding='utf-8')
+authors = csv.reader(csvfile, delimiter=';')
+next(authors)
 
 
 N = []
 N.extend(range(2, 11))
-N.extend(range(12, 22, 2))
 # N.extend(range(20, 40, 10))
 # N.extend(range(40, 120, 20))
 
@@ -63,6 +64,8 @@ feature_extractor = FeatureExtractor(authors,
                                      special_character_grams=SPEC,
                                      word_grams=WORD,
                                      word_frequencies=500,
-                                     character_grams=CHAR)
+                                     character_grams=CHAR,
+                                     skip=skip)
 
 feature_extractor.extract(outfile)
+csvfile.close()
