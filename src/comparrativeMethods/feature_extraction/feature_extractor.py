@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os
 from character import CharacterNGramFeatureExtractor,\
     SpecialCharacterNGramFeatureExtractor
@@ -32,7 +33,7 @@ class FeatureExtractor:
         for (n, size) in character_grams:
             extractor = CharacterNGramFeatureExtractor(n, size)
             extractor.fit(self.corpus)
-            self.featureNames += extractor.chosen_features()
+            self.featureNames += ['Char ' + str(n)] * size
 
             print('Char-%d-grams fitted, %d of total %d' %
                   (n, size, extractor.max))
@@ -43,7 +44,7 @@ class FeatureExtractor:
         for (n, size) in special_character_grams:
             extractor = SpecialCharacterNGramFeatureExtractor(n, size)
             extractor.fit(self.corpus)
-            self.featureNames += extractor.chosen_features()
+            self.featureNames += ['Spec ' + str(n)] * size
 
             print('Special-%d-grams fitted, %d of total %d' %
                   (n, size, extractor.max))
@@ -54,7 +55,7 @@ class FeatureExtractor:
         if word_frequencies != 0:
             extractor = WordFrequencyExtractor(word_frequencies)
             extractor.fit(self.corpus)
-            self.featureNames += extractor.chosen_features()
+            self.featureNames += ['Freq'] * word_frequencies
 
             print('Word Frequencies fitted, %d of total %d' %
                   (word_frequencies, extractor.max))
@@ -65,7 +66,7 @@ class FeatureExtractor:
         for (n, size) in postag_grams:
             extractor = PosTagNGramsExtractor(n, size)
             extractor.fit(self.corpus)
-            self.featureNames += extractor.chosen_features()
+            self.featureNames += ['Pos ' + str(n)] * size
 
             print('POS-Tag-%d-grams fitted, %d of total %d' %
                   (n, size, extractor.max))
@@ -76,17 +77,22 @@ class FeatureExtractor:
         for (n, size) in word_grams:
             extractor = WordNGramsFeatureExtractor(n, size)
             extractor.fit(self.corpus)
-            self.featureNames += extractor.chosen_features()
+            self.featureNames += ['Word ' + str(n)] * size
 
             print('Word-%d-grams fitted, %d of total %d' %
                   (n, size, extractor.max))
 
             self.extractors.append(extractor)
 
+        if len(self.featureNames) > 0:
+            open('Features', 'w').write(';'.join(self.featureNames))
+
     def extract(self, outfile, master_file=None):
         # Generate features for each author.
         author_features = []
-        for author in self.authors:
+        q = len(self.authors)
+        for i, author in enumerate(self.authors):
+            print(str(i) + '/' + str(q))
 
             for known in author.texts:
                 known_features = self.extract_features(known)
@@ -100,9 +106,6 @@ class FeatureExtractor:
             author_features[:, :-1] = scale(author_features[:, :-1], axis=0)
 
         np.savetxt(outfile, author_features)
-
-        if self.feature_header is not None:
-            open(self.feature_header, 'w').write('ø'.join(self.featureNames))
 
     def extract_features(self, text):
         features = []
@@ -132,10 +135,17 @@ class FeatureExtractor:
 class Author:
     def __init__(self, authorID, texts):
         self.id = authorID
-        self.texts = [texts.replace('$NL$', '\n').replace('$SC$', ';')]
+        if type(texts) is list:
+            self.texts = [a.replace('$NL$', '\n').replace(
+                '$SC$', ';') for a in texts]
+        else:
+            self.texts = [texts.replace('$NL$', '\n').replace('$SC$', ';')]
 
     def __str__(self):
         return 'Author: ' + self.id
+
+    def add(self, txt):
+        self.texts.append(txt.replace('$NL$', '\n').replace('$SC$', ';'))
 
 
 # TODO: description.
@@ -166,18 +176,28 @@ class Author:
 #    return authors
 
 
-def analyze_input_folder(data_folder):
-    files = (x for x in os.listdir(data_folder) if '.csv' in x)
+def analyze_input_folder(data):
+    if '.csv' in data:
+        files = [data]
+    else:
+        files = (x for x in os.listdir(data) if '.csv' in x)
 
-    texts = []
+    authors = []
 
+    prev = '-1'
     for f in files:
-        authors = [Author(int(x), y) for x, y
-                   in np.loadtxt(data_folder + '/' + f,
-                                 delimiter=';', skiprows=1, dtype=str)]
-        texts = np.concatenate((texts, authors))
+        data = np.loadtxt(data + '/' + f,
+                          delimiter=';', skiprows=1, dtype=str)
+        data = sorted(data, key=lambda x: int(x[0]))
 
-    return texts
+        for x, y in data:
+            if prev != x:
+                authors.append(Author(int(x), y))
+                prev = x
+            else:
+                authors[-1].add(y)
+
+    return authors
 
 
 def check(inp, vals):
