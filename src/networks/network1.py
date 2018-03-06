@@ -1,9 +1,11 @@
 #!/usr/bin/python3
+# -*- coding: utf-8 -*-
 
 from keras.layers import Dense, Convolution1D, GlobalMaxPooling1D, Input,\
     Concatenate, Embedding
 from keras.models import Model
 from ..preprocessing import MacomReader
+from keras.utils import plot_model
 import argparse
 import resource
 from ..util import CSVWriter
@@ -56,6 +58,7 @@ with reader as generator:
     model.compile(optimizer='adam',
                   loss='categorical_crossentropy',
                   metrics=['accuracy'])
+    plot_model(model, to_file='siamese.png')
 
     steps_n = len(generator.training_problems) / generator.batch_size
     val_steps_n = len(generator.validation_problems) / generator.batch_size
