@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 import random
 import sys
-from feature_extractor import analyze_input_folder, FeatureExtractor
+from feature_extractor import FeatureExtractor
+import csv
 
 
 random.seed = 7
@@ -10,8 +11,9 @@ random.seed = 7
 dataFolder = sys.argv[1]
 outfile = sys.argv[2]
 
-
-authors = analyze_input_folder(dataFolder)
+csvfile = open(dataFolder)
+authors = csv.reader(csvfile, delimiter=';')
+next(authors)
 
 
 N = []
@@ -66,3 +68,4 @@ feature_extractor = FeatureExtractor(authors,
                                      character_grams=CHAR)
 
 feature_extractor.extract(outfile)
+csvfile.close()

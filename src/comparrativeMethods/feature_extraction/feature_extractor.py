@@ -7,6 +7,8 @@ from words import WordFrequencyExtractor, WordNGramsFeatureExtractor
 import numpy as np
 from sklearn.preprocessing import scale
 from nltk.corpus import europarl_raw
+import pickle
+import re
 
 
 # TODO: description.
@@ -17,8 +19,6 @@ class FeatureExtractor:
             word_frequencies=0, postag_grams=[], word_grams=[],
             normalize=True, feature_header=None):
 
-        print('Author Count: %d' % len(authors))
-        print('Text Count: %d' % sum([len(x.texts) for x in authors]))
         self.authors = authors
         self.normalize = normalize
         self.feature_header = feature_header
@@ -86,21 +86,21 @@ class FeatureExtractor:
 
             self.extractors.append(extractor)
 
+        pickle.dump(self.extractors, open('Extractors', 'wb'))
+
         if len(self.featureNames) > 0:
             open('Features', 'w').write(';'.join(self.featureNames))
 
     def extract(self, outfile, master_file=None):
         # Generate features for each author.
         author_features = []
-        q = len(self.authors)
-        for i, author in enumerate(self.authors):
-            print(str(i) + '/' + str(q))
 
-            for known in author.texts:
-                known_features = self.extract_features(known)
+        for i, [author, text] in enumerate(self.authors):
+            text = clean(text)
+            known_features = self.extract_features(text)
 
-                features = known_features + [author.id]
-                author_features.append(features)
+            features = known_features + [int(author)]
+            author_features.append(features)
 
         # Write features to file.
         author_features = np.array(author_features)
@@ -117,6 +117,11 @@ class FeatureExtractor:
 
         return features
 
+
+def clean(txt):
+    txt = re.sub(r'\$NL\$', '\n', txt)
+    txt = re.sub(r'\$SC\$', ';', txt)
+    return txt
 
 # TODO: description.
 # class Author:
