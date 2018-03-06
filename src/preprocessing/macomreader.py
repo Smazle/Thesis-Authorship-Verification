@@ -182,6 +182,12 @@ class MacomReader:
 
         for i, line in enumerate(self.f):
             author, text = line.split(';')
+
+            if len(text) > 30000:
+                print('WARNING: Skipping text longer than 30,000 characters '
+                    + 'on line {}'.format(i))
+                continue
+
             try:
                 self.authors[author].append(i + 1)
             except KeyError:
