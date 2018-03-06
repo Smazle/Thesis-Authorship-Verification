@@ -39,29 +39,18 @@ will be able to determine if the author it was trained on, is in fact the author
 of this new text as well.
 
 
-\subsection{Siamese Neural Network}
+\subsection{Siamese Neural Network - Iteration 1}
 
-A Siamese Neural Network is a network architecture that shares weights across
-multiple parts of the network. They have previously been used successfully for
-comparison of objects in images by \cite{Koch2015SiameseNN}. They were
-originally introduced by \cite{NIPS1993_769} who used them for verification of
-signatures. \cite{NIPS1993_769} used the network to verify the authorship of
-signatures which is very similar to what we are doing in this thesis. The
-networks were supposed to learn how to extract features from the signatures and
-a distance function was used on top of the networks to compare the computed
-features. As descried earlier \cite{qian:2018} used a Siamese network for
-authorship attribution but his network is also closely related to the authorship
-verification case.
-
-Our idea for our first network architecture was to use a similar architecture as
-the ones above to extract features from a text. We start by preprocessing our
-input data. The input consists of a set of utf-8 encoded texts with an
-associated author id. To limit the number of different characters our network
-has to deal with we map all characters that occur with a frequency of less than
-$\frac{1}{100,000}$ to a garbage character we define. Since our network can only
-handle inputs of the same length we pad all texts to have the length of the
-longest text with another garbage character. We map all other characters to the
-numbers 1 to the size of the character set.
+Our idea for our first network architecture was to use a similar architecture
+as the ones used in \cite{Koch2015SiameseNN}, \cite{NIPS1993_769} and
+\cite{qian:2018}. We start by preprocessing our input data. The input consists
+of a set of utf-8 encoded texts with an associated author id. To limit the
+number of different characters our network has to deal with we map all
+characters that occur with a frequency of less than $\frac{1}{100,000}$ to a
+garbage character we define. Since our network can only handle inputs of the
+same length we pad all texts to have the length of the longest text with another
+garbage character. We map all other characters to the numbers 1 to the size of
+the character set.
 
 Now we have a set of vectors of numbers of the same size each associated with an
 author id. To construct an authorship verification dataset we looped through all
@@ -73,19 +62,19 @@ split the list of problems into two sets. A validation set consisting of 20\% of
 the problems and a training set consisting of 80\% of the problems.
 
 The network we used to try and solve the problem is shown in Figure
-\ref{fig:network_one}. The Siamese part of the network is the Convolutional
+\ref{fig:network_1}. The Siamese part of the network is the Convolutional
 Layer. We used 1000 filters of size 10. That means that 1000 different features
 are supposed to be learned by the network and each feature can use a local
 context of 10 characters to extract a feature. After the convolution we have a
 max-over-time pooling layer. The layer takes the maximum value of each feature
 such that we have 1000 features from each text. We then have a normal dense
 neural network on top of that which are given the features of both texts. The
-dense network is then supposed to learn how to compare the features from the
-two texts. We have 2 dense hidden layers each with 500 neurons. At the end we
-have a output layer with two outputs. The activation function for all layers
-except the last one is the rectified linear unit and the activation function of
-the last layer is the softmax function. The output of the network is a
-probability distribution over the two classes.
+dense network is then supposed to learn how to compare the features from the two
+texts. We have 2 dense hidden layers each with 500 neurons. At the end we have
+a output layer with two outputs. The activation function for all layers except
+the last one is the rectified linear unit and the activation function of the
+last layer is the softmax function. The output of the network is a probability
+distribution over the two classes.
 
 The input to the network first goes through an embedding layer. The embedding
 layer transforms integers into dense vectors of floating point numbers. The
@@ -94,16 +83,25 @@ to the same dense vector. The embedding is trainable meaning that better
 embeddings will be learned while the network is training.
 
 \begin{figure}[htb]
-\centering
-\includegraphics[scale=.4]{./graphs/method/siamese.png}
-\caption{Don't worry, this will be prettier later. Shows the structure of our
-    first Siamese Neural Network implementation.}
-\label{fig:network_one}
+    \centering
+    \includegraphics[scale=.4]{./graphs/method/siamese.png}
+    \caption{Illustrate the structure of our first Siamese Neural Network
+        Architecture.}
+    \label{fig:network_1}
 \end{figure}
 
-The results of the network with the best validation accuracy is,
+The network obtained a validation accuracy of 0.68684. We have shown both the
+training and validation accuracies in the different epochs in Figure
+\ref{fig:network1_accuracies}. In that plot we can see that the network very
+quickly overfits the training data and no longer learns anything general.
 
-Validation accuracy 0.6868421052631579
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width=0.5\textwidth]{./graphs/method/network_1_accuracies.png}
+    \caption{Training and validation accuracies in the different epochs of the
+        networks execution.}
+    \label{fig:network1_accuracies}
+\end{figure}
 
 Validation true positives 269
 
