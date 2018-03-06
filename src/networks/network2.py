@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from keras.layers import Dense, Convolution1D, GlobalMaxPooling1D, Input,\
-    Concatenate, Embedding
+    Concatenate, Embedding, Dropout, merge
 from keras.models import Model
 from ..preprocessing import MacomReader
 import argparse
@@ -43,22 +43,47 @@ reader = MacomReader(
 with reader as generator:
     inshape = (generator.max_len, )
 
-    known_in = Input(shape=inshape)
-    unknown_in = Input(shape=inshape)
+    known_in = Input(shape=inshape, name='known_input')
+    unknown_in = Input(shape=inshape, name='unknown_input')
 
     embedding = Embedding(len(generator.vocabulary_above_cutoff) + 2, 5,
                           input_length=generator.max_len)
 
-    conv = Convolution1D(filters=1000, kernel_size=10, strides=1,
-                         activation='relu')
+    known_embed = embedding(known_in)
+    unknown_embed = embedding(unknown_in)
 
-    repr_known = GlobalMaxPooling1D()(conv(embedding(known_in)))
-    repr_unknown = GlobalMaxPooling1D()(conv(embedding(unknown_in)))
+    conv8 = Convolution1D(filters=500, kernel_size=8, strides=1,
+                          activation='relu', name='convolutional_8')
 
-    full_input = Concatenate()([repr_known, repr_unknown])
+    conv4 = Convolution1D(filters=500, kernel_size=4, strides=1,
+                          activation='relu', name='convolutional_4')
 
-    dense = Dense(500, activation='relu')(full_input)
-    output = Dense(2, activation='softmax')(dense)
+    repr_known1 = GlobalMaxPooling1D(name='known_repr_8')(
+        conv8(known_embed))
+    repr_unknown1 = GlobalMaxPooling1D(name='unknown_repr_8')(
+        conv8(unknown_embed))
+
+    repr_known2 = GlobalMaxPooling1D(name='known_repr_4')(
+        conv4(known_embed))
+    repr_unknown2 = GlobalMaxPooling1D(name='unknown_repr_4')(
+        conv4(unknown_embed))
+
+    repr_known = Concatenate()([repr_known1, repr_known2])
+    repr_unknown = Concatenate()([repr_unknown1, repr_unknown2])
+
+    abs_diff = merge(
+        inputs=[repr_known, repr_unknown],
+        mode=lambda x: abs(x[0] - x[1]),
+        output_shape=lambda x: x[0],
+        name='absolute_difference'
+    )
+
+    dense1 = Dense(500, activation='relu')(abs_diff)
+    dense2 = Dense(500, activation='relu')(dense1)
+
+    pruned = Dropout(0.3)(dense2)
+
+    output = Dense(2, activation='softmax', name='output')(pruned)
 
     model = Model(inputs=[known_in, unknown_in], outputs=output)
     model.compile(optimizer='adam',
@@ -89,7 +114,6 @@ with reader as generator:
     if args.graph is not None:
         plot_model(model, to_file=args.graph)
 
-    # Train model.
     model.fit_generator(
         generator=generator.generate_training(),
         steps_per_epoch=steps_n,
