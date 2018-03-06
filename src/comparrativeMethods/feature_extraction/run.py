@@ -11,7 +11,7 @@ random.seed = 7
 dataFolder = sys.argv[1]
 outfile = sys.argv[2]
 
-csvfile = open(dataFolder)
+csvfile = open(dataFolder, "r", encoding="utf-8")
 authors = csv.reader(csvfile, delimiter=';')
 next(authors)
 
@@ -65,7 +65,8 @@ feature_extractor = FeatureExtractor(authors,
                                      special_character_grams=SPEC,
                                      word_grams=WORD,
                                      word_frequencies=500,
-                                     character_grams=CHAR)
+                                     character_grams=CHAR,
+                                     skip=True)
 
 feature_extractor.extract(outfile)
 csvfile.close()
