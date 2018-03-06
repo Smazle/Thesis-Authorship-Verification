@@ -17,6 +17,8 @@ class FeatureExtractor:
             word_frequencies=0, postag_grams=[], word_grams=[],
             normalize=True, feature_header=None):
 
+        print('Author Count: %d' % len(authors))
+        print('Text Count: %d' % sum([len(x.texts) for x in authors]))
         self.authors = authors
         self.normalize = normalize
         self.feature_header = feature_header
@@ -177,25 +179,18 @@ class Author:
 
 
 def analyze_input_folder(data):
-    if '.csv' in data:
-        files = [data]
-    else:
-        files = (x for x in os.listdir(data) if '.csv' in x)
-
     authors = []
 
-    prev = '-1'
-    for f in files:
-        data = np.loadtxt(data + '/' + f,
-                          delimiter=';', skiprows=1, dtype=str)
-        data = sorted(data, key=lambda x: int(x[0]))
+    data = np.loadtxt(data, delimiter=';', skiprows=1, dtype=str)
+    data = sorted(data, key=lambda x: int(x[0]))
 
-        for x, y in data:
-            if prev != x:
-                authors.append(Author(int(x), y))
-                prev = x
-            else:
-                authors[-1].add(y)
+    prev = '-1'
+    for x, y in data:
+        if prev != x:
+            authors.append(Author(int(x), y))
+            prev = x
+        else:
+            authors[-1].add(y)
 
     return authors
 

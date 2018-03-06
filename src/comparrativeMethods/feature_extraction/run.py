@@ -11,7 +11,8 @@ dataFolder = sys.argv[1]
 outfile = sys.argv[2]
 
 
-authors = analyze_input_folder(dataFolder)[:3]
+authors = analyze_input_folder(dataFolder)
+
 
 N = []
 N.extend(range(2, 11))
@@ -20,9 +21,6 @@ N.extend(range(12, 22, 2))
 # N.extend(range(40, 120, 20))
 
 S = 500
-
-print(N)
-print(S)
 
 POS = 219
 SPEC = 524
