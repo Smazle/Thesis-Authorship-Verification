@@ -5,20 +5,19 @@ import sys
 from feature_extractor import FeatureExtractor
 import csv
 
-
+skip = True
 random.seed = 7
 
 dataFolder = sys.argv[1]
 outfile = sys.argv[2]
 
-csvfile = open(dataFolder, "r", encoding="utf-8")
+csvfile = open(dataFolder, 'r', encoding='utf-8')
 authors = csv.reader(csvfile, delimiter=';')
 next(authors)
 
 
 N = []
 N.extend(range(2, 11))
-N.extend(range(12, 22, 2))
 # N.extend(range(20, 40, 10))
 # N.extend(range(40, 120, 20))
 
@@ -66,7 +65,7 @@ feature_extractor = FeatureExtractor(authors,
                                      word_grams=WORD,
                                      word_frequencies=500,
                                      character_grams=CHAR,
-                                     skip=True)
+                                     skip=skip)
 
 feature_extractor.extract(outfile)
 csvfile.close()

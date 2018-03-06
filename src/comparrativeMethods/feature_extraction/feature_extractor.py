@@ -37,54 +37,54 @@ class FeatureExtractor:
                 extractor = CharacterNGramFeatureExtractor(n, size)
                 extractor.fit(self.corpus)
                 self.featureNames += ['Char ' + str(n)] * size
-    
+
                 print('Char-%d-grams fitted, %d of total %d' %
                       (n, size, extractor.max))
-    
+
                 self.extractors.append(extractor)
-    
+
             # Handle special character n-grams.
             for (n, size) in special_character_grams:
                 extractor = SpecialCharacterNGramFeatureExtractor(n, size)
                 extractor.fit(self.corpus)
                 self.featureNames += ['Spec ' + str(n)] * size
-    
+
                 print('Special-%d-grams fitted, %d of total %d' %
                       (n, size, extractor.max))
-    
+
                 self.extractors.append(extractor)
-    
+
             # Handle word frequencies.
             if word_frequencies != 0:
                 extractor = WordFrequencyExtractor(word_frequencies)
                 extractor.fit(self.corpus)
                 self.featureNames += ['Freq'] * word_frequencies
-    
+
                 print('Word Frequencies fitted, %d of total %d' %
                       (word_frequencies, extractor.max))
-    
+
                 self.extractors.append(extractor)
-    
+
             # Handle POS tagging n-grams.
             for (n, size) in postag_grams:
                 extractor = PosTagNGramsExtractor(n, size)
                 extractor.fit(self.corpus)
                 self.featureNames += ['Pos ' + str(n)] * size
-    
+
                 print('POS-Tag-%d-grams fitted, %d of total %d' %
                       (n, size, extractor.max))
-    
+
                 self.extractors.append(extractor)
-    
+
             # Handle word n-grams.
             for (n, size) in word_grams:
                 extractor = WordNGramsFeatureExtractor(n, size)
                 extractor.fit(self.corpus)
                 self.featureNames += ['Word ' + str(n)] * size
-    
+
                 print('Word-%d-grams fitted, %d of total %d' %
                       (n, size, extractor.max))
-    
+
                 self.extractors.append(extractor)
 
             if len(self.featureNames) > 0:
@@ -94,9 +94,7 @@ class FeatureExtractor:
 
         else:
 
-            self.extractors = pickle.load(open("Extractors", "rb"))    
-
-        
+            self.extractors = pickle.load(open('Extractors', 'rb'))
 
     def extract(self, outfile, master_file=None):
         # Generate features for each author.
@@ -104,8 +102,12 @@ class FeatureExtractor:
 
         for i, [author, text] in enumerate(self.authors):
             text = clean(text)
-            print("Text", i)
-            known_features = self.extract_features(text)
+            try:
+                known_features = self.extract_features(text)
+                print('Text', i)
+            except ZeroDivisionError:
+                print('Text', i, 'Skipped')
+                continue
 
             features = known_features + [int(author)]
             author_features.append(features)
