@@ -185,13 +185,12 @@ class MacomReader:
 
             if len(text) > 30000:
                 print('WARNING: Skipping text longer than 30,000 characters '
-                    + 'on line {}'.format(i))
-                continue
-
-            try:
-                self.authors[author].append(i + 1)
-            except KeyError:
-                self.authors[author] = [i + 1]
+                    + 'on line {}'.format(i + 1))
+            else:
+                try:
+                    self.authors[author].append(i + 1)
+                except KeyError:
+                    self.authors[author] = [i + 1]
 
     # TODO: Make sure the same file is not returned for the same author.
     def generate_problems(self):
