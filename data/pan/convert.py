@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 
 import numpy as np
 import os
@@ -22,7 +23,7 @@ for pan in os.listdir('.'):
 
                         output.append([str(author), txt])
 
-            author += 1
+                author += 1
 
 output = np.array(output)
 np.savetxt('formattedPan.csv', output,
