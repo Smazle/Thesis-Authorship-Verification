@@ -37,7 +37,8 @@ reader = MacomReader(
     args.datafile,
     batch_size=2,
     encoding='numbers',
-    vocabulary_frequency_cutoff=1 / 100000
+    vocabulary_frequency_cutoff=1 / 100000,
+    validation_split=0.95
 )
 
 with reader as generator:
@@ -58,6 +59,9 @@ with reader as generator:
     conv4 = Convolution1D(filters=500, kernel_size=4, strides=1,
                           activation='relu', name='convolutional_4')
 
+    conv16 = Convolution1D(filters=200, kernel_size=8, strides=1,
+                           activation='relu', name='convolutional_16')
+
     repr_known1 = GlobalMaxPooling1D(name='known_repr_8')(
         conv8(known_embed))
     repr_unknown1 = GlobalMaxPooling1D(name='unknown_repr_8')(
@@ -68,8 +72,13 @@ with reader as generator:
     repr_unknown2 = GlobalMaxPooling1D(name='unknown_repr_4')(
         conv4(unknown_embed))
 
-    repr_known = Concatenate()([repr_known1, repr_known2])
-    repr_unknown = Concatenate()([repr_unknown1, repr_unknown2])
+    repr_known3 = GlobalMaxPooling1D(name='known_repr_16')(
+        conv16(known_embed))
+    repr_unknown3 = GlobalMaxPooling1D(name='unknown_repr_16')(
+        conv16(unknown_embed))
+
+    repr_known = Concatenate()([repr_known1, repr_known2, repr_known3])
+    repr_unknown = Concatenate()([repr_unknown1, repr_unknown2, repr_unknown3])
 
     abs_diff = merge(
         inputs=[repr_known, repr_unknown],
@@ -80,8 +89,10 @@ with reader as generator:
 
     dense1 = Dense(500, activation='relu')(abs_diff)
     dense2 = Dense(500, activation='relu')(dense1)
+    dense3 = Dense(500, activation='relu')(dense2)
+    dense4 = Dense(500, activation='relu')(dense3)
 
-    pruned = Dropout(0.3)(dense2)
+    pruned = Dropout(0.3)(dense4)
 
     output = Dense(2, activation='softmax', name='output')(pruned)
 

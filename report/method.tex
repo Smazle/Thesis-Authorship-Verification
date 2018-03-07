@@ -84,7 +84,7 @@ embeddings will be learned while the network is training.
 
 \begin{figure}[htb]
     \centering
-    \includegraphics[scale=.4]{./graphs/method/siamese.png}
+    \includegraphics[width=0.8\textwidth]{./graphs/method/network1.png}
     \caption{Illustrate the structure of our first Siamese Neural Network
         Architecture.}
     \label{fig:network_1}
@@ -98,7 +98,7 @@ quickly overfits the training data and no longer learns anything general.
 \begin{figure}[htb]
     \centering
     \includegraphics[width=0.5\textwidth]{./graphs/method/network_1_accuracies.png}
-    \caption{Training and validation accuracies in the different epochs of the
+    \caption{Training and validation accuracies for the iteration 1 network in the different epochs of the
         networks execution.}
     \label{fig:network1_accuracies}
 \end{figure}
@@ -114,8 +114,69 @@ Validation false negatives 129
 
 \subsection{Siamese Neural Network - Iteration 2}
 
-In our last network we observed that the network very quickly overfitted
-completely on the training dataset.
+% TODO: Illustrate how dropout corresponds to training different subnetworks in
+% each iteration.
+
+In our last network we observed that the network after a few number of epochs
+overfitted on the training dataset. The validation accuracy quickly began
+stalling as the training accuracy went to 100\%. We therefore focused our
+second network architecture on limiting overfitting. We added a dropout layer
+before the output layer. A dropout layer is a layer that will randomly remove
+neurons from a neural network during training. The layer prevents overfitting
+by making sure that the network cannot rely on the output of all neurons during
+training. This unpredictability makes it harder for the network to learn
+specific quirks of the training dataset since small quirks will only be picked
+up by a small amount of neurons while larger trends will be represented by a
+larger set of neurons. \cite{JMLR:v15:srivastava14a} investigated the use of
+dropout layers in different problem settings. They found that dropout layers
+reduced overfitting in all problems they looked at. In particular they found
+that document classification which is similar to what we are doing were also
+improved. The main drawback of a dropout layer is that it increases the run time
+of training the networks (\cite{JMLR:v15:srivastava14a}).
+
+In iteration 1 the function we used to merge features from the known and unknown
+text together were a concatenation. If we let the extracted features of the
+known text be $K_i$ and the extracted features of the unknown text be $U_i$ then
+$K_0$ and $U_0$ correspond to the same feature extracted from the two texts. The
+concatenation merge function would then produce,
+
+\begin{equation}
+    merge(K, U) \rightarrow \left(
+        K_0, K_1, \dots, K_n, U_0, U_1, \dots, U_n
+    \right)^T.
+\end{equation}
+
+That means that the neural network would have to figure out by itself that input
+$0$ were related in particular to input $n + 1$. To save the network that task
+we also replaced the merging function to the absolute difference of the feature
+vectors. That means that our merge function became,
+
+\begin{equation}
+    merge(K, U) \rightarrow \left(
+        (|K_0 - U_0|), (|K_1 - U_1|), \dots, (|K_n - U_n|)
+    \right)^T.
+\end{equation}
+
+So the network no longer has to learn arbitrary indexes. Instead it can learn
+which features is important for authorship verification and learn thresholds for
+when each feature is important. With the new merging we will have a large number
+whenever the two features are far apart and a small number whenever they are
+close to each other.
+
+We changed the convolutional filters we used from 1000 convolutional filters of
+size 10 to 500 convolutional filters of size 4 and 500 convolutional filters of
+size 8. The idea was that the filters could learn different features where some
+of the features would consist of a large number of characters and other of the
+features would consist of a small number of characters. The architecture of our
+network from iteration 2 is shown in Figure \ref{fig:network_2}.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{./graphs/method/network2.png}
+    \caption{Illustrate the structure of our second Siamese Neural Network
+        Architecture.}
+    \label{fig:network_2}
+\end{figure}
 
 TODO:
 \begin{itemize}
@@ -131,4 +192,10 @@ TODO:
         did.
     \item Add dropout to combat overfitting.
     \item Use more data in the training to combat overfitting.
+\end{itemize}
+
+
+\begin{itemize}
+    \item Use squared distance as merge function to get larger differences
+        between close and far apart.
 \end{itemize}

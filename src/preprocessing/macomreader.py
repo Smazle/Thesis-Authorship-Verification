@@ -184,29 +184,33 @@ class MacomReader:
             author, text = line.split(';')
 
             if len(text) > 30000:
-                print('WARNING: Skipping text longer than 30,000 characters '
-                    + 'on line {}'.format(i + 1))
+                print('WARNING: Skipping text longer than 30,000 characters ' +
+                      'on line {}'.format(i + 1))
+            elif len(text) < 200:
+                print('WARNING: Skipping text shorter than 200 characters ' +
+                      'on line {}'.format(i + 1))
             else:
                 try:
                     self.authors[author].append(i + 1)
                 except KeyError:
                     self.authors[author] = [i + 1]
 
-    # TODO: Make sure the same file is not returned for the same author.
     def generate_problems(self):
 
         for author in self.authors:
             other = set(self.authors.keys())
             other.remove(author)
 
-            for line in self.authors[author]:
-                same = random.choice(self.authors[author])
+            # Generate all combinations of the authors texts.
+            for (l1, l2) in itertools.combinations(self.authors[author], r=2):
+                # Generate a sample with same author.
+                self.problems.append((l1, l2, 1))
 
+                # Generate a sample with different authors.
+                same = random.choice(self.authors[author])
                 different = random.choice(self.authors
                                           [random.choice(list(other))])
-
-                self.problems.append((line, same, 1))
-                self.problems.append((line, different, 0))
+                self.problems.append((same, different, 0))
 
         random.shuffle(self.problems)
 
@@ -264,7 +268,8 @@ if __name__ == '__main__':
     reader = MacomReader(
         sys.argv[1],
         vocabulary_frequency_cutoff=1 / 100000,
-        encoding='numbers'
+        encoding='numbers',
+        validation_split=0.95
     )
 
     with reader as generator:
