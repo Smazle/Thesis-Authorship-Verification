@@ -13,7 +13,6 @@ or smaller than the average. The dataset contains 2047 different authors with
 an average of 16 texts. The author with the smallest amount of text has two
 texts and the author with the most amount of text has 33 texts.
 
-% TODO: Describe why we chose 1 / 100000. In several of our experiments we
 In several of our experiments we limited the number of different characters
 we represented. We did that to simplify the amount of different characters
 our neural networks had to consider. In particular we cutoff any characters
@@ -31,12 +30,12 @@ $3.13\cdot10^{-5}$ and $2.08\cdot10^{-5}$ respectively and will therefore
 all be included. The overall frequency distribution can be seen in figure
 \ref{fig:character_frequencies}.
 
-\begin{figure}
+\begin{figure}[htb]
     \centering
-    \includegraphics[scale=.8]{./graphs/Frequencies.png}
+    \includegraphics[scale=.8]{./graphs/data/character_frequencies.png}
     \caption{The frequency distribution of characters in the training data-set,
-    only a random subset of characters is shown on the x-axis, including the
-    most and least frequent}
+        only a random subset of characters is shown on the x-axis, including the
+        most and least frequent}
     \label{fig:character_frequencies}
 \end{figure}
 
