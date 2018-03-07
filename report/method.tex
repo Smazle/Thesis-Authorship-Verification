@@ -38,6 +38,27 @@ illustrated in Figure \ref{fig:profile_based}.
         "author n".}
 \end{figure}
 
+We will generally use the instance based approach and we will generally use
+Authorship Verification. The reason we use an instance based approach is that
+that allows us to use extra information from each single text. For example
+writing style may change over time especially for secondary school pupils that
+evolve very much in a short amount of time. Since we use an instance based
+approach we are able to weight similarity to newer texts higher than similarity
+to older texts.
+
+There are also another split between methods that we consider. There are
+generalizing and author specific models. In a generalizing model only a single
+model is trained on data from multiple authors and are able to make predictions
+about third party authors. And in the author specific model a separate model has
+to be trained for each author and is not able to make predictions for third
+party authors. The generalizing model has the advantage that it only has to be
+trained once and after that it can be used for everyone. The author specific
+model has the advantage that it can better fit to the specific quirks of a
+particular author since it is trained separately for each author. The downside
+of the author specific approach is that a new model has to be trained for each
+new author. We will focus on the generalizing approach since it is easier to
+implement for MaCom as they only have to train a model once.
+
 
 \subsection{Baseline Methods}
 
