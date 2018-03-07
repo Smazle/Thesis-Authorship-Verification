@@ -184,8 +184,8 @@ class MacomReader:
             author, text = line.split(';')
 
             if len(text) > 30000:
-                print('WARNING: Skipping text longer than 30,000 characters '
-                    + 'on line {}'.format(i + 1))
+                print('WARNING: Skipping text longer than 30,000 characters ' +
+                      'on line {}'.format(i + 1))
             else:
                 try:
                     self.authors[author].append(i + 1)
