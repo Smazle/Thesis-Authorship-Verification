@@ -1,13 +1,14 @@
 [PIP]
-numpy>=1.14.0
+numpy
 sklearn
-polyglot>=16.07.04
-nltk>=3.2.5
-scipy>=1.0.0
+polyglot
+nltk
+scipy
 pycld2
 morfessor
 pydot
 graphviz
+matplotlib
 
 [APT]
 graphviz
@@ -15,3 +16,4 @@ python3-pip
 libicu-dev
 python3-icu
 python-setuptools
+python3-tk

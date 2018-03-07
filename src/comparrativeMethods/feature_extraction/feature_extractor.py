@@ -8,7 +8,8 @@ import numpy as np
 from sklearn.preprocessing import scale
 from nltk.corpus import europarl_raw
 import pickle
-import re
+import sys; sys.path.insert(0, '../../util/')
+import utilities as util
 
 
 # TODO: description.
@@ -101,7 +102,9 @@ class FeatureExtractor:
         author_features = []
 
         for i, [author, text] in enumerate(self.authors):
-            text = clean(text)
+            print(text)
+            text = util.clean(text)
+            print(text)
             try:
                 known_features = self.extract_features(text)
                 print('Text', i)
@@ -127,11 +130,6 @@ class FeatureExtractor:
 
         return features
 
-
-def clean(txt):
-    txt = re.sub(r'\$NL\$', '\n', txt)
-    txt = re.sub(r'\$SC\$', ';', txt)
-    return txt
 
 # TODO: description.
 # class Author:
@@ -240,13 +238,13 @@ def gen_corpus():
                         if word in vals:
                             continue
 
-                        if sentence[i-1] == '(':
+                        if sentence[i - 1] == '(':
                             txt += ' ' + '(' + word
                             continue
 
                         if word == "\"":
                             if start:
-                                txt += ' ' + "\"" + sentence[i+1]
+                                txt += ' ' + "\"" + sentence[i + 1]
                                 skip = True
                             else:
                                 txt += "\""
@@ -254,9 +252,9 @@ def gen_corpus():
                             # import pdb; pdb.set_trace()
                             continue
 
-                        if i+1 < len(sentence) and sentence[i+1] in vals:
-                            txt += ' ' + word + sentence[i+1]
-                            if sentence[i+1] == "\"":
+                        if i + 1 < len(sentence) and sentence[i + 1] in vals:
+                            txt += ' ' + word + sentence[i + 1]
+                            if sentence[i + 1] == "\"":
                                 start = not start
 
                             continue
