@@ -1,5 +1,43 @@
 \section{Method} \label{sec:method} 
 
+In this section we will describe the method we have used to solve the Authorship
+Verification problem presented. In general there are two methods of representing
+each author. There is the instance based approach and the profile based
+approach. In the instance based approach each author is represented by a set of
+texts they have written while in the profile based approach they are represented
+by the sum of the set of texts they have written. The instance based approach is
+illustrated in Figure \ref{fig:instance_based} and the profile based approach is
+illustrated in Figure \ref{fig:profile_based}.
+
+\begin{figure}[htb]
+    \centering
+    \textbf{Instance Based Authorship Verification or Authorship Attribution}
+    \includegraphics[width=\textwidth]{./graphs/method/instance_based.jpg}
+    \caption{Illustrate the typical instance based Authorship Verification or
+        Authorship Attribution solution setup. A set of authors are given as
+        input each with a set of texts. Some Maching Learning model is trained
+        on the input texts and the model is used to predict an unknown text. In
+        the Authorship Verification case the prediction is either "same author"
+        or "different author" while in the Authorship Attribution case the
+        prediction will be one of "author 1", "author 2", \dots, "author n".}
+    \label{fig:instance_based}
+\end{figure}
+
+\begin{figure}[htb]
+    \centering
+    \textbf{Profile Based Authorship Verification or Authorship Attribution}
+    \includegraphics[width=\textwidth]{./graphs/method/profile_based.jpg}
+    \caption{Illustrate the typical profile based Authorship Verification or
+        Authorship Attribution setup. The texts of each author are combined
+        using some combination function such as an average or concatenation.
+        Those \textit{profiles} are then given to a Machine Learning model to
+        train. The output is a model which is used to predict unknown texts.
+        If it is the Authorship Verification case the prediction output is
+        either "same author" or "different author" and if it is the Authorship
+        Attribution case the output is one of "author 1", "author 2", \dots,
+        "author n".}
+\end{figure}
+
 
 \subsection{Baseline Methods}
 
