@@ -68,7 +68,7 @@ based on their performance in a previous project written by us as well,
 \cite{US}. Albeit that project was only concerned with English texts
 provided by the \cite{pan:2015}, and \cite{pan:2014} text forensics tasks,
 we hypothesize that the performance of these approaches will perform just
-as well on Danish texts.
+as well on Danish texts when being tuned for the Danish language.
 
 
 \subsubsection{Extended Delta Method}
@@ -77,7 +77,7 @@ One of the best performing methods of \cite{US} was the extended delta method.
 As the name suggests the method extends the already existing delta method
 described by \cite{evert2015towards}. The normal delta methods consists of first
 extracting word frequencies from all texts and using these as the describing
-features. After doing this to the entire sample-space of texts, and applying a
+features. After doing this to the entire sample space of texts, and applying a
 linear transformation to their respective feature-sets, \gls{KNN} is then used
 to determine the author of the introduced texts based on its closest neighbors
 in the word-frequency feature-space. The extended delta method, simply expands
@@ -91,7 +91,7 @@ Another algorithm used in \cite{US}. Heavily inspired by \cite{hansen2014}
 starts out by fetching all texts known to be written by a specific author and an
 equal number of texts known not to be written by that same author. It is upon
 the feature-set extracted from these texts that a \gls{SVM} is trained, allowing
-it to learn the specifics authors writing style from the known texts supplied
+it to learn the specific author's writing style from the known texts supplied
 and in contrast what the writing style of someone not him is. When a new text,
 with disputed authorship is presented the hope is that the trained \gls{SVM}
 will be able to determine if the author it was trained on, is in fact the author
@@ -100,21 +100,32 @@ of this new text as well.
 
 \subsection{Siamese Neural Network - Iteration 1}
 
+% TODO: Maybe make clearer what exactly were our idea and what we have from the
+% three articles.
+
 Our idea for our first network architecture was to use a similar architecture
 as the ones used in \cite{Koch2015SiameseNN}, \cite{NIPS1993_769} and
-\cite{qian:2018}. We start by preprocessing our input data. The input consists
-of a set of utf-8 encoded texts with an associated author id. To limit the
-number of different characters our network has to deal with we map all
-characters that occur with a frequency of less than $\frac{1}{100,000}$ to a
-garbage character we define. Since our network can only handle inputs of the
-same length we pad all texts to have the length of the longest text with another
-garbage character. We map all other characters to the numbers 1 to the size of
-the character set.
+\cite{qian:2018}. In our implementation we use a combination of the three
+approaches. Our main idea was to combine the approaches of \cite{qian:2018}
+and \cite{Koch2015SiameseNN}. \cite{qian:2018} use a Siamese network but
+with no convolutions and a distance function on top for text analysis while
+\cite{Koch2015SiameseNN} used a Siamese network with convolutions and fully
+connected network on top for image analysis. Our approach is to use convolutions
+in the Siamese network to learn important features from the texts. We also use
+a fully connected network on top of the convolutional layers to learn from the
+features the convolution extracted. In more detail we start by preprocessing
+our input data. The input consists of a set of utf-8 encoded texts with an
+associated author id. To limit the number of different characters our network
+has to deal with we map all characters that occur with a frequency of less than
+$\frac{1}{100,000}$ to a garbage character we define. Since our network can only
+handle inputs of the same length we pad all texts to have the length of the
+longest text with another garbage character. We map all other characters to the
+numbers 1 to the size of the character set.
 
-Now we have a set of vectors of numbers of the same size each associated with an
-author id. To construct an authorship verification dataset we looped through all
-the vectors for each vector we drew a random vector of the same author and a
-random vector of a different author. We then created two problem instances we
+Now we have a set of vectors of numbers of the same size each associated with
+an author id. To construct an authorship verification dataset we looped through
+all the vectors. For each vector we drew a random vector of the same author and
+a random vector of a different author. We then created two problem instances we
 could train on. One instance of two vectors from the same author with a label of
 1 and one instance of two vectors from different authors with a label of 0. We
 split the list of problems into two sets. A validation set consisting of 20\% of
@@ -157,8 +168,8 @@ quickly overfits the training data and no longer learns anything general.
 \begin{figure}[htb]
     \centering
     \includegraphics[width=0.5\textwidth]{./pictures/method/network_1_accuracies.png}
-    \caption{Training and validation accuracies for the iteration 1 network in the different epochs of the
-        networks execution.}
+    \caption{Training and validation accuracies for the iteration 1 network in
+        the different epochs of the networks execution.}
     \label{fig:network1_accuracies}
 \end{figure}
 
@@ -237,6 +248,20 @@ network from iteration 2 is shown in Figure \ref{fig:network_2}.
     \label{fig:network_2}
 \end{figure}
 
+We also added more dense layers to the model. A plot of the
+training and validation accuracies per epoch can be seen in Figure
+\ref{fig:network2_accuracies}.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\textwidth]{./pictures/method/network_2_accuracies.png}
+    \caption{Shows the training and validation accuracies on the second
+        network.}
+    \label{fig:network2_accuracies}
+\end{figure}
+
+
+
 TODO:
 \begin{itemize}
     \item We would like to experiment more with different functions to combine
@@ -254,7 +279,12 @@ TODO:
 \end{itemize}
 
 
+TODO:
 \begin{itemize}
     \item Use squared distance as merge function to get larger differences
         between close and far apart.
+    \item Try to not use dense network but a distance metric (we didn't get to
+        do that this week).
+    \item Network 2 seem to not improve much after first epoch. Try to use a
+        larger network and observe the effect.
 \end{itemize}
