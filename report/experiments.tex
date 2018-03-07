@@ -6,7 +6,7 @@
 In this section we will go through the experimentation performed in order to
 get the best baseline results. While many different features can be used when
 performing \gls{NLP}, we chose made use of the same features, as was used in
-\cite{Us}, since they spanned several several of the different linguistic
+\cite{US}, since they spanned several several of the different linguistic
 layers. The features available to pick from are:
 
 \begin{itemize}
@@ -23,8 +23,8 @@ produce the 3-grams "hel", "ell" and "llo". This also means that a feature such
 as word frequencies can be considered word-1-grams. 
 
 For all of these experiments a third party corpus, provided by
-\texttt{NLTK}\footcite{\url{http://www.nltk.org/index.html}}, was used as
-the basis for all the feature extraction, as was done in \cite{Us} as well. 
+\texttt{NLTK}\footnote{\url{http://www.nltk.org/index.html}}, was used as
+the basis for all the feature extraction, as was done in \cite{US} as well. 
 This corpus consists of 22476 sentences, and 563358 words.
 
 \subsubsection{Extended Delta Method}
@@ -37,7 +37,7 @@ This posed a problem, as the amount of combination of features, and opposing
 authors we would have to consider in order to find the best performing ones,
 would take quite a bit of computational time.
 
-Rather than performing a random selection of features as was done in \cite{Us},
+Rather than performing a random selection of features as was done in \cite{US},
 we chose to use a more systematic approach. We opted for a greedy approach. It
 starts out with a large, but still limited, set of features from which we would
 then remove the feature, whose removal yielded the best accuracy on a separate
