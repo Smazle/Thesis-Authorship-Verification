@@ -1,5 +1,43 @@
 \section{Method} \label{sec:method} 
 
+In this section we will describe the method we have used to solve the Authorship
+Verification problem presented. In general there are two methods of representing
+each author. There is the instance based approach and the profile based
+approach. In the instance based approach each author is represented by a set of
+texts they have written while in the profile based approach they are represented
+by the sum of the set of texts they have written. The instance based approach is
+illustrated in Figure \ref{fig:instance_based} and the profile based approach is
+illustrated in Figure \ref{fig:profile_based}.
+
+\begin{figure}[htb]
+    \centering
+    \textbf{Instance Based Authorship Verification or Authorship Attribution}
+    \includegraphics[width=\textwidth]{./pictures/method/instance_based.jpg}
+    \caption{Illustrate the typical instance based Authorship Verification or
+        Authorship Attribution solution setup. A set of authors are given as
+        input each with a set of texts. Some Maching Learning model is trained
+        on the input texts and the model is used to predict an unknown text. In
+        the Authorship Verification case the prediction is either "same author"
+        or "different author" while in the Authorship Attribution case the
+        prediction will be one of "author 1", "author 2", \dots, "author n".}
+    \label{fig:instance_based}
+\end{figure}
+
+\begin{figure}[htb]
+    \centering
+    \textbf{Profile Based Authorship Verification or Authorship Attribution}
+    \includegraphics[width=\textwidth]{./pictures/method/profile_based.jpg}
+    \caption{Illustrate the typical profile based Authorship Verification or
+        Authorship Attribution setup. The texts of each author are combined
+        using some combination function such as an average or concatenation.
+        Those \textit{profiles} are then given to a Machine Learning model to
+        train. The output is a model which is used to predict unknown texts.
+        If it is the Authorship Verification case the prediction output is
+        either "same author" or "different author" and if it is the Authorship
+        Attribution case the output is one of "author 1", "author 2", \dots,
+        "author n".}
+\end{figure}
+
 
 \subsection{Baseline Methods}
 
@@ -84,7 +122,7 @@ embeddings will be learned while the network is training.
 
 \begin{figure}[htb]
     \centering
-    \includegraphics[width=0.8\textwidth]{./graphs/method/network1.png}
+    \includegraphics[width=0.8\textwidth]{./pictures/method/network1.png}
     \caption{Illustrate the structure of our first Siamese Neural Network
         Architecture.}
     \label{fig:network_1}
@@ -97,7 +135,7 @@ quickly overfits the training data and no longer learns anything general.
 
 \begin{figure}[htb]
     \centering
-    \includegraphics[width=0.5\textwidth]{./graphs/method/network_1_accuracies.png}
+    \includegraphics[width=0.5\textwidth]{./pictures/method/network_1_accuracies.png}
     \caption{Training and validation accuracies for the iteration 1 network in the different epochs of the
         networks execution.}
     \label{fig:network1_accuracies}
@@ -172,7 +210,7 @@ network from iteration 2 is shown in Figure \ref{fig:network_2}.
 
 \begin{figure}
     \centering
-    \includegraphics[width=\textwidth]{./graphs/method/network2.png}
+    \includegraphics[width=\textwidth]{./pictures/method/network2.png}
     \caption{Illustrate the structure of our second Siamese Neural Network
         Architecture.}
     \label{fig:network_2}
