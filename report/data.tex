@@ -17,7 +17,7 @@ texts and the author with the most amount of text has 33 texts.
 In several of our experiments we limited the number of different characters
 we represented. We did that to simplify the amount of different characters
 our neural networks had to consider. In particular we cutoff any characters
-that occurred with a frequency less than $\frac{1}{100,000}$. We wanted to
+that occurred with a frequency less than $\frac{1}{100.000}$. We wanted to
 make sure that the cutoff only removed characters that were so infrequent
 that it would be hard for the neural networks to learn anything from them.
 Since the average amount of characters in a single text were 5851 characters
@@ -34,14 +34,29 @@ all be included. The overall frequency distribution can be seen in figure
 \begin{figure}
     \centering
     \includegraphics[scale=.8]{./graphs/Frequencies.png}
-    \caption{The frequency distribution of characters in the training data-set, only a random
-        subset of characters is shown on the x-axis, including the most and least frequent}
+    \caption{The frequency distribution of characters in the training data-set,
+    only a random subset of characters is shown on the x-axis, including the
+    most and least frequent}
     \label{fig:character_frequencies}
 \end{figure}
 
-
-
-
-% TODO: Describe how we dealt with garbage texts.
 The texts we are given are extracted from \textit{.pdf} files and there will
-therefore sometimes be garbage included.
+therefore sometimes be garbage included. In order to combat that, we've took
+a look at the average unique character count of each of the texts in the data
+set. They had and average of of X unique characters, and a median of X unique
+characters. Comparing this to the fact that the minimum unique character count
+is X, and the max unique character count is X, left us to deduce that there was
+some outliers in the set in terms of unique character count. After looking at
+the texts with the highest unique character count, a trend emerged. If a text
+had over around 100 characters, the text mostly contained garbage characters.
+A result from a erroneous data extraction. These texts also contained and
+abnormally large character count, and as such was removed by out 30.000
+character limit. In total there were only around 5 of these texts, so the impact
+on overall data integrity was negligible. While 100 seems as quite a forgiving
+threshold compared to the average and the median, the texts under that threshold
+had a large unique character count, due to the usage of different languages,
+containing character from other alphabets. This caused a elevation of unique
+characters used. However the addition of these new character wont have an impact
+on the data integrity either, due to the $\frac{1}{100.000}$ frequency threshold
+described earlier.
+

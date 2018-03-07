@@ -44,23 +44,31 @@ from the low level character n-grams, to the high level application specific
 features such as text creation date, and number of edits. It is using these
 features many of the current day state-of-the-art approaches are based.
 
-Some of these are profile-based approaches where an author is represented by
-a concatenation of all the texts in the his library of work. It is from the
-concatenation one then extracts the features. That gives a set of features
-describing the authors writing style rather than each individual text, which
-would be called an instance-based approach.
+Some of these are profile-based approaches where an author is represented
+by all the texts in the his library of work. It is from this collective
+representation on extracts the features from, thus resulting in a feature
+representation that the describe the authors writing style. This yields a more
+general representation of the author, rather than it describing just a singular
+texts, which would be called an instance based approach. An example of such a
+profile-based approach would be the concatenation of the authors library of
+work, from which the features are then extracted as if a giant single text.
+\cite{stamatos2009}
 
-The most successful example of a profile-based approach make use of a
-compression. This works, not by having represented each author library as a
-set of features, but rather makes use of compression to do so. In the initial
-scenario, we have a set of author-profiles, which is the concatenation of
-all their individual work. When a new text is then introduced the authorship
-is determined by looping through each author, adding it library (their
-concatenated profile). The profile is then compressed, both with and without
-the new text included in its library. The bit-wise difference is then computed,
-by subtracting them from one another, resulting in what is essentially the
-cross-entropy between the two texts. The author which the lowest cross-entropy
-is then considered to be the author of this new text.
+An example of the profile-based approach, which is highly regarded by
+\cite{stamatos2009}, make use of a compression. This works, not by having
+represented each author library as a set of features, but rather makes use of
+compression to do so. In the initial scenario, we have a set of author-profiles,
+which is the concatenation of all their individual work. When a new text is then
+introduced the authorship is determined by looping through each author, adding
+it library (their concatenated profile). The profile is then compressed, both
+with and without the new text included in its library. The bit-wise difference
+is then computed, by subtracting them from one another, resulting in what is
+essentially the cross-entropy between the two texts. The author which the lowest
+cross-entropy is then considered to be the author of this new text. Different
+methods of comprehension can be used as the base for this model, each giving
+different results. In the instance that \cite{stamatos2009} describes, RAR
+compression yielded the best results, but this of cause depends on the scenario
+one finds oneself in.
 
 As for instance-based approaches they use a more classic machine learning
 approach. Texts are again represented as a set of features. Then each texts
