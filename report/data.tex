@@ -39,23 +39,45 @@ all be included. The overall frequency distribution can be seen in figure
     \label{fig:character_frequencies}
 \end{figure}
 
-The texts we are given are extracted from \textit{.pdf} files and there will
-therefore sometimes be garbage included. In order to combat that, we've took
-a look at the average unique character count of each of the texts in the data
-set. They had and average of of X unique characters, and a median of X unique
-characters. Comparing this to the fact that the minimum unique character count
-is X, and the max unique character count is X, left us to deduce that there was
-some outliers in the set in terms of unique character count. After looking at
-the texts with the highest unique character count, a trend emerged. If a text
-had over around 100 characters, the text mostly contained garbage characters.
-A result from a erroneous data extraction. These texts also contained and
-abnormally large character count, and as such was removed by out 30.000
-character limit. In total there were only around 5 of these texts, so the impact
-on overall data integrity was negligible. While 100 seems as quite a forgiving
-threshold compared to the average and the median, the texts under that threshold
-had a large unique character count, due to the usage of different languages,
-containing character from other alphabets. This caused a elevation of unique
-characters used. However the addition of these new character wont have an impact
-on the data integrity either, due to the $\frac{1}{100.000}$ frequency threshold
-described earlier.
+In addition to limiting the characters based on their frequency, we also chose
+to limit the overall character count. This was a result of looking at the
+character count statistics listed in the beginning of this section. The texts
+which had only a very small character count compared to the average and median,
+was in most cases just a blank assignment submission. A blank submission, is
+when a student doesn't provide an text, as their submission, but rather a
+document containing nothing, or a declaration of them not having produced a
+text. As such the existence of these papers wont yield any positive input to our
+applied method, and is therefore removed. This is done by applying a 200 minimum
+character limit on each text in our data. On the other hand a character count
+which is too large, can also negatively impact the application of our different
+methods. This isn't necessarily tied to the content of the text, but rather the
+count. When applying our deep learning methods, all texts are padded to match
+the longest on in the data set. This means that in our case, all texts would
+have to padded to match the character count of 1.849.919. This would lead to a
+very large decrease in performance, with the only payoff being that we would get
+to keep the large outlier in our data set. We didn't believe that this trade-off
+was worth it, so we applied a 30.000 character upper limit on our data set. In
+the end, this resulted in only X texts being ignored, of which X was erroneous
+extracts anyway, so overall impact on the data quality was only impacted a small
+amount compared to the performance won by enforcing this limit.
+
+On the topic of erroneous extracts, the texts we were given were extracted from
+\textit{.pdf} files and there will therefore sometimes be garbage included.
+In order to combat that, we took a look at the average unique character count
+of each of the texts in the data set. They had an average of of X unique
+characters, and a median of X unique characters. Comparing this to the fact that
+the minimum unique character count is X, and the max unique character count is
+X, left us to deduce that there was some outliers in the set in terms of unique
+character count. After looking at the texts with the highest unique character
+count, a trend emerged. If a text had over around 100 characters, the text
+mostly contained garbage characters. A result from a erroneous data extraction.
+These texts also contained and abnormally large character count, and as such
+was removed by out 30.000 character limit. In total there were only around 5 of
+these texts, so the impact on overall data integrity was negligible. While 100
+seems as quite a forgiving threshold compared to the average and the median, the
+texts under that threshold had a large unique character count, due to the usage
+of different languages, containing character from other alphabets. This caused a
+elevation of unique characters used. However the addition of these new character
+wont have an impact on the data integrity either, due to the $\frac{1}{100.000}$
+frequency threshold described earlier.
 
