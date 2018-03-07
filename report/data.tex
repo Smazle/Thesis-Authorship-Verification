@@ -6,7 +6,7 @@ provided by MaCom is a file consisting of set of texts in Danish where each text
 is associated with an author ID. We have been given several text extractions
 of different sizes with the biggest dataset consisting of 32,682 texts. The
 dataset consist of texts of many different sizes. The shortest text consist of 2
-characters and the longest text of 1.849.919 characters. The average length of
+characters and the longest text of 1,849,919 characters. The average length of
 each text is 5689 characters with a median of 5363 characters. That means that
 almost all texts is close to the average and only a few has sizes much greater
 or smaller than the average. The dataset contains 2047 different authors with
@@ -33,9 +33,10 @@ all be included. The overall frequency distribution can be seen in figure
 \begin{figure}[htb]
     \centering
     \includegraphics[scale=.8]{./pictures/data/character_frequencies.png}
-    \caption{The frequency distribution of characters in the training data-set,
+    \caption{The frequency distribution of characters in the training dataset,
         only a random subset of characters is shown on the x-axis, including the
-        most and least frequent}
+        most and least frequent. The most frequent character is a space
+        character which is why the place is empty.}
     \label{fig:character_frequencies}
 \end{figure}
 
@@ -53,30 +54,30 @@ count which is too large, can also negatively impact the application of our
 different methods. This isn't necessarily tied to the content of the text, but
 rather the count. When applying our deep learning methods, all texts are padded
 to match the longest on in the data set. This means that in our case, all texts
-would have to padded to match the character count of 1.849.919. This would lead
+would have to padded to match the character count of 1,849,919. This would lead
 to a very large decrease in performance, with the only payoff being that we
 would get to keep the large outlier in our data set. We didn't believe that this
 trade-off was worth it, so we applied a 30.000 character upper limit on our data
 set. In the end, this resulted in only TODO texts being ignored, of which TODO
 was erroneous extracts anyway, so overall impact on the data quality was only
-impacted a small amount compared to the performance won by enforcing this limit.
+small.
 
 On the topic of erroneous extracts, the texts we were given were extracted from
-\textit{.pdf} files and there will therefore sometimes be garbage included.
-In order to combat that, we took a look at the average unique character count
-of each of the texts in the data set. They had an average of of TODO unique
-characters, and a median of TODO unique characters. Comparing this to the
-fact that the minimum unique character count is TODO, and the max unique
-character count is TODO, left us to deduce that there was some outliers in the
-set in terms of unique character count. After looking at the texts with the
-highest unique character count, a trend emerged. If a text had over around
-100 characters, the text mostly contained garbage characters. A result from
-a erroneous data extraction. These texts also contained and abnormally large
-character count, and as such was removed by out 30.000 character limit. In total
-there were only around 5 of these texts, so the impact on overall data integrity
-was negligible. While 100 seems as quite a forgiving threshold compared to
-the average and the median, the texts under that threshold had a large unique
-character count, due to the usage of different languages, containing character
-from other alphabets. This caused a elevation of unique characters used. However
-the addition of these new character wont have an impact on the data integrity
-either, due to the $\frac{1}{100.000}$ frequency threshold described earlier.
+\textit{.pdf} files and there will therefore sometimes be garbage included. In
+order to combat that, we looked at the average unique character count of each of
+the texts in the data set. They had an average of of TODO unique characters, and
+a median of TODO unique characters. Comparing this to the fact that the minimum
+unique character count is TODO, and the max unique character count is TODO,
+left us to deduce that there was some outliers in the set in terms of unique
+character count. After looking at the texts with the highest unique character
+count, a trend emerged. If a text had over around 100 characters, the text
+mostly contained garbage characters. A result from a erroneous data extraction.
+These texts also contained and abnormally large character count, and as such
+was removed by out 30.000 character limit. In total there were only around 5 of
+these texts, so the impact on overall data integrity was negligible. While 100
+seems as quite a forgiving threshold compared to the average and the median, the
+texts under that threshold had a large unique character count, due to the usage
+of different languages, containing character from other alphabets. This caused a
+elevation of unique characters used. However the addition of these new character
+wont have an impact on the data integrity either, due to the $\frac{1}{100.000}$
+frequency threshold described earlier.

@@ -15,7 +15,7 @@ illustrated in Figure \ref{fig:profile_based}.
     \includegraphics[width=\textwidth]{./pictures/method/instance_based.jpg}
     \caption{Illustrate the typical instance based Authorship Verification or
         Authorship Attribution solution setup. A set of authors are given as
-        input each with a set of texts. Some Maching Learning model is trained
+        input each with a set of texts. Some Machine Learning model is trained
         on the input texts and the model is used to predict an unknown text. In
         the Authorship Verification case the prediction is either "same author"
         or "different author" while in the Authorship Attribution case the
@@ -49,7 +49,7 @@ to older texts.
 There are also another split between methods that we consider. There are
 generalizing and author specific models. In a generalizing model only a single
 model is trained on data from multiple authors and are able to make predictions
-about third party authors. And in the author specific model a separate model has
+about third party authors. In the author specific model a separate model has
 to be trained for each author and is not able to make predictions for third
 party authors. The generalizing model has the advantage that it only has to be
 trained once and after that it can be used for everyone. The author specific
@@ -201,7 +201,7 @@ larger set of neurons. \cite{JMLR:v15:srivastava14a} investigated the use of
 dropout layers in different problem settings. They found that dropout layers
 reduced overfitting in all problems they looked at. In particular they found
 that document classification which is similar to what we are doing were also
-improved. The main drawback of a dropout layer is that it increases the run time
+improved. The main drawback of a dropout layer is that it increase the run time
 of training the networks (\cite{JMLR:v15:srivastava14a}).
 
 In iteration 1 the function we used to merge features from the known and unknown
@@ -260,23 +260,7 @@ training and validation accuracies per epoch can be seen in Figure
     \label{fig:network2_accuracies}
 \end{figure}
 
-
-
-TODO:
-\begin{itemize}
-    \item We would like to experiment more with different functions to combine
-        the features outputted from the convolutional layers. Currently we
-        concattenate them maybe we could combine them with an absolute
-        difference or something else.
-    \item We would like to experiment with convolutional filters that does not
-        look at 10 characters at a time. And maybe include both "longer" and
-        "shorter" filters which can learn from different levels.
-    \item We would like to not use a dense layer on the top of the feature
-        generation but a simple distance metric as some of the other articles
-        did.
-    \item Add dropout to combat overfitting.
-    \item Use more data in the training to combat overfitting.
-\end{itemize}
+The maximum validation accuracy obtained were 0.74464 in epoch 12.
 
 
 TODO:
