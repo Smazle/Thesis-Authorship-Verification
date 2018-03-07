@@ -84,7 +84,7 @@ embeddings will be learned while the network is training.
 
 \begin{figure}[htb]
     \centering
-    \includegraphics[scale=.4]{./graphs/method/siamese.png}
+    \includegraphics[width=0.8\textwidth]{./graphs/method/network1.png}
     \caption{Illustrate the structure of our first Siamese Neural Network
         Architecture.}
     \label{fig:network_1}
@@ -158,7 +158,25 @@ vectors. That means that our merge function became,
 \end{equation}
 
 So the network no longer has to learn arbitrary indexes. Instead it can learn
-which features is important for authorship verification.
+which features is important for authorship verification and learn thresholds for
+when each feature is important. With the new merging we will have a large number
+whenever the two features are far apart and a small number whenever they are
+close to each other.
+
+We changed the convolutional filters we used from 1000 convolutional filters of
+size 10 to 500 convolutional filters of size 4 and 500 convolutional filters of
+size 8. The idea was that the filters could learn different features where some
+of the features would consist of a large number of characters and other of the
+features would consist of a small number of characters. The architecture of our
+network from iteration 2 is shown in Figure \ref{fig:network_2}.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{./graphs/method/network2.png}
+    \caption{Illustrate the structure of our second Siamese Neural Network
+        Architecture.}
+    \label{fig:network_2}
+\end{figure}
 
 TODO:
 \begin{itemize}
@@ -174,4 +192,10 @@ TODO:
         did.
     \item Add dropout to combat overfitting.
     \item Use more data in the training to combat overfitting.
+\end{itemize}
+
+
+\begin{itemize}
+    \item Use squared distance as merge function to get larger differences
+        between close and far apart.
 \end{itemize}
