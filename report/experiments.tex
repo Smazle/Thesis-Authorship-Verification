@@ -1,1 +1,84 @@
 \section{Experiments} \label{sec:experiments}
+
+
+\subsection{Baseline Methods}
+
+In this section we will go through the experimentation performed in order to
+get the best baseline results. While many different features can be used when
+performing \gls{NLP}, we chose made use of the same features, as was used in
+\cite{Us}, since they spanned several several of the different linguistic
+layers. The features available to pick from are:
+
+\begin{itemize}
+    \item Word-N-Grams 
+    \item Character-N-Grams
+    \item Word Frequencies
+    \item \gls{POS}-tag-N-Grams
+    \item Special-Character-N-Grams
+\end{itemize}
+
+Where an N-gram describes the combinations of sequential elements of size N. In
+the case where that element is characters, and N is 3, the string "hello" would
+produce the 3-grams "hel", "ell" and "llo". This also means that a feature such
+as word frequencies can be considered word-1-grams. 
+
+For all of these experiments a third party corpus, provided by
+\texttt{NLTK}\footcite{\url{http://www.nltk.org/index.html}}, was used as
+the basis for all the feature extraction, as was done in \cite{Us} as well. 
+This corpus consists of 22476 sentences, and 563358 words.
+
+\subsubsection{Extended Delta Method}
+
+A large part of the experiments performed when applying the extended delta
+method was parameter tuning. 
+The extended delta method, does not do any mitigation of noisy data or feature
+selection it self. Thus we would have to do the feature selection ourselves.
+This posed a problem, as the amount of combination of features, and opposing
+authors we would have to consider in order to find the best performing ones,
+would take quite a bit of computational time.
+
+Rather than performing a random selection of features as was done in \cite{Us},
+we chose to use a more systematic approach. We opted for a greedy approach. It
+starts out with a large, but still limited, set of features from which we would
+then remove the feature, whose removal yielded the best accuracy on a separate
+validation set. This is done for until the removal of a feature doesn't
+improve the validation accuracy anymore.
+
+In order for us to determine this starting feature set, we had a look the
+amount of different feature there was available when looking at the corpus.
+
+\begin{itemize}
+    \item Word-2-Grams - 188472
+    \item Character-2-Grams - 2178
+    \item Word Frequencies - 27535
+    \item \gls{POS}-tag-2-Grams - 219
+    \item Special-Character-2-Grams - 524
+\end{itemize}
+
+These numbers are of cause inflated, due to the size of the corpus relative to
+the actual text we are training on, and will continue to increase as we increase
+as we increase the N in the N-grams. As a result of this, the frequency of each
+gram decreases, and so does the impact each individual gram has.
+For this reason we choose to only focus on the K most frequent instances of
+each feature, which also serves to limit of parameter search space.
+
+Using the listed quantities, a feature set of 8600 features was produced,
+containing
+
+\begin{itemize}
+    \item 500 Most Frequent Words
+    \item 500 Most Frequent Word-N-grams for $N \in {2,...,10}$
+    \item 300 Most Frequent Character-N-Grams for $N \in {2,...,10}$
+    \item 50 Most Frequent \gls{POS}-Tag-N-Grams for $N \in {2,...,10}$
+    \item 50 Most Frequent Special-Character-N-Grams for $N \in {2,...,10}$
+\end{itemize}
+TODO: Will probably need more limiting 
+
+It is using this feature-set we then apply our greedy deleting too, in order to
+determine the best combination of features.
+In addition to selecting the features, the number of opposing author was also
+a parameter that needed tuning. Thus, this greedy approach was also performed on
+different configurations of opposing authors A, where $A \in TODO$
+
+
+
