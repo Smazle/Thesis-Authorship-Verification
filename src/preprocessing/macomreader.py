@@ -192,21 +192,22 @@ class MacomReader:
                 except KeyError:
                     self.authors[author] = [i + 1]
 
-    # TODO: Make sure the same file is not returned for the same author.
     def generate_problems(self):
 
         for author in self.authors:
             other = set(self.authors.keys())
             other.remove(author)
 
-            for line in self.authors[author]:
-                same = random.choice(self.authors[author])
+            # Generate all combinations of the authors texts.
+            for (l1, l2) in itertools.combinations(self.authors[author], r=2):
+                # Generate a sample with same author.
+                self.problems.append((l1, l2, 1))
 
+                # Generate a sample with different authors.
+                same = random.choice(self.authors[author])
                 different = random.choice(self.authors
                                           [random.choice(list(other))])
-
-                self.problems.append((line, same, 1))
-                self.problems.append((line, different, 0))
+                self.problems.append((same, different, 0))
 
         random.shuffle(self.problems)
 
