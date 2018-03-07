@@ -98,7 +98,7 @@ quickly overfits the training data and no longer learns anything general.
 \begin{figure}[htb]
     \centering
     \includegraphics[width=0.5\textwidth]{./graphs/method/network_1_accuracies.png}
-    \caption{Training and validation accuracies in the different epochs of the
+    \caption{Training and validation accuracies for the iteration 1 network in the different epochs of the
         networks execution.}
     \label{fig:network1_accuracies}
 \end{figure}
@@ -114,8 +114,51 @@ Validation false negatives 129
 
 \subsection{Siamese Neural Network - Iteration 2}
 
-In our last network we observed that the network very quickly overfitted
-completely on the training dataset.
+% TODO: Illustrate how dropout corresponds to training different subnetworks in
+% each iteration.
+
+In our last network we observed that the network after a few number of epochs
+overfitted on the training dataset. The validation accuracy quickly began
+stalling as the training accuracy went to 100\%. We therefore focused our
+second network architecture on limiting overfitting. We added a dropout layer
+before the output layer. A dropout layer is a layer that will randomly remove
+neurons from a neural network during training. The layer prevents overfitting
+by making sure that the network cannot rely on the output of all neurons during
+training. This unpredictability makes it harder for the network to learn
+specific quirks of the training dataset since small quirks will only be picked
+up by a small amount of neurons while larger trends will be represented by a
+larger set of neurons. \cite{JMLR:v15:srivastava14a} investigated the use of
+dropout layers in different problem settings. They found that dropout layers
+reduced overfitting in all problems they looked at. In particular they found
+that document classification which is similar to what we are doing were also
+improved. The main drawback of a dropout layer is that it increases the run time
+of training the networks (\cite{JMLR:v15:srivastava14a}).
+
+In iteration 1 the function we used to merge features from the known and unknown
+text together were a concatenation. If we let the extracted features of the
+known text be $K_i$ and the extracted features of the unknown text be $U_i$ then
+$K_0$ and $U_0$ correspond to the same feature extracted from the two texts. The
+concatenation merge function would then produce,
+
+\begin{equation}
+    merge(K, U) \rightarrow \left(
+        K_0, K_1, \dots, K_n, U_0, U_1, \dots, U_n
+    \right)^T.
+\end{equation}
+
+That means that the neural network would have to figure out by itself that input
+$0$ were related in particular to input $n + 1$. To save the network that task
+we also replaced the merging function to the absolute difference of the feature
+vectors. That means that our merge function became,
+
+\begin{equation}
+    merge(K, U) \rightarrow \left(
+        (|K_0 - U_0|), (|K_1 - U_1|), \dots, (|K_n - U_n|)
+    \right)^T.
+\end{equation}
+
+So the network no longer has to learn arbitrary indexes. Instead it can learn
+which features is important for authorship verification.
 
 TODO:
 \begin{itemize}
