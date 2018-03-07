@@ -6,8 +6,10 @@ repos:
           types: [file, python]
         - id: flake8
           types: [python]
+          args: ["--ignore=E702"]
         - id: autopep8-wrapper
           types: [python]
+          args: ['-i', '--ignore=E702']
         - id: double-quote-string-fixer
           types: [python]
         - id: fix-encoding-pragma
