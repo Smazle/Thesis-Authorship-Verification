@@ -186,6 +186,9 @@ class MacomReader:
             if len(text) > 30000:
                 print('WARNING: Skipping text longer than 30,000 characters ' +
                       'on line {}'.format(i + 1))
+            elif len(text) < 200:
+                print('WARNING: Skipping text shorter than 200 characters ' +
+                      'on line {}'.format(i + 1))
             else:
                 try:
                     self.authors[author].append(i + 1)
@@ -265,7 +268,8 @@ if __name__ == '__main__':
     reader = MacomReader(
         sys.argv[1],
         vocabulary_frequency_cutoff=1 / 100000,
-        encoding='numbers'
+        encoding='numbers',
+        validation_split=0.95
     )
 
     with reader as generator:
