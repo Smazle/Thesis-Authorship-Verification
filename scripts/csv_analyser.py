@@ -67,6 +67,7 @@ print('Author max text number', np.max(author_number_texts))
 print('Author min text number', np.min(author_number_texts))
 
 
+# æøå freq
 d_char = ['æ', 'ø', 'å']
 d_freq = [(charset[x] / charcount, charset[x.upper()] / charcount)
           for x in d_char]
@@ -76,6 +77,8 @@ for i, char in enumerate(d_freq):
     print('Frequencies, %s %s, %s %s' %
           (d_char[i], char[0], d_char[i].upper(), char[1]))
 
+
+# Character Destribution
 charset = sorted(charset.items(), key=lambda x: x[1], reverse=True)
 
 characters = list(map(lambda x: x[0], charset))
