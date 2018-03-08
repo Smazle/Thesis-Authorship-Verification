@@ -77,10 +77,25 @@ approaches can be applied to the data as either a binary classification problem,
 in the case of authorship verification, and a multi-class classification problem
 in the case of authorship attribution.
 
-It is using this instance-based approach that we will attempt, in the following
-paper, to device a deep learning approach which can solve the authorship
-verification for the Danish company MaCom.
+\subsection{Motivation \& Problem Definition} 
 
+It is using this instance-based approach that we will attempt, in
+the following paper, to device a deep learning approach which can
+solve the authorship verification for the Danish company \texttt{MaCom
+A/S}\footnote{\url{http://www.macom.dk/}}. MaCom is the company behind the
+product \texttt{Lectio}\footnote{\url{https://www.lectio.dk/}}, which is a
+website that allows for student administration, communication, and digital
+teaching aid, and is used on schools all over Denmark. A service the website
+offer, is the submission, and handling of assignments made by student throughout
+their enrollment. MaCom has shown interest in determining whether or not these
+assignment were possible written by someone other than the student. It is
+especially final, end of school assignment, which might has an elevated risk of
+plagiarism and inclusion of ghost-writers. It is this risk they want to mitigate
+by having a piece of software which is able to detect such cases. However, the
+accuracy of this piece of software is of paramount importance. They don't want
+to wrong-fully accuse any student of not writing their assignment. For this
+reason they want a specificity (\gls{TNR}, will be covered later) of at least
+95\%, even if this results in only a 10\% overall accuracy.
 
 \begin{itemize}
     \item CNN's are good at extracting features from low level data.

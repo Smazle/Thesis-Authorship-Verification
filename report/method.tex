@@ -12,30 +12,32 @@ illustrated in Figure \ref{fig:profile_based}.
 \begin{figure}[htb]
     \centering
     \textbf{Instance Based Authorship Verification or Authorship Attribution}
-    \includegraphics[width=\textwidth]{./pictures/method/instance_based.jpg}
+    \includegraphics[scale=0.4]{./pictures/method/instance_based.png}
+
     \caption{Illustrate the typical instance based Authorship Verification or
-        Authorship Attribution solution setup. A set of authors are given as
-        input each with a set of texts. Some Machine Learning model is trained
-        on the input texts and the model is used to predict an unknown text. In
-        the Authorship Verification case the prediction is either "same author"
-        or "different author" while in the Authorship Attribution case the
-        prediction will be one of "author 1", "author 2", \dots, "author n".}
+        Authorship Attribution solution setup.\cite{stamatos2009} A set of
+        authors are given as input each with a set of texts. Some Machine
+        Learning model is trained on the input texts and the model is used to
+        predict an unknown text. In the Authorship Verification case the
+        prediction is either "same author" or "different author" while in the
+        Authorship Attribution case the prediction will be one of "author 1",
+        "author 2", \dots, "author n".}
     \label{fig:instance_based}
 \end{figure}
 
 \begin{figure}[htb]
     \centering
     \textbf{Profile Based Authorship Verification or Authorship Attribution}
-    \includegraphics[width=\textwidth]{./pictures/method/profile_based.jpg}
+    \includegraphics[scale=0.4]{./pictures/method/profile_based.png}
     \caption{Illustrate the typical profile based Authorship Verification or
-        Authorship Attribution setup. The texts of each author are combined
-        using some combination function such as an average or concatenation.
-        Those \textit{profiles} are then given to a Machine Learning model to
-        train. The output is a model which is used to predict unknown texts.
-        If it is the Authorship Verification case the prediction output is
-        either "same author" or "different author" and if it is the Authorship
-        Attribution case the output is one of "author 1", "author 2", \dots,
-        "author n".}
+        Authorship Attribution setup.\cite{stamatos2009} The texts of each
+        author are combined using some combination function such as an average
+        or concatenation. Those \textit{profiles} are then given to a Machine
+        Learning model to train. The output is a model which is used to predict
+        unknown texts. If it is the Authorship Verification case the prediction
+        output is either "same author" or "different author" and if it is the
+        Authorship Attribution case the output is one of "author 1", "author 2",
+        \dots, "author n".}
     \label{fig:profile_based}
 \end{figure}
 
@@ -59,6 +61,53 @@ particular author since it is trained separately for each author. The downside
 of the author specific approach is that a new model has to be trained for each
 new author. We will focus on the generalizing approach since it is easier to
 implement for MaCom as they only have to train a model once.
+
+As a unit of measuring the quality of our models, and how well they adhere to
+95\% specificity constraint, we will also compute the number of \gls{TP}s, \gls{TN}s,
+\gls{FP}s and \gls{FN}s. In these problems we get,
+
+\begin{itemize}
+    \item a \gls{TP} whenever we answer \textit{True} and the texts are written
+        by the same author,
+    \item a \gls{TN} whenever we answer \textit{False} and the texts are
+        \textbf{not} written by the same author,
+    \item a \gls{FP} whenever we answer \textit{True} and the texts are
+        \textbf{not} written by the same author,
+    \item a \gls{FN} whenever we answer \textit{False} and the texts are written
+        by the same author.
+\end{itemize}
+
+Given those definitions the \gls{TPR}, \gls{FPR}, \gls{TNR} and \gls{FNR}
+describes.
+
+\begin{description}
+    \item[\gls{TPR}: ] The fraction of positives that we reported \textit{True}
+        on i.e. the fraction of texts written by the same author that we say are
+        written by the same author.
+    \item[\gls{FPR}: ] The fraction of negatives that we reported \textit{True}
+        on i.e. the fraction of texts written by different authors that we say
+        are written by the same author.
+    \item[\gls{TNR}: ] The fraction of negatives that we reported \textit{False}
+        on i.e. the fraction of texts written by different authors that we say
+        are written by different authors.
+    \item[\gls{FNR}: ] The fraction of positives that we reported \textit{False}
+        on i.e. the fraction of texts written by the same author that we say are
+        written by different authors.
+\end{description}
+
+And they can be computed as,
+
+\begin{align}
+    TPR &= \frac{TP}{TP + FN}, \\
+    FPR &= \frac{FP}{FP + TN}, \\
+    TNR &= \frac{TN}{TN + FP}, \\
+    FNR &= \frac{FN}{FN + TP}.
+\end{align}
+
+In the case of MaCom, we want to minimize the \gls{FNR} as much as possible, so
+as to not wrongfully accuse anyone of not having written their assignment.
+
+
 
 
 \subsection{Neural Network Model}
