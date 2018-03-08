@@ -36,6 +36,7 @@ illustrated in Figure \ref{fig:profile_based}.
         either "same author" or "different author" and if it is the Authorship
         Attribution case the output is one of "author 1", "author 2", \dots,
         "author n".}
+    \label{fig:profile_based}
 \end{figure}
 
 We will generally use the instance based approach and we will generally use
@@ -58,6 +59,35 @@ particular author since it is trained separately for each author. The downside
 of the author specific approach is that a new model has to be trained for each
 new author. We will focus on the generalizing approach since it is easier to
 implement for MaCom as they only have to train a model once.
+
+
+\subsection{Neural Network Model}
+
+A Neural Network consist of a collection of neurons. Each neuron is a simplified
+mathematical model of a neuron in a brain. Each neuron has a set of inputs
+called $x_i$ and a single output called $z_i$. The neurons compute a weighted
+sum of its inputs and applies an activation function $h$ to the weighted sum.
+The weights are called $w_i$. The function each neuron computes is then,
+
+\begin{equation}
+    z_i = h\left(
+        \sum_{i = 1}^d w_ix_i + w_0
+    \right).
+\end{equation}
+
+The learning of each neuron consist of changing the weights of the inputs to
+give a better output. The activation function $h$ is usually a non linear
+function. A plot of different activation functions are shown in Figure
+\ref{fig:activation_functions}.
+
+\begin{figure}
+    \centering
+    \textbf{Activation Functions}\par\medskip
+    \includegraphics[width=0.5\textwidth]{./pictures/method/activation_functions.png}
+    \caption{Different activation functions that can be used in neural
+        networks.}
+    \label{fig:activation_functions}
+\end{figure}
 
 
 \subsection{Baseline Methods}
@@ -273,4 +303,6 @@ TODO:
         larger network and observe the effect.
     \item Use thresholding to manipulate the true positives (etc) and see what
         results we can get (also didn't do it this week).
+    \item Look at learning rate of the network to make sure that the ReLu
+        neurons don't die.
 \end{itemize}
