@@ -63,6 +63,53 @@ of the author specific approach is that a new model has to be trained for each
 new author. We will focus on the generalizing approach since it is easier to
 implement for MaCom as they only have to train a model once.
 
+As a unit of measuring the quality of our models, and how well they adhere to
+95\% specificity constraint, we will also compute the number of \gls{TP}s, \gls{TN}s,
+\gls{FP}s and \gls{FN}s. In these problems we get,
+
+\begin{itemize}
+    \item a \gls{TP} whenever we answer \textit{True} and the texts are written
+        by the same author,
+    \item a \gls{TN} whenever we answer \textit{False} and the texts are
+        \textbf{not} written by the same author,
+    \item a \gls{FP} whenever we answer \textit{True} and the texts are
+        \textbf{not} written by the same author,
+    \item a \gls{FN} whenever we answer \textit{False} and the texts are written
+        by the same author.
+\end{itemize}
+
+Given those definitions the \gls{TPR}, \gls{FPR}, \gls{TNR} and \gls{FNR}
+describes.
+
+\begin{description}
+    \item[\gls{TPR}: ] The fraction of positives that we reported \textit{True}
+        on i.e. the fraction of texts written by the same author that we say are
+        written by the same author.
+    \item[\gls{FPR}: ] The fraction of negatives that we reported \textit{True}
+        on i.e. the fraction of texts written by different authors that we say
+        are written by the same author.
+    \item[\gls{TNR}: ] The fraction of negatives that we reported \textit{False}
+        on i.e. the fraction of texts written by different authors that we say
+        are written by different authors.
+    \item[\gls{FNR}: ] The fraction of positives that we reported \textit{False}
+        on i.e. the fraction of texts written by the same author that we say are
+        written by different authors.
+\end{description}
+
+And they can be computed as,
+
+\begin{align}
+    TPR &= \frac{TP}{TP + FN}, \\
+    FPR &= \frac{FP}{FP + TN}, \\
+    TNR &= \frac{TN}{TN + FP}, \\
+    FNR &= \frac{FN}{FN + TP}.
+\end{align}
+
+In the case of MaCom, we want to minimize the \gls{FNR} as much as possible, so
+as to not wrongfully accuse anyone of not having written their assignment.
+
+
+
 
 \subsection{Baseline Methods}
 
