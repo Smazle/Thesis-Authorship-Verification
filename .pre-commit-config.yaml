@@ -1,6 +1,6 @@
 repos:
     - repo: git://github.com/pre-commit/pre-commit-hooks
-      sha: v1.1.1
+      sha: v1.2.3
       hooks:
         - id: trailing-whitespace
           types: [file, python]
@@ -10,7 +10,11 @@ repos:
         - id: autopep8-wrapper
           types: [python]
           args: ['-i', '--ignore=E702']
-        - id: double-quote-string-fixer
-          types: [python]
         - id: fix-encoding-pragma
           types: [python]
+        - id: double-quote-string-fixer 
+          types: [python]
+        - id: end-of-file-fixer
+          types: [file]
+        - id: mixed-line-ending
+          types: [file]
