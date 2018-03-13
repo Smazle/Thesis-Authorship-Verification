@@ -9,6 +9,7 @@ morfessor
 pydot
 graphviz
 matplotlib
+h5py
 
 [APT]
 graphviz
