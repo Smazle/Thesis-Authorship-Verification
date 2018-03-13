@@ -155,3 +155,5 @@ with reader as generator:
         validation_steps=val_steps_n,
         callbacks=callbacks
     )
+
+    model.save('final_model.hdf5')

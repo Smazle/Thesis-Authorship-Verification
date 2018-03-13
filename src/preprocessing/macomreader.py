@@ -4,7 +4,7 @@ import itertools
 import numpy as np
 import random
 import sys
-from collections import Counter, defaultdict
+from collections import Counter
 import pickle
 
 
@@ -148,7 +148,6 @@ class MacomReader:
         self.f_val.close()
 
         if self.save_file is not None:
-            print('I AM RUNNING')
             with open(self.save_file, 'wb') as save_here:
                 pickle.dump(self, save_here)
 
