@@ -7,6 +7,7 @@ import random
 from collections import Counter
 import pickle
 import sys
+from ..util import utilities as util
 
 
 # Class assume that authors are in order. It will not work if they are not in
