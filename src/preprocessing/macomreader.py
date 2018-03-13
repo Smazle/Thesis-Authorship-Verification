@@ -5,6 +5,7 @@ import numpy as np
 import random
 import sys
 from collections import Counter, defaultdict
+import pickle
 
 
 # Class assume that authors are in order. It will not work if they are not in
@@ -37,8 +38,11 @@ class MacomReader:
     # Set of characters that are below the cutoff given (they are ignored).
     vocabulary_below_cutoff = {}
 
-    # The one hot encoding we use to represent padding of texts.
+    # The encoding we use to represent padding of texts.
     padding = None
+
+    # The encoding we use to represent garbage characters.
+    garbage = None
 
     # The path of the datafile.
     filepath = None
@@ -81,11 +85,14 @@ class MacomReader:
     # List of validation problems.
     validation_problems = None
 
+    # If not None the reader will save the state of the reader to the filename.
+    save_file = None
+
     # TODO: Take argument specifying whether or not to ignore first line in
     # file.
     def __init__(self, filepath, batch_size=32, newline='$NL$',
                  semicolon='$SC$', encoding='one-hot', validation_split=0.8,
-                 vocabulary_frequency_cutoff=0.0):
+                 vocabulary_frequency_cutoff=0.0, save_file=None):
 
         if encoding != 'one-hot' and encoding != 'numbers':
             raise ValueError('encoding should be "one-hot" or "numbers"')
@@ -106,14 +113,8 @@ class MacomReader:
         self.encoding = encoding
         self.validation_split = validation_split
         self.vocabulary_frequency_cutoff = vocabulary_frequency_cutoff
+        self.save_file = save_file
 
-    def generate_training(self):
-        return self.generate(self.training_problems, self.f)
-
-    def generate_validation(self):
-        return self.generate(self.validation_problems, self.f_val)
-
-    def __enter__(self):
         self.f = open(self.filepath, mode='r', encoding='utf-8')
         self.fb = open(self.filepath, mode='rb')
         self.f_val = open(self.filepath, mode='r', encoding='utf-8')
@@ -124,12 +125,32 @@ class MacomReader:
         self.generate_problems()
         self.generate_vocabulary_map()
 
+        # Close files.
+        self.f.close()
+        self.fb.close()
+        self.f_val.close()
+
+    def generate_training(self):
+        return self.generate(self.training_problems, self.f)
+
+    def generate_validation(self):
+        return self.generate(self.validation_problems, self.f_val)
+
+    def __enter__(self):
+        self.f = open(self.filepath, mode='r', encoding='utf-8')
+        self.f_val = open(self.filepath, mode='r', encoding='utf-8')
+
         return self
 
     def __exit__(self, exc_type, exc_value, traceback):
         self.f.close()
         self.fb.close()
         self.f_val.close()
+
+        if self.save_file is not None:
+            print('I AM RUNNING')
+            with open(self.save_file, 'wb') as save_here:
+                pickle.dump(self, save_here)
 
     def generate_vocabulary_map(self):
         for author in self.authors:
@@ -160,12 +181,14 @@ class MacomReader:
         elif self.encoding == 'numbers':
             encoding = list(range(0, len(self.vocabulary_above_cutoff) + 2))
 
-        self.vocabulary_map = defaultdict(lambda: encoding[-2])
+        self.vocabulary_map = {}
 
         for i, c in enumerate(self.vocabulary_above_cutoff):
             self.vocabulary_map[c] = encoding[i]
 
         self.padding = encoding[-1]
+        self.garbage = encoding[-2]
+
 
     # Read in the file once and build a list of line offsets.
     def generate_seek_positions(self):
@@ -222,7 +245,9 @@ class MacomReader:
         f.seek(self.line_offset[line])
         author, text = f.readline().split(';')
         unescaped = unescape(text, self.newline, self.semicolon)
-        encoded = list(map(lambda x: self.vocabulary_map[x], unescaped))
+
+        encoded = list(map(lambda x: self.vocabulary_map[x]
+            if x in self.vocabulary_map else self.garbage, unescaped))
 
         len_diff = self.max_len - len(encoded)
         padded = encoded + ([self.padding] * len_diff)
@@ -257,6 +282,35 @@ class MacomReader:
                     y[i] = np.array([0, 1])
 
             yield [X_known, X_unknown], y
+
+    def save_reader(self, filename):
+        pickle.dump(self, open(filename, 'wb'))
+
+    # Declare which properties should be saved.
+    def __getstate__(self):
+        return (self.max_len, self.vocabulary_frequency_cutoff, self.vocabulary,
+                self.vocabulary_map, self.vocabulary_usage,
+                self.vocabulary_frequencies, self.vocabulary_above_cutoff,
+                self.vocabulary_below_cutoff, self.padding, self.garbage,
+                self.filepath, self.batch_size, self.newline, self.semicolon,
+                self.line_offset, self.authors, self.problems, self.encoding,
+                self.validation_split, self.training_problems,
+                self.validation_problems, self.save_file)
+
+    # Declare how to read properties from a pickled object.
+    def __setstate__(self, state):
+        (self.max_len, self.vocabulary_frequency_cutoff, self.vocabulary,
+            self.vocabulary_map, self.vocabulary_usage,
+            self.vocabulary_frequencies, self.vocabulary_above_cutoff,
+            self.vocabulary_below_cutoff, self.padding, self.garbage,
+            self.filepath, self.batch_size, self.newline, self.semicolon,
+            self.line_offset, self.authors, self.problems, self.encoding,
+            self.validation_split, self.training_problems,
+            self.validation_problems, self.save_file) = state
+
+
+def load_reader(filename):
+    return pickle.load(open(filename, 'rb'))
 
 
 # Replace escapes in the string from the MaCom dataset.

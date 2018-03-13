@@ -4,7 +4,7 @@
 from keras.layers import Dense, Convolution1D, GlobalMaxPooling1D, Input,\
     Concatenate, Embedding, Dropout, merge
 from keras.models import Model
-from ..preprocessing import MacomReader
+from ..preprocessing import MacomReader, load_reader
 import argparse
 from ..util import CSVWriter
 from keras.callbacks import ModelCheckpoint
@@ -31,15 +31,31 @@ parser.add_argument(
     type=str,
     help='Path to file to visualize network in.'
 )
+parser.add_argument(
+    '--reader',
+    type=str,
+    help='Use this pickled reader and not a new reader.'
+)
+parser.add_argument(
+    '--weights',
+    type=str,
+    help='Use the weights given as start weights instead of randomly' +
+         ' initializing.'
+)
 args = parser.parse_args()
 
-reader = MacomReader(
-    args.datafile,
-    batch_size=2,
-    encoding='numbers',
-    vocabulary_frequency_cutoff=1 / 100000,
-    validation_split=0.95
-)
+# Either load reader from file or create a new one.
+if args.reader is not None:
+    reader = load_reader(args.reader)
+else:
+    reader = MacomReader(
+        args.datafile,
+        batch_size=2,
+        encoding='numbers',
+        vocabulary_frequency_cutoff=1 / 100000,
+        validation_split=0.95,
+        save_file='reader.p'
+    )
 
 with reader as generator:
     inshape = (generator.max_len, )
@@ -109,7 +125,7 @@ with reader as generator:
         ModelCheckpoint(
             'weights.{epoch:02d}-{val_loss:.2f}.hdf5',
             monitor='val_loss',
-            save_best_only=True,
+            save_best_only=False,
             save_weights_only=True
         )
     ]
@@ -117,13 +133,19 @@ with reader as generator:
     if args.history is not None:
         callbacks.append(
             CSVWriter(
-                generator.generate_validation(), val_steps_n, args.history
+                generator.generate_validation(), val_steps_n,
+                generator.generate_training(), steps_n, args.history,
+                args.weights is not None
             )
         )
 
     # If we are asked to visualize model, do so.
     if args.graph is not None:
         plot_model(model, to_file=args.graph)
+
+    # If we are given weights, load them.
+    if args.weights is not None:
+        model.load_weights(args.weights)
 
     model.fit_generator(
         generator=generator.generate_training(),
