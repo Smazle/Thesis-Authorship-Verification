@@ -1,5 +1,6 @@
-#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+# !/usr/bin/env python3
+
 import random
 import sys
 from feature_extractor import FeatureExtractor
@@ -53,11 +54,10 @@ FREQ = 27535
 #            FREQ.append(word_frequencies)
 # print(char_grams)
 
-POS = list(map(lambda x: (x, 50), N))
-SPEC = list(map(lambda x: (x, 50), N))
+POS = list(map(lambda x: (x, 50), [2, 3, 4]))
+SPEC = list(map(lambda x: (x, 50), [2, 3, 4]))
 CHAR = list(map(lambda x: (x, 300), N))
-WORD = list(map(lambda x: (x, 500), N))
-FREQ = list(map(lambda x: (x, 500), N))
+WORD = list(map(lambda x: (x, 500), [2, 3, 4]))
 
 feature_extractor = FeatureExtractor(authors,
                                      postag_grams=POS,

@@ -25,7 +25,7 @@ cutoff point. While we wanted to limit the number of different characters
 the network would have to consider we also wanted to make sure that a couple
 of Danish characters would be considered. In particular the characters \ae,
 \o, \aa, \AE, \O\ and \AA. Those characters occur with the frequencies
-$7.23\cdot10^{-3}$, $5.5\cdot10^{-3}$, $8.5\cdot10^{-1}$, $1.85\cdot10^{10-5}$,
+$7.23\cdot10^{-3}$, $5.5\cdot10^{-3}$, $8.5\cdot10^{-3}$, $1.85\cdot10^{-5}$,
 $3.13\cdot10^{-5}$ and $2.08\cdot10^{-5}$ respectively and will therefore
 all be included. The overall frequency distribution can be seen in figure
 \ref{fig:character_frequencies}.
@@ -47,27 +47,26 @@ which had only a very small character count compared to the average and median,
 was in most cases just a blank assignment submission. A blank submission, is
 when a student doesn't provide an text, as their submission, but rather a
 document containing nothing, or a declaration of them not having produced a
-text. As such the existence of these papers wont yield any positive input to
-our applied method, and is therefore removed. This is done by applying a 200
-minimum character limit on each text in our data. On the other hand a character
-count which is too large, can also negatively impact the application of our
-different methods. This isn't necessarily tied to the content of the text, but
-rather the count. When applying our deep learning methods, all texts are padded
-to match the longest on in the data set. This means that in our case, all texts
-would have to padded to match the character count of 1,849,919. This would lead
-to a very large decrease in performance, with the only payoff being that we
-would get to keep the large outlier in our data set. We didn't believe that this
-trade-off was worth it, so we applied a 30.000 character upper limit on our data
-set. In the end, this resulted in only TODO texts being ignored, of which TODO
-was erroneous extracts anyway, so overall impact on the data quality was only
-small.
+text. As such the existence of these papers wont yield any positive input to our
+applied method, and is therefore removed. This is done by applying a 200 minimum
+character limit on each text in our data, which resulted in 356 being removed
+from out dataset. On the other hand a character count which is too large, can
+also negatively impact the application of our different methods. This isn't
+necessarily tied to the content of the text, but rather the count. When applying
+our deep learning methods, all texts are padded to match the longest on in the
+data set. This means that in our case, all texts would have to padded to match
+the character count of 1,849,919. This would lead to a very large decrease in
+performance, with the only payoff being that we would get to keep the large
+outlier in our data set. We didn't believe that this trade-off was worth it,
+so we applied a 30.000 character upper limit on our data set. In the end, this
+resulted in only 12 texts being ignored.
 
 On the topic of erroneous extracts, the texts we were given were extracted from
 \textit{.pdf} files and there will therefore sometimes be garbage included. In
 order to combat that, we looked at the average unique character count of each of
-the texts in the data set. They had an average of of TODO unique characters, and
-a median of TODO unique characters. Comparing this to the fact that the minimum
-unique character count is TODO, and the max unique character count is TODO,
+the texts in the data set. They had an average of of 59 unique characters, and
+a median of 61 unique characters. Comparing this to the fact that the minimum
+unique character count is 2, and the max unique character count is 280,
 left us to deduce that there was some outliers in the set in terms of unique
 character count. After looking at the texts with the highest unique character
 count, a trend emerged. If a text had over around 100 characters, the text

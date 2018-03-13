@@ -8,6 +8,11 @@ import matplotlib.pyplot as plt
 import sys; sys.path.insert(0, '../src/util/')
 import utilities as util
 
+
+def fix_space(x):
+    return x.replace(' ', '{SPACE}')
+
+
 parser = argparse.ArgumentParser(
     description=(
         'Return statistics about the CSV files we get from MaCom. ' +
@@ -51,6 +56,8 @@ print('\nAverage length', np.average(lengths))
 print('Median length', np.median(lengths))
 print('Max length', np.max(lengths))
 print('Min length', np.min(lengths))
+print('Texts Under Min', len(list(filter(lambda x: x < 200, lengths))))
+print('Texts Over Max', len(list(filter(lambda x: x > 30000, lengths))))
 
 print('\nAverage Unique Characters', np.average(uniques))
 print('Median Unique Characters', np.median(uniques))
@@ -58,6 +65,7 @@ print('Min Unique Characters', np.min(uniques))
 print('Max Unique Characters', np.max(uniques))
 print('Percieved Garbage Texts',
       len(list(filter(lambda x: x >= 100, uniques))))
+
 
 author_number_texts = list(map(lambda x: len(x), authors.values()))
 print('\nAuthor number', len(authors))
@@ -81,7 +89,7 @@ for i, char in enumerate(d_freq):
 # Character Destribution
 charset = sorted(charset.items(), key=lambda x: x[1], reverse=True)
 
-characters = list(map(lambda x: x[0], charset))
+characters = list(map(lambda x: fix_space(x[0]), charset))
 frequencies = list(map(lambda x: x[1] / charcount, charset))
 X = range(len(characters))
 
@@ -101,5 +109,6 @@ line2 = plt.plot(X, [1.0 / 100000.0] * len(X), color='red', label='Threshold')
 plt.legend(handles=[line1[0], line2[0]])
 
 plt.savefig('Frequencies.png')
+
 
 # print('Charset', charset)
