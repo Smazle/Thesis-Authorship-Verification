@@ -6,7 +6,7 @@ import numpy as np
 import random
 from collections import Counter
 import pickle
-import sys; sys.path.insert(0, '../../util/')
+import sys; sys.path.insert(0, '../util/')
 import utilities as util
 
 
@@ -92,8 +92,8 @@ class MacomReader:
 
     # TODO: Take argument specifying whether or not to ignore first line in
     # file.
-    def __init__(self, filepath, batch_size=32, newline='$NL$',
-                 semicolon='$SC$', encoding='one-hot', validation_split=0.8,
+    def __init__(self, filepath, batch_size=32, char=True,
+                 encoding='one-hot', validation_split=0.8,
                  vocabulary_frequency_cutoff=0.0, save_file=None):
 
         if encoding != 'one-hot' and encoding != 'numbers':
@@ -108,10 +108,9 @@ class MacomReader:
                              'required')
 
         # Save parameters.
+        self.char = char
         self.filepath = filepath
         self.batch_size = batch_size
-        self.newline = newline
-        self.semicolon = semicolon
         self.encoding = encoding
         self.validation_split = validation_split
         self.vocabulary_frequency_cutoff = vocabulary_frequency_cutoff
@@ -160,6 +159,8 @@ class MacomReader:
                 self.f.seek(self.line_offset[line])
                 text = self.f.readline()
                 decoded = util.clean(text)
+                if not self.char:
+                    decoded = util.wordProcess(decoded)
 
                 self.vocabulary = self.vocabulary.union(decoded)
                 self.vocabulary_usage = self.vocabulary_usage + \
@@ -247,6 +248,8 @@ class MacomReader:
         f.seek(self.line_offset[line])
         author, text = f.readline().split(';')
         unescaped = util.clean(text)
+        if not self.char:
+            unescaped = util.wordProcess(text)
 
         encoded = list(map(lambda x: self.vocabulary_map[x]
                            if x in self.vocabulary_map else
@@ -322,7 +325,9 @@ if __name__ == '__main__':
         sys.argv[1],
         vocabulary_frequency_cutoff=1 / 100000,
         encoding='numbers',
-        validation_split=0.95
+        validation_split=0.95,
+        char=False,
+        batch_size=1
     )
 
     with reader as generator:
