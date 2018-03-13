@@ -1,11 +1,13 @@
-#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+# !/usr/bin/python3
 
 import itertools
 import numpy as np
 import random
-import sys
-from collections import Counter, defaultdict
+from collections import Counter
 import pickle
+import sys; sys.path.insert(0, '../../util/')
+import utilities as util
 
 
 # Class assume that authors are in order. It will not work if they are not in
@@ -157,10 +159,11 @@ class MacomReader:
             for line in self.authors[author]:
                 self.f.seek(self.line_offset[line])
                 text = self.f.readline()
-                decoded = unescape(text, self.newline, self.semicolon)
+                decoded = util.clean(text)
 
                 self.vocabulary = self.vocabulary.union(decoded)
-                self.vocabulary_usage = self.vocabulary_usage + Counter(decoded)
+                self.vocabulary_usage = self.vocabulary_usage + \
+                    Counter(decoded)
 
                 if len(decoded) > self.max_len:
                     self.max_len = len(decoded)
@@ -188,7 +191,6 @@ class MacomReader:
 
         self.padding = encoding[-1]
         self.garbage = encoding[-2]
-
 
     # Read in the file once and build a list of line offsets.
     def generate_seek_positions(self):
@@ -244,10 +246,11 @@ class MacomReader:
     def read_line(self, line, f):
         f.seek(self.line_offset[line])
         author, text = f.readline().split(';')
-        unescaped = unescape(text, self.newline, self.semicolon)
+        unescaped = util.clean(text)
 
         encoded = list(map(lambda x: self.vocabulary_map[x]
-            if x in self.vocabulary_map else self.garbage, unescaped))
+                           if x in self.vocabulary_map else
+                           self.garbage, unescaped))
 
         len_diff = self.max_len - len(encoded)
         padded = encoded + ([self.padding] * len_diff)
@@ -263,9 +266,9 @@ class MacomReader:
 
             if self.encoding == 'one-hot':
                 X_known = np.zeros((self.batch_size, self.max_len,
-                                   len(self.vocabulary) + 1))
+                                    len(self.vocabulary) + 1))
                 X_unknown = np.zeros((self.batch_size, self.max_len,
-                                     len(self.vocabulary) + 1))
+                                      len(self.vocabulary) + 1))
                 y = np.zeros((self.batch_size, 2))
             elif self.encoding == 'numbers':
                 X_known = np.zeros((self.batch_size, self.max_len))
@@ -288,7 +291,8 @@ class MacomReader:
 
     # Declare which properties should be saved.
     def __getstate__(self):
-        return (self.max_len, self.vocabulary_frequency_cutoff, self.vocabulary,
+        return (self.max_len, self.vocabulary_frequency_cutoff,
+                self.vocabulary,
                 self.vocabulary_map, self.vocabulary_usage,
                 self.vocabulary_frequencies, self.vocabulary_above_cutoff,
                 self.vocabulary_below_cutoff, self.padding, self.garbage,
@@ -311,11 +315,6 @@ class MacomReader:
 
 def load_reader(filename):
     return pickle.load(open(filename, 'rb'))
-
-
-# Replace escapes in the string from the MaCom dataset.
-def unescape(text, newline, semicolon):
-    return text.replace(newline, '\n').replace(semicolon, ';')
 
 
 if __name__ == '__main__':
