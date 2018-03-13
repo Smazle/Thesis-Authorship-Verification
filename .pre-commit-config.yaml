@@ -15,6 +15,6 @@ repos:
         - id: double-quote-string-fixer 
           types: [python]
         - id: end-of-file-fixer
-          types: [file]
+          types: [file, python]
         - id: mixed-line-ending
-          types: [file]
+          types: [file, python]
