@@ -294,14 +294,13 @@ class MacomReader:
     # Declare which properties should be saved.
     def __getstate__(self):
         return (self.max_len, self.vocabulary_frequency_cutoff,
-                self.vocabulary,
-                self.vocabulary_map, self.vocabulary_usage,
+                self.vocabulary, self.vocabulary_map, self.vocabulary_usage,
                 self.vocabulary_frequencies, self.vocabulary_above_cutoff,
                 self.vocabulary_below_cutoff, self.padding, self.garbage,
                 self.filepath, self.batch_size, self.newline, self.semicolon,
                 self.line_offset, self.authors, self.problems, self.encoding,
                 self.validation_split, self.training_problems,
-                self.validation_problems, self.save_file)
+                self.validation_problems, self.save_file, self.char)
 
     # Declare how to read properties from a pickled object.
     def __setstate__(self, state):
