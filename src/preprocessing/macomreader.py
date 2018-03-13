@@ -1,11 +1,12 @@
-#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+# !/usr/bin/python3
 
 import itertools
 import numpy as np
 import random
-import sys
 from collections import Counter
 import pickle
+import sys
 
 
 # Class assume that authors are in order. It will not work if they are not in
@@ -90,8 +91,8 @@ class MacomReader:
 
     # TODO: Take argument specifying whether or not to ignore first line in
     # file.
-    def __init__(self, filepath, batch_size=32, newline='$NL$',
-                 semicolon='$SC$', encoding='one-hot', validation_split=0.8,
+    def __init__(self, filepath, batch_size=32, char=True,
+                 encoding='one-hot', validation_split=0.8,
                  vocabulary_frequency_cutoff=0.0, save_file=None):
 
         if encoding != 'one-hot' and encoding != 'numbers':
@@ -106,10 +107,9 @@ class MacomReader:
                              'required')
 
         # Save parameters.
+        self.char = char
         self.filepath = filepath
         self.batch_size = batch_size
-        self.newline = newline
-        self.semicolon = semicolon
         self.encoding = encoding
         self.validation_split = validation_split
         self.vocabulary_frequency_cutoff = vocabulary_frequency_cutoff
@@ -156,10 +156,13 @@ class MacomReader:
             for line in self.authors[author]:
                 self.f.seek(self.line_offset[line])
                 text = self.f.readline()
-                decoded = unescape(text, self.newline, self.semicolon)
+                decoded = util.clean(text)
+                if not self.char:
+                    decoded = util.wordProcess(decoded)
 
                 self.vocabulary = self.vocabulary.union(decoded)
-                self.vocabulary_usage = self.vocabulary_usage + Counter(decoded)
+                self.vocabulary_usage = self.vocabulary_usage + \
+                    Counter(decoded)
 
                 if len(decoded) > self.max_len:
                     self.max_len = len(decoded)
@@ -187,7 +190,6 @@ class MacomReader:
 
         self.padding = encoding[-1]
         self.garbage = encoding[-2]
-
 
     # Read in the file once and build a list of line offsets.
     def generate_seek_positions(self):
@@ -243,10 +245,13 @@ class MacomReader:
     def read_line(self, line, f):
         f.seek(self.line_offset[line])
         author, text = f.readline().split(';')
-        unescaped = unescape(text, self.newline, self.semicolon)
+        unescaped = util.clean(text)
+        if not self.char:
+            unescaped = util.wordProcess(text)
 
         encoded = list(map(lambda x: self.vocabulary_map[x]
-            if x in self.vocabulary_map else self.garbage, unescaped))
+                           if x in self.vocabulary_map else
+                           self.garbage, unescaped))
 
         len_diff = self.max_len - len(encoded)
         padded = encoded + ([self.padding] * len_diff)
@@ -262,9 +267,9 @@ class MacomReader:
 
             if self.encoding == 'one-hot':
                 X_known = np.zeros((self.batch_size, self.max_len,
-                                   len(self.vocabulary) + 1))
+                                    len(self.vocabulary) + 1))
                 X_unknown = np.zeros((self.batch_size, self.max_len,
-                                     len(self.vocabulary) + 1))
+                                      len(self.vocabulary) + 1))
                 y = np.zeros((self.batch_size, 2))
             elif self.encoding == 'numbers':
                 X_known = np.zeros((self.batch_size, self.max_len))
@@ -287,7 +292,8 @@ class MacomReader:
 
     # Declare which properties should be saved.
     def __getstate__(self):
-        return (self.max_len, self.vocabulary_frequency_cutoff, self.vocabulary,
+        return (self.max_len, self.vocabulary_frequency_cutoff,
+                self.vocabulary,
                 self.vocabulary_map, self.vocabulary_usage,
                 self.vocabulary_frequencies, self.vocabulary_above_cutoff,
                 self.vocabulary_below_cutoff, self.padding, self.garbage,
@@ -312,17 +318,14 @@ def load_reader(filename):
     return pickle.load(open(filename, 'rb'))
 
 
-# Replace escapes in the string from the MaCom dataset.
-def unescape(text, newline, semicolon):
-    return text.replace(newline, '\n').replace(semicolon, ';')
-
-
 if __name__ == '__main__':
     reader = MacomReader(
         sys.argv[1],
         vocabulary_frequency_cutoff=1 / 100000,
         encoding='numbers',
-        validation_split=0.95
+        validation_split=0.95,
+        char=False,
+        batch_size=1
     )
 
     with reader as generator:

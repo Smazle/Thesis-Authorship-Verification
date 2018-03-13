@@ -1,5 +1,5 @@
-#!/usr/bin/python3
 # -*- coding: utf-8 -*-
+# !/usr/bin/python3
 
 from keras.layers import Dense, Convolution1D, GlobalMaxPooling1D, Input,\
     Concatenate, Embedding, Dropout, merge

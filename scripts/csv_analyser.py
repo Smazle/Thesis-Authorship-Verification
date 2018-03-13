@@ -33,12 +33,21 @@ lengths = []
 authors = {}
 charset = Counter()
 uniques = []
+words = []
+uniqueWords = []
 for line in f:
     author, text = line.split(';')
     text = util.clean(text)
 
     lengths.append(len(text))
     uniques.append(len(set(list(text))))
+
+    cleanText = list(
+        filter(lambda x: x != '', text.replace('\n', ' ').split(' ')))
+    cleanText = [''.join(list(filter(lambda x: x.isalnum(), q)))
+                 for q in cleanText]
+    words.append(len(cleanText))
+    uniqueWords.append(len(set(cleanText)))
 
     if author in authors:
         authors[author].append(len(text))
@@ -52,12 +61,14 @@ charcount = float(sum(lengths))
 
 print('\nNumber of texts', len(lengths))
 
-print('\nAverage length', np.average(lengths))
-print('Median length', np.median(lengths))
-print('Max length', np.max(lengths))
-print('Min length', np.min(lengths))
-print('Texts Under Min', len(list(filter(lambda x: x < 200, lengths))))
-print('Texts Over Max', len(list(filter(lambda x: x > 30000, lengths))))
+print('\nAverage character count', np.average(lengths))
+print('Median character count', np.median(lengths))
+print('Max character count', np.max(lengths))
+print('Min character count', np.min(lengths))
+print('Texts Under Min characters', len(
+    list(filter(lambda x: x < 200, lengths))))
+print('Texts Over Max characters', len(
+    list(filter(lambda x: x > 30000, lengths))))
 
 print('\nAverage Unique Characters', np.average(uniques))
 print('Median Unique Characters', np.median(uniques))
@@ -66,6 +77,15 @@ print('Max Unique Characters', np.max(uniques))
 print('Percieved Garbage Texts',
       len(list(filter(lambda x: x >= 100, uniques))))
 
+print('\nAverage word count', np.average(words))
+print('Median word count', np.median(words))
+print('Max word count', np.max(words))
+print('Min word count', np.min(words))
+
+print('\nAverage Unique Characters', np.average(uniqueWords))
+print('Median Unique Characters', np.median(uniqueWords))
+print('Min Unique Characters', np.min(uniqueWords))
+print('Max Unique Characters', np.max(uniqueWords))
 
 author_number_texts = list(map(lambda x: len(x), authors.values()))
 print('\nAuthor number', len(authors))
