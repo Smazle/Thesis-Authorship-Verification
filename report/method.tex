@@ -434,6 +434,55 @@ training and validation accuracies per epoch can be seen in Figure
 The maximum validation accuracy obtained were 0.74464 in epoch 12.
 
 
+\subsection{Siamese Neural Network - Iteration 3}
+
+In iteration 2 we observed that the network seemed to learn everything in the
+first epoch and didn't improve much after that. We also observed that the
+accuracy improved compared to the first network. We therefore wanted to try a
+larger network which would be able to hopefully learn more and obtain a higher
+accuracy than our first two networks.
+
+We both tried adding more convolutions and adding more dense layers. Our third
+network use 700 convolutions of size 8 (currently drawn confusingly) and 500
+convolutions of size 4. The network then contains 4 dense layers all with 500
+hidden neurons with \gls{ReLu} activation function. Then a dropout layer with
+30\% dropout and finally the output layer with 2 neurons and a softmax
+activation function. The function we use to combine the features from the two
+texts are still the absolute difference as that seemed to work fine for the
+previous network. We have shown the structure of the third network in Figure
+\ref{fig:network3}.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{./pictures/method/network3.png}
+    \caption{Illustrate the structure of our third Siamese Neural Network.}
+    \label{fig:network3}
+\end{figure}
+
+
+\subsection{Prediction System}
+
+The networks we have trained above does not solve the problem presented to us
+by MaCom. The networks above all compare two texts and predict whether or not
+they have been written by the same person. In the MaCom problem we are given a
+set of texts for each author so we can make use of all texts when making our
+predictions. We can also use metadata about the individual texts to make our
+prediction. We can for example weigh the newest texts higher authorship than
+the older texts. As described earlier writing style changes over time and it is
+therefore clear that newer texts captures more of an authors current writing
+style than older. An advantage of using multiple texts for each author to make a
+prediction is that outliers will be averaged out.
+
+The scheme we have (will eventually*) implement is using the networks we trained
+previously to predict all texts of an author and then take a weighted average
+over the probabilities of the predictions. More formally given a text $x$, a
+trained neural network $N$ and an author $a$ with $n$ previous texts we will
+verify whether or not $x$ is written by $a$ by using the network to compare each
+$t \in a$ to $x$. That gives us $n$ probabilities $P$ of the text $x$ being
+written by the same author as that $t \in a$. We then take a weighted average
+over $P$ to obtain a final probability $p$. We then threshold that final
+probability such that we don't accuse to many people of cheating.
+
 TODO:
 \begin{itemize}
     \item Describe Backpropagration

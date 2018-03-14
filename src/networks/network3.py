@@ -76,7 +76,7 @@ with reader as generator:
                           activation='relu', name='convolutional_4')
 
     conv16 = Convolution1D(filters=200, kernel_size=8, strides=1,
-                           activation='relu', name='convolutional_16')
+                           activation='relu', name='convolutional_8_2')
 
     repr_known1 = GlobalMaxPooling1D(name='known_repr_8')(
         conv8(known_embed))
@@ -88,9 +88,9 @@ with reader as generator:
     repr_unknown2 = GlobalMaxPooling1D(name='unknown_repr_4')(
         conv4(unknown_embed))
 
-    repr_known3 = GlobalMaxPooling1D(name='known_repr_16')(
+    repr_known3 = GlobalMaxPooling1D(name='known_repr_8_2')(
         conv16(known_embed))
-    repr_unknown3 = GlobalMaxPooling1D(name='unknown_repr_16')(
+    repr_unknown3 = GlobalMaxPooling1D(name='unknown_repr_8_2')(
         conv16(unknown_embed))
 
     repr_known = Concatenate()([repr_known1, repr_known2, repr_known3])
