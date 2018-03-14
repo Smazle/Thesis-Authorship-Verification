@@ -169,5 +169,29 @@ from the texts and used those as the features. Using these features, some
 date of the text, they trained a SVM classifier, which ended up with an
 accuracy of 84\%
 
+An example of a profile-based authorship attribution approach, which is highly
+regarded by \cite{stamatos2009}, make use of a compression. This works, not
+by having represented each author library as a set of features, but rather
+makes use of compression to do so. In the initial scenario, we have a set of
+author-profiles, which is the concatenation of all their individual work.
+When a new text is then introduced the authorship is determined by looping
+through each author, adding it library (their concatenated profile). The
+profile is then compressed, both with and without the new text included in its
+library. The bit-wise difference is then computed, by subtracting them from
+one another, resulting in what is essentially the cross-entropy between the
+two texts. The author which the lowest cross-entropy is then considered to be
+the author of this new text. Different methods of comprehension can be used as
+the base for this model, each giving different results. In the instance that
+\cite{stamatos2009} describes, RAR compression yielded the best results, but
+this of cause depends on the scenario one finds oneself in.
+
+As for instance-based approaches they use a more classic machine learning
+approach. Texts are again represented as a set of features. Then each texts
+features is used as a training sample. Thus several simple machine learning
+approaches can be applied to the data as either a binary classification problem,
+in the case of authorship verification, and a multi-class classification problem
+in the case of authorship attribution.
+
+
 % TODO: Add subsection explaining our choices based on this related work
 % section.
