@@ -110,13 +110,68 @@ In the case of MaCom, we want to minimize the \gls{FNR} as much as possible, so
 as to not wrongfully accuse anyone of not having written their assignment.
 
 
-\subsection{Neural Network Model}
+\subsection{Deep Learning}
 
-A Neural Network consist of a collection of neurons. Each neuron is a simplified
-mathematical model of a neuron in a brain. Each neuron has a set of inputs
-called $x_i$ and a single output called $z_i$. The neurons compute a weighted
-sum of its inputs and applies an activation function $h$ to the weighted sum.
-The weights are called $w_i$. The function each neuron computes is then,
+In this paper we will approach the authorship verification/attribution problem
+using deep-learning. The terms deep learning was first introduced to machine
+machine learning in 1989, and afterward to \gls{NN}'s in 2000. The terms quickly
+became synonymous with \gls{NN}'s due to them being some of the more efficient
+deep learning methods.\cite{Schmidhuber:2015}
+
+With the inner workings of the brain used as the basis, a standard simple
+\gls{NN} consists of a set interconnected processors, called neurons. Each
+of these neurons has a real-valued activation associated with it, which
+activates differently depending on the specific neuron. The input neurons
+activate through perceiving the environment, or in other words, when it
+is fed data externally. Other neurons are simply activated through the
+weighted activation of previous neurons. It these weights the focus is on in
+deep learning, more details regarding this will be presented later in the
+paper.\cite{DBLP:journals/corr/Schmidhuber14}
+
+\gls{NN}'s have been around since the 1940'ies. However, back then they were
+merely variations of the linear regressors used at the time, and wasn't
+very reminiscent of the Networks on can see today. It wasn't until the
+late 1960'ies, early 70'ies, that networks comparable to the more modern
+approaches surfaced. Examples of such early works, are the two publications
+\cite{ivakhnenko1973cybernetic} and \cite{4308320}, which describe multi-layered
+feed-forward supervised neural network architectures. While the work described
+in \cite{4308320} was indeed one of the first cases of the modern \gls{NN},
+actually getting the network to learn was still a problem, as the tweaking of
+individual weights attributed to each neuron in the network wasn't trivial.
+Little did they know, research to solve that problem was already in progress.
+The basics of continuous back \gls{BP} was initially described in 1960, in
+\cite{Kelley1960}, quickly followed by a simpler approach which used only the
+chain rule in 1962, \cite{DREYFUS196230}. It wasn't until 1970 that the modern
+version of \gls{BP} was described, using automatic differentiation as its'
+basis. With this, the increase in research of usages of \gls{BP} increased the
+following decades. As the computational power increased several 1000 folds in
+the 90'ies and 2000, so the did the practical usage of \gls{BP}, and \gls{NN} in
+general, a increase that has since increased even more. \cite{Schmidhuber:2015}
+
+Like with the history of authorship attribution, research in this area of
+science picked up more interest, as we entered the modern computational age,
+and with the introduction of the \gls{CNN}. \gls{CNN}'s bases themselves on
+the early work described in \cite{TJP:TJP19681951215}. They showed that cats
+and monkeys visual cortexes contains a set of neurons, each individually
+responding to a receptive field, or area, of their field of view. Neighboring
+receptive fields all have a certain amount of overlap, however in the end
+a cohesive view is created. This is what paved the way for neocognition
+in 1980\cite{Fukushima1980}, the basis of \gls{CNN}'s, which works in a
+very similar manner, by looking overlapping subsections of some data. These
+convolutional neurons however were rarely used alone, but together with a
+down-sampling neuron such Max Pooling introduced in 1993.\cite{Schmidhuber:2015}
+
+TODO: Add more maybe? Change degree of detail
+
+\subsubsection{Neurons}
+
+As mentioned previously a \gls{NN} consists of a collection of neurons. Each
+neuron is a simplified mathematical model, which behaves much like neurons in in
+the brain would, receiving, processing and transmitting data/information. Each
+neuron has a set of inputs called $x_i$ and a single output called $z_i$. The
+neurons compute a weighted sum of its inputs and applies an activation function
+$h$ to the weighted sum. The weights are called $w_i$. The function each neuron
+computes is then,
 
 \begin{equation}
     z_i = h\left(
@@ -124,9 +179,20 @@ The weights are called $w_i$. The function each neuron computes is then,
     \right).
 \end{equation}
 
-The learning of each neuron consist of changing the weights of the inputs to
-give a better output. The activation function $h$ is usually a non linear
-function. A plot of different activation functions are shown in Figure
+The learning of a \gls{NN} consist of changing the weights applied at each
+neuron, with the goal of enabling the network to make accurate decision
+based on an underlying structure in the data it used to tweak its' weights
+based on.
+
+The activation function $h$, used at each neuron, defines the output of the
+node given a certain input. A simple example of a would be computer chip
+circuit, which can be seen as a series of activation functions outputting 0 or
+1 depending on their input. This activation function would be a linear one.
+When applying activation functions to neurons in \gls{NN}'s, they are usually
+non-linear, as it allows for the computation of more complex problems using a
+smaller amount of neurons, relative to usage of a linear activation function.
+
+A plot of different activation functions is shown in Figure
 \ref{fig:activation_functions}.
 
 \begin{figure}
@@ -138,7 +204,31 @@ function. A plot of different activation functions are shown in Figure
     \label{fig:activation_functions}
 \end{figure}
 
-We mainly use the \gls{ReLu} activation function in the middle of our networks.
+Each activation function has its' pros and cons. We mainly use the \gls{ReLu}
+activation function in the hidden layers of our networks. The reason for this
+selection is its' general purpose use. When selecting a activation function
+for your neurons, the best function would be the one which best approximates
+the underlying function. Without a good idea as to what that function might
+be, \gls{ReLu} is a good starting point. Its' simplicity provides a quick
+computation time, and its' below zero limitation means that a large portion
+of the network won't be activating, resulting in smaller computation time. In
+addition to that, the derivative of the function will yield 1 in the case of a
+positive input, resulting in the \gls{BG} loss having equal influence throughout
+the network. I the case of other activation functions, such as the Sigmoid
+function, where the error will be decreased as least a quarter at each layers,
+resulting in big error in the deep layers not reaching the shallow layers of the
+network. This property of the \gls{ReLu} activation function, does however not
+come without its' costs. If the learning rate of the network isn't configured
+correctly, a \gls{ReLu} activated neuron might be blasted with a gradient so
+large, that it never reaches a point of activation again. In other words,
+the neuron "dies". As such, one can risk a network containing a lot of dead,
+non-activation neurons, thus greatly decreasing its' quality. On the other hand
+the sigmoid function, doesn't allow its' neurons to die. Instead they their
+significance to the final output decreases infinitely, until their contribute
+with close to nothing, but still activate, slowing down the network. Its' based
+on these considerations we chose the \gls{ReLu} activation function, leaving us
+the task of properly selecting out learning rate.
+
 
 
 \subsection{Baseline Methods}
@@ -346,6 +436,9 @@ The maximum validation accuracy obtained were 0.74464 in epoch 12.
 
 TODO:
 \begin{itemize}
+    \item Describe Backpropagration
+    \item Describe Optimizers
+    \item Describe RNN
     \item Use squared distance as merge function to get larger differences
         between close and far apart.
     \item Try to not use dense network but a distance metric (we didn't get to
