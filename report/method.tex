@@ -369,6 +369,30 @@ previous network. We have shown the structure of the third network in Figure
     \label{fig:network3}
 \end{figure}
 
+
+\subsection{Prediction System}
+
+The networks we have trained above does not solve the problem presented to us
+by MaCom. The networks above all compare two texts and predict whether or not
+they have been written by the same person. In the MaCom problem we are given a
+set of texts for each author so we can make use of all texts when making our
+predictions. We can also use metadata about the individual texts to make our
+prediction. We can for example weigh the newest texts higher authorship than
+the older texts. As described earlier writing style changes over time and it is
+therefore clear that newer texts captures more of an authors current writing
+style than older. An advantage of using multiple texts for each author to make a
+prediction is that outliers will be averaged out.
+
+The scheme we have (will eventually*) implement is using the networks we trained
+previously to predict all texts of an author and then take a weighted average
+over the probabilities of the predictions. More formally given a text $x$, a
+trained neural network $N$ and an author $a$ with $n$ previous texts we will
+verify whether or not $x$ is written by $a$ by using the network to compare each
+$t \in a$ to $x$. That gives us $n$ probabilities $P$ of the text $x$ being
+written by the same author as that $t \in a$. We then take a weighted average
+over $P$ to obtain a final probability $p$. We then threshold that final
+probability such that we don't accuse to many people of cheating.
+
 TODO:
 \begin{itemize}
     \item Use squared distance as merge function to get larger differences
