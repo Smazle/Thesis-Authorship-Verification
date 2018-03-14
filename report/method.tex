@@ -344,6 +344,31 @@ training and validation accuracies per epoch can be seen in Figure
 The maximum validation accuracy obtained were 0.74464 in epoch 12.
 
 
+\subsection{Siamese Neural Network - Iteration 3}
+
+In iteration 2 we observed that the network seemed to learn everything in the
+first epoch and didn't improve much after that. We also observed that the
+accuracy improved compared to the first network. We therefore wanted to try a
+larger network which would be able to hopefully learn more and obtain a higher
+accuracy than our first two networks.
+
+We both tried adding more convolutions and adding more dense layers. Our third
+network use 700 convolutions of size 8 (currently drawn confusingly) and 500
+convolutions of size 4. The network then contains 4 dense layers all with 500
+hidden neurons with \gls{ReLu} activation function. Then a dropout layer with
+30\% dropout and finally the output layer with 2 neurons and a softmax
+activation function. The function we use to combine the features from the two
+texts are still the absolute difference as that seemed to work fine for the
+previous network. We have shown the structure of the third network in Figure
+\ref{fig:network3}.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{./pictures/method/network3.png}
+    \caption{Illustrate the structure of our third Siamese Neural Network.}
+    \label{fig:network3}
+\end{figure}
+
 TODO:
 \begin{itemize}
     \item Use squared distance as merge function to get larger differences
