@@ -213,7 +213,7 @@ be, \gls{ReLu} is a good starting point. Its' simplicity provides a quick
 computation time, and its' below zero limitation means that a large portion
 of the network won't be activating, resulting in smaller computation time. In
 addition to that, the derivative of the function will yield 1 in the case of a
-positive input, resulting in the \gls{BG} loss having equal influence throughout
+positive input, resulting in the \gls{BP} loss having equal influence throughout
 the network. I the case of other activation functions, such as the Sigmoid
 function, where the error will be decreased as least a quarter at each layers,
 resulting in big error in the deep layers not reaching the shallow layers of the
@@ -228,7 +228,6 @@ significance to the final output decreases infinitely, until their contribute
 with close to nothing, but still activate, slowing down the network. Its' based
 on these considerations we chose the \gls{ReLu} activation function, leaving us
 the task of properly selecting out learning rate.
-
 
 
 \subsection{Baseline Methods}
