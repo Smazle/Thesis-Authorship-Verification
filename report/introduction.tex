@@ -1,81 +1,113 @@
-% TODO: Introduce the MaCom problem. Maybe with a reference to this article.
-% https://www.dr.dk/nyheder/indland/elever-bruger-ghostwritere-til-eksamen
 \section{Introduction} \label{sec:introduction}
 
+% An introduction to the context or background of the topic (you could include
+% interesting facts or quotations)
+
 In this thesis we work on the problem of authorship verification using texts
-written by Danish secondary school pupils. Authorship verification is the
-problem of determining whether a text $x$ is written by the same author as the
-author of a set of texts $Y$. The usual authorship verification method works by
-first extracting features from each $y \in Y$ and from $x$ and then determining
-whether or not the author is the same by comparing the features.
+written by Danish secondary school pupils. Authorship verification and
+authorship attribution, is the ability to distinguish between authors of texts,
+based on a set of extracted textual features. The automation of authorship
+attribution/verification has been a lively branch of research ever since the
+beginning of the digital age, giving birth to online digital text forensics
+tasks, such as \cite{pan:2015}. Initial attempts at quantifying writing style
+can be seen by \cite{Mendenhall237}, who attempted to determine the authorship
+of several of Shakespeare's texts. There is a theory that Shakespeare didn't
+write some or all of his texts, or that he was at least a front for one or more
+unknown authors. \cite{Mendenhall237} attempted this classification, using the
+frequency distribution of words of different lengths. Throughout the years the
+approaches to this problem has changed quite a bit. When authorship attribution
+started to interest researchers the approaches were Stylometric. In addition to
+that, fully automated systems were rare as authorship attribution/verification
+was mostly used in an supporting manner. It was during the 1990's that fully
+automated systems became more prevalent. The main reason for this was the
+Internet. Before the Internet, the data available simply wasn't suitable for
+authorship attribution tasks. Books were too big, resulting in a lack in
+homogeneity, and the amount of authors, and bench-marking data was to small.
+The Internet paved the way for insurmountable amount of data, and variations of
+that data, impacting areas such as information retrieval, machine learning and
+\gls{NLP}.
 
-Authorship verification and authorship attribution, is the ability to
-distinguish between texts, and their associated author, based on a set of
-extracted textual features. The automation of this has been a lively branch of
-research ever since the entering the digital age, giving birth to online digital
-forensics tasks, such as \cite{pan:2015}. Initial attempts at quantifying the
-writing style can be seen by \cite{Mendenhall237}, who attempted to determine
-the authorship of several of Shakespeare's texts. There is a theory that
-Shakespeare didn't write some or all of his texts, or that he was at least a
-front for one or more unknown authors. \cite{Mendenhall237} attempted this
-classification, using the frequency distribution of words of different lengths.
-Throughout the years the approaches to this problem has changed quite a bit.
-When authorship attribution started interesting researchers the approaches were
-more Stylometric in nature. In addition to that, fully automated systems were
-rare as authorship verification/attribution was used mostly in an supporting
-manner. It was during the 1990's that fully automated systems became more
-prevalent. The main reason for this was the Internet. Before the Internet, the
-data available simply wasn't suitable for authorship attribution tasks. Books
-were too big, resulting in a lack in homogeneity, and the amount of authors, and
-bench-marking data was to small. The Internet paved the way for insurmountable
-amount of data, and variations of that data, impacting areas such as information
-retrieval, machine learning and \gls{NLP}.
+In order for any fully automatic authorship verification to work, stylometric
+features describing the text has to be automatically extracted. These features
+span multiple linguistic layers, ranging from the low level character n-grams,
+to the high level application specific features such as text creation date,
+and number of edits. It is using these features many of the current day
+state-of-the-art approaches are based.
 
-This is where authorship verification as we know it enters the picture. Along
-with authorship \gls{NLP} approaches such as authorship attribution and
-plagiarism detection. Authorship verification is, as the name suggests, the task
-of determining whether or not a person is the author of a proposed text. As such
-author verification is a sub-problem of what is called authorship attribution.
-Authorship attribution describes the task of determining the authorship of a
-text from a set of proposed authors. In order for any fully automatic authorship
-verification to work, stylometric features describing the text has to be
-automatically extracted. These features span multiple linguistic layers, ranging
-from the low level character n-grams, to the high level application specific
-features such as text creation date, and number of edits. It is using these
-features many of the current day state-of-the-art approaches are based.
+% The reason for writing about this topic:
 
-Some of these are profile-based approaches where an author is represented
-by all the texts in the his library of work. It is from this collective
-representation on extracts the features from, thus resulting in a feature
-representation that the describe the authors writing style. This yields a more
-general representation of the author, rather than it describing just a singular
-texts, which would be called an instance based approach. An example of such a
-profile-based approach would be the concatenation of the authors library of
-work, from which the features are then extracted as if a giant single text.
-\cite{stamatos2009}
+In this thesis we want to experiment with and solve an authorship
+verification task for the Danish company \texttt{MaCom A/S}
+\footnote{\url{http://www.macom.dk/}}. MaCom is the company behind the
+product \texttt{Lectio} \footnote{\url{https://www.lectio.dk/}}, which is a
+website that allows for student administration, communication, and digital
+teaching aid. Lectio is used on schools all over Denmark. A service the
+website offers, is the submission and handling of assignments written by
+student throughout their enrollment. MaCom has shown interest in determining
+whether or not these assignment were possible written by someone other than
+the student (a "ghost writer"). Ghost writing is especially a problem on
+the \gls{SRP} assignment. \gls{SRP} is an interdisciplinary assignment all
+Danish secondary school students turn in on their second year. There is
+no oral examination for the assignment and the grade obtained is part of
+the students final results from the secondary school. The combination of
+the importance of the assignment and no oral examination leads to students
+turning in assignments written by ghost writers. The Danish state owned public
+service radio and television company \texttt{DR} has written about the problem
+\url{https://www.dr.dk/nyheder/indland/elever-bruger-ghostwritere-til-eksamen}.
+In this thesis we setup a system for detecting ghost writing based on machine
+learning methods. The system is meant to help teachers make decisions about
+whether or not an assignment turned in by a student is written by someone else.
+It is not important that the system catches 100\% of the assignments written by
+someone else. If the system only catches a fraction of the cheaters it will
+function as a deterrent for other students cheating. What is most important is
+that the system does not accuse anyone of cheating who has turned in their own
+assignment. The system should also be able to give a reason for why we think a
+particular assignment is written by someone else. Such a reason could for
+example be that the frequency of particular words are significantly different in
+the new assignment than in all previously handed in by the student. Reasons for
+why we think an assignment is written by someone else will help a teacher if
+he/she wants to accuse a student of using a ghost writer.
 
-An example of the profile-based approach, which is highly regarded by
-\cite{stamatos2009}, make use of a compression. This works, not by having
-represented each author library as a set of features, but rather makes use of
-compression to do so. In the initial scenario, we have a set of author-profiles,
-which is the concatenation of all their individual work. When a new text is then
-introduced the authorship is determined by looping through each author, adding
-it library (their concatenated profile). The profile is then compressed, both
-with and without the new text included in its library. The bit-wise difference
-is then computed, by subtracting them from one another, resulting in what is
-essentially the cross-entropy between the two texts. The author which the lowest
-cross-entropy is then considered to be the author of this new text. Different
-methods of comprehension can be used as the base for this model, each giving
-different results. In the instance that \cite{stamatos2009} describes, RAR
-compression yielded the best results, but this of cause depends on the scenario
-one finds oneself in.
+% Introduce the main ideas that stem from your topic/title and the order in
+% which you will discuss them?
 
-As for instance-based approaches they use a more classic machine learning
-approach. Texts are again represented as a set of features. Then each texts
-features is used as a training sample. Thus several simple machine learning
-approaches can be applied to the data as either a binary classification problem,
-in the case of authorship verification, and a multi-class classification problem
-in the case of authorship attribution.
+A more formal definition of the problem we will be working with are,
+
+
+\begin{definition}
+
+    Authorship verification is a problem where you are given a set of texts $Y$
+    that are all written by the same author $a$ and a single text $x$ of unknown
+    authorship. You then have to determine whether the text $x$ is written by
+    the author $a$.
+
+\end{definition}
+
+Authorship verification is closely linked with the problem of authorship
+attribution,
+
+\begin{definition}
+
+    In authorship attribution you are given a set of authors $A$ and a text $x$.
+    Each $a \in A$ has a set of associated texts $T(a)$. The task is then to
+    find the $a \in A$ that has written the text $x$.
+
+\end{definition}
+
+The problems are closely linked since an answer for authorship attribution can
+be obtained by using authorship verification and an answer for authorship
+verification can be obtained by using authorship attribution. Consider a case
+where we are given a solution to the authorship verification problem $S$. $S$ is
+a mapping from an author $a$ and text $x$ to either true or false. Given an
+instance of the authorship attribution problem with authors $A$ and text $x$ we
+solve the problem by using $S$ on each author $a \in A$. We return the author
+where $S$ reports true. Now consider a case where we are given a solution to the
+authorship attribution problem $S$. $S$ is now a mapping from a set of authors
+$A$ and text $x$ to an author $a \in A$. Given an instance of the authorship
+verification problem with author $a$ and text $x$ and a set of different authors
+$AD$ we solve the verification problem by applying the attribution function to
+the authors $\{a\} \cup AD$ and the text $x$. If we get $a$ back we report
+true and otherwise false.
 
 \subsection{Deep Learning} 
 
@@ -130,28 +162,4 @@ down-sampling neuron such Max Pooling introduced in 1993.\cite{Schmidhuber:2015}
 TODO: Add more maybe? Change degree of detail
 
 
-\subsection{Motivation \& Problem Definition} 
 
-It is using this instance-based approach that we will attempt, in
-the following paper, to device a deep learning approach which can
-solve the authorship verification for the Danish company \texttt{MaCom
-A/S}\footnote{\url{http://www.macom.dk/}}. MaCom is the company behind the
-product \texttt{Lectio}\footnote{\url{https://www.lectio.dk/}}, which is a
-website that allows for student administration, communication, and digital
-teaching aid, and is used on schools all over Denmark. A service the website
-offer, is the submission, and handling of assignments made by student throughout
-their enrollment. MaCom has shown interest in determining whether or not these
-assignment were possible written by someone other than the student. It is
-especially final, end of school assignment, which might has an elevated risk of
-plagiarism and inclusion of ghost-writers. It is this risk they want to mitigate
-by having a piece of software which is able to detect such cases. However, the
-accuracy of this piece of software is of paramount importance. They don't want
-to wrong-fully accuse any student of not writing their assignment. For this
-reason they want a specificity (\gls{TNR}, will be covered later) of at least
-95\%, even if this results in only a 10\% overall accuracy.
-
-\begin{itemize}
-    \item CNN's are good at extracting features from low level data.
-    \item Elaborate description of MaCom data and the "MaCom Problem".
-    \item Expand in general
-\end{itemize}
