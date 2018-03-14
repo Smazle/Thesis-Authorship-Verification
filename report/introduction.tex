@@ -77,6 +77,59 @@ approaches can be applied to the data as either a binary classification problem,
 in the case of authorship verification, and a multi-class classification problem
 in the case of authorship attribution.
 
+\subsection{Deep Learning} 
+
+In this paper we will approach the authorship verification/attribution problem
+using deep-learning. The terms deep learning was first introduced to machine
+machine learning in 1989, and afterward to \gls{NN}'s in 2000. The terms quickly
+became synonymous with \gls{NN}'s due to them being some of the more efficient
+deep learning methods.\cite{Schmidhuber:2015} 
+
+A standard simple \gls{NN} consists of a set interconnected processors, called
+neurons. Each of these neurons has a real-valued activation associated with
+it, which activates differently depending on the specific neuron. The input
+neurons activate through perceiving the environment, or in other words, when
+it is fed data externally. Other neurons are simply activated through the
+weighted activation of previous neurons. It these weights the focus is on in
+deep learning, more details regarding this will be presented later in the
+paper.\cite{DBLP:journals/corr/Schmidhuber14}
+
+\gls{NN}'s have been around since the 1940'ies. However, back then they were
+merely variations of the linear regressors used at the time, and wasn't
+very reminiscent of the Networks on can see today. It wasn't until the
+late 1960'ies, early 70'ies, that networks comparable to the more modern
+approaches surfaced. Examples of such early works, are the two publications
+\cite{ivakhnenko1973cybernetic} and \cite{4308320}, which describe multi-layered
+feed-forward supervised neural network architectures. While the work described
+in \cite{4308320} was indeed one of the first cases of the modern \gls{NN},
+actually getting the network to learn was still a problem, as the tweaking of
+individual weights attributed to each neuron in the network wasn't trivial.
+Little did they know, research to solve that problem was already in progress.
+The basics of continuous back \gls{BP} was initially described in 1960, in
+\cite{Kelley1960}, quickly followed by a simpler approach which used only the
+chain rule in 1962, \cite{DREYFUS196230}. It wasn't until 1970 that the modern
+version of \gls{BP} was described, using automatic differentiation as its'
+basis. With this, the increase in research of usages of \gls{BP} increased the
+following decades. As the computational power increased several 1000 folds in
+the 90'ies and 2000, so the did the practical usage of \gls{BP}, and \gls{NN} in
+general, a increase that has since increased even more. \cite{Schmidhuber:2015}
+
+Like with the history of authorship attribution, research in this area of
+science picked up more interest, as we entered the modern computational age,
+and with the introduction of the \gls{CNN}. \gls{CNN}'s bases themselves on
+the early work described in \cite{TJP:TJP19681951215}. They showed that cats
+and monkeys visual cortexes contains a set of neurons, each individually
+responding to a receptive field, or area, of their field of view. Neighboring
+receptive fields all have a certain amount of overlap, however in the end
+a cohesive view is created. This is what paved the way for neocognition
+in 1980\cite{Fukushima1980}, the basis of \gls{CNN}'s, which works in a
+very similar manner, by looking overlapping subsections of some data. These
+convolutional neurons however were rarely used alone, but together with a
+down-sampling neuron such Max Pooling introduced in 1993.\cite{Schmidhuber:2015}
+
+TODO: Add more maybe? Change degree of detail
+
+
 \subsection{Motivation \& Problem Definition} 
 
 It is using this instance-based approach that we will attempt, in
