@@ -43,22 +43,24 @@ reader = MacomReader(
 with reader as generator:
     inshape = (generator.max_len, )
 
-    known_in = Input(shape=inshape)
-    unknown_in = Input(shape=inshape)
+    known_in = Input(shape=inshape, name='known_input')
+    unknown_in = Input(shape=inshape, name='unknown_input')
 
     embedding = Embedding(len(generator.vocabulary_above_cutoff) + 2, 5,
                           input_length=generator.max_len)
 
     conv = Convolution1D(filters=1000, kernel_size=10, strides=1,
-                         activation='relu')
+                         activation='relu', name='convolution_10')
 
-    repr_known = GlobalMaxPooling1D()(conv(embedding(known_in)))
-    repr_unknown = GlobalMaxPooling1D()(conv(embedding(unknown_in)))
+    repr_known = GlobalMaxPooling1D(name='repr_known')(
+        conv(embedding(known_in)))
+    repr_unknown = GlobalMaxPooling1D(name='repr_unknown')(
+        conv(embedding(unknown_in)))
 
     full_input = Concatenate()([repr_known, repr_unknown])
 
     dense = Dense(500, activation='relu')(full_input)
-    output = Dense(2, activation='softmax')(dense)
+    output = Dense(2, activation='softmax', name='output')(dense)
 
     model = Model(inputs=[known_in, unknown_in], outputs=output)
     model.compile(optimizer='adam',

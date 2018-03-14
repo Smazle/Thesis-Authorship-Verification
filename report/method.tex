@@ -41,13 +41,12 @@ illustrated in Figure \ref{fig:profile_based}.
     \label{fig:profile_based}
 \end{figure}
 
-We will generally use the instance based approach and we will generally use
-Authorship Verification. The reason we use an instance based approach is that it
-allows us to use extra information from each single text. For example writing
-style may change over time especially for secondary school pupils that evolve
-very much in a short amount of time. Since we use an instance based approach we
-are able to weight similarity to newer texts higher than similarity to older
-texts.
+We will generally use the instance based approach. The reason we use an instance
+based approach is that it allows us to use extra information from each single
+text. For example writing style may change over time especially for secondary
+school pupils that evolve very much in a short amount of time. Since we use an
+instance based approach we are able to weight similarity to newer texts higher
+than similarity to older texts.
 
 There are also another split between methods that we consider. There are
 generalizing and author specific models. In a generalizing model only a single
@@ -66,8 +65,8 @@ model once.
 
 As a unit of measuring the quality of our models, and how well they adhere to
 95\% specificity constraint, we will also compute the number of \gls{TP}s,
-\gls{TN}s, \gls{FP}s and \gls{FN}s, as was done
-in a project previously created by us.\cite{US} In these problems we get,
+\gls{TN}s, \gls{FP}s and \gls{FN}s, as was done in a project previously created
+by us.\cite{US} In these problems we get,
 
 \begin{itemize}
     \item a \gls{TP} whenever we answer \textit{True} and the texts are written
@@ -222,7 +221,7 @@ max-over-time pooling layer. The layer takes the maximum value of each feature
 such that we have 1000 features from each text. We then have a normal dense
 neural network on top of that which are given the features of both texts. The
 dense network is then supposed to learn how to compare the features from the two
-texts. We have 2 dense hidden layers each with 500 neurons. At the end we have
+texts. We have 1 dense hidden layer each with 500 neurons. At the end we have
 a output layer with two outputs. The activation function for all layers except
 the last one is the rectified linear unit and the activation function of the
 last layer is the softmax function. The output of the network is a probability
@@ -236,7 +235,7 @@ embeddings will be learned while the network is training.
 
 \begin{figure}[htb]
     \centering
-    \includegraphics[width=0.8\textwidth]{./pictures/method/network1.png}
+    \includegraphics[width=0.6\textwidth]{./pictures/method/network1.png}
     \caption{Illustrate the structure of our first Siamese Neural Network
         Architecture.}
     \label{fig:network_1}
