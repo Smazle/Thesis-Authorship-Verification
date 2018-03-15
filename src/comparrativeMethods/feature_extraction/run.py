@@ -6,7 +6,7 @@ import sys
 from feature_extractor import FeatureExtractor
 import csv
 
-skip = False
+skip = True
 skipLines = 0
 random.seed = 7
 
@@ -54,7 +54,7 @@ FREQ = 27535
 #            FREQ.append(word_frequencies)
 # print(char_grams)
 
-POS = list(map(lambda x: (x, 50), [2, 3, 4]))
+POS = list(map(lambda x: (x, 50), [3, 4]))
 SPEC = list(map(lambda x: (x, 50), [2, 3, 4]))
 CHAR = list(map(lambda x: (x, 300), N))
 WORD = list(map(lambda x: (x, 500), [2, 3, 4]))
