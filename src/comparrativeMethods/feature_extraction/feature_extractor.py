@@ -97,30 +97,33 @@ class FeatureExtractor:
 
             self.extractors = pickle.load(open('Extractors', 'rb'))
 
-    def extract(self, outfile, master_file=None):
+    def extract(self, outfile, skipLines=0, master_file=None):
         # Generate features for each author.
         author_features = []
 
-        for i, [author, text] in enumerate(self.authors):
-            print(text)
-            text = util.clean(text)
-            print(text)
-            try:
-                known_features = self.extract_features(text)
-                print('Text', i)
-            except ZeroDivisionError:
-                print('Text', i, 'Skipped')
-                continue
+        with open(outfile, 'a') as f:
+            print('Starting to generate features')
+            for i, [author, text] in enumerate(self.authors):
+                if i < skipLines:
+                    print('Text', i, 'Skipped'); continue
 
-            features = known_features + [int(author)]
-            author_features.append(features)
+                text = util.clean(text)
+                try:
+                    known_features = self.extract_features(text)
+                    print('Text', i)
+                except ZeroDivisionError:
+                    print('Text', i, 'Err')
+                    f.write('Err' + '\n')
+                    continue
+
+                features = known_features + [int(author)]
+                f.write(' '.join(list(map(str, features))) + '\n')
+                author_features.append(features)
 
         # Write features to file.
         author_features = np.array(author_features)
         if self.normalize:
             author_features[:, :-1] = scale(author_features[:, :-1], axis=0)
-
-        np.savetxt(outfile, author_features)
 
     def extract_features(self, text):
         features = []
@@ -130,6 +133,12 @@ class FeatureExtractor:
 
         return features
 
+
+def cleanFile(output):
+    with open(output) as oldfile, open(output + 'Clean', 'w') as newfile:
+        for line in oldfile:
+            if 'Err' not in line:
+                newfile.write(line)
 
 # TODO: description.
 # class Author:

@@ -1,12 +1,13 @@
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# !/usr/bin/env python3
 
 import random
 import sys
 from feature_extractor import FeatureExtractor
 import csv
 
-skip = True
+skip = False
+skipLines = 0
 random.seed = 7
 
 dataFolder = sys.argv[1]
@@ -15,7 +16,6 @@ outfile = sys.argv[2]
 csvfile = open(dataFolder, 'r', encoding='utf-8')
 authors = csv.reader(csvfile, delimiter=';')
 next(authors)
-
 
 N = []
 N.extend(range(2, 11))
@@ -67,5 +67,5 @@ feature_extractor = FeatureExtractor(authors,
                                      character_grams=CHAR,
                                      skip=skip)
 
-feature_extractor.extract(outfile)
+feature_extractor.extract(outfile, skipLines=skipLines)
 csvfile.close()
