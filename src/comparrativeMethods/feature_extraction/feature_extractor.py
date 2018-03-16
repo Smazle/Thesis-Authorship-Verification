@@ -10,7 +10,7 @@ from nltk.corpus import europarl_raw
 import pickle
 import sys; sys.path.insert(0, '../../util/')
 import utilities as util
-
+import time
 
 # TODO: description.
 class FeatureExtractor:
@@ -104,13 +104,15 @@ class FeatureExtractor:
         with open(outfile, 'a') as f:
             print('Starting to generate features')
             for i, [author, text] in enumerate(self.authors):
+                start = time.time()
                 if i < skipLines:
                     print('Text', i, 'Skipped'); continue
 
                 text = util.clean(text)
                 try:
                     known_features = self.extract_features(text)
-                    print('Text', i)
+                    t = time.time() - start
+                    print('Text', i, "-", t * 1000)
                 except ZeroDivisionError:
                     print('Text', i, 'Err')
                     f.write('Err' + '\n')
@@ -118,7 +120,8 @@ class FeatureExtractor:
 
                 features = known_features + [int(author)]
                 f.write(' '.join(list(map(str, features))) + '\n')
-                author_features.append(features)
+                
+                
 
         # Write features to file.
         author_features = np.array(author_features)
