@@ -4,11 +4,12 @@
 from keras.layers import Dense, Convolution1D, GlobalMaxPooling1D, Input,\
     Concatenate, Embedding, Dropout, merge
 from keras.models import Model
-from ..preprocessing import MacomReader, load_reader
+from ..preprocessing import MacomReader
 import argparse
 from ..util import CSVWriter
 from keras.callbacks import ModelCheckpoint
 from keras.utils import plot_model
+import pickle
 
 
 # Parse arguments.
@@ -46,7 +47,7 @@ args = parser.parse_args()
 
 # Either load reader from file or create a new one.
 if args.reader is not None:
-    reader = load_reader(args.reader)
+    reader = pickle.load(open(args.reader, mode='r'))
 else:
     reader = MacomReader(
         args.datafile,

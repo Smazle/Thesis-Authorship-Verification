@@ -1,3 +1,3 @@
 # -*- encoding: utf-8 -*-
 
-from .macomreader import MacomReader, load_reader
+from .macomreader import MacomReader, LineReader

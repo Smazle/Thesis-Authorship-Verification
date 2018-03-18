@@ -10,6 +10,53 @@ import sys
 from ..util import utilities as util
 
 
+class LineReader:
+
+    # Name of the file we read lines from.
+    filename = None
+
+    # List of line offsets.
+    line_offsets = None
+
+    # Format to read lines as.
+    encoding = None
+
+    # File handle to read from.
+    f = None
+
+    def __init__(self, filename, encoding='utf-8'):
+        self.filename = filename
+        self.encoding = encoding
+
+        self.line_offsets = []
+        with open(self.filename, mode='rb') as f:
+            offset = 0
+            for line in f:
+                self.line_offsets.append(offset)
+                offset += len(line)
+
+    def __enter__(self):
+        self.f = open(self.filename, mode='r', encoding=self.encoding)
+
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        self.f.close()
+
+    def readline(self, line_n):
+        self.f.seek(self.line_offsets[line_n])
+
+        return self.f.readline()
+
+    def readlines(self, skipfirst=False):
+        if skipfirst:
+            for i in range(1, len(self.line_offsets)):
+                yield self.readline(i)
+        else:
+            for i in range(0, len(self.line_offsets)):
+                yield self.readline(i)
+
+
 # Class assume that authors are in order. It will not work if they are not in
 # order.
 class MacomReader:
@@ -52,21 +99,6 @@ class MacomReader:
     # The size of each batch we yield in the generator.
     batch_size = None
 
-    # What string to replace to a newline.
-    newline = None
-
-    # What string to replace with a semicolon.
-    semicolon = None
-
-    # Open datafile.
-    f = None
-
-    # Open datafile in binary mode.
-    fb = None
-
-    # List of offsets the lines in the datafile start on.
-    line_offset = []
-
     # Map from author identifier to list of line numbers.
     authors = {}
 
@@ -89,6 +121,9 @@ class MacomReader:
 
     # If not None the reader will save the state of the reader to the filename.
     save_file = None
+
+    # Whether or not to word encode or character.
+    char = True
 
     # TODO: Take argument specifying whether or not to ignore first line in
     # file.
@@ -116,47 +151,30 @@ class MacomReader:
         self.vocabulary_frequency_cutoff = vocabulary_frequency_cutoff
         self.save_file = save_file
 
-        self.f = open(self.filepath, mode='r', encoding='utf-8')
-        self.fb = open(self.filepath, mode='rb')
-        self.f_val = open(self.filepath, mode='r', encoding='utf-8')
-
         # Generate representation used to generate training data.
-        self.generate_seek_positions()
-        self.generate_authors()
-        self.generate_problems()
-        self.generate_vocabulary_map()
-
-        # Close files.
-        self.f.close()
-        self.fb.close()
-        self.f_val.close()
+        with LineReader(self.filepath) as linereader:
+            self.generate_authors(linereader)
+            self.generate_problems()
+            self.generate_vocabulary_map(linereader)
 
     def generate_training(self):
-        return self.generate(self.training_problems, self.f)
+        return self.generate(self.training_problems)
 
     def generate_validation(self):
-        return self.generate(self.validation_problems, self.f_val)
+        return self.generate(self.validation_problems)
 
     def __enter__(self):
-        self.f = open(self.filepath, mode='r', encoding='utf-8')
-        self.f_val = open(self.filepath, mode='r', encoding='utf-8')
-
         return self
 
     def __exit__(self, exc_type, exc_value, traceback):
-        self.f.close()
-        self.fb.close()
-        self.f_val.close()
-
         if self.save_file is not None:
             with open(self.save_file, 'wb') as save_here:
                 pickle.dump(self, save_here)
 
-    def generate_vocabulary_map(self):
+    def generate_vocabulary_map(self, linereader):
         for author in self.authors:
-            for line in self.authors[author]:
-                self.f.seek(self.line_offset[line])
-                text = self.f.readline()
+            for line_n in self.authors[author]:
+                text = linereader.readline(line_n)
                 decoded = util.clean(text)
                 if not self.char:
                     decoded = util.wordProcess(decoded)
@@ -192,20 +210,8 @@ class MacomReader:
         self.padding = encoding[-1]
         self.garbage = encoding[-2]
 
-    # Read in the file once and build a list of line offsets.
-    def generate_seek_positions(self):
-        self.fb.seek(0)
-
-        offset = 0
-        for line in self.fb:
-            self.line_offset.append(offset)
-            offset += len(line)
-        self.fb.seek(0)
-
-    def generate_authors(self):
-        self.f.seek(self.line_offset[1])
-
-        for i, line in enumerate(self.f):
+    def generate_authors(self, linereader):
+        for i, line in enumerate(linereader.readlines(skipfirst=True)):
             author, text = line.split(';')
 
             if len(text) > 30000:
@@ -214,11 +220,10 @@ class MacomReader:
             elif len(text) < 200:
                 print('WARNING: Skipping text shorter than 200 characters ' +
                       'on line {}'.format(i + 1))
+            elif author in self.authors:
+                self.authors[author].append(i + 1)
             else:
-                try:
-                    self.authors[author].append(i + 1)
-                except KeyError:
-                    self.authors[author] = [i + 1]
+                self.authors[author] = [i + 1]
 
     def generate_problems(self):
 
@@ -243,10 +248,10 @@ class MacomReader:
         self.training_problems = self.problems[:split_point]
         self.validation_problems = self.problems[split_point:]
 
-    def read_line(self, line, f):
-        f.seek(self.line_offset[line])
-        author, text = f.readline().split(';')
+    def read_encoded_line(self, linereader, line_n):
+        author, text = linereader.readline(line_n).split(';')
         unescaped = util.clean(text)
+
         if not self.char:
             unescaped = util.wordProcess(text)
 
@@ -260,74 +265,48 @@ class MacomReader:
         return np.array(padded)
 
     # Generate batches of samples.
-    def generate(self, problems, f):
-        problems = itertools.cycle(problems)
+    def generate(self, problems):
+        with LineReader(self.filepath, encoding='utf-8') as reader:
+            problems = itertools.cycle(problems)
 
-        while True:
-            batch = itertools.islice(problems, self.batch_size)
+            while True:
+                batch = itertools.islice(problems, self.batch_size)
 
-            if self.encoding == 'one-hot':
-                X_known = np.zeros((self.batch_size, self.max_len,
-                                    len(self.vocabulary) + 1))
-                X_unknown = np.zeros((self.batch_size, self.max_len,
-                                      len(self.vocabulary) + 1))
-                y = np.zeros((self.batch_size, 2))
-            elif self.encoding == 'numbers':
-                X_known = np.zeros((self.batch_size, self.max_len))
-                X_unknown = np.zeros((self.batch_size, self.max_len))
-                y = np.zeros((self.batch_size, 2))
+                if self.encoding == 'one-hot':
+                    X_known = np.zeros((self.batch_size, self.max_len,
+                                        len(self.vocabulary) + 1))
+                    X_unknown = np.zeros((self.batch_size, self.max_len,
+                                         len(self.vocabulary) + 1))
+                    y = np.zeros((self.batch_size, 2))
+                elif self.encoding == 'numbers':
+                    X_known = np.zeros((self.batch_size, self.max_len))
+                    X_unknown = np.zeros((self.batch_size, self.max_len))
+                    y = np.zeros((self.batch_size, 2))
 
-            for (i, (line1, line2, label)) in enumerate(batch):
-                X_known[i] = self.read_line(line1, f)
-                X_unknown[i] = self.read_line(line2, f)
+                for (i, (line1, line2, label)) in enumerate(batch):
+                    X_known[i] = self.read_encoded_line(reader, line1)
+                    X_unknown[i] = self.read_encoded_line(reader, line2)
 
-                if label == 0:
-                    y[i] = np.array([1, 0])
-                else:
-                    y[i] = np.array([0, 1])
+                    if label == 0:
+                        y[i] = np.array([1, 0])
+                    else:
+                        y[i] = np.array([0, 1])
 
-            yield [X_known, X_unknown], y
+                yield [X_known, X_unknown], y
 
     def save_reader(self, filename):
         pickle.dump(self, open(filename, 'wb'))
 
-    # Declare which properties should be saved.
-    def __getstate__(self):
-        return (self.max_len, self.vocabulary_frequency_cutoff,
-                self.vocabulary, self.vocabulary_map, self.vocabulary_usage,
-                self.vocabulary_frequencies, self.vocabulary_above_cutoff,
-                self.vocabulary_below_cutoff, self.padding, self.garbage,
-                self.filepath, self.batch_size, self.newline, self.semicolon,
-                self.line_offset, self.authors, self.problems, self.encoding,
-                self.validation_split, self.training_problems,
-                self.validation_problems, self.save_file, self.char)
-
-    # Declare how to read properties from a pickled object.
-    def __setstate__(self, state):
-        (self.max_len, self.vocabulary_frequency_cutoff, self.vocabulary,
-            self.vocabulary_map, self.vocabulary_usage,
-            self.vocabulary_frequencies, self.vocabulary_above_cutoff,
-            self.vocabulary_below_cutoff, self.padding, self.garbage,
-            self.filepath, self.batch_size, self.newline, self.semicolon,
-            self.line_offset, self.authors, self.problems, self.encoding,
-            self.validation_split, self.training_problems,
-            self.validation_problems, self.save_file) = state
-
-
-def load_reader(filename):
-    return pickle.load(open(filename, 'rb'))
-
 
 if __name__ == '__main__':
-    reader = MacomReader(
+    reader1 = MacomReader(
         sys.argv[1],
         vocabulary_frequency_cutoff=1 / 100000,
         encoding='numbers',
         validation_split=0.95,
-        char=False,
-        batch_size=1
+        char=True,
+        batch_size=1,
+        save_file='test_reader.p'
     )
 
-    with reader as generator:
-        print(len(reader.training_problems))
-        print(len(reader.validation_problems))
+    print(reader1.problems)
