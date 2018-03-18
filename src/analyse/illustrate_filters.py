@@ -57,13 +57,30 @@ with macomreader as reader:
                 else:
                     char = text[index]
 
-                # if index > max_ind - (conv_size / 2) and index < max_ind + (conv_size / 2):
                 if index >= max_ind and index < max_ind + conv_size:
-                    html_file.write('<td bgcolor="red"><font color="black">{}</font></td>'
-                            .format(char))
+                    html_file.write('<td bgcolor="red">{}</td>'.format(char))
                 else:
-                    html_file.write('<td bgcolor="white"><font color="black">{}</font></td>'
-                            .format(char))
+                    html_file.write('<td bgcolor="white">{}</td>'.format(char))
             html_file.write('</tr>')
 
         html_file.write('</table></body></html>')
+
+    for i in range(1, 500):
+        text1 = macomreader.read_line(i, macomreader.f)
+        text2 = macomreader.read_line(opposition, macomreader.f)
+
+        text1 = np.expand_dims(text1, axis=0)
+        text2 = np.expand_dims(text2, axis=0)
+
+        layer_output = get_output([text1, text2, 0])[0]
+
+        first_filter = layer_output[0, :, 0]
+        max_ind = np.argmax(first_filter)
+
+        macomreader.f.seek(macomreader.line_offset[i])
+        text = macomreader.f.readline()\
+            .split(';')[1]\
+            .replace('$NL$', '\n')\
+            .replace('$SC$', ';')
+
+        print(repr(text[max_ind:max_ind + 8]))
