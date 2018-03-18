@@ -18,10 +18,8 @@ illustrated in Figure \ref{fig:profile_based}.
         Authorship Attribution solution setup.\cite{stamatos2009} A set of
         authors are given as input each with a set of texts. Some Machine
         Learning model is trained on the input texts and the model is used to
-        predict an unknown text. In the Authorship Verification case the
-        prediction is either "same author" or "different author" while in the
-        Authorship Attribution case the prediction will be one of "author 1",
-        "author 2", \dots, "author n".}
+        predict an unknown text. }
+
     \label{fig:instance_based}
 \end{figure}
 
@@ -34,10 +32,8 @@ illustrated in Figure \ref{fig:profile_based}.
         author are combined using some combination function such as an average
         or a concatenation. Those \textit{profiles} are then given to a Machine
         Learning model to train. The output is a model which is used to predict
-        unknown texts. If it is the Authorship Verification case the prediction
-        output is either "same author" or "different author" and if it is the
-        Authorship Attribution case the output is one of "author 1", "author 2",
-        \dots, "author n".}
+        unknown texts. }
+
     \label{fig:profile_based}
 \end{figure}
 
@@ -113,10 +109,10 @@ as to not wrongfully accuse anyone of not having written their assignment.
 \subsection{Deep Learning}
 
 In this paper we will approach the authorship verification/attribution problem
-using deep-learning. The terms deep learning was first introduced to machine
-machine learning in 1989, and afterward to \gls{NN}'s in 2000. The terms quickly
-became synonymous with \gls{NN}'s due to them being some of the more efficient
-deep learning methods.\cite{Schmidhuber:2015}
+using deep-learning. The terms of deep learning, it was first introduced to
+machine machine learning in 1989, and afterward to \gls{NN}'s in 2000. The terms
+quickly became synonymous with \gls{NN}'s due to them being some of the more
+efficient deep learning methods.\cite{Schmidhuber:2015}
 
 With the inner workings of the brain used as the basis, a standard simple
 \gls{NN} consists of a set interconnected processors, called neurons. Each
@@ -128,10 +124,10 @@ weighted activation of previous neurons. It these weights the focus is on in
 deep learning, more details regarding this will be presented later in the
 paper.\cite{DBLP:journals/corr/Schmidhuber14}
 
-\gls{NN}'s have been around since the 1940'ies. However, back then they were
+\gls{NN}'s have been around since the 1940's. However, back then they were
 merely variations of the linear regressors used at the time, and wasn't
 very reminiscent of the Networks on can see today. It wasn't until the
-late 1960'ies, early 70'ies, that networks comparable to the more modern
+late 1960's, early 70's, that networks comparable to the more modern
 approaches surfaced. Examples of such early works, are the two publications
 \cite{ivakhnenko1973cybernetic} and \cite{4308320}, which describe multi-layered
 feed-forward supervised neural network architectures. While the work described
@@ -139,25 +135,25 @@ in \cite{4308320} was indeed one of the first cases of the modern \gls{NN},
 actually getting the network to learn was still a problem, as the tweaking of
 individual weights attributed to each neuron in the network wasn't trivial.
 Little did they know, research to solve that problem was already in progress.
-The basics of continuous back \gls{BP} was initially described in 1960, in
+The basics of continuous \gls{BP} was initially described in 1960, in
 \cite{Kelley1960}, quickly followed by a simpler approach which used only the
 chain rule in 1962, \cite{DREYFUS196230}. It wasn't until 1970 that the modern
 version of \gls{BP} was described, using automatic differentiation as its'
 basis. With this, the increase in research of usages of \gls{BP} increased the
 following decades. As the computational power increased several 1000 folds in
-the 90'ies and 2000, so the did the practical usage of \gls{BP}, and \gls{NN} in
-general, a increase that has since increased even more. \cite{Schmidhuber:2015}
+the 90's and 2000's, so did the practical usage of \gls{BP}, and \gls{NN} in
+general.\cite{Schmidhuber:2015}
 
 Like with the history of authorship attribution, research in this area of
 science picked up more interest, as we entered the modern computational age,
-and with the introduction of the \gls{CNN}. \gls{CNN}'s bases themselves on
+and with the introduction of the \gls{CNN}. \gls{CNN}s bases themselves on
 the early work described in \cite{TJP:TJP19681951215}. They showed that cats
-and monkeys visual cortexes contains a set of neurons, each individually
+and monkeys visual cortexes contain a set of neurons, each individually
 responding to a receptive field, or area, of their field of view. Neighboring
 receptive fields all have a certain amount of overlap, however in the end
 a cohesive view is created. This is what paved the way for neocognition
 in 1980\cite{Fukushima1980}, the basis of \gls{CNN}'s, which works in a
-very similar manner, by looking overlapping subsections of some data. These
+very similar manner, looking at overlapping subsections of some data. These
 convolutional neurons however were rarely used alone, but together with a
 down-sampling neuron such Max Pooling introduced in 1993.\cite{Schmidhuber:2015}
 

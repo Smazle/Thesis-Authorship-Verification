@@ -38,35 +38,37 @@ state-of-the-art approaches are based.
 
 In this thesis we want to experiment with and solve an authorship
 verification task for the Danish company \texttt{MaCom A/S}
-\footnote{\url{http://www.macom.dk/}}. MaCom is the company behind the
-product \texttt{Lectio} \footnote{\url{https://www.lectio.dk/}}, which is a
-website that allows for student administration, communication, and digital
-teaching aid. Lectio is used on schools all over Denmark. A service the
-website offers, is the submission and handling of assignments written by
-student throughout their enrollment. MaCom has shown interest in determining
-whether or not these assignment were possible written by someone other than
-the student (a "ghost writer"). Ghost writing is especially a problem on
-the \gls{SRP} assignment. \gls{SRP} is an interdisciplinary assignment all
-Danish secondary school students turn in on their second year. There is
-no oral examination for the assignment and the grade obtained is part of
-the students final results from the secondary school. The combination of
-the importance of the assignment and no oral examination leads to students
-turning in assignments written by ghost writers. The Danish state owned public
-service radio and television company \texttt{DR} has written about the problem
-\url{https://www.dr.dk/nyheder/indland/elever-bruger-ghostwritere-til-eksamen}.
-In this thesis we setup a system for detecting ghost writing based on machine
-learning methods. The system is meant to help teachers make decisions about
-whether or not an assignment turned in by a student is written by someone else.
-It is not important that the system catches 100\% of the assignments written by
-someone else. If the system only catches a fraction of the cheaters it will
-function as a deterrent for other students cheating. What is most important is
-that the system does not accuse anyone of cheating who has turned in their own
-assignment. The system should also be able to give a reason for why we think a
-particular assignment is written by someone else. Such a reason could for
-example be that the frequency of particular words are significantly different in
-the new assignment than in all previously handed in by the student. Reasons for
-why we think an assignment is written by someone else will help a teacher if
-he/she wants to accuse a student of using a ghost writer.
+\footnote{\url{http://www.macom.dk/}}. MaCom is the company behind the product
+\texttt{Lectio} \footnote{\url{https://www.lectio.dk/}}, which is a website
+that allows for student administration, communication, and digital teaching
+aid. Lectio is used in schools all over Denmark. A service the website offers,
+is the submission and handling of assignments written by student throughout
+their enrollment. MaCom has shown interest in determining whether or not these
+assignment were possible written by someone other than the student (a "ghost
+writer"). Ghost writing is especially a problem on the \gls{SRP} assignment.
+\gls{SRP} is an interdisciplinary assignment all Danish secondary school
+students turn in at the end of their third year. There is no oral examination
+for the assignment and the grade obtained is part of the students final
+results from the secondary school. The combination of the importance of the
+assignment and no oral examination leads to students turning in assignments
+written by ghost writers. The Danish state owned public service radio and
+television company \texttt{DR}, actually wrote a piece describing this problem
+\footnote{\url{https://www.dr.dk/nyheder/indland/elever-bruger-ghostwritere-til-
+eksamen}}, noting that around querying 2000 student, 58\% got help from friends
+or family, and around 15\% knew someone who had their assignment written by
+someone else. In this thesis we setup a system for detecting ghost writing based
+on machine learning methods. The system is meant to help teachers make decisions
+about whether or not an assignment turned in by a student is written by someone
+else. It is not important that the system catches 100\% of the assignments
+written by someone else. If the system only catches a fraction of the cheaters
+it will function as a deterrent for other students cheating. What is most
+important is that the system does not accuse anyone of cheating who has turned
+in their own assignment. The system should also be able to give a reason for
+why we think a particular assignment is written by someone else. Such a reason
+could for example be that the frequency of particular words are significantly
+different in the new assignment than in all previously handed in by the student.
+Reasons for why we think an assignment is written by someone else will help a
+teacher if he/she wants to accuse a student of using a ghost writer.
 
 % Introduce the main ideas that stem from your topic/title and the order in
 % which you will discuss them?
