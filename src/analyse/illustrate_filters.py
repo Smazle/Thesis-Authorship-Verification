@@ -7,15 +7,6 @@ from ..preprocessing import load_reader
 import sys
 
 
-def rgb(minimum, maximum, value):
-    minimum, maximum = float(minimum), float(maximum)
-    ratio = 2 * (value - minimum) / (maximum - minimum)
-    b = int(max(0, 255 * (1 - ratio)))
-    r = int(max(0, 255 * (ratio - 1)))
-    g = 255 - b - r
-    return r, g, b
-
-
 model = load_model(sys.argv[1])
 
 get_output = K.function([
@@ -28,8 +19,9 @@ get_output = K.function([
 macomreader = load_reader(sys.argv[2])
 macomreader.batch_size = 1
 
-text_line = 10
+text_line = 32
 opposition = 2
+conv_size = 8
 
 with macomreader as reader:
     text1 = macomreader.read_line(text_line, macomreader.f)
@@ -42,8 +34,7 @@ with macomreader as reader:
 
     # Extract first filter.
     first_filter = layer_output[0, :, 0]
-    minimum = np.amin(first_filter)
-    maximum = np.amax(first_filter)
+    max_ind = np.argmax(first_filter)
 
     macomreader.f.seek(macomreader.line_offset[text_line])
     text = macomreader.f.readline()\
@@ -66,9 +57,13 @@ with macomreader as reader:
                 else:
                     char = text[index]
 
-                r, g, b = rgb(minimum, maximum, value)
-                html_file.write('<td bgcolor="rgb({},{},{})"><font color="white">{}</font></td>'\
-                    .format(r, g, b, char))
+                # if index > max_ind - (conv_size / 2) and index < max_ind + (conv_size / 2):
+                if index >= max_ind and index < max_ind + conv_size:
+                    html_file.write('<td bgcolor="red"><font color="black">{}</font></td>'
+                            .format(char))
+                else:
+                    html_file.write('<td bgcolor="white"><font color="black">{}</font></td>'
+                            .format(char))
             html_file.write('</tr>')
 
         html_file.write('</table></body></html>')
