@@ -75,37 +75,37 @@ teacher if he/she wants to accuse a student of using a ghost writer.
 
 A more formal definition of the problem we will be working with are,
 
-\begin{definition}
+\begin{definition}[Authorship Verification]
 
-    Authorship verification is a problem where you are given a set of texts $Y$
-    that are all written by the same author $a$ and a single text $x$ of unknown
-    authorship. You then have to determine whether the text $x$ is written by
-    the author $a$.
+    Given a set of texts $T(\alpha)$ written by author $\alpha \in \mathcal{A}$
+    and a single text $x$ of unknown authorship. Determine if $x \in T(\alpha)$.
 
 \end{definition}
 
 Authorship verification is closely linked with the problem of authorship
 attribution,
 
-\begin{definition}
+\begin{definition}[Authorship Attribution]
 
-    In authorship attribution you are given a set of authors $A$ and a text $x$.
-    Each $a \in A$ has a set of associated texts $T(a)$. The task is then to
-    find the $a \in A$ that has written the text $x$.
+    Given a set of authors $\alpha \in \mathcal{A}$, each with set of text
+    $T(\alpha)$. Given a text of unknown authorship determine which $\alpha \in
+    \mathcal{A}$ is the author.
 
 \end{definition}
 
-The problems are closely linked since an answer for authorship attribution can
-be obtained by using authorship verification and an answer for authorship
-verification can be obtained by using authorship attribution. Consider a case
-where we are given a solution to the authorship verification problem $S$. $S$ is
-a mapping from an author $a$ and text $x$ to either true or false. Given an
-instance of the authorship attribution problem with authors $A$ and text $x$ we
-solve the problem by using $S$ on each author $a \in A$. We return the author
-where $S$ reports true. Now consider a case where we are given a solution to the
-authorship attribution problem $S$. $S$ is now a mapping from a set of authors
-$A$ and text $x$ to an author $a \in A$. Given an instance of the authorship
-verification problem with author $a$ and text $x$ and a set of different authors
-$AD$ we solve the verification problem by applying the attribution function to
-the authors $\{a\} \cup AD$ and the text $x$. If we get $a$ back we report
-true and otherwise false.
+The problems are closely linked since an answer for authorship attribution
+can be obtained by using authorship verification and an answer for authorship
+verification can be obtained by using authorship attribution. Consider a
+case where we are given a solution to the authorship verification problem
+$\mathcal{S}$. $\mathcal{S}$ is a mapping from an author $\alpha$ and text
+$x$ to either true or false. Given an instance of the authorship attribution
+problem with authors $\mathcal{A}$ and text $x$ we solve the problem by using
+$\mathcal{S}$ on each author $\alpha \in \mathcal{A}$. We return the author
+where $\mathcal{S}$ reports true. Now consider a case where we are given a
+solution to the authorship attribution problem $\mathcal{S}$. $\mathcal{S}$ is
+now a mapping from a set of authors $\mathcal{A}$ and text $x$ to an author
+$\alpha \in \mathcal{A}$. Given an instance of the authorship verification
+problem with author $\alpha$ and text $x$ and a set of different authors
+$T_{diff}(\alpha)$ we solve the verification problem by applying the
+attribution function to the authors $\{\alpha\} \cup T_{diff}(\alpha)$
+and the text $x$. If we get $\alpha$ back we report true and otherwise false.
