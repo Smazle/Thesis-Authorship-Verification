@@ -57,8 +57,6 @@ class LineReader:
                 yield self.readline(i)
 
 
-# Class assume that authors are in order. It will not work if they are not in
-# order.
 class MacomReader:
 
     # The maximal length of any of the texts.
@@ -119,9 +117,6 @@ class MacomReader:
     # List of validation problems.
     validation_problems = None
 
-    # If not None the reader will save the state of the reader to the filename.
-    save_file = None
-
     # Whether or not to word encode or character.
     char = True
 
@@ -129,7 +124,7 @@ class MacomReader:
     # file.
     def __init__(self, filepath, batch_size=32, char=True,
                  encoding='one-hot', validation_split=0.8,
-                 vocabulary_frequency_cutoff=0.0, save_file=None):
+                 vocabulary_frequency_cutoff=0.0):
 
         if encoding != 'one-hot' and encoding != 'numbers':
             raise ValueError('encoding should be "one-hot" or "numbers"')
@@ -149,7 +144,6 @@ class MacomReader:
         self.encoding = encoding
         self.validation_split = validation_split
         self.vocabulary_frequency_cutoff = vocabulary_frequency_cutoff
-        self.save_file = save_file
 
         # Generate representation used to generate training data.
         with LineReader(self.filepath) as linereader:
@@ -162,14 +156,6 @@ class MacomReader:
 
     def generate_validation(self):
         return self.generate(self.validation_problems)
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, exc_type, exc_value, traceback):
-        if self.save_file is not None:
-            with open(self.save_file, 'wb') as save_here:
-                pickle.dump(self, save_here)
 
     def generate_vocabulary_map(self, linereader):
         for author in self.authors:
@@ -294,9 +280,6 @@ class MacomReader:
 
                 yield [X_known, X_unknown], y
 
-    def save_reader(self, filename):
-        pickle.dump(self, open(filename, 'wb'))
-
 
 if __name__ == '__main__':
     reader1 = MacomReader(
@@ -306,7 +289,9 @@ if __name__ == '__main__':
         validation_split=0.95,
         char=True,
         batch_size=1,
-        save_file='test_reader.p'
     )
 
-    print(reader1.problems)
+    print(reader1.authors)
+
+    reader2 = pickle.load(open(sys.argv[2], mode='rb'))
+    print(reader2.authors)
