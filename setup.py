@@ -4,7 +4,7 @@
 # from setuptools import setup, find_packages
 import os
 
-requirements = open('./requirements.txt', 'r').read()
+requirements = open('./requirements', 'r').read()
 requirements = requirements.split('[APT]\n')
 requirements = [[y for y in x.split('\n') if y != ''] for x in requirements]
 
