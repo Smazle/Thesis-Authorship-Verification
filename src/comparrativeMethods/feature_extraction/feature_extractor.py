@@ -13,6 +13,8 @@ import utilities as util
 import time
 
 # TODO: description.
+
+
 class FeatureExtractor:
 
     def __init__(
@@ -89,7 +91,7 @@ class FeatureExtractor:
                 self.extractors.append(extractor)
 
             if len(self.featureNames) > 0:
-                open('Features', 'w').write(';'.join(self.featureNames))
+                open('Features', 'w').write(';'.join(self.featureNames) + '\n')
 
             pickle.dump(self.extractors, open('Extractors', 'wb'))
 
@@ -112,7 +114,7 @@ class FeatureExtractor:
                 try:
                     known_features = self.extract_features(text)
                     t = time.time() - start
-                    print('Text', i, "-", t * 1000)
+                    print('Text', i, '-', t * 1000)
                 except ZeroDivisionError:
                     print('Text', i, 'Err')
                     f.write('Err' + '\n')
@@ -120,8 +122,6 @@ class FeatureExtractor:
 
                 features = known_features + [int(author)]
                 f.write(' '.join(list(map(str, features))) + '\n')
-                
-                
 
         # Write features to file.
         author_features = np.array(author_features)
