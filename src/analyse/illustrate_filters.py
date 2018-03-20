@@ -3,8 +3,9 @@
 import numpy as np
 from keras.models import load_model
 from keras import backend as K
-from ..preprocessing import load_reader
+import jsonpickle
 import sys
+from ..preprocessing import LineReader
 
 
 model = load_model(sys.argv[1])
@@ -16,16 +17,17 @@ get_output = K.function([
     model.get_layer('convolutional_8').get_output_at(0)]
 )
 
-macomreader = load_reader(sys.argv[2])
-macomreader.batch_size = 1
+with open(sys.argv[2], 'r') as macomreader_in:
+    reader = jsonpickle.decode(macomreader_in.read())
+    reader.batch_size = 1
 
 text_line = 32
 opposition = 2
 conv_size = 8
 
-with macomreader as reader:
-    text1 = macomreader.read_line(text_line, macomreader.f)
-    text2 = macomreader.read_line(opposition, macomreader.f)
+with LineReader(sys.argv[3], encoding='utf-8') as linereader:
+    text1 = reader.read_encoded_line(linereader, text_line)
+    text2 = reader.read_encoded_line(linereader, opposition)
 
     text1 = np.expand_dims(text1, axis=0)
     text2 = np.expand_dims(text2, axis=0)
@@ -36,8 +38,7 @@ with macomreader as reader:
     first_filter = layer_output[0, :, 0]
     max_ind = np.argmax(first_filter)
 
-    macomreader.f.seek(macomreader.line_offset[text_line])
-    text = macomreader.f.readline()\
+    text = linereader.readline(text_line)\
         .split(';')[1]\
         .replace('$NL$', '\n')\
         .replace('$SC$', ';')
@@ -66,8 +67,8 @@ with macomreader as reader:
         html_file.write('</table></body></html>')
 
     for i in range(1, 500):
-        text1 = macomreader.read_line(i, macomreader.f)
-        text2 = macomreader.read_line(opposition, macomreader.f)
+        text1 = reader.read_encoded_line(linereader, i)
+        text2 = reader.read_encoded_line(linereader, opposition)
 
         text1 = np.expand_dims(text1, axis=0)
         text2 = np.expand_dims(text2, axis=0)
@@ -77,8 +78,7 @@ with macomreader as reader:
         first_filter = layer_output[0, :, 0]
         max_ind = np.argmax(first_filter)
 
-        macomreader.f.seek(macomreader.line_offset[i])
-        text = macomreader.f.readline()\
+        text = linereader.readline(i)\
             .split(';')[1]\
             .replace('$NL$', '\n')\
             .replace('$SC$', ';')
