@@ -87,5 +87,8 @@ with LineReader(args.datafile, encoding='utf-8') as linereader:
         else:
             raise Exception('This case should be impossible')
 
+        print('tps,tns,fps,fns')
+        print(tps, tns, fps, fns)
+
 print('tps,tns,fps,fns')
 print(tps, tns, fps, fns)
