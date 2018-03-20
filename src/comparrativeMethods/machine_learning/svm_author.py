@@ -1,143 +1,97 @@
 #!/usr/bin/python3
 
 import argparse
+import csv
 import numpy as np
-from numpy.random import choice
+# from numpy.random import choice
 from sklearn.svm import SVC
-from sklearn.model_selection import LeaveOneOut
-from sklearn.model_selection import GridSearchCV
+from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import ShuffleSplit
+# from sklearn.model_selection import GridSearchCV
 
 
-class Hashable:
-
-    def __init__(self, d):
-        self.d = d
-
-    def __hash__(self):
-        return hash(str(self.d))
+def single_one(n, size, dtype=np.bool):
+    x = np.zeros((size, ), dtype=dtype)
+    x[n] = 1
+    return x
 
 
-# Set up arguments
 parser = argparse.ArgumentParser(
-    description='Run author specific SVM classifier on input data given.')
-
-parser.add_argument('file', type=str, help='Data File Location')
-
+    description='Find best features from feature file via a greedy search')
 parser.add_argument(
-    '--with-normalization',
-    help='Whether or not to normalize data.',
-    action='store_true',
-    default=False)
-
-parser.add_argument(
-    '--c',
-    help='Hyperparameter for SVM',
-    type=float,
-    default=None)
-
-parser.add_argument(
-    '--gamma',
-    help='Hyperparamter for SVM',
-    type=float,
-    default=None)
-
-parser.add_argument(
-    '--with-PN',
-    help='Whether or not to also print True Positive, False Positive, True ' +
-    'Negative and False Negative.',
-    action='store_true',
-    default=False)
-
+    'features',
+    type=str,
+    help='Path to file containing features'
+)
 args = parser.parse_args()
 
-# Remove author number
-data = np.loadtxt(args.file, dtype=np.float)
-authors = data[:, -1].astype(np.int)
-results = data[:, -2].astype(np.bool)
-X = data[:, :-2]
+with open(args.features, 'r') as feature_file:
+    feature_file.readline()  # Skip first line.
+    reader = csv.reader(feature_file, delimiter=' ', lineterminator='\n')
 
-# Normalize the data.
-if args.with_normalization:
-    mean = np.mean(X, axis=0)
-    std_var = np.std(X, axis=0)
+    # Number of features is number of columns minus the author column.
+    feature_n = len(reader.__next__()) - 1
 
-    std_var[std_var == 0] = 1
+    line_n = 1
+    for line in reader:
+        line_n = line_n + 1
 
-    X = (X - mean) / std_var
+    X = np.zeros((line_n, feature_n), dtype=np.float)
+    authors = np.zeros((line_n, ), dtype=np.int)
 
-if args.c is None or args.gamma is None:
-    configurations = {}
-    for author in np.unique(authors):
-        result = results[authors == author][0]
-        same_author = X[authors == author, 0:int(X.shape[1] / 2)]
-        different_author = X[authors != author, 0:int(X.shape[1] / 2)]
-        X_unknown = X[authors == author, int(X.shape[1] / 2):][0]
+    # Go back to start of file and read again.
+    feature_file.seek(0)
+    feature_file.readline()
+    reader = csv.reader(feature_file, delimiter=' ', lineterminator='\n')
 
-        # Draw random opposition.
-        same_author_n = same_author.shape[0]
-        random = different_author[choice(different_author.shape[0],
-                                         same_author_n, replace=False), :]
+    for i, line in enumerate(reader):
+        X[i] = np.array(list(map(lambda x: float(x), line[0:-1])))
+        authors[i] = int(line[-1])
 
-        # Stack author specific and random.
-        X_train = np.vstack([same_author, random])
-        y_train = np.array([1] * same_author_n + [0] * same_author_n)
+unique_authors = np.sort(np.unique(authors))
 
-        # Cross validation over all C and gamma.
-        C_range = np.logspace(-2, 10, 7)
-        gamma_range = np.logspace(-9, 3, 7)
-        param_grid = dict(gamma=gamma_range, C=C_range)
-        cv = LeaveOneOut()
-        grid = GridSearchCV(SVC(kernel='rbf'), param_grid=param_grid, cv=cv)
-        grid.fit(X_train, y_train)
+# While we keep improving accuracy continue.
+current_features = np.zeros((X.shape[1], ), dtype=np.bool)
+ns = np.arange(0, current_features.shape[0])
+prev_best = 0.0
+while True:
+    # Try to add each of the missing features and keep the version that
+    # improves score the most.
+    best_index = None
+    for missing in ns[np.logical_not(current_features)]:
+        print('Testing', missing)
+        new_feature = single_one(missing, current_features.shape[0])
+        features = X[:, np.logical_or(current_features, new_feature)]
 
-        try:
-            configurations[Hashable(grid.best_params_)] += 1
-        except KeyError:
-            configurations[Hashable(grid.best_params_)] = 1
+        scores = []
+        for author in unique_authors:
+            author_texts = features[authors == author]
+            other_texts = features[authors != author]
 
-    # Extract best configuration from the above search.
-    best_conf = max(configurations, key=configurations.get).d
-else:
-    best_conf = {'C': args.c, 'gamma': args.gamma}
+            opposition = other_texts[np.random.choice(
+                other_texts.shape[0],
+                author_texts.shape[0],
+                replace=False)]
 
-final_results = []
-true_positives = 0
-true_negatives = 0
-false_positives = 0
-false_negatives = 0
-for author in np.unique(authors):
-    result = results[authors == author][0]
-    same_author = X[authors == author, 0:int(X.shape[1] / 2)]
-    different_author = X[authors != author, 0:int(X.shape[1] / 2)]
-    X_unknown = X[authors == author, int(X.shape[1] / 2):][0]
+            # TODO: Change C and gamma values.
+            classifier = SVC(kernel='rbf', C=100, gamma=0.00001)
+            X_train = np.vstack([author_texts, opposition])
+            y_train = np.array([1] * author_texts.shape[0] + [0] * author_texts.shape[0])
 
-    # Draw random opposition.
-    same_author_n = same_author.shape[0]
-    random = different_author[choice(different_author.shape[0], same_author_n,
-                                     replace=False), :]
+            cv = ShuffleSplit(n_splits=3, test_size=0.3, random_state=0)
+            score = cross_val_score(classifier, X_train, y_train, cv=cv)
 
-    # Stack author specific and random.
-    X_train = np.vstack([same_author, random])
-    y_train = np.array([1] * same_author_n + [0] * same_author_n)
+            scores.append(np.mean(score))
 
-    model = SVC(C=best_conf['C'], kernel='rbf', gamma=best_conf['gamma'])
-    model.fit(X_train, y_train)
+        if np.mean(scores) > prev_best:
+            prev_best = np.mean(scores)
+            best_index = missing
 
-    prediction = model.predict(X_unknown.reshape(1, -1))[0]
-
-    final_results.append(prediction == result)
-
-    if prediction == result and result == 1:
-        true_positives += 1
-    elif prediction == result and result == 0:
-        true_negatives += 1
-    elif prediction != result and result == 1:
-        false_negatives += 1
+    if best_index is None:
+        # We are done.
+        break
     else:
-        false_positives += 1
+        print('prev_best', prev_best, 'best_index', best_index)
+        current_features[best_index] = True
 
-
-print(np.sum(final_results) / float(len(final_results)))
-if args.with_PN:
-    print('TP', true_positives, 'TN', true_negatives, 'FP', false_positives,
-          'FN', false_negatives)
+print(current_features)
