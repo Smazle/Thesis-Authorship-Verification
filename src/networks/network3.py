@@ -9,7 +9,7 @@ import argparse
 from ..util import CSVWriter
 from keras.callbacks import ModelCheckpoint
 from keras.utils import plot_model
-import pickle
+import jsonpickle
 
 
 # Parse arguments.
@@ -47,7 +47,8 @@ args = parser.parse_args()
 
 # Either load reader from file or create a new one.
 if args.reader is not None:
-    reader = pickle.load(open(args.reader, mode='r'))
+    with open(args.reader, mode='r') as reader_in:
+        reader = jsonpickle.decode(reader_in.read())
 else:
     reader = MacomReader(
         args.datafile,
@@ -57,8 +58,9 @@ else:
         validation_split=0.95
     )
 
-with open('reader.p', mode='wb') as reader_out:
-    pickle.dump(reader, reader_out)
+if args.reader is not None:
+    with open('reader.p', mode='w') as reader_out:
+        reader_out.write(jsonpickle.encode(reader))
 
 inshape = (reader.max_len, )
 

@@ -57,7 +57,7 @@ class LineReader:
                 yield self.readline(i)
 
 
-class MacomReader:
+class MacomReader(object):
 
     # The maximal length of any of the texts.
     max_len = 0
