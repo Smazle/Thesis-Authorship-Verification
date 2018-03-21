@@ -21,7 +21,8 @@ base = './extended_delta.py ../feature_extraction/output \
         --opposing-file ../feature_extraction/output '
 
 
-data = np.loadtxt(inp, dtype=np.float, delimiter=' ', skiprows=1)
+data = np.loadtxt(inp, dtype=str, delimiter=' ', skiprows=1)
+
 
 featureNames = [tuple(x.split(' '))
                 for x in open(inp).readline().rstrip().split(';')]
@@ -35,30 +36,29 @@ startIndex = {key: featureNames.index(key) for key in list(set(featureNames))}
 print(startIndex)
 
 
-neigbors = range(2, 11)
+neigbors = range(1, 8)
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--metric', type=int)
-parser.add_argument('--opposing-set-size', type=int)
+parser.add_argument('--N', type=int)
 
 neigbor_results = {}
 
-prev = (0, 0)
 for count in neigbors:
-    print('Neighbors', count)
-    runBase = base + '--opposing-set-size ' + str(count) + ' '
+    prev = (0, 0)
+    runBase = base + '--N ' + str(count) + ' '
 
     changed = False
 
     indexes = sorted(startIndex.values())
     maxDiff = max([abs(indexes[i - 1] - x) for i, x in enumerate(indexes)][1:])
     features = [[x] for x in indexes]
+    args = parser.parse_args(['--metric', '1', '--N', str(count)])
+    print('Neighbors', args.N)
 
     fallCount = 0
     for i in range(maxDiff):
 
-        args = parser.parse_args(
-            ['--metric', '1', '--opposing-set-size', str(count)])
         result = ed.runMe(args, data, data, np.concatenate(features))
         # import pdb; pdb.set_trace()
 
@@ -75,8 +75,8 @@ for count in neigbors:
             open('ExtendedParams.features', 'a').write(str(prev) + '\n')
             break
 
-        features = increment(features, startIndex)
         print(features)
+        features = increment(features, startIndex)
 
     neigbor_results[neigbors] = (prev[1], np.concatenate(features))
 
