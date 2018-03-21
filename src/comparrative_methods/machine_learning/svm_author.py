@@ -94,4 +94,4 @@ while True:
         print('prev_best', prev_best, 'best_index', best_index)
         current_features[best_index] = True
 
-print(current_features)
+    np.savetxt('best_features.npz', current_features)
