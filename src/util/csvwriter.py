@@ -1,7 +1,8 @@
 
 import numpy as np
 import math
-from keras.callbacks import CSVLogger, Callback
+from keras.callbacks import Callback
+
 
 class CSVWriter(Callback):
 
@@ -70,7 +71,7 @@ class CSVWriter(Callback):
             self.validation_steps
         )
 
-        self.outfile.write('{},{},{},{},{},{}\r\n'.format(
+        self.outfile.write('{},{},{},{},{},{},{}\r\n'.format(
             epoch + self.prev_epochs, logs['acc'], logs['val_acc'], tps, tns,
             fps, fns))
         self.outfile.flush()
