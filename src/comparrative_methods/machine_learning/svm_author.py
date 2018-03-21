@@ -5,7 +5,6 @@ import csv
 import numpy as np
 from sklearn.svm import SVC
 from sklearn.model_selection import cross_val_score
-from sklearn.model_selection import ShuffleSplit
 
 
 # Set seed to make sure we get reproducible results.
@@ -116,8 +115,7 @@ while True:
             X_train = np.vstack([author_texts, opposition])
             y_train = np.array([1] * author_texts.shape[0] + [0] * author_texts.shape[0])
 
-            cv = ShuffleSplit(n_splits=3, test_size=0.1, random_state=0)
-            score = cross_val_score(classifier, X_train, y_train, cv=cv)
+            score = cross_val_score(classifier, X_train, y_train)
 
             scores.append(np.mean(score))
 
