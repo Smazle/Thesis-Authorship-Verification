@@ -17,7 +17,7 @@ features available to pick from are:
     \item Special-Character-n-grams,
 \end{itemize}
 
-where an n-gram describes the combinations of sequential elements of size n. In
+Where an n-gram describes the combinations of sequential elements of size n. In
 the case where that element is characters, and n is 3, the string "hello" would
 produce the character-3-grams "hel", "ell" and "llo". This also means that a
 feature such as word frequencies can be considered word-1-grams.
@@ -30,22 +30,40 @@ corpus consists of 22,476 sentences, and 563,358 words.
 
 \subsubsection{Extended Delta Method}
 
+
 A large part of the experiments performed when applying the extended delta
 method was parameter tuning. The extended delta method, does not do any
 mitigation of noisy data or feature selection it self. Thus we would have
-to do the feature selection ourselves. This was a problem as the amount of
-combinations of features and opposing authors we would have to consider in
-order to find the best performing ones, would take a lot of time.
+to do the feature selection ourselves. Not only that, but contrary to the
+circumstances our previous paper \cite{US} was written in, we have more than
+one text per author. As such, we don't need the opposing author approach any
+more. When given a text $x$ and a proposed author $\alpha$, we pick out all text
+written that author $T(\alpha)$, the different set $T_{diff}(\alpha)$ of same
+length, containing text not written by that author. Using those sets, we create
+a \gls{KNN} model, and apply it to $x$, returning 1 if $x \in T(\alpha)$ and
+zero otherwise.
+Additionally we also apply the model to the negative case, where we pick
+text randomly from the training-set, returning 1 if this new text is predicted
+as being in $T_{diff}(\alpha)$ and 0 otherwise.
 
-Rather than performing a random selection of features as was done in \cite{US},
-we chose to use a more systematic approach. We opted for a greedy approach. It
-starts out with a large, but still limited, set of features from which we would
-then remove the feature, whose removal yielded the best accuracy on a separate
-validation set. This is done until the removal of any feature doesn't improve
-the validation accuracy.
+Thus we need to tune the N in \gls{KNN}, instead of the number of opposing
+author that was used in \cite{US}
 
-In order for us to determine this starting feature set, we had a look the
-amount of different feature there was available when looking at the corpus.
+So the parameter selection consists of finding the best features, and the best
+N.
+
+Rather than finding the best features, using the somewhat random approach used
+in our previous paper\cite{US}, we chose to do it more systematically this time
+around. This however proved a greater task than anticipated. In order to find
+the best set of feature, one would have to extract a very large set of features,
+thousands in our case and determine the best combination of those features. A
+task like that would take an incredible amount of computing power, and time.
+Thus, we opted for a forward greedy selection approach.
+
+We initially wanted to extract of large set of features, to perform our greedy
+selection on. The corpus used had the following quantities of the different
+features.
+
 
 \begin{itemize}
     \item Word-2-grams - 188,472
@@ -58,8 +76,8 @@ amount of different feature there was available when looking at the corpus.
 These numbers are of course inflated due to the size of the corpus relative
 to the actual text we are training on, and will continue to increase as we
 increase the n in the n-grams. As a result of this, the frequency of each n-gram
-decreases, and so does the impact each individual n-gram has. For this reason
-we choose to only focus on the K most frequent instances of each feature, which
+decreases, and so does the impact each individual n-gram has. For this reason we
+choose to only focus on a subset most frequent instances of each feature, which
 also serves to limit the parameter search space.
 
 Using the listed quantities, a feature set of 8,600 features was produced,
@@ -67,15 +85,88 @@ containing
 
 \begin{itemize}
     \item the 500 most frequent words,
-    \item the 500 most frequent word-n-grams for $n \in {2,...,10}$,
+    \item the 500 most frequent word-n-grams for $n \in {2,3,4}$,
     \item the 300 most frequent character-n-grams for $n \in {2,...,10}$,
-    \item the 50 most frequent \gls{POS}-tag-n-grams for $n \in {2,...,10}$, and
-    \item the 50 most frequent special-character-n-grams for $n \in {2,...,10}$.
+    \item the 50 most frequent \gls{POS}-tag-n-grams for $n \in {3,4}$, and
+    \item the 50 most frequent special-character-n-grams for $n \in {2,3,4}$.
 \end{itemize}
-TODO: Will probably need more limiting.
 
-It is using this feature set we then apply our greedy deleting too. In order
-to determine the best combination of features. In addition to selecting the
-features, the number of opposing author was also a parameter that needed tuning.
-Thus, this greedy approach was also performed on different configurations of
-opposing authors $A$, where $A \in TODO$
+The selection the quantities, bases on the number available in the corpus, as
+listed earlier. As the for the N in the N-grams, \cite{aalykke2016} found out
+that char-8-grams worked very well in his case, so we rounded up to 10. Looking
+at the results from \cite{US}, Word-n-grams mostly stopped occurring in texts
+when getting to 4-grams, when looking at the result from \cite{US}. A similar
+thing could be seen with the special-character-n-grams, where an increase in N,
+wouldn't contribute anything. \gls{POS}-tag-n-grams were a really big burden
+computationally, as such a reduction in possible N-values, had to be made.
+
+These features were extracted from subset of the data-set described earlier
+in section \ref{sec:data}. However it wasn't beholden to the same upper limit
+character and unique character constraint. This data-set contained 14646
+entries. The distribution of the texts over authors in this data-set isn't
+very evenly spread. As such, we removed some data-entries, so $$\forall \alpha
+\in \mathcal{A} (T(\alpha) = T_{min})$$ Where $T_{min}$ is the smallest amount
+of texts associated with one author, in the case 4. Doing this decreased the
+data-set entry quantity to 3748, with 937 different authors.
+
+Having the features, we could then proceed with the greedy algorithm, which
+works as follows. It stats out only using the most frequent of each of
+the different features. Using this set it loops through each $\alpha \in
+\mathcal{A}$ applying the extended delta methods, as described earlier in this
+section. After each iteration the next, most frequent of each of the feature
+is added to our active set of features, and then the extended delta method is
+applied again. For each of these iteration, the best result is saved. If the
+result doesn't improve for three iterations, or no more features are available,
+the saved best result is returned. As each feature only has a certain of amount
+of most frequent values, the greedy algorithm will reach a point where it want
+to take grab the next most frequent feature, but it isn't available. In this
+case, simple stop taking entries from that feature, but we keep taking from the
+others. This greedy approach was applied using different configurations of the
+N in KNN and distance metric, with $N \in {1,...,7}$, and the distance metric
+being either Manhattan or Euclidean.
+
+The results of the selection can be seen in figures \ref{fig:resultsMan} and 
+\ref{fig:resultsEuc}. 
+
+\begin{table}
+\centering
+\begin{tabular}{|c|c|c|}
+\hline
+KNN & Frequent Feature Count & Result          \\ \hline
+1   & 12                     & \textbf{0.7705} \\ \hline
+2   & 10                     & 0.6927          \\ \hline
+3   & 6                      & 0.6742          \\ \hline
+4   & 2                      & 0.6378          \\ \hline
+5   & 13                     & 0.6391          \\ \hline
+6   & 2                      & 0.6053          \\ \hline
+7   & 10                     & 0.5989          \\ \hline
+\end{tabular}
+\caption{Results of the forward greedy selection of the extended delta method
+using the Manhattan distance. The point where a single feature had no more
+entries to pick from, was never reached. As such Frequent Feature Count
+describes how many most frequent entries were picked out from each feature.}
+\label{fig:resultsMan}
+\end{table}
+
+\begin{table}[]
+\centering
+\begin{tabular}{|c|c|c|}
+\hline
+KNN & Frequent Feature Count & Result          \\ \hline
+1   & 10                     & \textbf{0.7772} \\ \hline
+2   & 13                     & 0.6990          \\ \hline
+3   & 3                      & 0.6791          \\ \hline
+4   & 4                      & 0.6499          \\ \hline
+5   & 2                      & 0.6288          \\ \hline
+6   & 2                      & 0.6065          \\ \hline
+7   & 2                      & 0.5959          \\ \hline
+\end{tabular}
+\caption{Results of the forward greedy selection of the extended delta method
+using the Euclidean distance. The point where a single feature had no more
+entries to pick from, was never reached. As such Frequent Feature Count
+describes how many most frequent entries were picked out from each feature.}
+\label{fig:resultsEuc}
+\end{table}
+
+As such, the best configuration is Euclidean distance, with the 10 most frequent
+of the different features, is what we will be using on the test data.

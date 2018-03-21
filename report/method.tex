@@ -175,17 +175,17 @@ computes is then,
 \end{equation}
 
 The training of a \gls{NN} consists of changing the weights applied at each
-neuron, with the goal of enabling the network to make accurate decision
-based on an underlying structure in the data it used to tweak its' weights
-based on.
+neuron, with the goal of modeling the relationships present in the data.
 
 The activation function $h$, used at each neuron, defines the output of the
-node given a certain input. A simple example of a would be computer chip
+node given a certain input. A simple example of this would be computer chip
 circuit, which can be seen as a series of activation functions outputting 0 or
 1 depending on their input. This activation function would be a linear one.
-When applying activation functions to neurons in \gls{NN}'s, they are usually
+When applying activation functions to neurons in \gls{NN}s, they are usually
 non-linear, as it allows for the computation of more complex problems using a
-smaller amount of neurons, relative to usage of a linear activation function.
+smaller amount of neurons, relative to usage of a linear activation function,
+as they allow for the universal function approximation, a point also made by
+\cite{6797088}
 
 A plot of different activation functions is shown in Figure
 \ref{fig:activation_functions}.
@@ -199,31 +199,35 @@ A plot of different activation functions is shown in Figure
     \label{fig:activation_functions}
 \end{figure}
 
-Each activation function has its' pros and cons. We mainly use the \gls{ReLu}
-activation function in the hidden layers of our networks. The reason for this
-selection is its' general purpose use. When selecting a activation function
-for your neurons, the best function would be the one which best approximates
-the underlying function. Without a good idea as to what that function might
-be, \gls{ReLu} is a good starting point. Its' simplicity provides a quick
-computation time, and its' below zero limitation means that a large portion
-of the network won't be activating, resulting in smaller computation time. In
-addition to that, the derivative of the function will yield 1 in the case of a
-positive input, resulting in the \gls{BP} loss having equal influence throughout
-the network. I the case of other activation functions, such as the Sigmoid
-function, where the error will be decreased as least a quarter at each layers,
-resulting in big error in the deep layers not reaching the shallow layers of the
-network. This property of the \gls{ReLu} activation function, does however not
-come without its' costs. If the learning rate of the network isn't configured
-correctly, a \gls{ReLu} activated neuron might be blasted with a gradient so
-large, that it never reaches a point of activation again. In other words,
-the neuron "dies". As such, one can risk a network containing a lot of dead,
-non-activation neurons, thus greatly decreasing its' quality. On the other hand
-the sigmoid function, doesn't allow its' neurons to die. Instead they their
-significance to the final output decreases infinitely, until their contribute
-with close to nothing, but still activate, slowing down the network. Its' based
-on these considerations we chose the \gls{ReLu} activation function, leaving us
-the task of properly selecting out learning rate.
-
+Each activation function has its' pros and cons. We mainly made use of the
+\gls{ReLu} activation function in the hidden layers of our networks. The reason
+for this selection is its general purpose use. When selecting an activation
+function for your neurons, the best function would be the one which best
+approximates the underlying function. Without a good idea as to what that
+function might be, \gls{ReLu} is a good starting point. Its simplicity provides
+a quick computation time, and its' below zero limitation means that a large
+portion of the network won't be activating, resulting in an even smaller
+computation time. In addition to that, the derivative of the function is 1
+in the case of a positive input, resulting in the \gls{BP} loss having equal
+influence throughout the network. In the case of other activation functions,
+this might not be the case, resulting in an altering of the error as we \gls{BP}
+through the network. This could lead to a big error in the deep layers not
+reaching the shallow layers of the network. This property of the \gls{ReLu}
+activation function, does however not come without its' costs. If the learning
+rate of the network isn't configured correctly, a \gls{ReLu} activated neuron
+might be blasted with a gradient so large, that it never reaches a point of
+activation again. In other words, the neuron "dies". As such, one can risk
+a network containing a lot of dead, non-activation neurons, thus greatly
+decreasing its' quality. On the other hand the sigmoid function, doesn't allow
+its' neurons to die. It can become victim to saturation. In the case of
+weight being too small or too high, the output values will be placed
+at the far ends of the sigmoid range of values. At this point the gradient
+is incredibly small, meaning that contribution that neuron now has is
+negligible. This neuron is now only a strain on the network, slowing
+it down through its' activation, but contribution nothing, a problem
+\gls{ReLu} does not have. Its based on these considerations we chose
+the \gls{ReLu} activation function, leaving us the task of properly selecting
+our learning rate.\cite{JiYan}\cite{AndrejKarpathy}\cite{AvinashSharmaV}
 
 \subsection{Baseline Methods}
 
@@ -394,16 +398,15 @@ In our last network we observed that the network after a few number of epochs
 overfitted on the training dataset. The validation accuracy quickly began
 stalling as the training accuracy went to 100\%. We therefore focused our
 second network architecture on limiting overfitting. We added a dropout layer
-before the output layer. A dropout layer is a layer that will randomly remove
-neurons from a neural network during training. The layer prevents overfitting
-by making sure that the network cannot rely on the output of all neurons during
-training. This unpredictability makes it harder for the network to learn
-specific quirks of the training dataset since small quirks will only be picked
-up by a small amount of neurons while larger trends will be represented by a
-larger set of neurons. \cite{JMLR:v15:srivastava14a} investigated the use of
-dropout layers in different problem settings. They found that dropout layers
-reduced overfitting in all problems they looked at. In particular they found
-that document classification which is similar to what we are doing were also
+before the output layer. The layer prevents overfitting by making sure that
+the network cannot rely on the output of all neurons during training. This
+unpredictability makes it harder for the network to learn specific quirks of
+the training dataset since small quirks will only be picked up by a small
+amount of neurons while larger trends will be represented by a larger set
+of neurons. \cite{JMLR:v15:srivastava14a} investigated the use of dropout
+layers in different problem settings. They found that dropout layers reduced
+overfitting in all problems they looked at. In particular they found that
+document classification which is similar to what we are doing were also
 improved. The main drawback of a dropout layer is that it increase the run time
 of training the networks (\cite{JMLR:v15:srivastava14a}).
 
