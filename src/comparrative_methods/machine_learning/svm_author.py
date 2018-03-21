@@ -117,8 +117,7 @@ while True:
             X_train = np.vstack([author_texts, opposition])
             y_train = np.array([1] * author_texts.shape[0] + [0] * author_texts.shape[0])
 
-            # cv = ShuffleSplit(n_splits=3, test_size=0.3, random_state=0)
-            cv = LeaveOneOut()
+            cv = ShuffleSplit(n_splits=3, test_size=0.1, random_state=0)
             score = cross_val_score(classifier, X_train, y_train, cv=cv)
 
             scores.append(np.mean(score))
