@@ -3,17 +3,56 @@
 import argparse
 import csv
 import numpy as np
-# from numpy.random import choice
 from sklearn.svm import SVC
 from sklearn.model_selection import cross_val_score
 from sklearn.model_selection import ShuffleSplit
-# from sklearn.model_selection import GridSearchCV
+from sklearn.model_selection import LeaveOneOut
+
+
+# Set seed to make sure we get reproducible results.
+np.random.seed(7)
 
 
 def single_one(n, size, dtype=np.bool):
     x = np.zeros((size, ), dtype=dtype)
     x[n] = 1
     return x
+
+
+def analyse_header(header):
+    change_indices = []
+    prev = None
+    columns = 0
+    for i, value in enumerate(header.rstrip().split(';')):
+        columns = columns + 1
+        if prev != value:
+            change_indices.append(i)
+            prev = value
+
+    feature_classes = {}
+    for (start, end) in zip(change_indices, change_indices[1:]):
+        feature_classes[start] = list(range(start, end))
+
+    return feature_classes
+
+
+def get_next_missing(feature_classes):
+    missing = []
+
+    for key in feature_classes:
+        values = feature_classes[key]
+        if len(values) != 0:
+            missing.append(values[0])
+
+    return missing
+
+
+def remove_feature(feature_classes, value):
+    for key in feature_classes:
+        values = feature_classes[key]
+
+        if value in values:
+            values.remove(value)
 
 
 parser = argparse.ArgumentParser(
@@ -26,7 +65,8 @@ parser.add_argument(
 args = parser.parse_args()
 
 with open(args.features, 'r') as feature_file:
-    feature_file.readline()  # Skip first line.
+    header = feature_file.readline()  # Skip first line.
+    feature_classes = analyse_header(header)
     reader = csv.reader(feature_file, delimiter=' ', lineterminator='\n')
 
     # Number of features is number of columns minus the author column.
@@ -52,13 +92,12 @@ unique_authors = np.sort(np.unique(authors))
 
 # While we keep improving accuracy continue.
 current_features = np.zeros((X.shape[1], ), dtype=np.bool)
-ns = np.arange(0, current_features.shape[0])
 prev_best = 0.0
 while True:
     # Try to add each of the missing features and keep the version that
     # improves score the most.
     best_index = None
-    for missing in ns[np.logical_not(current_features)]:
+    for missing in get_next_missing(feature_classes):
         print('Testing', missing)
         new_feature = single_one(missing, current_features.shape[0])
         features = X[:, np.logical_or(current_features, new_feature)]
@@ -78,7 +117,8 @@ while True:
             X_train = np.vstack([author_texts, opposition])
             y_train = np.array([1] * author_texts.shape[0] + [0] * author_texts.shape[0])
 
-            cv = ShuffleSplit(n_splits=3, test_size=0.3, random_state=0)
+            # cv = ShuffleSplit(n_splits=3, test_size=0.3, random_state=0)
+            cv = LeaveOneOut()
             score = cross_val_score(classifier, X_train, y_train, cv=cv)
 
             scores.append(np.mean(score))
@@ -93,5 +133,6 @@ while True:
     else:
         print('prev_best', prev_best, 'best_index', best_index)
         current_features[best_index] = True
+        remove_feature(current_features, best_index)
 
     np.savetxt('best_features.npz', current_features)
