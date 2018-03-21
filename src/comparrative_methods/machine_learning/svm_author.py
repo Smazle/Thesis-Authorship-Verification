@@ -6,7 +6,6 @@ import numpy as np
 from sklearn.svm import SVC
 from sklearn.model_selection import cross_val_score
 from sklearn.model_selection import ShuffleSplit
-from sklearn.model_selection import LeaveOneOut
 
 
 # Set seed to make sure we get reproducible results.
@@ -132,6 +131,6 @@ while True:
     else:
         print('prev_best', prev_best, 'best_index', best_index)
         current_features[best_index] = True
-        remove_feature(current_features, best_index)
+        remove_feature(feature_classes, best_index)
 
     np.savetxt('best_features.npz', current_features)
