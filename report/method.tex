@@ -456,6 +456,90 @@ previous network. We have shown the structure of the third network in Figure
     \label{fig:network3}
 \end{figure}
 
+Our third network were able to obtain an accuracy of 0.83612. We have shown the
+training and validation accuracies in Figure \ref{fig:network_3_accuracies}. We
+can see that the network quickly improve the about 80\% accuracy and after that
+not much happens.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\textwidth]{./pictures/method/network_3_accuracies.png}
+    \caption{Shows the training and validation accuracies over the epochs of
+        training on the third network.}
+    \label{fig:network_3_accuracies}
+\end{figure}
+
+To get an idea of which features the network were looking at we looked at the
+output of the convolutional layers. After the convolutional layers we have a
+max-over-time pool so we know that higher values are important. We could then
+take a text, feed it to the network, find the index of the maximum output of
+the convolutional layers and then show the text snipped (char-n-gram) that
+produced that high value. We then did that for all the texts in the dataset. The
+first filter in the network for example yielded many short strings ending with 3
+newlines. Some examples of these are,
+
+\begin{lstlisting}[gobble=4]
+    'adsen\n\n\n'
+    'ndsen\n\n\n'
+    'umeer\n\n\n'
+    'endte\n\n\n'
+    'ingen\n\n\n'
+    'ehren\n\n\n'
+    'elsen\n\n\n'
+    'ommer\n\n\n'
+    'Ruter\n\n\n'
+    'ummer\n\n\n'
+    'ersen\n\n\n'
+    'ansen\n\n\n'
+    'heden\n\n\n'
+    'ensen\n\n\n'
+    'arsen\n\n\n'
+    'orten\n\n\n'
+    'ulsen\n\n\n'
+    'orgen\n\n\n'
+\end{lstlisting}
+
+Many of those short string looks like the ending of common Danish
+names followed by three newlines. Here are some examples of the
+names taken from a list of the 100 most frequent surnames in Denmark
+\footnote{http://www.mydanishroots.com/surnames-meaning-and-origin/the-100-most-
+common-surnames-in-denmark.html},
+
+\begin{description}
+    \item[adsen:] Madsen.
+    \item[ndsen:] Svendsen, Frandsen.
+    \item[elsen:] Nielsen, Mikkelsen.
+    \item[ersen:] Pedersen, Andersen, Petersen, Iversen, Jespersen.
+    \item[ansen:] Hansen, Christiansen, Johansen, Kristiansen.
+    \item[ensen:] Jensen, Christensen, S\o rensen, J\o rgensen, Kristensen,
+        Mortensen, Mogensen.
+    \item[arsen:] Larsen.
+    \item[ulsen:] Poulsen.
+\end{description}
+
+The network therefore seems to have learned that a name followed by whitespace
+are an important feature when determining the authorship of a text. Clearly when
+a student buy an assignment from a ghost writer the text will contain the
+students own name. Therefore these features are counter productive since the
+network learns that as a result of how we have created the training dataset
+where each text has the correct authors name in it.
+
+Things we are considering to do:
+\begin{itemize}
+    \item Filter out names from texts. Mikkel is currently on vacation and he
+        did not make a new extract for us before he left. He agreed to perform
+        an extract while he is on vacation. The new extract will either give us
+        the name of the student writing the assignment or Mikkel will filter out
+        the names from the texts for us.
+    \item Cut texts into smaller pieces. Since only the first piece will contain
+        the students name the network can no longer rely heavily on learning
+        name based features. That will also result in a shorter training time
+        since we can run with a larger batch size.
+    \item Get better idea of what the networks are reacting to by looking at
+        more than just the first filter. Obviously we cannot go through them all
+        since there are several thousand.
+\end{itemize}
+
 
 \subsection{Prediction System}
 
@@ -470,16 +554,27 @@ therefore clear that newer texts captures more of an authors current writing
 style than older. An advantage of using multiple texts for each author to make a
 prediction is that outliers will be averaged out.
 
-The scheme we have (will eventually*) implement is using the networks we trained
-previously to predict all texts of an author and then take a weighted average
-over the probabilities of the predictions. More formally given a text $x$, a
-trained neural network $N$ and an author $\alpha$ with $T(\alpha)$ previous
-texts we will verify whether or not $x$ is written by $\alpha$ by using the
-network to compare each $t \in T(\alpha)$ to $x$. That gives us $|T(\alpha)|$
-probabilities $p\in P$ of the text $x$ being written by the same author as that $t
-\in T(\alpha)$. We then take a weighted average over $P$ to obtain a final
-probability $p$. We then threshold that final probability such that we don't
-accuse to many people of cheating.
+The scheme we have implemented is using the networks we trained previously
+to predict all texts of an author and then take a weighted average over the
+probabilities of the predictions. More formally given a text $x$, a trained
+neural network $N$ and an author $\alpha$ with $n$ previous texts we will verify
+whether or not $x$ is written by $\alpha$ by using the network to compare each
+$t \in T(\alpha)$ to $x$. That gives us $n$ probabilities $P_i$ of the text
+$x$ being written by the same author as each $t \in T(\alpha)$. We then take a
+weighted average over $P$ to obtain a final probability $p$. We then threshold
+that final probability such that we don't accuse to many people of cheating.
+
+Taking the network $N$ as network 3 and thresholding the final probability as
+$0.5$ we obtained an accuracy of 0.92452 with 1934 \gls{TP}'s, 1851 \gls{TN}'s,
+196 \gls{FP}'s and 113 \gls{FN}'s. The results come from taking each author
+$\alpha$ in our dataset (concatenation of both training and validation),
+randomly taking a text $t_k \in T(\alpha)$ and a text
+$t_u \in \bigcup_{\beta \in A} T(\beta) \setminus T(\alpha)$ and then applying
+the prediction system first to $T(\alpha) \setminus \{t_k\}$ and $t_k$ and then
+to $T(\alpha) \setminus \{t_k\}$ and $t_u$. In this experiment the fraction of
+wrongfull accusations out of all accusations are $\frac{FNS}{FNS + TNS} =
+\frac{113}{113 + 1851} = 0.057535$. That is an excellent result since that means
+that less than 10\% of the accusations we make will be wrong.
 
 TODO:
 \begin{itemize}
@@ -490,10 +585,5 @@ TODO:
     \item Describe RNN
     \item Use squared distance as merge function to get larger differences
         between close and far apart.
-    \item Try to not use dense network but a distance metric (we didn't get to
-        do that this week).
-    \item Network 2 seem to not improve much after first epoch. Try to use a
-        larger network and observe the effect.
-    \item Use thresholding to manipulate the true positives (etc) and see what
-        results we can get (also didn't do it this week).
+    \item Try to not use dense network but a distance metric.
 \end{itemize}

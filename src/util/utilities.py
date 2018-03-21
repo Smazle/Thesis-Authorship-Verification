@@ -16,3 +16,7 @@ def wordProcess(txt):
     txt = [''.join(list(filter(lambda x: x.isalnum(), q))) for q in txt]
     txt = list(filter(lambda x: x != '', txt))
     return txt
+
+
+if __name__ == '__main__':
+    print(clean('Hello, World!$NL$Hello, World!'))
