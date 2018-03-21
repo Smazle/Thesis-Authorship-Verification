@@ -15,19 +15,19 @@ def runMe(args, training=None, data=None, features=None):
     # Import data ([features...], truth, author).
 
     if data is None:
-        data = np.loadtxt(args.file, dtype=np.float, delimiter=' ', skiprows=1)
+        data = np.loadtxt(args.file, dtype=str, delimiter=' ', skiprows=1)
 
     if training is None:
         training = np.loadtxt(args.opposing_file,
-                              dtype=np.float, delimiter=' ', skiprows=1)
+                              dtype=str, delimiter=' ', skiprows=1)
 
     authors = data[:, -1].astype(np.int)
-    data = np.array(data[:, :-1])
+    data = data[:, :-1].astype(np.float)
     scaler = StandardScaler().fit(data)
     data = scaler.transform(data)
 
     training_authors = training[:, -1].astype(np.int)
-    training = np.array(training[:, :-1])
+    training = training[:, :-1].astype(np.float)
 
     if features is None:
         features = [int(''.join(a)) for a in args.features]
@@ -39,40 +39,38 @@ def runMe(args, training=None, data=None, features=None):
             training.shape[0], len(features))
         data = data[:, features].reshape(data.shape[0], len(features))
 
-    #   Temporary, to be removed
-    #   temp = list(range(0, int(training.shape[0]/2)))
-    #   training[:, -1] = temp*2
-    #   authors = training[:, -1].astype(np.int)
-
     predictions = []
-    authorIndex = {key: 0 for key in list(set(training_authors))}
-    for i in range(data.shape[0]):
-        opposing_index = list(filter(lambda x: x[1] != authors[i],
-                                     enumerate(training_authors)))
-        opposing_index = random.sample(opposing_index, args.opposing_set_size)
-        opposing_index = [x[0] for x in opposing_index]
+    for i, author in enumerate(authors):
 
-        temp = list(enumerate(training_authors))
-        own = list(filter(lambda x: x[1] == authors[i], temp))
+        enumeration = list(enumerate(training_authors))
 
-        if authors[i] in authorIndex.keys():
-            del own[authorIndex[authors[i]]]
-            authorIndex[authors[i]] += 1
+        # Find texts written by that author
+        own = list(filter(lambda x: x[1] == author and
+                          not np.array_equal(training[x[0]], data[i]),
+                          enumeration))
+        own = [x[0] for x in own]
 
-        inp = np.append(training[opposing_index], [
-                        training[own[0][0]]], axis=0)
-        res = np.append(training_authors[opposing_index],
-                        [authors[i]], axis=0)
+        # Find texts not written by that author
+        opposing = list(filter(lambda x: x[1] != author, enumeration))
+        opposing_idx = random.sample(opposing, len(own))
+        opposing_idx = [x[0] for x in opposing_idx]
+
+        X = np.append(training[own], training[opposing_idx], axis=0)
+        y = np.append(training_authors[own], [0] * len(own), axis=0)
 
         model = neighbors.KNeighborsClassifier(
-            n_neighbors=1, weights='uniform', algorithm='auto',
+            n_neighbors=args.N, weights='uniform', algorithm='auto',
             metric='minkowski', p=args.metric)
-        model.fit(inp, res)
+        model.fit(X, y)
 
-        prediction = int(model.predict([data[i]])[0])
-        predictions.append(1 if prediction == authors[i] else 0)
+        prediction = int(model.predict([data[i]]))
+        predictions.append(1 if prediction == author else 0)
 
-    result = np.sum(predictions) / data.shape[0]
+        otherAuthor = [training[random.sample(opposing, 1)[0][0]]]
+        prediction = int(model.predict(otherAuthor))
+        predictions.append(1 if prediction == 0 else 0)
+
+    result = np.mean(predictions)
     return result
 
 
@@ -96,10 +94,10 @@ if __name__ == '__main__':
         action='store_true',
         default=False)
     parser.add_argument(
-        '--opposing-set-size',
+        '--N',
         help='Number of opposing authors to use',
         type=int,
-        default=5)
+        default=1)
     parser.add_argument(
         '--metric',
         help='Which Minkowski metric to use given 1 it will be the Manhattan' +
