@@ -356,7 +356,13 @@ perform the following tasks,
         concatenation of the $2 \times 1000$ features extracted giving a single
         vector of $2000$ values.
     \item[dense\_1:] Fully connected layer with 500 neurons. All 500 neurons is
-        connected to the 2000 values from the concatenation layer.
+        connected to the 2000 values from the concatenation layer. The
+        activation function is the \gls{ReLu}.
+    \item[output:] The output layer consisting of two neurons. Each of them is
+        connected to the 500 neurons in dense\_1. The activation function is the
+        softmax function. The first neuron computes the probability of the two
+        texts being written by different people. The second neuron computes the
+        probability of the two texts being written by the same person.
 \end{description}
 
 \begin{figure}[htb]
