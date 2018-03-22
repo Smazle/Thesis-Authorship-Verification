@@ -211,6 +211,8 @@ class MacomReader(object):
             else:
                 self.authors[author] = [i + 1]
 
+    # TODO: The split into train and validation should happen between authors
+    # and not just specific training instances.
     def generate_problems(self):
 
         for author in self.authors:
