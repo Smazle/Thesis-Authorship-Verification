@@ -204,34 +204,60 @@ A plot of different activation functions is shown in Figure
 \end{figure}
 
 Each activation function has its pros and cons. We mainly made use of the
-\gls{ReLu} activation function in the hidden layers of our networks. The reason
-for this selection is its general purpose use. When selecting an activation
-function for your neurons, the best function would be the one which best
-approximates the underlying function. Without a good idea as to what that
-function might be, \gls{ReLu} is a good starting point. Its simplicity provides
-a quick computation time, and its below zero limitation means that a large
-portion of the network won't be activating, resulting in an even smaller
+\gls{ReLu} activation function in the hidden layers of our networks. The
+reason for this selection is its general purpose use. When selecting an
+activation function for your neurons, the best function would be the one which
+best approximates the underlying function. Without a good idea as to what
+that function might be, \gls{ReLu} is a good starting point. Its simplicity
+provides a quick computation time, and its below zero limitation means that a
+large portion of the network won't be activating, resulting in an even smaller
 computation time. In addition to that, the derivative of the function is 1
 in the case of a positive input, resulting in the \gls{BP} loss having equal
 influence throughout the network. In the case of other activation functions,
-this might not be the case, resulting in an altering of the error as we \gls{BP}
-through the network. This could lead to a big error in the deep layers not
-reaching the shallow layers of the network. This property of the \gls{ReLu}
-activation function, does however not come without its costs. If the learning
-rate of the network isn't configured correctly, a \gls{ReLu} activated neuron
-might be blasted with a gradient so large, that it never reaches a point of
-activation again. In other words, the neuron "dies". As such, one can risk
-a network containing a lot of dead, non-activation neurons, thus greatly
-decreasing its quality. On the other hand the sigmoid function, doesn't allow
-its neurons to die. It can become victim to saturation. In the case of
-weight being too small or too high, the output values will be placed
-at the far ends of the sigmoid range of values. At this point the gradient
-is incredibly small, meaning that contribution that neuron now has is
-negligible. This neuron is now only a strain on the network, slowing
-it down through its activation, but contribution nothing, a problem
-\gls{ReLu} does not have. Its based on these considerations we chose
-the \gls{ReLu} activation function, leaving us the task of properly selecting
-our learning rate.\cite{JiYan}\cite{AndrejKarpathy}\cite{AvinashSharmaV}
+this might not be the case, resulting in an altering of the error as we
+propagate backwards through the network. This could lead to a big error in the
+deeper layers not reaching the shallow layers of the network. This property of
+the \gls{ReLu} activation function, does however not come without its costs.
+If the learning rate of the network isn't configured correctly, a \gls{ReLu}
+activated neuron might be blasted with a gradient so large, that it never
+reaches a point of activation again. In other words, the neuron "dies". As
+such, one can risk a network containing a lot of dead non-activation neurons,
+thus greatly decreasing its quality. On the other hand the sigmoid function,
+doesn't allow its neurons to die. It can become victim to saturation. In
+the case of weight being too small or too high, the output values will be
+placed at the far ends of the sigmoid range of values. At this point the
+gradient is incredibly small, meaning that the contribution that neuron now has
+is negligible. This neuron is now only a strain on the network, slowing it
+down through its activation, but contribution nothing, a problem \gls{ReLu}
+does not have. Its based on these considerations we chose the \gls{ReLu}
+activation function, leaving us the task of properly selecting our learning
+rate.\cite{JiYan}\cite{AndrejKarpathy}\cite{AvinashSharmaV}
+
+As the activation function of our output neurons we have generally
+used the softmax function. The softmax function is shown in Figure
+\ref{fig:softmax_activation}. The function is defined as
+
+\begin{equation}
+    h(x_i) = \frac{e^{x_i}}{\sum_{k=1}^n e^{x_k}}, \text{for $i = 1 \dots n$}.
+\end{equation}
+
+The softmax function takes any vector $x \in \mathbb{R}^n$ and returns a vector
+$y \in (0, 1)^n$. Where the sum of the output vectors elements will be equal to
+1. The function is therefore great at constructing a probability distribution
+based on an input vector. Each individual value in the vector get a high
+probability if the value is high and a low probability if the value is low.
+Therefore the function is often used at the end of networks to get the
+probability of each class in a classification problem.
+
+\begin{figure}
+    \centering
+    \textbf{Softmax Activation Function}\par\medskip
+    \includegraphics[width=0.5\textwidth]{./pictures/method/softmax_function.png}
+    \caption{The softmax activation function.}
+    \label{fig:softmax_activation}
+\end{figure}
+
+
 
 
 
