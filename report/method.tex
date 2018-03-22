@@ -137,7 +137,7 @@ Little did they know, research to solve that problem was already in progress.
 The basics of continuous \gls{BP} was initially described in 1960, in
 \cite{Kelley1960}, quickly followed by a simpler approach which used only the
 chain rule in 1962, \cite{DREYFUS196230}. It wasn't until 1970 that the modern
-version of \gls{BP} was described, using automatic differentiation as its'
+version of \gls{BP} was described, using automatic differentiation as its
 basis. With this, the increase in research of usages of \gls{BP} increased the
 following decades. As the computational power increased several 1000 folds in
 the 90's and 2000's, so did the practical usage of \gls{BP}, and \gls{NN} in
@@ -199,13 +199,13 @@ A plot of different activation functions is shown in Figure
     \label{fig:activation_functions}
 \end{figure}
 
-Each activation function has its' pros and cons. We mainly made use of the
+Each activation function has its pros and cons. We mainly made use of the
 \gls{ReLu} activation function in the hidden layers of our networks. The reason
 for this selection is its general purpose use. When selecting an activation
 function for your neurons, the best function would be the one which best
 approximates the underlying function. Without a good idea as to what that
 function might be, \gls{ReLu} is a good starting point. Its simplicity provides
-a quick computation time, and its' below zero limitation means that a large
+a quick computation time, and its below zero limitation means that a large
 portion of the network won't be activating, resulting in an even smaller
 computation time. In addition to that, the derivative of the function is 1
 in the case of a positive input, resulting in the \gls{BP} loss having equal
@@ -213,18 +213,18 @@ influence throughout the network. In the case of other activation functions,
 this might not be the case, resulting in an altering of the error as we \gls{BP}
 through the network. This could lead to a big error in the deep layers not
 reaching the shallow layers of the network. This property of the \gls{ReLu}
-activation function, does however not come without its' costs. If the learning
+activation function, does however not come without its costs. If the learning
 rate of the network isn't configured correctly, a \gls{ReLu} activated neuron
 might be blasted with a gradient so large, that it never reaches a point of
 activation again. In other words, the neuron "dies". As such, one can risk
 a network containing a lot of dead, non-activation neurons, thus greatly
-decreasing its' quality. On the other hand the sigmoid function, doesn't allow
-its' neurons to die. It can become victim to saturation. In the case of
+decreasing its quality. On the other hand the sigmoid function, doesn't allow
+its neurons to die. It can become victim to saturation. In the case of
 weight being too small or too high, the output values will be placed
 at the far ends of the sigmoid range of values. At this point the gradient
 is incredibly small, meaning that contribution that neuron now has is
 negligible. This neuron is now only a strain on the network, slowing
-it down through its' activation, but contribution nothing, a problem
+it down through its activation, but contribution nothing, a problem
 \gls{ReLu} does not have. Its based on these considerations we chose
 the \gls{ReLu} activation function, leaving us the task of properly selecting
 our learning rate.\cite{JiYan}\cite{AndrejKarpathy}\cite{AvinashSharmaV}
