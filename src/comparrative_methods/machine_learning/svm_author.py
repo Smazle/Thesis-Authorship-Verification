@@ -39,8 +39,10 @@ def get_next_missing(feature_classes):
 
     for key in feature_classes:
         values = feature_classes[key]
-        if len(values) != 0:
-            missing.append(values[0])
+        length = len(values)
+        if length != 0:
+            for i in range(min(length, 10)):
+                missing.append(values[i])
 
     return missing
 
