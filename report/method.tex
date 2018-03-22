@@ -141,7 +141,8 @@ version of \gls{BP} was described, using automatic differentiation as its
 basis. With this, the increase in research of usages of \gls{BP} increased the
 following decades. As the computational power increased several 1000 folds in
 the 90's and 2000's, so did the practical usage of \gls{BP}, and \gls{NN} in
-general.\cite{Schmidhuber:2015}
+general\cite{Schmidhuber:2015}. The real life application of \gls{BP}, will be described
+in section \ref{sec:BP}
 
 Like with the history of authorship attribution, research in this area of
 science picked up more interest, as we entered the modern computational age,
@@ -155,8 +156,6 @@ a cohesive view is created. This is what paved the way for neocognition in
 similar manner, looking at overlapping subsections of data. These convolutional
 neurons however were rarely used alone, but together with a down-sampling neuron
 such as Max Pooling introduced in 1993.\cite{Schmidhuber:2015}
-
-TODO: Add more maybe? Change degree of detail
 
 \subsubsection{Neurons}
 
@@ -177,6 +176,11 @@ computes is then,
 The training of a \gls{NN} consists of changing the weights applied at each
 neuron, with the goal of modeling the relationships present in the data.
 
+\subsubsection{Backpropagation}\label{sec:BP}
+The actual modeling and learning that the \gls{NN} does, can be attributed
+to \gls{BP}.
+
+\subsubsection{Activation Functions}
 The activation function $h$, used at each neuron, defines the output of the
 node given a certain input. A simple example of this would be computer chip
 circuit, which can be seen as a series of activation functions outputting 0 or
@@ -228,6 +232,8 @@ it down through its activation, but contribution nothing, a problem
 \gls{ReLu} does not have. Its based on these considerations we chose
 the \gls{ReLu} activation function, leaving us the task of properly selecting
 our learning rate.\cite{JiYan}\cite{AndrejKarpathy}\cite{AvinashSharmaV}
+
+
 
 \subsection{Baseline Methods}
 
