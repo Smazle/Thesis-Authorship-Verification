@@ -7,8 +7,8 @@ import random
 from sklearn import neighbors
 from sklearn.preprocessing import StandardScaler
 
-
 np.random.seed(7)
+random.seed(7)
 
 
 def runMe(args, training=None, data=None, features=None):
@@ -23,11 +23,13 @@ def runMe(args, training=None, data=None, features=None):
 
     authors = data[:, -1].astype(np.int)
     data = data[:, :-1].astype(np.float)
-    scaler = StandardScaler().fit(data)
-    data = scaler.transform(data)
 
     training_authors = training[:, -1].astype(np.int)
     training = training[:, :-1].astype(np.float)
+
+    scaler = StandardScaler().fit(training)
+    training = scaler.transform(training)
+    data = scaler.transform(data)
 
     if features is None:
         features = [int(''.join(a)) for a in args.features]
@@ -63,12 +65,15 @@ def runMe(args, training=None, data=None, features=None):
             metric='minkowski', p=args.metric)
         model.fit(X, y)
 
-        prediction = int(model.predict([data[i]]))
-        predictions.append(1 if prediction == author else 0)
+        try:
+            prediction = int(model.predict([data[i]]))
+            predictions.append(1 if prediction == author else 0)
 
-        otherAuthor = [training[random.sample(opposing, 1)[0][0]]]
-        prediction = int(model.predict(otherAuthor))
-        predictions.append(1 if prediction == 0 else 0)
+            otherAuthor = [training[random.sample(opposing, 1)[0][0]]]
+            prediction = int(model.predict(otherAuthor))
+            predictions.append(1 if prediction == 0 else 0)
+        except ValueError:
+            print('Dublcate Text Found, Skipping', len(predictions) / 2)
 
     result = np.mean(predictions)
     return result
