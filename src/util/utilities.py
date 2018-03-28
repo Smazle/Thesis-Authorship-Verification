@@ -7,6 +7,7 @@ import re
 def clean(txt):
     txt = re.sub(r'\$NL\$', '\n', txt)
     txt = re.sub(r'\$SC\$', ';', txt)
+    txt = re.sub(r'\$NAME\$', '', txt)
     return txt
 
 
@@ -19,4 +20,4 @@ def wordProcess(txt):
 
 
 if __name__ == '__main__':
-    print(clean('Hello, World!$NL$Hello, World!'))
+    print(clean('Hello, World!$NL$Hello$NAME$, World!'))
