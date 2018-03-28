@@ -88,33 +88,29 @@ class FeatureExtractor:
             f.write('author,' + ','.join(self.feature_names) + '\r\n')
 
             for i, [author, date, text] in enumerate(self.authors):
-                start = time.time()
-                text = clean(text)
-
-                try:
-                    features = self.extract_features(text)
-                    t = time.time() - start
-                    print('Text', i, '-', t * 1000)
-                except ZeroDivisionError:
-                    print('Text', i, 'Err')
-                    f.write('Err' + '\n')
-                    continue
+                features = self.extract_features(i, clean(text))
 
                 line = [author] + features
                 f.write(','.join(list(map(str, line))) + '\r\n')
 
-    def extract_features(self, text):
-        features = []
+    def extract_features(self, i, text):
+        start = time.time()
 
-        for extractor in self.extractors:
-            features = features + extractor.extract(text)
+        features = []
+        try:
+            for extractor in self.extractors:
+                features = features + extractor.extract(text)
+
+            print('Text', i, '-', (time.time() - start) * 1000)
+        except Exception:
+            print('Text', i, 'Err')
 
         return features
 
 
 def gen_corpus():
     chapters = europarl_raw.danish.chapters()
-    vals = ['%', ',', ':', ')', '(']
+    vals = ['%', ',', ':', ')', '(']  # TODO: Name this something else.
 
     txt = ''
 
