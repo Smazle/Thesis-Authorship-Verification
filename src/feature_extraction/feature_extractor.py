@@ -84,7 +84,7 @@ class FeatureExtractor:
 
             self.extractors.append(extractor)
 
-    def extract(self, outfile, master_file=None):
+    def extract(self, outfile):
         with open(outfile, 'a') as f:
             # Write header.
             outfile.write('author' + ','.join(self.feature_names) + '\r\n')

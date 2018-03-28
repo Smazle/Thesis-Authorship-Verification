@@ -52,4 +52,4 @@ with open(args.datafile, 'r', encoding='utf-8') as csvfile:
         character_grams=character_grams,
     )
 
-    feature_extractor.extract(outfile, skipLines=skipLines)
+    feature_extractor.extract(args.outfile)
