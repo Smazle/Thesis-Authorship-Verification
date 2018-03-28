@@ -11,8 +11,6 @@ import pickle
 from ..util.utilities import clean
 import time
 
-# TODO: description.
-
 
 class FeatureExtractor:
 
@@ -87,9 +85,8 @@ class FeatureExtractor:
     def extract(self, outfile):
         with open(outfile, 'a') as f:
             # Write header.
-            f.write('author' + ','.join(self.feature_names) + '\r\n')
+            f.write('author,' + ','.join(self.feature_names) + '\r\n')
 
-            print('Starting to generate features')
             for i, [author, date, text] in enumerate(self.authors):
                 start = time.time()
                 text = clean(text)
@@ -103,8 +100,8 @@ class FeatureExtractor:
                     f.write('Err' + '\n')
                     continue
 
-                line = [int(author) + features]
-                f.write(','.join(list(map(str, features))) + '\r\n')
+                line = [author] + features
+                f.write(','.join(list(map(str, line))) + '\r\n')
 
     def extract_features(self, text):
         features = []
