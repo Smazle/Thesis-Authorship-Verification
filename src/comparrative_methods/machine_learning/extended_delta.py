@@ -11,7 +11,7 @@ from sklearn.preprocessing import StandardScaler
 np.random.seed(7)
 
 
-def runMe(args, training=None, data=None, features=None):
+def main(args, training=None, data=None, features=None):
     # Import data ([features...], truth, author).
 
     if data is None:
@@ -118,4 +118,4 @@ if __name__ == '__main__':
     )
 
     args = parser.parse_args()
-    print(runMe(args))
+    print(main(args))
