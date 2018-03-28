@@ -2,70 +2,54 @@
 # -*- coding: utf-8 -*-
 
 import random
-import sys
-from feature_extractor import FeatureExtractor
+from .feature_extractor import FeatureExtractor
+import argparse
 import csv
 
-skip = True
-skipLines = 0
+
 random.seed = 7
 
-dataFolder = sys.argv[1]
-outfile = sys.argv[2]
+# Parse arguments.
+parser = argparse.ArgumentParser(
+    description='Run feature extraction on a datafile in MaCom CSV format.'
+)
+parser.add_argument(
+    'datafile',
+    type=str,
+    help='Path to file containing texts in csv format.'
+)
+parser.add_argument(
+    'outfile',
+    type=str,
+    help='Path to file we should write output in.'
+)
+parser.add_argument(
+    '--skip-lines',
+    type=int,
+    default=1,
+    help='How many lines to skip in the beginning of the datafile.'
+)
+args = parser.parse_args()
 
-csvfile = open(dataFolder, 'r', encoding='utf-8')
-authors = csv.reader(csvfile, delimiter=';')
-next(authors)
+with open(args.datafile, 'r', encoding='utf-8') as csvfile:
+    authors = csv.reader(csvfile, delimiter=';')
 
-N = []
-N.extend(range(2, 11))
-# N.extend(range(20, 40, 10))
-# N.extend(range(40, 120, 20))
+    # If we are asked to skip lines we will.
+    for i in range(args.skip_lines):
+        next(authors)
 
-S = 500
+    postag_grams = list(map(lambda x: (x, 50), [3, 4]))
+    special_character_grams = list(map(lambda x: (x, 50), [2, 3, 4]))
+    character_grams = list(map(lambda x: (x, 300), [2, 3, 4, 5, 6, 7, 8, 9, 10]))
+    word_grams = list(map(lambda x: (x, 500), [2, 3, 4]))
 
-POS = 219
-SPEC = 524
-CHAR = 2178
-WORD = 188472
-FREQ = 27535
+    feature_extractor = FeatureExtractor(
+        authors,
+        postag_grams=postag_grams,
+        special_character_grams=special_character_grams,
+        word_grams=word_grams,
+        word_frequencies=500,
+        character_grams=character_grams,
+    )
 
-
-# calls = [POS, SPEC, CHAR, WORD, FREQ]
-#
-# POS = SPEC = CHAR = WORD = FREQ = []
-#
-# for i in S:
-#    for q in range(1, len(N)):
-#        grams = combinations(N, q)
-#
-#        for combo in grams:
-#            combo = list(combo)
-#            postag_grams = list(map(lambda x: (x, i), combo))
-#            special_grams = list(map(lambda x: (x, i), combo))
-#            char_grams = list(map(lambda x: (x, i), combo))
-#            word_grams = list(map(lambda x: (x, i), combo))
-#            word_frequencies = i
-#
-#            POS.append(postag_grams)
-#            SPEC.append(special_grams)
-#            CHAR.append(char_grams)
-#            WORD.append(word_grams)
-#            FREQ.append(word_frequencies)
-# print(char_grams)
-
-POS = list(map(lambda x: (x, 50), [3, 4]))
-SPEC = list(map(lambda x: (x, 50), [2, 3, 4]))
-CHAR = list(map(lambda x: (x, 300), N))
-WORD = list(map(lambda x: (x, 500), [2, 3, 4]))
-
-feature_extractor = FeatureExtractor(authors,
-                                     postag_grams=POS,
-                                     special_character_grams=SPEC,
-                                     word_grams=WORD,
-                                     word_frequencies=500,
-                                     character_grams=CHAR,
-                                     skip=skip)
-
-feature_extractor.extract(outfile, skipLines=skipLines)
-csvfile.close()
+    feature_extractor.extract(outfile, skipLines=skipLines)
