@@ -5,8 +5,13 @@ import random
 from .feature_extractor import FeatureExtractor
 import argparse
 import csv
+import sys
 
 
+# Make sure we can hold all files in csv file memory.
+csv.field_size_limit(sys.maxsize)
+
+# Set random state for reproducible results.
 random.seed = 7
 
 # Parse arguments.
