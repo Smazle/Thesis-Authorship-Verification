@@ -87,7 +87,7 @@ class FeatureExtractor:
     def extract(self, outfile):
         with open(outfile, 'a') as f:
             # Write header.
-            outfile.write('author' + ','.join(self.feature_names) + '\r\n')
+            f.write('author' + ','.join(self.feature_names) + '\r\n')
 
             print('Starting to generate features')
             for i, [author, date, text] in enumerate(self.authors):
