@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+# -*- coding: utf-8 -*-
 
 import argparse
 import csv
@@ -78,7 +79,10 @@ while True:
             # TODO: Change C and gamma values.
             classifier = SVC(kernel='rbf', C=100, gamma=0.00001)
             X_train = np.vstack([author_texts, opposition])
-            y_train = np.array([1] * author_texts.shape[0] + [0] * author_texts.shape[0])
+            y_train = np.array(
+                [1] * author_texts.shape[0] +
+                [0] * author_texts.shape[0]
+            )
 
             score = cross_val_score(classifier, X_train, y_train)
 
