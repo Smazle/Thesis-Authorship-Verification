@@ -59,7 +59,8 @@ for count in neigbors:
     fallCount = 0
     for i in range(maxDiff):
 
-        result = ed.runMe(args, data, data, np.concatenate(features))
+        result = ed.runMe(args, np.copy(data), np.copy(data),
+                          np.concatenate(features))
         # import pdb; pdb.set_trace()
 
         if prev[1] < result:
