@@ -160,7 +160,7 @@ class MacomReader(object):
     def generate_vocabulary_map(self, linereader):
         for author in self.authors:
             for line_n in self.authors[author]:
-                text = linereader.readline(line_n)
+                autor, date, text = linereader.readline(line_n).split(';')
                 decoded = util.clean(text)
                 if not self.char:
                     decoded = util.wordProcess(decoded)
@@ -198,7 +198,7 @@ class MacomReader(object):
 
     def generate_authors(self, linereader):
         for i, line in enumerate(linereader.readlines(skipfirst=True)):
-            author, text = line.split(';')
+            author, date, text = line.split(';')
 
             if len(text) > 30000:
                 print('WARNING: Skipping text longer than 30,000 characters ' +
@@ -237,7 +237,7 @@ class MacomReader(object):
         self.validation_problems = self.problems[split_point:]
 
     def read_encoded_line(self, linereader, line_n):
-        author, text = linereader.readline(line_n).split(';')
+        author, date, text = linereader.readline(line_n).split(';')
         unescaped = util.clean(text)
 
         if not self.char:
