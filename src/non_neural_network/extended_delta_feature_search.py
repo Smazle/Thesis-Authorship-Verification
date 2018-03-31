@@ -1,4 +1,6 @@
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+
 import numpy as np
 import sys
 import pickle
@@ -17,8 +19,7 @@ def increment(features, startIndex):
     return features
 
 
-base = './extended_delta.py ../feature_extraction/output \
-        --opposing-file ../feature_extraction/output '
+base = './extended_delta.py' + inp + ' --opposing-file' + inp + " "
 
 
 data = np.loadtxt(inp, dtype=str, delimiter=' ', skiprows=1)
@@ -73,7 +74,10 @@ for count in neigbors:
 
         if fallCount == 3:
             print(prev)
-            open('ExtendedParams.features', 'a').write(str(prev) + '\n')
+            open('ExtendedParams.features', 'a')\
+                .write(",".join(list(map(str, prev[0])) +
+                                str(prev[1]) + "\n"))
+
             break
 
         print(features)
@@ -81,4 +85,4 @@ for count in neigbors:
 
     neigbor_results[neigbors] = (prev[1], np.concatenate(features))
 
-pickle.dump(neigbor_results, open('params', 'wb'))
+pickle.dump(neigbor_results, open('extended_delta_features', 'wb'))
