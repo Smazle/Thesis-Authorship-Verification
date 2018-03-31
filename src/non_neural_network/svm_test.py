@@ -2,18 +2,21 @@
 # -*- coding: utf-8 -*-
 
 import argparse
-import csv
 import numpy as np
 import random
 from sklearn.svm import SVC
 from sklearn.model_selection import LeaveOneOut, GridSearchCV
 from collections import Counter
+import pandas as pd
+
+np.random.seed(1337)
+random.seed(1337)
 
 
 parser = argparse.ArgumentParser(
     description='Use features in feature file specified by the boolean ' +
-        'vector given to find best svm parameters and test the svm on part ' +
-        'of the data.'
+                'vector given to find best svm parameters and test the svm ' +
+                'on part of the data.'
 )
 parser.add_argument(
     'featurefile',
@@ -24,39 +27,23 @@ parser.add_argument(
     'features',
     type=str,
     help='Path to file containing boolean vector to specify which features ' +
-        'to use.'
+         'to use.'
 )
 parser.add_argument(
     'training_validation_split',
     type=float,
-    help='Number between 0 and 1 specifying how much data should be reserved ' +
-        'for validation and not for finding hyperparameters.'
+    help='Number between 0 and 1 specifying how much data should be ' +
+         'reserved for validation and not for finding hyperparameters.'
 )
 args = parser.parse_args()
 
-# Read datafile without consuming all my RAM (numpy...).
+# Load data.
 with open(args.featurefile, 'r') as feature_file:
-    feature_file.readline()  # Skip first line.
-    reader = csv.reader(feature_file, delimiter=' ', lineterminator='\n')
+    data = pd.read_csv(feature_file)
+    authors = data.as_matrix(columns=['author']).flatten()
 
-    # Number of features is number of columns minus the author column.
-    feature_n = len(reader.__next__()) - 1
-
-    line_n = 1
-    for line in reader:
-        line_n = line_n + 1
-
-    X = np.zeros((line_n, feature_n), dtype=np.float)
-    authors = np.zeros((line_n, ), dtype=np.int)
-
-    # Go back to start of file and read again.
-    feature_file.seek(0)
-    feature_file.readline()
-    reader = csv.reader(feature_file, delimiter=' ', lineterminator='\n')
-
-    for i, line in enumerate(reader):
-        X[i] = np.array(list(map(lambda x: float(x), line[0:-1])))
-        authors[i] = int(line[-1])
+    datacolumns = filter(lambda x: x != 'author', data.columns)
+    X = data.as_matrix(columns=datacolumns)
 
 # Get list of unique authors in a scrambled order so we don't have any bias in
 # the order of the datafile.
@@ -107,12 +94,9 @@ for author in training_authors:
     best_C_gamma = (grid.best_params_['C'], grid.best_params_['gamma'])
     best_params = best_params + Counter([best_C_gamma])
 
-print(best_params.most_common(1))
-print(best_params)
-
 ((C, gamma), count) = best_params.most_common()[0]
 
-print(C, gamma)
+print('final best parameters', 'C', C, 'gamma', gamma)
 
 # Train an svm using the best parameters found.
 scores = []
@@ -140,9 +124,14 @@ for author in validation_authors:
         model = SVC(kernel='rbf', C=C, gamma=gamma)
         model.fit(X_train[train_index], y_train[train_index])
 
-        predictions = model.predict(X_train[test_index])
+        # Single prediction since we use leave one out.
+        prediction = model.predict(X_train[test_index])
 
-        # print(predictions)
-        print(y_train[test_index])
-        print(predictions - y_train[test_index])
-        print()
+        if prediction[0] == y_train[test_index][0]:
+            author_scores.append(1.0)
+        else:
+            author_scores.append(0.0)
+
+    scores.append(np.mean(author_scores))
+
+print('final score', np.mean(scores))
