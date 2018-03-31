@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import numpy as np
-import sys
-import pickle
-import extended_delta as ed
 import argparse
+import extended_delta as ed
+import numpy as np
+import pickle
+import sys
 
 inp = sys.argv[1]
 
