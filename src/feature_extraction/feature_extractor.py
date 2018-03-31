@@ -144,7 +144,6 @@ def gen_corpus():
                         else:
                             txt += "\""
                         start = not start
-                        # import pdb; pdb.set_trace()
                         continue
 
                     if i + 1 < len(sentence) and sentence[i + 1] in vals:
