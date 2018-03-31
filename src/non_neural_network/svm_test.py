@@ -9,9 +9,9 @@ from sklearn.model_selection import LeaveOneOut, GridSearchCV
 from collections import Counter
 import pandas as pd
 
+# Set random state for reproducible results.
 np.random.seed(1337)
 random.seed(1337)
-
 
 parser = argparse.ArgumentParser(
     description='Use features in feature file specified by the boolean ' +
@@ -62,6 +62,7 @@ with open(args.features, 'r') as f:
 
 X = X[:, features_to_use]
 
+# Find the best hyperparameters using the training authors.
 best_params = Counter()
 for author in training_authors:
     # Split texts into those written by same and different authors.
@@ -98,7 +99,7 @@ for author in training_authors:
 
 print('final best parameters', 'C', C, 'gamma', gamma)
 
-# Train an svm using the best parameters found.
+# Train an svm for each validation author using the best parameters found.
 scores = []
 for author in validation_authors:
     # Split texts into those written by same and different authors.
