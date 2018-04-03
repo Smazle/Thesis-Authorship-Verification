@@ -1,0 +1,4 @@
+./getData
+./getTest
+./convert.py blabla
+rm -rf pan_*

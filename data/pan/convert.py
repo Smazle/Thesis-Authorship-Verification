@@ -3,8 +3,14 @@
 
 import numpy as np
 import os
+import time
+import sys
+
 
 output = [['ID', 'Text']]
+
+if len(sys.argv) > 1:
+    output[0].insert(1, 'Date')
 
 author = 0
 for pan in os.listdir('.'):
@@ -21,10 +27,20 @@ for pan in os.listdir('.'):
                         txt = txt.replace(';', '$SC$')
                         txt = txt.replace(u'\ufeff', '')
 
-                        output.append([str(author), txt])
+                        if len(sys.argv) > 1:
+                            output.append([str(author),
+                                           time.strftime('%d-%m-%y'),
+                                           txt])
+                        else:
+                            output.append([str(author), txt])
 
                 author += 1
 
 output = np.array(output)
-np.savetxt('formattedPan.csv', output,
-           delimiter=';', fmt='%s', encoding='utf8')
+
+if len(sys.argv) > 1:
+    np.savetxt('formattedPanWithTime.csv', output,
+               delimiter=';', fmt='%s', encoding='utf8')
+else:
+    np.savetxt('formattedPan.csv', output,
+               delimiter=';', fmt='%s', encoding='utf8')

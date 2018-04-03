@@ -10,6 +10,9 @@ pydot
 graphviz
 matplotlib
 h5py
+tensorflow
+tensorflow-gpu
+jsonpickle
 
 [APT]
 graphviz
