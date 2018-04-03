@@ -8,7 +8,7 @@ import jsonpickle
 from keras.models import Model
 from keras.layers.embeddings import Embedding
 from keras.layers import Dense, Concatenate, Input, Dropout, GRU, Reshape,\
-    Lambda, Flatten
+    Lambda, Flatten, Activation
 from keras.callbacks import ModelCheckpoint
 from keras.utils import plot_model
 from keras.layers.pooling import AveragePooling1D
@@ -50,6 +50,7 @@ parser.add_argument(
 args = parser.parse_args()
 
 
+
 def l2_norm(x, axis=None):
     """
     takes an input tensor and returns the l2 norm along specified axis
@@ -60,25 +61,32 @@ def l2_norm(x, axis=None):
 
     return norm
 
-
 def pairwise_cosine_sim(A_B):
     """
     A [batch x n x d] tensor of n rows with d dimensions
     B [batch x m x d] tensor of n rows with d dimensions
 
     returns:
-    D [batch x n x m] tensor of cosine similarity
-    scores between each point i<n, j<m
+    D [batch x n x m] tensor of cosine similarity scores between each point i<n, j<m
     """
 
     A, B = A_B
-    A_mag = l2_norm(A)
-    B_mag = l2_norm(B)
-    num = K.dot(A, K.transpose(B))
-    den = (A_mag * B_mag)
-    dist_mat = num / den
+
+    A_mag = l2_norm(A, axis=1)
+    B_mag = l2_norm(B, axis=1)
+    num = K.batch_dot(K.permute_dimensions(B, (0,2,1)), A)
+    den = (A_mag * K.permute_dimensions(B_mag, (0,2,1)))
+    dist_mat =  num / den
+
+    print(num.get_shape())
+    print(den.get_shape())
+    print(dist_mat.get_shape())
 
     return dist_mat
+
+def shape(input_shape):
+    shape1, shape2 = input_shape
+    return (shape1[0], 1)
 
 
 # Either load reader from file or create a new one.
@@ -88,7 +96,7 @@ if args.reader is not None:
 else:
     reader = MacomReader(
         args.datafile,
-        batch_size=2,
+        batch_size=1,
         encoding='numbers',
         vocabulary_frequency_cutoff=1 / 100000,
         validation_split=0.95
@@ -120,25 +128,24 @@ gru_unknown = Reshape((100, 1))(gru_unknown)
 avg_known = AveragePooling1D()(gru_known)
 avg_unknown = AveragePooling1D()(gru_unknown)
 
-avg_known = Flatten()(avg_known)
-avg_unknown = Flatten()(avg_unknown)
+#avg_known = Flatten()(avg_known)
+#avg_unknown = Flatten()(avg_unknown)
 
-known_out = Dense(len(reader.authors), activation='softmax')(avg_known)
-unknown_out = Dense(len(reader.authors), activation='softmax')(avg_unknown)
+known_out = Activation("softmax")(avg_known)
+unknown_out = Activation("softmax")(avg_unknown)
 
-# TODO: Handle returning only 1 value
-cosine_sim = Lambda(pairwise_cosine_sim)([known_out, unknown_out])
+cosine_sim = Lambda(pairwise_cosine_sim, output_shape=shape)([known_out, unknown_out])
+
+#output = Flatten()(cosine_sim)
+
+#output = Activation("softmax")(cosine_sim)
+
+model = Model(inputs=[known_in, unknown_in], outputs=cosine_sim)
 
 
-# TODO: Finish it off correctly.
-cosine_sim = Reshape((1,))(cosine_sim)
-
-output = Dense(1, activation='sigmoid')(cosine_sim)
-
-model = Model(inputs=[known_in, unknown_in], outputs=output)
 
 model.compile(optimizer='adam',
-              loss='categorical_crossentropy',
+              loss='mse',
               metrics=['accuracy'])
 
 steps_n = len(reader.training_problems) / reader.batch_size
@@ -176,8 +183,7 @@ model.fit_generator(
     steps_per_epoch=steps_n,
     epochs=1,
     validation_data=reader.generate_validation(),
-    validation_steps=val_steps_n,
-    callbacks=callbacks
+    validation_steps=val_steps_n
 )
 
 model.save('final_model.hdf5')
