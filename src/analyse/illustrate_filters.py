@@ -68,8 +68,7 @@ with open(args.reader, 'r') as macomreader_in:
     reader = jsonpickle.decode(macomreader_in.read())
     reader.batch_size = 1
 
-filter_maxs = []  # Collect the strings giving max out.
-filter_maxs_val = []  # Collect the max values.
+output = []
 with LineReader(args.datafile, encoding='utf-8') as linereader:
     opposition = reader.read_encoded_line(linereader, 1)
     for i in range(1, len(linereader.line_offsets)):
@@ -90,11 +89,12 @@ with LineReader(args.datafile, encoding='utf-8') as linereader:
         max_text = repr(text[max_ind:max_ind + args.convolution_size])
         print(max_text, max_val)
 
-        filter_maxs.append(max_text)
-        filter_maxs_val.append(max_val)
+        output.append((i, max_text, max_val))
+
+output.sort(key=lambda x: x[2], reverse=True)
 
 if args.outfile is not None:
     with open(args.outfile, 'w') as f:
         f.write('text,max-string,max-val\r\n')
-        for i, (string, val) in enumerate(zip(filter_maxs, filter_maxs_val)):
+        for i, string, val in output:
             f.write('{},{},{}\r\n'.format(i, string, val))
