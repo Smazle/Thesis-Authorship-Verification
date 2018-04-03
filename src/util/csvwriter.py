@@ -1,6 +1,6 @@
 
-import numpy as np
 import math
+import numpy as np
 from keras.callbacks import Callback
 
 
@@ -90,8 +90,8 @@ class CSVWriter(Callback):
         fps = 0
         fns = 0
 
-        for i in range(math.ceil(self.validation_steps)):
-            X, y = next(self.validation_generator)
+        for i in range(math.ceil(steps)):
+            X, y = next(generator)
             prediction = self.model.predict(X)
 
             prediction = prediction[:, 1] - prediction[:, 0]
