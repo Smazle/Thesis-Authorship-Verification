@@ -355,7 +355,7 @@ previous network. We have shown the structure of the third network in Figure
 
 Our third network were able to obtain an accuracy of 0.83612. We have shown the
 training and validation accuracies in Figure \ref{fig:network_3_accuracies}. We
-can see that the network quickly improve the about 80\% accuracy and after that
+can see that the network quickly improve to about 80\% accuracy and after that
 not much happens.
 
 \begin{figure}
@@ -438,52 +438,52 @@ Things we are considering to do:
 \end{itemize}
 
 
-\subsection{Prediction System}
+\subsection{Siamese Neural Network - Iteration 4}
 
-The networks we have trained above does not solve the problem presented to us
-by MaCom. The networks above all compare two texts and predict whether or not
-they have been written by the same person. In the MaCom problem we are given a
-set of texts for each author so we can make use of all texts when making our
-predictions. We can also use metadata about the individual texts to make our
-prediction. We can for example weigh the newest texts higher authorship than
-the older texts. As described earlier writing style changes over time and it is
-therefore clear that newer texts captures more of an authors current writing
-style than older. An advantage of using multiple texts for each author to make a
-prediction is that outliers will be averaged out.
+In this iteration we trained the third network again but now using a dataset
+where names were substituted by empty strings. We wanted to see how well the
+network would perform when it was not able to use peoples names as a feature.
+A graph of the training and validation accuracies can be seen in Figure
+\ref{fig:network_4_accuracies}. The best validation result we found was in epoch
+20 with an accuracy of 0.80531. That means that we lost about 3\% accuracy now
+that we can no longer look at peoples names.
 
-The scheme we have implemented is using the networks we trained previously
-to predict all texts of an author and then take a weighted average over the
-probabilities of the predictions. More formally given a text $x$, a trained
-neural network $N$ and an author $\alpha$ with $n$ previous texts we will verify
-whether or not $x$ is written by $\alpha$ by using the network to compare each
-$t \in T(\alpha)$ to $x$. That gives us $n$ probabilities $P_i$ of the text
-$x$ being written by the same author as each $t \in T(\alpha)$. We then take a
-weighted average over $P$ to obtain a final probability $p$. We then threshold
-that final probability such that we don't accuse to many people of cheating.
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\textwidth]{./pictures/experiments/network_4_accuracies.png}
+    \caption{Shows the training and validation accuracies over the epochs of
+        training on the fourth iteration of the network.}
+    \label{fig:network_4_accuracies}
+\end{figure}
 
-Taking the network $N$ as network 3 and thresholding the final probability as
-$0.5$ we obtained an accuracy of 0.92452 with 1934 \gls{TP}'s, 1851 \gls{TN}'s,
-196 \gls{FP}'s and 113 \gls{FN}'s. The results come from taking each author
-$\alpha$ in our dataset (concatenation of both training and validation),
-randomly taking a text $t_k \in T(\alpha)$ and a text
-$t_u \in \bigcup_{\beta \in A} T(\beta) \setminus T(\alpha)$ and then applying
-the prediction system first to $T(\alpha) \setminus \{t_k\}$ and $t_k$ and then
-to $T(\alpha) \setminus \{t_k\}$ and $t_u$. In this experiment the fraction of
-wrongfull accusations out of all accusations are $\frac{FNS}{FNS + TNS} =
-\frac{113}{113 + 1851} = 0.057535$. That is an excellent result since that means
-that less than 10\% of the accusations we make will be wrong.
-
-TODO:
-\begin{itemize}
-    \item Describe Backpropagration
-    \item Describe Optimizers
-    \item Describe Convolutions
-    \item Describe Dropout
-    \item Describe RNN
-    \item Use squared distance as merge function to get larger differences
-        between close and far apart.
-    \item Try to not use dense network but a distance metric.
-\end{itemize}
+We wanted to verify whether or not the network still looked at the names of the
+authors. It is not possible for us to look at all 1200 filters but we looked
+at a couple and did not find any that looked like they were looking at names.
+However we did find that the network now seems to be looking at which class
+the student is in. The classes in Danish schools are typically written as 1.p,
+1.q, 2.p, 2,q, etc. and we found that one of the convolutional 4 filters were
+looking at character sequences such as those. We have generated a couple of
+tables that shows what the network is now looking at. We generated the tables by
+taking the first 50 texts from the dataset and extracting the maximum value of a
+particular filter from each text. That gives a single string of the convolution
+size from each text and a number which is higher the more important that string
+is. We then sorted the extractions by the importance score. The result of a
+couple of the filters are shown in Figures \ref{fig:features_convolution_8_1},
+\ref{fig:features_convolution_8_5}, \ref{fig:features_convolution_8_100} and
+\ref{fig:features_convolution_4_100}. The first figure looks at whether or not
+authors use the phrase "s\aa at" (such that). Inexperienced Danish writers will
+often use the phrase which is considered grammatically incorrect in most Danish
+sentences. Therefore the network seems to have learned that some writers use
+"s\aa at" while others don't and that it is an important phrase when verifying
+authorship. The second figure seems to look at whether or not an authors uses
+the phrase "meget" (most). Some authors apparently often describe things using
+"meget" while others do not. The third figure shows that the network looks at
+which authors use the phrase "at de" or "at der" ("that they" or "that there").
+The fourth filter is the one that seems to look at which class a student is in.
+In our constructed dataset the class of a student will always be a good feature
+since we don't have any actual ghost writers. However a ghost writer would write
+the correct class of the student on their submission. Therefore we don't want
+the network to learn that particular feature.
 
 \begin{table}
     \centering
@@ -540,6 +540,9 @@ TODO:
         \textbf{Text 2}   & \verb{' dag i t'{  & 26.28683 \\
         \textbf{Text 31}  & \verb{'· Frank\n'{ & 21.83477
     \end{tabular}
+    \caption{The most important part of the first 50 texts according to
+        convolutional filter 1 of size 8. Sorted by the importance score.}
+    \label{fig:features_convolution_8_1}
 \end{table}
 
 \begin{table}
@@ -597,11 +600,14 @@ TODO:
         \textbf{Text 19} & \verb{'rne om f'{ & 14.34204 \\
         \textbf{Text 2} & \verb{' betydni'{ & 13.36254 \\
     \end{tabular}
+    \caption{The most important part of the first 50 texts according to
+        convolutional filter 5 of size 8. Sorted by the importance score.}
+    \label{fig:features_convolution_8_5}
 \end{table}
 
 \begin{table}
     \centering
-    \textbf{Convolutional Filter 5 of Size 8}\par\medskip
+    \textbf{Convolutional Filter 100 of Size 8}\par\medskip
     \begin{tabular}{c|cc}
         & \textbf{Filter Max String} & \textbf{Filter Max Value} \\ \hline
         \textbf{Text 20} & \verb{', at De '{ & 14.06486 \\
@@ -654,6 +660,9 @@ TODO:
         \textbf{Text 2} & \verb{'8/11-201'{ & 6.90774 \\
         \textbf{Text 31} & \verb{'\n· Indle'{ & 6.84124 \\
     \end{tabular}
+    \caption{The most important part of the first 50 texts according to
+        convolutional filter 100 of size 8. Sorted by the importance score.}
+    \label{fig:features_convolution_8_100}
 \end{table}
 
 \begin{table}
@@ -711,4 +720,56 @@ TODO:
         \textbf{Text 44} & \verb{' et '{ & 11.57521 \\
         \textbf{Text 31} & \verb{'· Br'{ & 10.81910 \\
     \end{tabular}
+    \caption{The most important part of the first 50 texts according to
+        convolutional filter 100 of size 4. Sorted by the importance score.}
+    \label{fig:features_convolution_4_100}
 \end{table}
+
+
+\subsection{Prediction System}
+
+The networks we have trained above does not solve the problem presented to us
+by MaCom. The networks above all compare two texts and predict whether or not
+they have been written by the same person. In the MaCom problem we are given a
+set of texts for each author so we can make use of all texts when making our
+predictions. We can also use metadata about the individual texts to make our
+prediction. We can for example weigh the newest texts higher authorship than
+the older texts. As described earlier writing style changes over time and it is
+therefore clear that newer texts captures more of an authors current writing
+style than older. An advantage of using multiple texts for each author to make a
+prediction is that outliers will be averaged out.
+
+The scheme we have implemented is using the networks we trained previously
+to predict all texts of an author and then take a weighted average over the
+probabilities of the predictions. More formally given a text $x$, a trained
+neural network $N$ and an author $\alpha$ with $n$ previous texts we will verify
+whether or not $x$ is written by $\alpha$ by using the network to compare each
+$t \in T(\alpha)$ to $x$. That gives us $n$ probabilities $P_i$ of the text
+$x$ being written by the same author as each $t \in T(\alpha)$. We then take a
+weighted average over $P$ to obtain a final probability $p$. We then threshold
+that final probability such that we don't accuse to many people of cheating.
+
+Taking the network $N$ as network 3 and thresholding the final probability as
+$0.5$ we obtained an accuracy of 0.92452 with 1934 \gls{TP}'s, 1851 \gls{TN}'s,
+196 \gls{FP}'s and 113 \gls{FN}'s. The results come from taking each author
+$\alpha$ in our dataset (concatenation of both training and validation),
+randomly taking a text $t_k \in T(\alpha)$ and a text
+$t_u \in \bigcup_{\beta \in A} T(\beta) \setminus T(\alpha)$ and then applying
+the prediction system first to $T(\alpha) \setminus \{t_k\}$ and $t_k$ and then
+to $T(\alpha) \setminus \{t_k\}$ and $t_u$. In this experiment the fraction of
+wrongfull accusations out of all accusations are $\frac{FNS}{FNS + TNS} =
+\frac{113}{113 + 1851} = 0.057535$. That is an excellent result since that means
+that less than 10\% of the accusations we make will be wrong.
+
+
+TODO:
+\begin{itemize}
+    \item Describe Backpropagration
+    \item Describe Optimizers
+    \item Describe Convolutions
+    \item Describe Dropout
+    \item Describe RNN
+    \item Use squared distance as merge function to get larger differences
+        between close and far apart.
+    \item Try to not use dense network but a distance metric.
+\end{itemize}
