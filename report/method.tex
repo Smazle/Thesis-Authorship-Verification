@@ -390,9 +390,10 @@ That is the prediction system returns 1 if the weighted average of the
 probability that $t_u$ is written by the same author as $t_k$ for each $t_k \in
 T(\alpha)$ is greater than the threshold $\theta$ and 0 otherwise.
 
-The $f$ parameter can be anything that returns a probability. We are going to
-present several different networks that can be used as $f$ as they will take two
-texts and end with a softmax layer that outputs a probability distribution.
+The $F$ parameter can be anything that takes two texts and returns a
+probability. We are going to present several different networks that can be used
+as $f$ as they will take two texts and end with a softmax layer that outputs a
+probability distribution.
 
 The $w$ parameter in the prediction system can be used to weigh the known
 texts differently. For example we could define $w$ such that the newest
