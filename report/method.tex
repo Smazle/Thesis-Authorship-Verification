@@ -373,17 +373,17 @@ out.
 
 \begin{definition}[Prediction System]
 
-    Our prediction system is a function $P(f, \alpha, t_u, w, \theta)
-    \rightarrow \{0, 1\}$ where $f$ is a function taking two texts and giving
+    Our prediction system is a function $P(F, \alpha, t_u, W, \theta)
+    \rightarrow \{0, 1\}$ where $F$ is a function taking two texts and giving
     the probability that the texts are written by the same author, $\alpha$ is
     an author that has written the texts $T(\alpha)$, $t_u$ is a text of unknown
-    authorship, $w$ is a function taking a text and giving a number between 0
-    and 1 where $\sum_{t_k \in T(\alpha)} w(t_k) = 1$ and $\theta \in [0;1]$ is
+    authorship, $W$ is a function taking a text and giving a number between 0
+    and 1 where $\sum_{t_k \in T(\alpha)} W(t_k) = 1$ and $\theta \in [0;1]$ is
     a threshold. The prediction system then returns,
 
     \begin{equation}
-        p = \begin{cases}
-            1 & \text{if } \sum_{t_k \in T(\alpha)} w(t_k) f(t_k, t_u) > \theta \\
+        P(F, \alpha, t_u, W, \theta) = \begin{cases}
+            1 & \text{if } \sum_{t_k \in T(\alpha)} W(t_k) F(t_k, t_u) > \theta \\
             0 & \text{otherwise}.
         \end{cases}
     \end{equation}
