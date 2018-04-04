@@ -11,8 +11,8 @@ each text is 5689 characters with a median of 5363 characters. That means that
 almost all texts is close to the average and only a few has sizes much greater
 or smaller than the average. The dataset contains 2047 different authors with
 an average of 16 texts. The author with the smallest amount of text has two
-texts and the author with the most amount of text has 33 texts.
-Additionally the average word word count is 960, with a median of 915. 
+texts and the author with the most amount of text has 33 texts. Additionally the
+average word count is 960, with a median of 915.
 
 In several of our experiments we limited the number of different characters
 we represented. We did that to simplify the amount of different characters
@@ -46,12 +46,12 @@ to limit the overall character count. This was a result of looking at the
 character count statistics listed in the beginning of this section. The texts
 which had only a very small character count compared to the average and median,
 was in most cases just a blank assignment submission. A blank submission, is
-when a student doesn't provide an text, as their submission, but rather a
+when a student doesn't provide any text, as their submission, but rather a
 document containing nothing, or a declaration of them not having produced a
 text. As such the existence of these papers wont yield any positive input to our
 applied method, and is therefore removed. This is done by applying a 200 minimum
-character limit on each text in our data, which resulted in 356 being removed
-from out dataset. On the other hand a character count which is too large, can
+character limit on each text in our dataset. That resulted in 356 being removed
+from the dataset. On the other hand a character count which is too large, can
 also negatively impact the application of our different methods. This isn't
 necessarily tied to the content of the text, but rather the count. When applying
 our deep learning methods, all texts are padded to match the longest on in the
