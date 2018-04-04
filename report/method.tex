@@ -178,15 +178,15 @@ The training of a \gls{NN} consists of changing the weights applied at each
 neuron, with the goal of modeling the relationships present in the data.
 
 \subsubsection{TODO: Backpropagation}\label{sec:BP}
-The actual modeling and learning that the \gls{NN} does, can be attributed
-to \gls{BP}. It by this process, that the weight in our \gls{NN} are updated,
-signifying the learning the network does. The process can be split into three
-steps, which are continuously repeated:
+
+The neural network learns by updating the weights in the network. The weights
+are updated using \gls{BP}. The process can be split into three distinct steps
+which are continuously repeated:
 
 \begin{enumerate}
-    \item Feed Forward
-    \item Back Propagate
-    \item Update Weights
+    \item Feed Forward,
+    \item Back Propagate,
+    \item Update Weights.
 \end{enumerate}
 
 The goal of these three steps is to minimize the overall cost of the network.
@@ -206,7 +206,6 @@ power. As such the practical application of this entails shuffling and dividing
 your training data into batches, and doing the 3 steps listed above for each of
 the batches. This results in a very good approximation of the ideal weights,
 without spending as much computational time.
-
 
 TODO: More math!
 
@@ -364,12 +363,9 @@ making the final prediction.
 
 In the MaCom problem we are given a set of texts for each author so we can make
 use of multiple texts when making our predictions. We can also use metadata
-about the individual texts to make our prediction. We can for example weigh the
-newest texts higher than the older texts. As described earlier writing style
-changes over time and it is therefore clear that newer texts captures more of an
-authors current writing style than older texts. An advantage of using multiple
-texts for each author to make a prediction is that outliers will be averaged
-out.
+about the individual texts to make our prediction. An advantage of using
+multiple texts for each author to make a prediction is that outliers will be
+averaged out.
 
 \begin{definition}[Prediction System]
 
@@ -394,4 +390,30 @@ That is the prediction system returns 1 if the weighted average of the
 probability that $t_u$ is written by the same author as $t_k$ for each $t_k \in
 T(\alpha)$ is greater than the threshold $\theta$ and 0 otherwise.
 
-% TODO: Describe how we can tweak \theta to obtain error rate we want.
+The $f$ parameter can be anything that returns a probability. We are going to
+present several different networks that can be used as $f$ as they will take two
+texts and end with a softmax layer that outputs a probability distribution.
+
+The $w$ parameter in the prediction system can be used to weigh the known
+texts differently. For example we could define $w$ such that the newest
+text is weighed as most important and older texts are weighed less and less
+important. $w$ could be defined as $w(t_1), w(t_2), \dots, w(t_n) = \frac{1}{2},
+\frac{1}{4}, \dots, \frac{1}{2^{n-1}}, \frac{1}{2^{n-1}}$ where $t_1$ is the
+newest text, $t_2$ is the second newest and so on. Otherwise $w$ can also
+be used to take a simple average of the decisions by defining it as $w(t) =
+\frac{1}{|T(\alpha)|}$.
+
+The $\theta$ parameter determines when we consider an unknown text to be written
+by an author. The natural choice for $\theta$ is 0.5 since that is what the
+network use when it computes the loss of each training sample. However the
+$\theta$ parameter can be used to enforce how sure we have to be of a decision
+to accuse an author of not having written an assignment. As described earlier
+MaCom does not want to accuse innocent students of cheating. That means that
+it is very important to MaCom to minimize the number of \gls{FN}'s compared
+to the total number of accusations raised. That means that we have to keep
+$\frac{FN}{FN + TN}$ below a threshold chosen by MaCom. We can use the $\theta$
+parameter to control that fraction. Hopefully the \gls{FN}'s generally end up
+with a value closer to 1 than the \gls{TN}'s. If that is the case then lowering
+$\theta$ value will lower the fraction since there will be fewer \gls{FN}'s.
+That might lower the overall accuracy of the prediction system but will make
+sure that at few students as possible are falsely accused.
