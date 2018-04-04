@@ -725,6 +725,29 @@ the network to learn that particular feature.
     \label{fig:features_convolution_4_100}
 \end{table}
 
+Our main problem is that the networks keep using metadata from the texts to
+make the predictions. The metadata will always match even though a ghost writer
+has written the assignment. It is probably not possible for us to extract all
+metadata from all texts. Even though names are supposed to have been removed
+the dataset still contains a couple of them and there is so many different ways
+of writing the class of a student that it is not feasible for us to remove
+all of them. The metadata will typically occur in the beginning of the text
+and sometimes throughout the text in headers. When training a neural network
+on images it is normal practice to rotate, shift, shear and zoom the images
+randomly during training. The shifting of the images produces new images where
+part of the image is no longer part of the training set. In each epoch the
+image is shifted a different amount in different directions and the network can
+therefore learn to recognise objects even though part of the image is not there.
+We wanted to do something similar for the texts we are training on. At the
+moment the network relies on finding metadata in the text. That is only possible
+when it is given the whole text since metadata will only occur in parts of the
+text. We therefore want to try to only give part of the texts to the network
+during training. We can do that by replacing some random part of the input text
+with a special value during training. For example each time a text is used
+during training we might replace 50\% of it with a special garbage character.
+Therefore the network will no longer be able to rely on finding metadata about
+the text since the metadata will not always be present.
+
 
 \subsection{Prediction System}
 
