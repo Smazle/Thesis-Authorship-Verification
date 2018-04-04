@@ -35,7 +35,6 @@ corpus consists of 22,476 sentences, and 563,358 words.
 
 \subsubsection{Extended Delta Method}
 
-
 A large part of the experiments performed when applying the extended delta
 method was parameter tuning. The extended delta method, does not do any
 mitigation of noisy data or feature selection it self. Thus we would have
@@ -67,7 +66,6 @@ Thus, we opted for a forward greedy selection approach.
 We initially wanted to extract of large set of features, to perform our greedy
 selection on. The corpus used had the following quantities of the different
 features.
-
 
 \begin{itemize}
     \item Word-2-grams - 188,472
@@ -135,43 +133,45 @@ The results of the selection can be seen in figures \ref{fig:resultsMan} and
 \ref{fig:resultsEuc}. 
 
 \begin{table}
-\centering
-\begin{tabular}{|c|c|c|}
-\hline
-KNN & Frequent Feature Count & Result          \\ \hline
-1   & 12                     & \textbf{0.7705} \\ \hline
-2   & 10                     & 0.6927          \\ \hline
-3   & 6                      & 0.6742          \\ \hline
-4   & 2                      & 0.6378          \\ \hline
-5   & 13                     & 0.6391          \\ \hline
-6   & 2                      & 0.6053          \\ \hline
-7   & 10                     & 0.5989          \\ \hline
-\end{tabular}
-\caption{Results of the forward greedy selection of the extended delta method
-using the Manhattan distance. The point where a single feature had no more
-entries to pick from, was never reached. As such Frequent Feature Count
-describes how many most frequent entries were picked out from each feature.}
-\label{fig:resultsMan}
+    \centering
+    \begin{tabular}{|c|c|c|}
+    \hline
+    KNN & Frequent Feature Count & Result          \\ \hline
+    1   & 12                     & \textbf{0.7705} \\ \hline
+    2   & 10                     & 0.6927          \\ \hline
+    3   & 6                      & 0.6742          \\ \hline
+    4   & 2                      & 0.6378          \\ \hline
+    5   & 13                     & 0.6391          \\ \hline
+    6   & 2                      & 0.6053          \\ \hline
+    7   & 10                     & 0.5989          \\ \hline
+    \end{tabular}
+    \caption{Results of the forward greedy selection of the extended delta
+        method using the Manhattan distance. The point where a single feature
+        had no more entries to pick from, was never reached. As such Frequent
+        Feature Count describes how many most frequent entries were picked out
+        from each feature.}
+    \label{fig:resultsMan}
 \end{table}
 
 \begin{table}[]
-\centering
-\begin{tabular}{|c|c|c|}
-\hline
-KNN & Frequent Feature Count & Result          \\ \hline
-1   & 10                     & \textbf{0.7772} \\ \hline
-2   & 13                     & 0.6990          \\ \hline
-3   & 3                      & 0.6791          \\ \hline
-4   & 4                      & 0.6499          \\ \hline
-5   & 2                      & 0.6288          \\ \hline
-6   & 2                      & 0.6065          \\ \hline
-7   & 2                      & 0.5959          \\ \hline
-\end{tabular}
-\caption{Results of the forward greedy selection of the extended delta method
-using the Euclidean distance. The point where a single feature had no more
-entries to pick from, was never reached. As such Frequent Feature Count
-describes how many most frequent entries were picked out from each feature.}
-\label{fig:resultsEuc}
+    \centering
+    \begin{tabular}{|c|c|c|}
+    \hline
+    KNN & Frequent Feature Count & Result          \\ \hline
+    1   & 10                     & \textbf{0.7772} \\ \hline
+    2   & 13                     & 0.6990          \\ \hline
+    3   & 3                      & 0.6791          \\ \hline
+    4   & 4                      & 0.6499          \\ \hline
+    5   & 2                      & 0.6288          \\ \hline
+    6   & 2                      & 0.6065          \\ \hline
+    7   & 2                      & 0.5959          \\ \hline
+    \end{tabular}
+    \caption{Results of the forward greedy selection of the extended delta
+        method using the Euclidean distance. The point where a single feature
+        had no more entries to pick from, was never reached. As such Frequent
+        Feature Count describes how many most frequent entries were picked out
+        from each feature.}
+    \label{fig:resultsEuc}
 \end{table}
 
 As such, the best configuration is Euclidean distance, with the 10 most frequent
@@ -179,37 +179,6 @@ of the different features, is what we will be using on the test data.
 
 
 \subsection{Siamese Neural Network - Iteration 1}
-
-% TODO: Maybe make clearer what exactly were our idea and what we have from the
-% three articles.
-
-Our idea for our first network architecture was to use a similar architecture
-as the ones used in \cite{Koch2015SiameseNN}, \cite{NIPS1993_769} and
-\cite{qian:2018}. In our implementation we use a combination of the three
-approaches. Our main idea was to combine the approaches of \cite{qian:2018}
-and \cite{Koch2015SiameseNN}. \cite{qian:2018} use a Siamese network but
-with no convolutions and a distance function on top for text analysis while
-\cite{Koch2015SiameseNN} used a Siamese network with convolutions and fully
-connected network on top for image analysis. Our approach is to use convolutions
-in the Siamese network to learn important features from the texts. We also use
-a fully connected network on top of the convolutional layers to learn from the
-features the convolution extracted. In more detail we start by preprocessing
-our input data. The input consists of a set of utf-8 encoded texts with an
-associated author id. To limit the number of different characters our network
-has to deal with we map all characters that occur with a frequency of less than
-$\frac{1}{100,000}$ to a garbage character we define. Since our network can only
-handle inputs of the same length we pad all texts to have the length of the
-longest text with another garbage character. We map all other characters to the
-numbers 1 to the size of the character set.
-
-Now we have a set of vectors of numbers of the same size each associated with
-an author id. To construct an authorship verification dataset we looped through
-all the vectors. For each vector we drew a random vector of the same author and
-a random vector of a different author. We then created two problem instances we
-could train on. One instance of two vectors from the same author with a label of
-1 and one instance of two vectors from different authors with a label of 0. We
-split the list of problems into two sets. A validation set consisting of 20\% of
-the problems and a training set consisting of 80\% of the problems.
 
 The network we used to try and solve the problem is shown in Figure
 \ref{fig:network_1}. The Siamese part of the network is the Convolutional
@@ -745,43 +714,6 @@ is able to find out whether or not a text contains the phrase but are not able
 to say anything about how often that phrase is used by the author. To find out
 how often a phrase is used we need to stop using max over time pooling and start
 using some kind of average.
-
-
-\subsection{Prediction System}
-
-The networks we have trained above does not solve the problem presented to us
-by MaCom. The networks above all compare two texts and predict whether or not
-they have been written by the same person. In the MaCom problem we are given a
-set of texts for each author so we can make use of all texts when making our
-predictions. We can also use metadata about the individual texts to make our
-prediction. We can for example weigh the newest texts higher authorship than
-the older texts. As described earlier writing style changes over time and it is
-therefore clear that newer texts captures more of an authors current writing
-style than older. An advantage of using multiple texts for each author to make a
-prediction is that outliers will be averaged out.
-
-The scheme we have implemented is using the networks we trained previously
-to predict all texts of an author and then take a weighted average over the
-probabilities of the predictions. More formally given a text $x$, a trained
-neural network $N$ and an author $\alpha$ with $n$ previous texts we will verify
-whether or not $x$ is written by $\alpha$ by using the network to compare each
-$t \in T(\alpha)$ to $x$. That gives us $n$ probabilities $P_i$ of the text
-$x$ being written by the same author as each $t \in T(\alpha)$. We then take a
-weighted average over $P$ to obtain a final probability $p$. We then threshold
-that final probability such that we don't accuse to many people of cheating.
-
-Taking the network $N$ as network 3 and thresholding the final probability as
-$0.5$ we obtained an accuracy of 0.92452 with 1934 \gls{TP}'s, 1851 \gls{TN}'s,
-196 \gls{FP}'s and 113 \gls{FN}'s. The results come from taking each author
-$\alpha$ in our dataset (concatenation of both training and validation),
-randomly taking a text $t_k \in T(\alpha)$ and a text
-$t_u \in \bigcup_{\beta \in A} T(\beta) \setminus T(\alpha)$ and then applying
-the prediction system first to $T(\alpha) \setminus \{t_k\}$ and $t_k$ and then
-to $T(\alpha) \setminus \{t_k\}$ and $t_u$. In this experiment the fraction of
-wrongfull accusations out of all accusations are $\frac{FNS}{FNS + TNS} =
-\frac{113}{113 + 1851} = 0.057535$. That is an excellent result since that means
-that less than 10\% of the accusations we make will be wrong.
-
 
 TODO:
 \begin{itemize}
