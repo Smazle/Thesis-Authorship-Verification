@@ -427,22 +427,6 @@ students own name. Therefore these features are counter productive since the
 network learns that as a result of how we have created the training dataset
 where each text has the correct authors name in it.
 
-Things we are considering to do:
-\begin{itemize}
-    \item Filter out names from texts. Mikkel is currently on vacation and he
-        did not make a new extract for us before he left. He agreed to perform
-        an extract while he is on vacation. The new extract will either give us
-        the name of the student writing the assignment or Mikkel will filter out
-        the names from the texts for us.
-    \item Cut texts into smaller pieces. Since only the first piece will contain
-        the students name the network can no longer rely heavily on learning
-        name based features. That will also result in a shorter training time
-        since we can run with a larger batch size.
-    \item Get better idea of what the networks are reacting to by looking at
-        more than just the first filter. Obviously we cannot go through them all
-        since there are several thousand.
-\end{itemize}
-
 
 \subsection{Siamese Neural Network - Iteration 4}
 
@@ -454,39 +438,6 @@ A graph of the training and validation accuracies can be seen in Figure
 20 with an accuracy of 0.80531. That means that we lost about 3\% accuracy now
 that we can no longer look at peoples names.
 
-The scheme we have implemented is using the networks we trained previously
-to predict all texts of an author and then take a weighted average over the
-probabilities of the predictions. More formally given a text $x$, a trained
-neural network $N$ and an author $\alpha$ we will verify
-if $x \in T(\alpha)$ by using the network to compare each
-$t \in T(\alpha)$ to $x$. That gives us $|T(\alpha)|$ probabilities $P$ of the text
-$x$ being written by the same author as each $t \in T(\alpha)$. We then take a
-weighted average over $P$ to obtain a final probability. We then threshold
-that final probability such that we don't accuse to many people of cheating.
-
-Taking the network $N$ as network 3 and thresholding the final probability as
-$0.5$ we obtained an accuracy of 0.92452 with 1934 \gls{TP}s, 1851 \gls{TN}s,
-196 \gls{FP}s and 113 \gls{FN}s. The results come from taking each author
-$\alpha\_i \in \mathcal{A}$ in our dataset (concatenation of both training and validation),
-randomly taking a text $t_k \in T(\alpha_i)$ and a text
-$t_u \in T_{diff}(\alpha_i)$ and then applying
-the prediction system first to $T(\alpha) \setminus \{t_k\}$ and $t_k$ and then
-to $T(\alpha) \setminus \{t_k\}$ and $t_u$. In this experiment the fraction of
-wrongfull accusations out of all accusations are $\frac{FN}{FN + TN} =
-\frac{113}{113 + 1851} = 0.057535$. That is an excellent result since that means
-that less than 10\% of the accusations we make will be wrong.
-
-TODO:
-\begin{itemize}
-    \item Describe Backpropagration
-    \item Describe Optimizers
-    \item Describe Convolutions
-    \item Describe Dropout
-    \item Describe RNN
-    \item Use squared distance as merge function to get larger differences
-        between close and far apart.
-    \item Try to not use dense network but a distance metric.
-\end{itemize}
 \begin{figure}
     \centering
     \includegraphics[width=0.5\textwidth]{./pictures/experiments/network_4_accuracies.png}
