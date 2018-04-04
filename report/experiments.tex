@@ -510,10 +510,10 @@ is. We then sorted the extractions by the importance score. The result of a
 couple of the filters are shown in Figures \ref{fig:features_convolution_8_1},
 \ref{fig:features_convolution_8_5}, \ref{fig:features_convolution_8_100} and
 \ref{fig:features_convolution_4_100}. The first figure looks at whether or not
-authors use the phrase "s\aa at" (such that). Inexperienced Danish writers will
+authors use the phrase "s\aa\ at" (such that). Inexperienced Danish writers will
 often use the phrase which is considered grammatically incorrect in most Danish
 sentences. Therefore the network seems to have learned that some writers use
-"s\aa at" while others don't and that it is an important phrase when verifying
+"s\aa\ at" while others don't and that it is an important phrase when verifying
 authorship. The second figure seems to look at whether or not an authors uses
 the phrase "meget" (most). Some authors apparently often describe things using
 "meget" while others do not. The third figure shows that the network looks at
@@ -786,6 +786,14 @@ with a special value during training. For example each time a text is used
 during training we might replace 50\% of it with a special garbage character.
 Therefore the network will no longer be able to rely on finding metadata about
 the text since the metadata will not always be present.
+
+Another problem our current networks has is that each filter extract only a
+single value from a text. For example the filter shown in Figure
+\ref{features_convolution_8_1} that looked at the phrase "s\aa\ at". The filter
+is able to find out whether or not a text contains the phrase but are not able
+to say anything about how often that phrase is used by the author. To find out
+how often a phrase is used we need to stop using max over time pooling and start
+using some kind of average.
 
 
 \subsection{Prediction System}
