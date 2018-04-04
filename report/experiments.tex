@@ -224,51 +224,7 @@ The input to the network first goes through an embedding layer. The embedding
 layer transforms integers into dense vectors of floating point numbers. The
 embedding layer functions as a lookup table such that each integer is mapped
 to the same dense vector. The embedding is trainable meaning that better
-embeddings will be learned while the network is training. The different layers
-perform the following tasks,
-
-\begin{description}
-    \item[known\_input:] The input of the known text. The known text consist of
-        an array of numbers where each number corresponds to a unique character.
-        Characters that occur less frequently than $\frac{1}{100000}$ are
-        replaced by a special number. The texts are padded to the same length
-        with another special number.
-    \item[unknown\_input:] The input of the unknown text. The unknown text
-        consist of an array of numbers where each number corresponds to a unique
-        character. Characters that occur less frequently than $\frac{1}{100000}$
-        are replaced by a special number. The texts are padded to the same
-        length with another special number.
-    \item[embedding\_1:] The layer takes an array of numbers and encodes them as
-        dense vectors of some size. Our embedding layer encodes each number as a
-        5 dimensional vector. The embedding is learnable meaning that characters
-        that are alike will be mapped to roughly similar positions in the output
-        space. For example we expect the characters 'a' and 'A' to mapped closer
-        to each other than 'a' and 'b'.
-    \item[convolustion\_10:] A convolutional layer with 1000 filters and a
-        kernel size of 10. The convolutional window will slide over the embedded
-        characters looking at 10 at a time. For each 10 characters we will get a
-        single output. The stride is 1 so the output of the layer will only be
-        10 units shorter than the input.
-    \item[repr\_known:] The representation of the known text is the
-        max-over-time pooling of the convolutional layers output. Since 1000
-        filters were used in the convolutional layer the representation of the
-        known text will consist of 1000 numbers.
-    \item[repr\_unknown:] The representation of the unknown text is the
-        max-over-time pooling of the convolutional layers output. Since 1000
-        filters were used in the convolutional layer the representation of the
-        unknown text will consist of 1000 numbers.
-    \item[concatenate\_1:] Merge the two representations together by doing a
-        concatenation of the $2 \times 1000$ features extracted giving a single
-        vector of $2000$ values.
-    \item[dense\_1:] Fully connected layer with 500 neurons. All 500 neurons is
-        connected to the 2000 values from the concatenation layer. The
-        activation function is the \gls{ReLu}.
-    \item[output:] The output layer consisting of two neurons. Each of them is
-        connected to the 500 neurons in dense\_1. The activation function is the
-        softmax function. The first neuron computes the probability of the two
-        texts being written by different people. The second neuron computes the
-        probability of the two texts being written by the same person.
-\end{description}
+embeddings will be learned while the network is training.
 
 \begin{figure}[htb]
     \centering
@@ -355,76 +311,7 @@ size 10 to 500 convolutional filters of size 4 and 500 convolutional filters of
 size 8. The idea was that the filters could learn different features where some
 of the features would consist of a large number of characters and other of the
 features would consist of a small number of characters. The architecture of our
-network from iteration 2 is shown in Figure \ref{fig:network_2}. The layers are,
-
-\begin{description}
-    \item[known\_input:] The input of the known text. The known text consist of
-        an array of numbers where each number corresponds to a unique character.
-        Characters that occur less frequently than $\frac{1}{100000}$ are
-        replaced by a special number. The texts are padded to the same length
-        with another special number.
-    \item[unknown\_input:] The input of the unknown text. The unknown text
-        consist of an array of numbers where each number corresponds to a unique
-        character. Characters that occur less frequently than $\frac{1}{100000}$
-        are replaced by a special number. The texts are padded to the same
-        length with another special number.
-    \item[embedding\_1:] The layer takes an array of numbers and encodes them as
-        dense vectors of some size. Our embedding layer encodes each number as a
-        5 dimensional vector. The embedding is learnable meaning that characters
-        that are alike will be mapped to roughly similar positions in the output
-        space. For example we expect the characters 'a' and 'A' to mapped closer
-        to each other than 'a' and 'b'.
-    \item[convolustion\_8:] A convolutional layer with 500 filters and a
-        kernel size of 8. The convolutional window will slide over the embedded
-        characters looking at 8 at a time. For each 8 characters we will get a
-        single output. The stride is 1 so the output of the layer will only be
-        8 units shorter than the input.
-    \item[convolustion\_4:] A convolutional layer with 500 filters and a
-        kernel size of 4. The convolutional window will slide over the embedded
-        characters looking at 4 at a time. For each 4 characters we will get a
-        single output. The stride is 1 so the output of the layer will only be
-        4 units shorter than the input.
-    \item[known\_repr\_8:] The representation of the known text is the
-        max-over-time pooling of the convolutional\_8 layers output. Since 500
-        filters were used in the convolutional\_8 layer the representation of
-        the known text will consist of 500 numbers.
-    \item[unknown\_repr\_8:] The representation of the unknown text is the
-        max-over-time pooling of the convolutional\_8 layers output. Since 500
-        filters were used in the convolutional\_8 layer the representation of
-        the unknown text will consist of 500 numbers.
-    \item[known\_repr\_4:] The representation of the known text is the
-        max-over-time pooling of the convolutional\_4 layers output. Since 500
-        filters were used in the convolutional\_4 layer the representation of
-        the known text will consist of 500 numbers.
-    \item[unknown\_repr\_4:] The representation of the unknown text is the
-        max-over-time pooling of the convolutional\_4 layers output. Since 500
-        filters were used in the convolutional\_4 layer the representation of
-        the unknown text will consist of 500 numbers.
-    \item[concatenate\_1:] Merge the representation of the features of the known
-        text from the convolutional\_8 and convolutional\_4 layers with a
-        concatenation function to produce a single feature vector.
-    \item[concatenate\_2:] Merge the representation of the features of the
-        unknown text from the convolutional\_8 and convolutional\_4 layers with
-        a concatenation function to produce a single feature vector.
-    \item[absolute\_difference:] Merge the representation of the known and
-        unkonwn text with the absolute difference between the vectors. The input
-        is the two vectors representing the texts of 1000 elements. The output
-        is the elementwise absolute difference.
-    \item[dense\_1:] A fully connected layer with 500 neurons. The 500 neurons
-        are all connected to all outputs of the absolute\_difference layer. The
-        activation function is the \gls{ReLu}.
-    \item[dense\_2:] A fully connected layer with 500 neurons. The 500 neurons
-        are all connected to all outputs of the previous layer. The
-        activation function is the \gls{ReLu}.
-    \item[dropout\_1:] A dropout layer with 30\% dropout. In each batch during
-        training 30\% of the network is turned of and only the other 70\% is
-        trained.
-    \item[output:] The output layer consisting of two neurons. Each of them is
-        connected to the 500 neurons in dense\_2. The activation function is the
-        softmax function. The first neuron computes the probability of the two
-        texts being written by different people. The second neuron computes the
-        probability of the two texts being written by the same person.
-\end{description}
+network from iteration 2 is shown in Figure \ref{fig:network_2}.
 
 \begin{figure}
     \centering
@@ -465,82 +352,7 @@ hidden neurons with \gls{ReLu} activation function. Then a dropout layer with
 activation function. The function we use to combine the features from the two
 texts are still the absolute difference as that seemed to work fine for the
 previous network. We have shown the structure of the third network in Figure
-\ref{fig:network3}. A description of the layers are,
-
-\begin{description}
-    \item[known\_input:] The input of the known text. The known text consist of
-        an array of numbers where each number corresponds to a unique character.
-        Characters that occur less frequently than $\frac{1}{100000}$ are
-        replaced by a special number. The texts are padded to the same length
-        with another special number.
-    \item[unknown\_input:] The input of the unknown text. The unknown text
-        consist of an array of numbers where each number corresponds to a unique
-        character. Characters that occur less frequently than $\frac{1}{100000}$
-        are replaced by a special number. The texts are padded to the same
-        length with another special number.
-    \item[embedding\_1:] The layer takes an array of numbers and encodes them as
-        dense vectors of some size. Our embedding layer encodes each number as a
-        5 dimensional vector. The embedding is learnable meaning that characters
-        that are alike will be mapped to roughly similar positions in the output
-        space. For example we expect the characters 'a' and 'A' to mapped closer
-        to each other than 'a' and 'b'.
-    \item[convolustion\_8:] A convolutional layer with 700 filters and a
-        kernel size of 8. The convolutional window will slide over the embedded
-        characters looking at 8 at a time. For each 8 characters we will get a
-        single output. The stride is 1 so the output of the layer will only be
-        8 units shorter than the input.
-    \item[convolustion\_4:] A convolutional layer with 500 filters and a
-        kernel size of 4. The convolutional window will slide over the embedded
-        characters looking at 4 at a time. For each 4 characters we will get a
-        single output. The stride is 1 so the output of the layer will only be
-        4 units shorter than the input.
-    \item[known\_repr\_8:] The representation of the known text is the
-        max-over-time pooling of the convolutional\_8 layers output. Since 700
-        filters were used in the convolutional\_8 layer the representation of
-        the known text will consist of 700 numbers.
-    \item[unknown\_repr\_8:] The representation of the unknown text is the
-        max-over-time pooling of the convolutional\_8 layers output. Since 700
-        filters were used in the convolutional\_8 layer the representation of
-        the unknown text will consist of 700 numbers.
-    \item[known\_repr\_4:] The representation of the known text is the
-        max-over-time pooling of the convolutional\_4 layers output. Since 500
-        filters were used in the convolutional\_4 layer the representation of
-        the known text will consist of 500 numbers.
-    \item[unknown\_repr\_4:] The representation of the unknown text is the
-        max-over-time pooling of the convolutional\_4 layers output. Since 500
-        filters were used in the convolutional\_4 layer the representation of
-        the unknown text will consist of 500 numbers.
-    \item[concatenate\_1:] Merge the representation of the features of the known
-        text from the convolutional\_8 and convolutional\_4 layers with a
-        concatenation function to produce a single feature vector.
-    \item[concatenate\_2:] Merge the representation of the features of the
-        unknown text from the convolutional\_8 and convolutional\_4 layers with
-        a concatenation function to produce a single feature vector.
-    \item[absolute\_difference:] Merge the representation of the known and
-        unkonwn text with the absolute difference between the vectors. The input
-        is the two vectors representing the texts of 1200 elements. The output
-        is the elementwise absolute difference.
-    \item[dense\_1:] A fully connected layer with 500 neurons. The 500 neurons
-        are all connected to all outputs of the absolute\_difference layer. The
-        activation function is the \gls{ReLu}.
-    \item[dense\_2:] A fully connected layer with 500 neurons. The 500 neurons
-        are all connected to all outputs of the previous layer. The
-        activation function is the \gls{ReLu}.
-    \item[dense\_3:] A fully connected layer with 500 neurons. The 500 neurons
-        are all connected to all outputs of the previous layer. The
-        activation function is the \gls{ReLu}.
-    \item[dense\_4:] A fully connected layer with 500 neurons. The 500 neurons
-        are all connected to all outputs of the previous layer. The
-        activation function is the \gls{ReLu}.
-    \item[dropout\_1:] A dropout layer with 30\% dropout. In each batch during
-        training 30\% of the network is turned of and only the other 70\% is
-        trained.
-    \item[output:] The output layer consisting of two neurons. Each of them is
-        connected to the 500 neurons in dense\_4. The activation function is the
-        softmax function. The first neuron computes the probability of the two
-        texts being written by different people. The second neuron computes the
-        probability of the two texts being written by the same person.
-\end{description}
+\ref{fig:network3}.
 
 \begin{figure}
     \centering
