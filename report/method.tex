@@ -177,21 +177,38 @@ computes is then,
 The training of a \gls{NN} consists of changing the weights applied at each
 neuron, with the goal of modeling the relationships present in the data.
 
-\subsubsection{Backpropagation}\label{sec:BP}
+\subsubsection{TODO: Backpropagation}\label{sec:BP}
 The actual modeling and learning that the \gls{NN} does, can be attributed
 to \gls{BP}. It by this process, that the weight in our \gls{NN} are updated,
 signifying the learning the network does. The process can be split into three
 steps, which are continuously repeated:
+
 \begin{enumerate}
     \item Feed Forward
     \item Back Propagate
     \item Update Weights
 \end{enumerate}
-When starting out, we have a set of our starting weight. As to how these weights
-are initialized is up to the user. At this point steps 
+
+The goal of these three steps is to minimize the overall cost of the network.
+The cost in this case, refers to the loss we end up with. In order to that the
+network makes use of the gradient to optimize each of the individual weights.
+Step 1, feeding forward, is simply a parse through the \gls{NN}. When this is
+done we can compute the cost of that single training example. Looking at each
+of the previous contributing nodes, we can attempts to minimize the final cost
+of the network by tweaking the weights, using the gradient of the activation
+function of that particular layer, with respect to those weights. Doing this
+iteratively throughout the network is back propagation, as we are propagating
+the loss of that single value back throughout the network. In the end, each
+single training sample would have a desired change to each of the weights.
+These desired changes would then be averaged and applied to the weights of the
+network. This approach however, is very cost ineffective in terms of computing
+power. As such the practical application of this entails shuffling and dividing 
+your training data into batches, and doing the 3 steps listed above for each of
+the batches. This results in a very good approximation of the ideal weights,
+without spending as much computational time.
 
 
-TODO: More details needed here
+TODO: More math!
 
 
 \subsubsection{Activation Functions}
