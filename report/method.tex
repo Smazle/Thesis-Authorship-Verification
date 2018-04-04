@@ -392,16 +392,16 @@ T(\alpha)$ is greater than the threshold $\theta$ and 0 otherwise.
 
 The $F$ parameter can be anything that takes two texts and returns a
 probability. We are going to present several different networks that can be used
-as $f$ as they will take two texts and end with a softmax layer that outputs a
+as $F$ as they will take two texts and end with a softmax layer that outputs a
 probability distribution.
 
-The $w$ parameter in the prediction system can be used to weigh the known
-texts differently. For example we could define $w$ such that the newest
+The $W$ parameter in the prediction system can be used to weigh the known
+texts differently. For example we could define $W$ such that the newest
 text is weighed as most important and older texts are weighed less and less
-important. $w$ could be defined as $w(t_1), w(t_2), \dots, w(t_n) = \frac{1}{2},
+important. $W$ could be defined as $W(t_1), W(t_2), \dots, W(t_n) = \frac{1}{2},
 \frac{1}{4}, \dots, \frac{1}{2^{n-1}}, \frac{1}{2^{n-1}}$ where $t_1$ is the
-newest text, $t_2$ is the second newest and so on. Otherwise $w$ can also
-be used to take a simple average of the decisions by defining it as $w(t) =
+newest text, $t_2$ is the second newest and so on. Otherwise $W$ can also
+be used to take a simple average of the decisions by defining it as $W(t) =
 \frac{1}{|T(\alpha)|}$.
 
 The $\theta$ parameter determines when we consider an unknown text to be written
