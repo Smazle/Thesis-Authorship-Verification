@@ -3,26 +3,31 @@
 
 \subsection{Baseline Methods}
 
-In this section we will go through the experimentation performed in order
-to get our baseline results. While many different features can be used when
-performing \gls{NLP}, we chose the same features, as was used in \cite{US},
-since they spanned several several of the different linguistic layers. The
-features available to pick from are:
+In this section we will go through the experiments performed in order to get
+our baseline results. While many different features can be used when performing
+\gls{NLP}, we chose the same features, as was used in \cite{US}, since they
+span several several of the different linguistic layers. The linguistic
+layers are different areas which all serve to describe a certain text. An
+example this could be the character level layer, which as the name implies,
+focuses on the individual characters used in a specific text. Other examples
+of this, could the sentence, that focuses on the sentences of the text,
+and the meta layer, that focuses on things such as publishing/delivery date,
+and file format. The features available to pick from in this case are:
 
 \begin{itemize}
-    \item Word-n-grams,
-    \item Character-n-grams,
+    \item Word-N-grams,
+    \item Character-N-grams,
     \item Word Frequencies (word-1-grams),
-    \item \gls{POS}-tag-n-grams, and
-    \item Special-Character-n-grams,
+    \item \gls{POS}-tag-N-grams, and
+    \item Special-Character-N-grams,
 \end{itemize}
 
-Where an n-gram describes the combinations of sequential elements of size n. In
+Where an N-gram describes the combinations of sequential elements of size n. In
 the case where that element is characters, and n is 3, the string "hello" would
 produce the character-3-grams "hel", "ell" and "llo". This also means that a
 feature such as word frequencies can be considered word-1-grams.
 
-For all of these experiments a third party corpus, provided by
+For all of these experiments a Danish third party corpus, provided by
 \texttt{NLTK}\footnote{\url{http://www.nltk.org/index.html}}, was used as the
 basis for all the feature extraction, as was done in \cite{US} as well. This
 corpus consists of 22,476 sentences, and 563,358 words.
@@ -37,20 +42,19 @@ mitigation of noisy data or feature selection it self. Thus we would have
 to do the feature selection ourselves. Not only that, but contrary to the
 circumstances our previous paper \cite{US} was written in, we have more than
 one text per author. As such, we don't need the opposing author approach any
-more. When given a text $x$ and a proposed author $\alpha$, we pick out all text
-written that author $T(\alpha)$, the different set $T_{diff}(\alpha)$ of same
-length, containing text not written by that author. Using those sets, we create
-a \gls{KNN} model, and apply it to $x$, returning 1 if $x \in T(\alpha)$ and
-zero otherwise.
-Additionally we also apply the model to the negative case, where we pick
-text randomly from the training-set, returning 1 if this new text is predicted
-as being in $T_{diff}(\alpha)$ and 0 otherwise.
+more. When given a text $x$ and a proposed author $\alpha$, we pick out all
+text written that author $T(\alpha)$, and a set different authored texts
+$T_{diff}(\alpha)$ of same length. Using those sets, we create a \gls{KNN}
+model, and apply it to $x$, returning 1 if $x \in T(\alpha)$ and zero otherwise.
+Additionally we also apply the model to the negative case, where we pick text
+randomly from the training-set, returning 1 if this new text is predicted as
+being in $T_{diff}(\alpha)$ and 0 otherwise.
 
-Thus we need to tune the N in \gls{KNN}, instead of the number of opposing
+Thus we need to tune the K in \gls{KNN}, instead of the number of opposing
 author that was used in \cite{US}
 
 So the parameter selection consists of finding the best features, and the best
-N.
+K.
 
 Rather than finding the best features, using the somewhat random approach used
 in our previous paper\cite{US}, we chose to do it more systematically this time
@@ -75,37 +79,39 @@ features.
 
 These numbers are of course inflated due to the size of the corpus relative
 to the actual text we are training on, and will continue to increase as we
-increase the n in the n-grams. As a result of this, the frequency of each n-gram
-decreases, and so does the impact each individual n-gram has. For this reason we
+increase the N in the N-grams. As a result of this, the frequency of each N-gram
+decreases, and so does the impact each individual N-gram has. For this reason we
 choose to only focus on a subset most frequent instances of each feature, which
 also serves to limit the parameter search space.
 
-Using the listed quantities, a feature set of 8,600 features was produced,
-containing
+Using the quantities listed above as inspiration, a feature set of 8,600
+features was produced, containing
 
 \begin{itemize}
     \item The 500 most frequent words,
-    \item The 500 most frequent word-n-grams for $n \in {2,3,4}$,
-    \item The 300 most frequent character-n-grams for $n \in {2,...,10}$,
-    \item The 50 most frequent \gls{POS}-tag-n-grams for $n \in {3,4}$, and
-    \item The 50 most frequent special-character-n-grams for $n \in {2,3,4}$.
+    \item The 500 most frequent word-N-grams for $N \in \{2,3,4\}$,
+    \item The 300 most frequent character-N-grams for $N \in \{2,...,10\}$,
+    \item The 50 most frequent \gls{POS}-tag-N-grams for $N \in \{3,4\}$, and
+    \item The 50 most frequent special-character-N-grams for $N \in \{2,3,4\}$.
 \end{itemize}
 
-The selection the quantities, bases on the number available in the corpus, as
-listed earlier. As the for the N in the N-grams, \cite{aalykke2016} found out
-that char-8-grams worked very well in his case, so we rounded up to 10. Looking
-at the results from \cite{US}, Word-n-grams mostly stopped occurring in texts
-when getting to 4-grams, when looking at the result from \cite{US}. A similar
-thing could be seen with the special-character-n-grams, where an increase in N,
-wouldn't contribute anything. \gls{POS}-tag-n-grams were a really big burden
+The selection the quantities, bases on the number available in the corpus,
+as listed earlier. As the for the N in the N-grams, \cite{aalykke2016} found
+out that char-8-grams worked very well in his case, which is why N goes all
+the way to 10 in the case of char-N-grams . Looking at the results
+from \cite{US}, Word-N-grams mostly stopped occurring in texts when getting
+to 4-grams, when looking at the result from \cite{US}. A similar thing
+could be seen with the special-character-N-grams, where an increase in N,
+wouldn't contribute anything. \gls{POS}-tag-N-grams were a really big burden
 computationally, as such a reduction in possible N-values, had to be made.
 
 These features were extracted from subset of the data-set described earlier
 in section \ref{sec:data}. However it wasn't beholden to the same upper limit
-character and unique character constraint. This data-set contained 14646
+character and unique character constraint, as the lack of memory isn't nearly
+as severe as in the case of our \gls{NN}s. This data-set contained 14646
 entries. The distribution of the texts over authors in this data-set isn't
-very evenly spread. As such, we removed some data-entries, so $$\forall \alpha
-\in \mathcal{A} (T(\alpha) = T_{min})$$ Where $T_{min}$ is the smallest amount
+very evenly spread. As such, we removed some data-entries, so $$\{\forall \alpha
+\in \mathcal{A}: |T(\alpha)| = T_{min}\}$$ Where $T_{min}$ is the smallest amount
 of texts associated with one author, in the case 4. Doing this decreased the
 data-set entry quantity to 3748, with 937 different authors.
 
@@ -566,7 +572,7 @@ To get an idea of which features the network were looking at we looked at the
 output of the convolutional layers. After the convolutional layers we have a
 max-over-time pool so we know that higher values are important. We could then
 take a text, feed it to the network, find the index of the maximum output of
-the convolutional layers and then show the text snipped (char-n-gram) that
+the convolutional layers and then show the text snipped (char-N-gram) that
 produced that high value. We then did that for all the texts in the dataset. The
 first filter in the network for example yielded many short strings ending with 3
 newlines. Some examples of these are,
@@ -650,22 +656,22 @@ prediction is that outliers will be averaged out.
 The scheme we have implemented is using the networks we trained previously
 to predict all texts of an author and then take a weighted average over the
 probabilities of the predictions. More formally given a text $x$, a trained
-neural network $N$ and an author $\alpha$ with $n$ previous texts we will verify
-whether or not $x$ is written by $\alpha$ by using the network to compare each
-$t \in T(\alpha)$ to $x$. That gives us $n$ probabilities $P_i$ of the text
+neural network $N$ and an author $\alpha$ we will verify
+if $x \in T(\alpha)$ by using the network to compare each
+$t \in T(\alpha)$ to $x$. That gives us $|T(\alpha)|$ probabilities $P$ of the text
 $x$ being written by the same author as each $t \in T(\alpha)$. We then take a
-weighted average over $P$ to obtain a final probability $p$. We then threshold
+weighted average over $P$ to obtain a final probability. We then threshold
 that final probability such that we don't accuse to many people of cheating.
 
 Taking the network $N$ as network 3 and thresholding the final probability as
-$0.5$ we obtained an accuracy of 0.92452 with 1934 \gls{TP}'s, 1851 \gls{TN}'s,
-196 \gls{FP}'s and 113 \gls{FN}'s. The results come from taking each author
-$\alpha$ in our dataset (concatenation of both training and validation),
-randomly taking a text $t_k \in T(\alpha)$ and a text
-$t_u \in \bigcup_{\beta \in A} T(\beta) \setminus T(\alpha)$ and then applying
+$0.5$ we obtained an accuracy of 0.92452 with 1934 \gls{TP}s, 1851 \gls{TN}s,
+196 \gls{FP}s and 113 \gls{FN}s. The results come from taking each author
+$\alpha\_i \in \mathcal{A}$ in our dataset (concatenation of both training and validation),
+randomly taking a text $t_k \in T(\alpha_i)$ and a text
+$t_u \in T_{diff}(\alpha_i)$ and then applying
 the prediction system first to $T(\alpha) \setminus \{t_k\}$ and $t_k$ and then
 to $T(\alpha) \setminus \{t_k\}$ and $t_u$. In this experiment the fraction of
-wrongfull accusations out of all accusations are $\frac{FNS}{FNS + TNS} =
+wrongfull accusations out of all accusations are $\frac{FN}{FN + TN} =
 \frac{113}{113 + 1851} = 0.057535$. That is an excellent result since that means
 that less than 10\% of the accusations we make will be wrong.
 
