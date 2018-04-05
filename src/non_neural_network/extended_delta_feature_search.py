@@ -22,22 +22,22 @@ def increment(features, startIndex):
 base = './extended_delta.py' + inp + ' --opposing-file' + inp + " "
 
 
-data = np.loadtxt(inp, dtype=str, delimiter=' ', skiprows=1)
+data = np.loadtxt(inp, dtype=str, delimiter=',', skiprows=1)
 
 
 featureNames = [tuple(x.split(' '))
-                for x in open(inp).readline().rstrip().split(';')]
+                for x in open(inp).readline().rstrip().split(',')]
 featureCount = len(featureNames)
 
 # print(featureNames)
 
-startIndex = {key: featureNames.index(key) for key in list(set(featureNames))}
+startIndex = {key: featureNames.index(key) for key in list(set(featureNames[1:]))}
 
 
 print(startIndex)
 
 
-neigbors = range(1, 8)
+neigbors = range(1, 12)
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--metric', type=int)
@@ -60,7 +60,7 @@ for count in neigbors:
     fallCount = 0
     for i in range(maxDiff):
 
-        result = ed.runMe(args, np.copy(data), np.copy(data),
+        result = ed.main(args, np.copy(data), np.copy(data),
                           np.concatenate(features))
         # import pdb; pdb.set_trace()
 

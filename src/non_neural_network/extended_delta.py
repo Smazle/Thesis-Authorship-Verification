@@ -21,11 +21,11 @@ def main(args, training=None, data=None, features=None):
         training = np.loadtxt(args.opposing_file,
                               dtype=str, delimiter=' ', skiprows=1)
 
-    authors = data[:, -1].astype(np.int)
-    data = data[:, :-1].astype(np.float)
+    authors = data[:, 0]
+    data = data[:, 1:].astype(np.float)
 
-    training_authors = training[:, -1].astype(np.int)
-    training = training[:, :-1].astype(np.float)
+    training_authors = training[:, 0]
+    training = training[:, 1:].astype(np.float)
 
     scaler = StandardScaler().fit(training)
     training = scaler.transform(training)
