@@ -1,6 +1,6 @@
 repos:
     - repo: git://github.com/pre-commit/pre-commit-hooks
-      rev: v1.2.3
+      sha: v1.2.3
       hooks:
         - id: trailing-whitespace
           types: [file, python]

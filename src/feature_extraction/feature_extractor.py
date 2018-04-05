@@ -85,32 +85,35 @@ class FeatureExtractor:
     def extract(self, outfile):
         with open(outfile, 'a') as f:
             # Write header.
-            f.write('author,' + ','.join(self.feature_names) + '\r\n')
+            outfile.write('author' + ','.join(self.feature_names) + '\r\n')
 
             for i, [author, date, text] in enumerate(self.authors):
-                features = self.extract_features(i, clean(text))
+                start = time.time()
+                text = clean(text)
+
+                try:
+                    features = self.extract_features(text)
+                    t = time.time() - start
+                    print('Text', i, '-', t * 1000)
+                except Exception as e:
+                    print('Text', i, 'Err', str(e))
+                    continue
 
                 line = [author] + features
                 f.write(','.join(list(map(str, line))) + '\r\n')
 
-    def extract_features(self, i, text):
-        start = time.time()
-
+    def extract_features(self, text):
         features = []
-        try:
-            for extractor in self.extractors:
-                features = features + extractor.extract(text)
 
-            print('Text', i, '-', (time.time() - start) * 1000)
-        except Exception:
-            print('Text', i, 'Err')
+        for extractor in self.extractors:
+            features = features + extractor.extract(text)
 
         return features
 
 
 def gen_corpus():
     chapters = europarl_raw.danish.chapters()
-    vals = ['%', ',', ':', ')', '(']  # TODO: Name this something else.
+    cleanUpVals = ['%', ',', ':', ')', '(']
 
     txt = ''
 
@@ -130,7 +133,7 @@ def gen_corpus():
                         skip = False
                         continue
 
-                    if word in vals:
+                    if word in cleanUpVals:
                         continue
 
                     if sentence[i - 1] == '(':
@@ -146,7 +149,8 @@ def gen_corpus():
                         start = not start
                         continue
 
-                    if i + 1 < len(sentence) and sentence[i + 1] in vals:
+                    if i + 1 < len(sentence) and sentence[i + 1] \
+                            in cleanUpVals:
                         txt += ' ' + word + sentence[i + 1]
                         if sentence[i + 1] == "\"":
                             start = not start
