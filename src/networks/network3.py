@@ -53,7 +53,6 @@ else:
     reader = MacomReader(
         args.datafile,
         batch_size=2,
-        encoding='numbers',
         vocabulary_frequency_cutoff=1 / 100000,
         validation_split=0.95
     )

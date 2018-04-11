@@ -69,7 +69,7 @@ class MacomReader(object):
     # A set containing all the different characters used in the input file.
     vocabulary = set()
 
-    # Mapping from a character to its one-hot encoding.
+    # Mapping from a character to its encoding.
     vocabulary_map = {}
 
     # Mapping from a characters to the number of times it is used in the
@@ -105,9 +105,6 @@ class MacomReader(object):
     # from different authors.
     problems = []
 
-    # Which encoding to encode the characters in.
-    encoding = None
-
     # If 0..8 80% is training data and 20% are validation data.
     validation_split = None
 
@@ -122,12 +119,8 @@ class MacomReader(object):
 
     # TODO: Take argument specifying whether or not to ignore first line in
     # file.
-    def __init__(self, filepath, batch_size=32, char=True,
-                 encoding='one-hot', validation_split=0.8,
+    def __init__(self, filepath, batch_size=32, char=True, validation_split=0.8,
                  vocabulary_frequency_cutoff=0.0):
-
-        if encoding != 'one-hot' and encoding != 'numbers':
-            raise ValueError('encoding should be "one-hot" or "numbers"')
 
         if validation_split > 1.0 or validation_split < 0.0:
             raise ValueError('validation_split between 0 and 1 required')
@@ -141,7 +134,6 @@ class MacomReader(object):
         self.char = char
         self.filepath = filepath
         self.batch_size = batch_size
-        self.encoding = encoding
         self.validation_split = validation_split
         self.vocabulary_frequency_cutoff = vocabulary_frequency_cutoff
 
@@ -183,10 +175,7 @@ class MacomReader(object):
             {k for k, v in self.vocabulary_frequencies.items()
              if v < self.vocabulary_frequency_cutoff}
 
-        if self.encoding == 'one-hot':
-            encoding = np.diag(np.ones(len(self.vocabulary_above_cutoff) + 2))
-        elif self.encoding == 'numbers':
-            encoding = list(range(0, len(self.vocabulary_above_cutoff) + 2))
+        encoding = list(range(0, len(self.vocabulary_above_cutoff) + 2))
 
         self.vocabulary_map = {}
 
@@ -260,16 +249,9 @@ class MacomReader(object):
             while True:
                 batch = itertools.islice(problems, self.batch_size)
 
-                if self.encoding == 'one-hot':
-                    X_known = np.zeros((self.batch_size, self.max_len,
-                                        len(self.vocabulary) + 1))
-                    X_unknown = np.zeros((self.batch_size, self.max_len,
-                                         len(self.vocabulary) + 1))
-                    y = np.zeros((self.batch_size, 2))
-                elif self.encoding == 'numbers':
-                    X_known = np.zeros((self.batch_size, self.max_len))
-                    X_unknown = np.zeros((self.batch_size, self.max_len))
-                    y = np.zeros((self.batch_size, 2))
+                X_known = np.zeros((self.batch_size, self.max_len))
+                X_unknown = np.zeros((self.batch_size, self.max_len))
+                y = np.zeros((self.batch_size, 1))
 
                 for (i, (line1, line2, label)) in enumerate(batch):
                     X_known[i] = self.read_encoded_line(reader, line1)
@@ -287,7 +269,6 @@ if __name__ == '__main__':
     reader1 = MacomReader(
         sys.argv[1],
         vocabulary_frequency_cutoff=1 / 100000,
-        encoding='numbers',
         validation_split=0.95,
         char=True,
         batch_size=1,

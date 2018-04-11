@@ -36,7 +36,6 @@ args = parser.parse_args()
 reader = MacomReader(
     args.datafile,
     batch_size=2,
-    encoding='numbers',
     vocabulary_frequency_cutoff=1 / 100000
 )
 
