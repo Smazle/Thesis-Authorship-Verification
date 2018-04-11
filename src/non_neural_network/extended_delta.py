@@ -11,21 +11,24 @@ np.random.seed(7)
 random.seed(7)
 
 
-def main(args, training=None, data=None, features=None):
+def main(args, training_inp=None, test_inp=None, features=None):
     # Import data ([features...], truth, author).
 
-    if data is None:
-        data = np.loadtxt(args.file, dtype=str, delimiter=' ', skiprows=1)
+    if test_inp is None:
+        test_inp = np.loadtxt(
+            args.file, dtype=str, delimiter=' ', skiprows=1)
 
-    if training is None:
-        training = np.loadtxt(args.opposing_file,
-                              dtype=str, delimiter=' ', skiprows=1)
+    if training_inp is None:
+        training_inp = np.loadtxt(args.opposing_file,
+                                  dtype=str, delimiter=' ', skiprows=1)
 
-    authors = data[:, 0]
-    data = data[:, 1:].astype(np.float)
+    authors = test_inp[:, 0]
+    data = test_inp[:, 1:].astype(np.float)
 
-    training_authors = training[:, 0]
-    training = training[:, 1:].astype(np.float)
+    training_authors = training_inp[:, 0]
+    training = training_inp[:, 1:].astype(np.float)
+    del training_inp
+    del test_inp
 
     scaler = StandardScaler().fit(training)
     training = scaler.transform(training)
