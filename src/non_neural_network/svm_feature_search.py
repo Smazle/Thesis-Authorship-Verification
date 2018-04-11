@@ -14,12 +14,6 @@ np.random.seed(7)
 random.seed(7)
 
 
-def single_one(n, size, dtype=np.bool):
-    x = np.zeros((size, ), dtype=dtype)
-    x[n] = 1
-    return x
-
-
 parser = argparse.ArgumentParser(
     description='Find best features from feature file via a greedy search')
 parser.add_argument(
@@ -50,19 +44,17 @@ if args.authors is not None:
     X = X[np.isin(authors, unique_authors)]
     authors = authors[np.isin(authors, unique_authors)]
 
-# While we keep improving accuracy continue.
-current_features = np.zeros((X.shape[1], ), dtype=np.bool)
+# While we improve accuracy continue.
+best_features = np.zeros((X.shape[1], ), dtype=np.bool)
 prev_best = 0.0
 while True:
-    # Try to add each of the missing features and keep the version that
-    # improves score the most.
     best_index = None
-    not_used = np.nonzero(np.logical_not(current_features))[0]
-    np.random.shuffle(not_used)
-    for missing in not_used:
-        print('Testing', missing)
-        new_feature = single_one(missing, current_features.shape[0])
-        features = X[:, np.logical_or(current_features, new_feature)]
+    for i in np.nonzero(np.logical_not(best_features))[0]:
+        print('Trying feature', i)
+        assert not best_features[i]
+        best_features[i] = True
+        features = X[:, best_features]
+        best_features[i] = False
 
         scores = []
         for author in unique_authors:
@@ -86,15 +78,14 @@ while True:
             scores.append(np.mean(score))
 
         if np.mean(scores) > prev_best:
+            print('\tFound better with score', np.mean(score))
             prev_best = np.mean(scores)
-            best_index = missing
-            break
+            best_index = i
+
+    np.savetxt('best_features.npz', best_features)
 
     if best_index is None:
-        # We are done.
+        print('Best index is none so this is the best we can do')
         break
     else:
-        print('prev_best', prev_best, 'best_index', best_index)
-        current_features[best_index] = True
-
-    np.savetxt('best_features.npz', current_features)
+        best_features[best_index] = True
