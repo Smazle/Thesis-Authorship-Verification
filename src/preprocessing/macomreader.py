@@ -255,27 +255,18 @@ class MacomReader(object):
             while True:
                 batch = itertools.islice(problems, self.batch_size)
 
-                if self.batch_size == 1:
-                    X_known = self.read_encoded_line(reader, line1)
-                    X_unknown = self.read_encoded_line(reader, line2)
+                X_known = np.zeros((self.batch_size, self.max_len))
+                X_unknown = np.zeros((self.batch_size, self.max_len))
+                y = np.zeros((self.batch_size, 1))
+
+                for (i, (line1, line2, label)) in enumerate(batch):
+                    X_known[i] = self.read_encoded_line(reader, line1)
+                    X_unknown[i] = self.read_encoded_line(reader, line2)
 
                     if label == 0:
-                        y = np.array([1, 0])
+                        y[i] = np.array([1, 0])
                     else:
-                        y = np.array([0, 1])
-                else:
-                    X_known = np.zeros((self.batch_size, self.max_len))
-                    X_unknown = np.zeros((self.batch_size, self.max_len))
-                    y = np.zeros((self.batch_size, 1))
-
-                    for (i, (line1, line2, label)) in enumerate(batch):
-                        X_known[i] = self.read_encoded_line(reader, line1)
-                        X_unknown[i] = self.read_encoded_line(reader, line2)
-
-                        if label == 0:
-                            y[i] = np.array([1, 0])
-                        else:
-                            y[i] = np.array([0, 1])
+                        y[i] = np.array([0, 1])
 
                 yield [X_known, X_unknown], y
 
