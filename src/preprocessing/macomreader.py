@@ -119,8 +119,8 @@ class MacomReader(object):
 
     # TODO: Take argument specifying whether or not to ignore first line in
     # file.
-    def __init__(self, filepath, batch_size=32, char=True, validation_split=0.8,
-                 vocabulary_frequency_cutoff=0.0):
+    def __init__(self, filepath, batch_size=32, char=True,
+                 validation_split=0.8, vocabulary_frequency_cutoff=0.0):
 
         if validation_split > 1.0 or validation_split < 0.0:
             raise ValueError('validation_split between 0 and 1 required')
