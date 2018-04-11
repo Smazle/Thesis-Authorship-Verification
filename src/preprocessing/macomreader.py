@@ -117,13 +117,10 @@ class MacomReader(object):
     # Whether or not to word encode or character.
     char = True
 
-    # Whether or not to pad the texts.
-    pad_texts = None
-
     # TODO: Take argument specifying whether or not to ignore first line in
     # file.
     def __init__(self, filepath, batch_size=32, char=True, validation_split=0.8,
-                 vocabulary_frequency_cutoff=0.0, pad_texts=True):
+                 vocabulary_frequency_cutoff=0.0):
 
         if validation_split > 1.0 or validation_split < 0.0:
             raise ValueError('validation_split between 0 and 1 required')
@@ -134,7 +131,6 @@ class MacomReader(object):
                              'required')
 
         # Save parameters.
-        self.pad_texts = pad_texts
         self.char = char
         self.filepath = filepath
         self.batch_size = batch_size
@@ -240,12 +236,10 @@ class MacomReader(object):
                            if x in self.vocabulary_map else
                            self.garbage, unescaped))
 
-        if self.pad_texts:
-            len_diff = self.max_len - len(encoded)
-            padded = encoded + ([self.padding] * len_diff)
-            return np.array(padded)
-        else:
-            return np.array(encoded)
+        len_diff = self.max_len - len(encoded)
+        padded = encoded + ([self.padding] * len_diff)
+
+        return np.array(padded)
 
     # Generate batches of samples.
     def generate(self, problems):
