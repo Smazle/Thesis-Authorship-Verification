@@ -251,7 +251,7 @@ class MacomReader(object):
 
                 X_known = np.zeros((self.batch_size, self.max_len))
                 X_unknown = np.zeros((self.batch_size, self.max_len))
-                y = np.zeros((self.batch_size, 1))
+                y = np.zeros((self.batch_size, 2))
 
                 for (i, (line1, line2, label)) in enumerate(batch):
                     X_known[i] = self.read_encoded_line(reader, line1)
