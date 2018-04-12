@@ -2,7 +2,7 @@
 
 import numpy as np
 from keras.models import load_model
-from ..preprocessing import LineReader
+from ..preprocessing import LineReader, MacomReader
 import argparse
 import jsonpickle
 import random
@@ -32,9 +32,11 @@ model = load_model(args.network)
 with open(args.reader, mode='r') as reader_in:
     reader = jsonpickle.decode(reader_in.read())
 
+validation_set_reader = MacomReader(args.datafile, validation_split=1.0)
+
 # For each author take 1 author text and 1 other text.
 problems = []
-for author in reader.authors:
+for author in validation_set_reader.authors:
     other = list(reader.authors.keys())
     other.remove(author)
 
