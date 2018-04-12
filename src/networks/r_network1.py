@@ -83,21 +83,9 @@ gru_unknown = gru(unknown_emb)
 known_out = Activation('softmax')(gru_known)
 unknown_out = Activation('softmax')(gru_unknown)
 
-cos_distance = merge([known_out, unknown_out], mode='cos',
-                     dot_axes=1)  # magic dot_axes works here!
+cos_distance = merge([known_out, unknown_out], mode='cos', dot_axes=1)
 cos_distance = Reshape((1,))(cos_distance)
 cos_similarity = Lambda(lambda x: 1 - x)(cos_distance)
-
-# avg_known = AveragePooling1D()(gru_known)
-# avg_unknown = AveragePooling1D()(gru_unknown)
-
-# avg_known = Flatten()(avg_known)
-# avg_unknown = Flatten()(avg_unknown)
-
-
-# output = Flatten()(cosine_sim)
-
-# output = Activation("softmax")(cosine_sim)
 
 output = Dense(2, activation='softmax')(cos_similarity)
 
