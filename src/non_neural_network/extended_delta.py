@@ -14,6 +14,8 @@ random.seed(7)
 def main(args, training_inp=None, test_inp=None, features=None):
     # Import data ([features...], truth, author).
 
+    trainingRun = training_inp is not None
+    
     if test_inp is None:
         test_inp = np.loadtxt(
             args.file, dtype=str, delimiter=' ', skiprows=1)
@@ -22,10 +24,10 @@ def main(args, training_inp=None, test_inp=None, features=None):
         training_inp = np.loadtxt(args.opposing_file,
                                   dtype=str, delimiter=' ', skiprows=1)
 
-    authors = test_inp[:, 0]
+    authors = test_inp[:, 0].astype(np.int)
     data = test_inp[:, 1:].astype(np.float)
 
-    training_authors = training_inp[:, 0]
+    training_authors = training_inp[:, 0].astype(np.int)
     training = training_inp[:, 1:].astype(np.float)
     del training_inp
     del test_inp
@@ -50,10 +52,10 @@ def main(args, training_inp=None, test_inp=None, features=None):
         enumeration = list(enumerate(training_authors))
 
         # Find texts written by that author
-        own = list(filter(lambda x: x[1] == author and
-                          not np.array_equal(training[x[0]], data[i]),
-                          enumeration))
+        own = list(filter(lambda x: x[1] == author,enumeration))
         own = [x[0] for x in own]
+        if trainingRun:
+            del own[own.index(i)]
 
         # Find texts not written by that author
         opposing = list(filter(lambda x: x[1] != author, enumeration))
@@ -68,15 +70,13 @@ def main(args, training_inp=None, test_inp=None, features=None):
             metric='minkowski', p=args.metric)
         model.fit(X, y)
 
-        try:
-            prediction = int(model.predict([data[i]]))
-            predictions.append(1 if prediction == author else 0)
+        # print(len(own), len(opposing_idx), i, author, sorted(own))
+        prediction = int(model.predict([data[i]]))
+        predictions.append(1 if prediction == author else 0)
 
-            otherAuthor = [training[random.sample(opposing, 1)[0][0]]]
-            prediction = int(model.predict(otherAuthor))
-            predictions.append(1 if prediction == 0 else 0)
-        except ValueError:
-            print('Dublcate Text Found, Skipping', len(predictions) / 2)
+        otherAuthor = [training[random.sample(opposing, 1)[0][0]]]
+        prediction = int(model.predict(otherAuthor))
+        predictions.append(1 if prediction == 0 else 0)
 
     result = np.mean(predictions)
     return result
