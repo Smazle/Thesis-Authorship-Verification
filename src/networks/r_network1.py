@@ -95,6 +95,7 @@ model.compile(optimizer='adam',
               loss='categorical_crossentropy',
               metrics=['accuracy'])
 
+
 steps_n = len(reader.training_problems) / reader.batch_size
 val_steps_n = len(reader.validation_problems) / reader.batch_size
 
@@ -120,6 +121,7 @@ if args.history is not None:
 # If we are asked to visualize model, do so.
 if args.graph is not None:
     plot_model(model, to_file=args.graph, show_shapes=True)
+    open(args.graph + '.json', 'w').write(model.to_json() + '\n')
 
 # If we are given weights, load them.
 if args.weights is not None:
