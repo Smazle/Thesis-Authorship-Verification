@@ -271,12 +271,12 @@ doing a structured search.
 TODO: Try using all features.
 
 
-\subsection{Siamese Networks}
-The main attraction of our authorship verification task, is the
-implementation and testing of different \gls{NN}. In the following
-sections we will go through the different iterations of networks
-we have produced. A glossary of the different layers used can be seen in figure
-\ref{glossary}
+\subsection{Siamese Networks} The main attraction of our authorship verification
+task, is the implementation and testing of different \gls{NN}. In the following
+sections we will go through the different iterations of networks we have
+produced. A glossary of the different layers used can be seen in figure
+\ref{glossary}. Throughout out experiments, we used a 0.5 threshold for
+classification.
 
 \begin{landscape}
 \begin{table}[]
@@ -812,7 +812,7 @@ the network to learn that particular feature.
 
 Our main problem is that the networks keep using metadata from the texts to
 make the predictions. The metadata will always match even though a ghost writer
-has written the assignment. It is probably not possible for us to extract all
+has written the assignment. It is probably not possible for us to remove all
 metadata from all texts. Even though names are supposed to have been removed
 the dataset still contains a couple of them and there is so many different ways
 of writing the class of a student that it is not feasible for us to remove
