@@ -78,8 +78,8 @@ A more formal definition of the problem we will be working with are,
 
 \begin{definition}[Authorship Verification]
 
-    Given a set of texts $T(\alpha)$ written by author $\alpha$ and a single
-    text $x$ of unknown authorship. Determine if $x \in T(\alpha)$.
+    Given a set of texts $T_\alpha$ written by author $\alpha$ and a single
+    text $x$ of unknown authorship. Determine if $x \in T_\alpha$.
 
 \end{definition}
 
@@ -89,7 +89,7 @@ attribution,
 \begin{definition}[Authorship Attribution]
 
     Given a set of authors $\mathcal{A} = \{ \alpha_1, \alpha_2,...\alpha_N\}$,
-    each with set of text $T(\alpha_i)$, and a text of unknown authorship.
+    each with set of text $T_{alpha_i}$, and a text of unknown authorship.
     Determine which $\alpha_i \in \mathcal{A}$ is the author.
 
 \end{definition}
@@ -107,8 +107,8 @@ solution to the authorship attribution problem $\mathcal{S}$. $\mathcal{S}$ is
 now a mapping from a set of authors $\mathcal{A}$ and text $x$ to an author
 $\alpha \in \mathcal{A}$. Given an instance of the authorship verification
 problem with author $\alpha_i \in \mathcal{A}$ and text $x$ and a set of
-texts written by different authors $T_{diff}(\alpha_i) = \{T(\beta) | \beta
+texts written by different authors $\overline{T}_{\alpha_i} = \{T_\beta | \beta
 \in \mathcal{A} \land \beta \neq \alpha_i\}$ we solve the verification
-problem by applying the attribution function to the texts $T(\alpha_i)
-\cup T_{diff}(\alpha_i)$ and the text of unknown authorship $x$. If $x \in
-T(\alpha_i)$ back we report true and otherwise false.
+problem by applying the attribution function to the texts $T_{\alpha_i}
+\cup \overline{T}_{\alpha_i}$ and the text of unknown authorship $x$. If $x \in
+T_{\alpha_i}$ back we report true and otherwise false.

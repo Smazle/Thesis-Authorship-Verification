@@ -103,6 +103,13 @@ And they can be computed as,
     FNR &= \frac{FN}{FN + TP}.
 \end{align}
 
+Using these definition we can also describe the accuracy measure we will be
+reporting on throughout our experiments.
+
+\begin{equation}
+    \text{Accuracy} = \frac{TP + TN}{TP + FP + TN + FN}
+\end{equation}
+
 In the case of MaCom, we want to minimize the \gls{FNR} as much as possible, so
 as to not wrongfully accuse anyone of not having written their assignment.
 
@@ -369,17 +376,17 @@ averaged out.
 
 \begin{definition}[Prediction System]
 
-    Our prediction system is a function $P(F, \alpha, t_u, W, \theta)
+    Our prediction system is a function $P(f,w, \alpha, t_{unkown}, \theta)
     \rightarrow \{0, 1\}$ where $F$ is a function taking two texts and giving
     the probability that the texts are written by the same author, $\alpha$ is
-    an author that has written the texts $T(\alpha)$, $t_u$ is a text of unknown
-    authorship, $W$ is a function taking a text and giving a number between 0
-    and 1 where $\sum_{t_k \in T(\alpha)} W(t_k) = 1$ and $\theta \in [0;1]$ is
-    a threshold. The prediction system then returns,
+    an author that has written the texts $T_{\alpha}$, $t_{known}$ is a text
+    of unknown authorship, $w$ is a function taking a text and giving a number
+    between 0 and 1 where $\sum_{t_{known} \in T_\alpha} w(t_{known}) = 1$ and
+    $\theta \in [0;1]$ is a threshold. The prediction system then returns,
 
     \begin{equation}
-        P(F, \alpha, t_u, W, \theta) = \begin{cases}
-            1 & \text{if } \sum_{t_k \in T(\alpha)} W(t_k) F(t_k, t_u) > \theta \\
+        P(f, w, \alpha, t_{unkown}, \theta) = \begin{cases}
+            1 & \text{if } \sum_{t_{known} \in T_\alpha} w(t_k) f(t_{known}, t_{unkown}) > \theta \\
             0 & \text{otherwise}.
         \end{cases}
     \end{equation}
@@ -387,22 +394,22 @@ averaged out.
 \end{definition}
 
 That is the prediction system returns 1 if the weighted average of the
-probability that $t_u$ is written by the same author as $t_k$ for each $t_k \in
-T(\alpha)$ is greater than the threshold $\theta$ and 0 otherwise.
+probability that $t_{unknown}$ is written by the same author as $t_{known}$ for each $t_k \in
+T_\alpha$ is greater than the threshold $\theta$ and 0 otherwise.
 
-The $F$ parameter can be anything that takes two texts and returns a
+The $f$ parameter can be anything that takes two texts and returns a
 probability. We are going to present several different networks that can be used
-as $F$ as they will take two texts and end with a softmax layer that outputs a
+as $f$ as they will take two texts and end with a softmax layer that outputs a
 probability distribution.
 
-The $W$ parameter in the prediction system can be used to weigh the known
-texts differently. For example we could define $W$ such that the newest
+The $w$ parameter in the prediction system can be used to weigh the known
+texts differently. For example we could define $w$ such that the newest
 text is weighed as most important and older texts are weighed less and less
-important. $W$ could be defined as $W(t_1), W(t_2), \dots, W(t_n) = \frac{1}{2},
+important. $w$ could be defined as $w(t_1), w(t_2), \dots, w(t_n) = \frac{1}{2},
 \frac{1}{4}, \dots, \frac{1}{2^{n-1}}, \frac{1}{2^{n-1}}$ where $t_1$ is the
 newest text, $t_2$ is the second newest and so on. Otherwise $W$ can also
-be used to take a simple average of the decisions by defining it as $W(t) =
-\frac{1}{|T(\alpha)|}$.
+be used to take a simple average of the decisions by defining it as $w(t) =
+\frac{1}{|T_\alpha|}$.
 
 The $\theta$ parameter determines when we consider an unknown text to be written
 by an author. The natural choice for $\theta$ is 0.5 since that is what the
@@ -410,11 +417,11 @@ network use when it computes the loss of each training sample. However the
 $\theta$ parameter can be used to enforce how sure we have to be of a decision
 to accuse an author of not having written an assignment. As described earlier
 MaCom does not want to accuse innocent students of cheating. That means that
-it is very important to MaCom to minimize the number of \gls{FN}'s compared
+it is very important to MaCom to minimize the number of \gls{FN}s compared
 to the total number of accusations raised. That means that we have to keep
 $\frac{FN}{FN + TN}$ below a threshold chosen by MaCom. We can use the $\theta$
-parameter to control that fraction. Hopefully the \gls{FN}'s generally end up
-with a value closer to 1 than the \gls{TN}'s. If that is the case then lowering
-$\theta$ value will lower the fraction since there will be fewer \gls{FN}'s.
+parameter to control that fraction. Hopefully the \gls{FN}s generally end up
+with a value closer to 1 than the \gls{TN}s. If that is the case then lowering
+$\theta$ value will lower the fraction since there will be fewer \gls{FN}s.
 That might lower the overall accuracy of the prediction system but will make
 sure that at few students as possible are falsely accused.
