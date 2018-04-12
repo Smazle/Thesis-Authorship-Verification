@@ -376,7 +376,7 @@ averaged out.
 
 \begin{definition}[Prediction System]
 
-    Our prediction system is a function $P(f,w, \alpha, t_{unkown}, \theta)
+    Our prediction system is a function $P(f, w, \alpha, t_{unkown}, \theta)
     \rightarrow \{0, 1\}$ where $F$ is a function taking two texts and giving
     the probability that the texts are written by the same author, $\alpha$ is
     an author that has written the texts $T_{\alpha}$, $t_{known}$ is a text
@@ -394,8 +394,8 @@ averaged out.
 \end{definition}
 
 That is the prediction system returns 1 if the weighted average of the
-probability that $t_{unknown}$ is written by the same author as $t_{known}$ for each $t_k \in
-T_\alpha$ is greater than the threshold $\theta$ and 0 otherwise.
+probability that $t_{unknown}$ is written by the same author as $t_{known}$ for
+each $t_k \in T_\alpha$ is greater than the threshold $\theta$ and 0 otherwise.
 
 The $f$ parameter can be anything that takes two texts and returns a
 probability. We are going to present several different networks that can be used
@@ -407,7 +407,7 @@ texts differently. For example we could define $w$ such that the newest
 text is weighed as most important and older texts are weighed less and less
 important. $w$ could be defined as $w(t_1), w(t_2), \dots, w(t_n) = \frac{1}{2},
 \frac{1}{4}, \dots, \frac{1}{2^{n-1}}, \frac{1}{2^{n-1}}$ where $t_1$ is the
-newest text, $t_2$ is the second newest and so on. Otherwise $W$ can also
+newest text, $t_2$ is the second newest and so on. Otherwise $w$ can also
 be used to take a simple average of the decisions by defining it as $w(t) =
 \frac{1}{|T_\alpha|}$.
 
