@@ -36,7 +36,7 @@ startIndex = {key: featureNames.index(key)
 print(startIndex)
 
 
-neigbors = range(1, 12)
+neigbors = range(1, 10)
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--metric', type=int)
