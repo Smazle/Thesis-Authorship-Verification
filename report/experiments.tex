@@ -177,7 +177,6 @@ The results of the selection can be seen in figures \ref{fig:resultsMan} and
 As such, the best configuration is Euclidean distance, with the 10 most frequent
 of the different features, is what we will be using on the test data.
 
-
 \subsubsection{Author Specific SVM}
 
 The author specific SVM is a authorship verification method that learns from
@@ -272,6 +271,37 @@ doing a structured search.
 TODO: Try using all features.
 
 
+\subsection{Siamese Networks} The main attraction of our authorship verification
+task, is the implementation and testing of different \gls{NN}. In the following
+sections we will go through the different iterations of networks we have
+produced. A glossary of the different layers used can be seen in figure
+\ref{glossary}. Throughout out experiments, we used a 0.5 threshold for
+classification.
+
+\begin{landscape}
+\begin{table}[]
+\centering
+\caption{Glossary used when performing experiments, and creating their associated models.\cite{chollet2015kerask}}
+\label{glossary}
+\begin{tabular}{|c|c|l|}
+\hline
+\textbf{Layer}     & \textbf{Description}                                                                                                                                                                        & \multicolumn{1}{c|}{\textbf{Actively Used Parameters}}                                                                                                                                                                                                                                                                                         \\ \hline
+Input        & \begin{tabular}[c]{@{}c@{}}Serves as the entrypoint of the network, \\ by receiving a set of texts and feeding it trough the network.\end{tabular}                                          & \textbf{Shape} - The shape of each sample give to the input.                                                                                                                                                                                                                                                                                            \\ \hline
+Embedding          & \begin{tabular}[c]{@{}c@{}}Taking in an encoded sample, \\ it produces a dense vector representation for that text.\end{tabular}                                                            & \begin{tabular}[c]{@{}l@{}}\textbf{Input Dim} - Size of vocabulary.\\\textbf{Output Dim} - Size of vector used to represent embedding.\end{tabular}                                                                                                                                                                                                             \\ \hline
+Convolutional      & \begin{tabular}[c]{@{}c@{}}Applies convulution to the data it \\ recieves according to the decription, \\ found in section *TODO:Section Reference*\end{tabular}                            & \begin{tabular}[c]{@{}l@{}}\textbf{Filters} - Dimensionality of the output, \\ ie. number of filter from the convolution. \\ \textbf{Kernel Size} - Integer or list describing \\ size of convolution window.\\ \textbf{Strides} - Stride length of the \\ convolutional window.\\ \textbf{Activation} The activation function to be \\ applied after the convolution.\end{tabular} \\ \hline
+Global Max Pooling & \begin{tabular}[c]{@{}c@{}}Extracts the maximum value \\ from each of the provided data\end{tabular}                                                                                        & Has no parameters.                                                                                                                                                                                                                                                                                                                             \\ \hline
+Concatenation      & \begin{tabular}[c]{@{}c@{}}As the name suggests, this layers simply \\ concatenates the data it receives from different layers\end{tabular}                                                 & Has no parameters.                                                                                                                                                                                                                                                                                                                             \\ \hline
+Merge              & \begin{tabular}[c]{@{}c@{}}Merges its inputs, \\ using a specified function to generate a single output.\end{tabular}                                                                       & \textbf{Function} - The function used to merge the recieved data.                                                                                                                                                                                                                                                                                       \\ \hline
+Dense              & \begin{tabular}[c]{@{}c@{}}A simple fully connected layer, \\ taking in data and applying \\ the function described in section \ref{sec:neurons}\end{tabular}                               & \begin{tabular}[c]{@{}l@{}}\textbf{Units} - Number of neurons in in the layer.\\ \textbf{Activation} - The activation function to be applied.\end{tabular}                                                                                                                                                                                                       \\ \hline
+Dropout            & \begin{tabular}[c]{@{}c@{}}Drop a fraction it receives, \\ with the goal of preventing overfitting.\end{tabular}                                                                            & \textbf{Rate} -The fraction of data it receives dropped.                                                                                                                                                                                                                                                                                                \\ \hline
+Lambda             & Applies a specified function to the input it receives                                                                                                                                       & \textbf{Function} - The function applied.                                                                                                                                                                                                                                                                                                               \\ \hline
+Reshape            & Reshapes the data it receives                                                                                                                                                               & \textbf{Dim} - Dimensionality to reshape to.                                                                                                                                                                                                                                                                                                            \\ \hline
+GRU                & \begin{tabular}[c]{@{}c@{}}A gated recurrent unit is applied to the data \\ according to the description \\ found in *TODO: Section Reference*\end{tabular}                                 & \textbf{Unit} - Number of neurons in the layer.                                                                                                                                                                                                                                                                                                        \\ \hline
+LSTM               & \begin{tabular}[c]{@{}c@{}}A Long Short-Term Memory layer, \\ which works according to the description in \\ section *TODO: Section Reference" is applied \\ to the given data\end{tabular} & \textbf{Unit} - Number of neurons in the layer.                                                                                                                                                                                                                                                                                                        \\ \hline
+\end{tabular}
+\end{table}
+\end{landscape}
+
 \subsection{Siamese Neural Network - Iteration 1}
 
 The network we used to try and solve the problem is shown in Figure
@@ -317,7 +347,7 @@ quickly overfits the training data and no longer learns anything general.
 \end{figure}
 
 
-\subsection{Siamese Neural Network - Iteration 2}
+\subsubsection{Siamese Neural Network - Iteration 2}
 
 % TODO: Illustrate how dropout corresponds to training different subnetworks in
 % each iteration.
@@ -397,7 +427,7 @@ training and validation accuracies per epoch can be seen in Figure
 The maximum validation accuracy obtained were 0.74464 in epoch 12.
 
 
-\subsection{Siamese Neural Network - Iteration 3}
+\subsubsection{Siamese Neural Network - Iteration 3}
 
 In iteration 2 we observed that the network seemed to learn everything in the
 first epoch and didn't improve much after that. We also observed that the
@@ -493,7 +523,7 @@ network learns that as a result of how we have created the training dataset
 where each text has the correct authors name in it.
 
 
-\subsection{Siamese Neural Network - Iteration 4}
+\subsubsection{Siamese Neural Network - Iteration 4}
 
 In this iteration we trained the third network again but now using a dataset
 where names were substituted by empty strings. We wanted to see how well the
@@ -782,7 +812,7 @@ the network to learn that particular feature.
 
 Our main problem is that the networks keep using metadata from the texts to
 make the predictions. The metadata will always match even though a ghost writer
-has written the assignment. It is probably not possible for us to extract all
+has written the assignment. It is probably not possible for us to remove all
 metadata from all texts. Even though names are supposed to have been removed
 the dataset still contains a couple of them and there is so many different ways
 of writing the class of a student that it is not feasible for us to remove

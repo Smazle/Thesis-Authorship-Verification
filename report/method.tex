@@ -110,9 +110,16 @@ reporting on throughout our experiments.
     \text{Accuracy} = \frac{TP + TN}{TP + FP + TN + FN}
 \end{equation}
 
+
 In the case of MaCom, we want to minimize the \gls{FNR} as much as possible, so
 as to not wrongfully accuse anyone of not having written their assignment.
-
+This however leaves out a equally important metric. While a low \gls{FNR}
+is the goal, MaCom also wants to minimize the number of \gls{FN}s compared
+to the total number of accusations made. This can be described as:
+$$
+\text{Accusation Error} = \frac{FN}{FN + TN}
+$$
+Our goal is also to keep this value under a certain threshold specified by MaCom.
 
 \subsection{Deep Learning}
 
@@ -165,7 +172,7 @@ similar manner, looking at overlapping subsections of data. These convolutional
 neurons however were rarely used alone, but together with a down-sampling neuron
 such as Max Pooling introduced in 1993.\cite{Schmidhuber:2015}
 
-\subsubsection{Neurons}
+\subsubsection{Neurons}\label{sec:neurons}
 
 As mentioned previously a \gls{NN} consists of a collection of neurons. Each
 neuron is a simplified mathematical model, which behaves much like neurons in
@@ -199,9 +206,9 @@ which are continuously repeated:
 The goal of these three steps is to minimize the overall cost of the network.
 The cost in this case, refers to the loss we end up with. In order to that the
 network makes use of the gradient to optimize each of the individual weights.
-Step 1, feeding forward, is simply a parse through the \gls{NN}. When this is
+Step 1, feeding forward, is simply a pass through the \gls{NN}. When this is
 done we can compute the cost of that single training example. Looking at each
-of the previous contributing nodes, we can attempts to minimize the final cost
+of the previous contributing nodes, we can attempt to minimize the final cost
 of the network by tweaking the weights, using the gradient of the activation
 function of that particular layer, with respect to those weights. Doing this
 iteratively throughout the network is back propagation, as we are propagating
@@ -416,12 +423,10 @@ by an author. The natural choice for $\theta$ is 0.5 since that is what the
 network use when it computes the loss of each training sample. However the
 $\theta$ parameter can be used to enforce how sure we have to be of a decision
 to accuse an author of not having written an assignment. As described earlier
-MaCom does not want to accuse innocent students of cheating. That means that
-it is very important to MaCom to minimize the number of \gls{FN}s compared
-to the total number of accusations raised. That means that we have to keep
-$\frac{FN}{FN + TN}$ below a threshold chosen by MaCom. We can use the $\theta$
-parameter to control that fraction. Hopefully the \gls{FN}s generally end up
-with a value closer to 1 than the \gls{TN}s. If that is the case then lowering
-$\theta$ value will lower the fraction since there will be fewer \gls{FN}s.
-That might lower the overall accuracy of the prediction system but will make
-sure that at few students as possible are falsely accused.
+MaCom does not want to accuse innocent students of cheating. That means that it
+is very important to MaCom to minimize the number accusation error. We can use
+the $\theta$ parameter to control that error. Hopefully the \gls{FN}s generally
+end up with a value closer to 1 than the \gls{TN}s. If that is the case then
+lowering $\theta$ value will lower the fraction since there will be fewer
+\gls{FN}s. That might lower the overall accuracy of the prediction system but
+will make sure that at few students as possible are falsely accused.
