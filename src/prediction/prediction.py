@@ -87,7 +87,10 @@ def uniform(xs):
 # 1/2, the second newest has 1/4 and so on.
 def time_simple(xs):
     weights = [1 / (2**x) for x in range(1, len(xs))]
-    weights.append(weights[-1])
+    if len(weights) == 0:
+        weights = [1.0]
+    else:
+        weights.append(weights[-1])
     sort = np.argsort(xs)
 
     return np.array(weights)[sort]
