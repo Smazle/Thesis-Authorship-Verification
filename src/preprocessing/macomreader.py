@@ -243,7 +243,7 @@ class MacomReader(object):
         if with_date:
             epoch = datetime.utcfromtimestamp(0)
             date = datetime.strptime(date, '%d-%m-%Y')
-            time = (date - epoch).total_seconds() * 1000.0
+            time = (date - epoch).total_seconds()
             return np.array(padded), time
         else:
             return np.array(padded)
