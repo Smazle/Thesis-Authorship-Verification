@@ -170,3 +170,5 @@ if __name__ == '__main__':
             validation_reader, linereader, problems, weights, args.theta)
 
         print(tps, tns, fps, fns)
+        print("Accuracy", (tps + tns) / (tps + tns + fps + fns))
+        print("Errors", fns / (fns + tns))
