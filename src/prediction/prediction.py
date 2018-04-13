@@ -16,6 +16,10 @@ def get_problems(macomreader, linereader):
 
         author_texts = macomreader.authors[author]
 
+        if len(author_texts) <= 1:
+            print("WARNING NOT ENOUGH TEXTS FOUND")
+            continue
+
         # We want to predict the newest text.
         lines = [
             macomreader.read_encoded_line(linereader, line, with_date=True)
@@ -35,19 +39,17 @@ def get_problems(macomreader, linereader):
 
 
 def predict(macomreader, linereader, author_texts, non_author_text, w, theta):
-    unknown_text = np.zeros(
-        (len(author_texts), macomreader.max_len), dtype=np.int)
-    known_texts = np.zeros(
-        (len(author_texts), macomreader.max_len), dtype=np.int)
+    unknown_text = np.zeros((1, macomreader.max_len), dtype=np.int)
+    unknown_text[0] = reader.read_encoded_line(linereader, non_author_text)
     times = np.zeros((len(author_texts)), dtype=np.int)
+    predictions = np.zeros((len(author_texts), ), dtype=np.float)
 
     # Read texts.
     for i, known in enumerate(author_texts):
-        known_texts[i], times[i] = macomreader.read_encoded_line(
+        known_text = np.zeros((1, macomreader.max_len), dtype=np.int)
+        known_text[0], times[i] = macomreader.read_encoded_line(
             linereader, known, with_date=True)
-        unknown_text[i] = reader.read_encoded_line(linereader, non_author_text)
-
-    predictions = model.predict([unknown_text, known_texts])[:, 1]
+        predictions[i] = model.predict([unknown_text, known_text])[0,1]
 
     return np.average(predictions, weights=w(times)) > theta
 
@@ -76,16 +78,29 @@ def evaluate(macomreader, linereader, problems, w, theta):
     return tps, tns, fps, fns
 
 
+# Return uniform distribution over the timestamps.
 def uniform(xs):
     return np.ones((xs.shape[0],), dtype=np.float) / xs.shape[0]
 
 
+# Return a distribution over the times such that the newest time has weight
+# 1/2, the second newest has 1/4 and so on.
 def time_simple(xs):
     weights = [1 / (2**x) for x in range(1, len(xs))]
-    weights.append(weights[-1])
+    if len(weights) == 0:
+        weights = [1.0]
+    else:
+        weights.append(weights[-1])
     sort = np.argsort(xs)
 
     return np.array(weights)[sort]
+
+
+def time_weighted(xs):
+    weights = xs - np.min(xs)
+    weights = weights / np.sum(weights)
+
+    return weights
 
 
 if __name__ == '__main__':
@@ -117,7 +132,7 @@ if __name__ == '__main__':
         '--weights',
         type=str,
         help='Which weighting of predictions to use. Should be one of ' +
-             '"uniform", "simple-time"',
+             '"uniform", "simple-time" or "advanced-time"',
         default='uniform'
     )
     args = parser.parse_args()
@@ -144,6 +159,8 @@ if __name__ == '__main__':
         weights = uniform
     elif args.weights == 'simple-time':
         weights = time_simple
+    elif args.weights == 'advanced-time':
+        weights = time_weighted
     else:
         raise Exception('Unknown weights {}'.format(args.weights))
 
@@ -153,3 +170,5 @@ if __name__ == '__main__':
             validation_reader, linereader, problems, weights, args.theta)
 
         print(tps, tns, fps, fns)
+        print("Accuracy", (tps + tns) / (tps + tns + fps + fns))
+        print("Errors", fns / (fns + tns))
