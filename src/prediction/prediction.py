@@ -80,6 +80,14 @@ def uniform(xs):
     return np.ones((xs.shape[0],), dtype=np.float) / xs.shape[0]
 
 
+def time_simple(xs):
+    weights = [1 / (2**x) for x in range(1, len(xs))]
+    weights.append(weights[-1])
+    sort = np.argsort(xs)
+
+    return np.array(weights)[sort]
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description='Use neural network to predict authorship of assignments.'
@@ -108,7 +116,8 @@ if __name__ == '__main__':
     parser.add_argument(
         '--weights',
         type=str,
-        help='Which weighting of predictions to use.',
+        help='Which weighting of predictions to use. Should be one of ' +
+             '"uniform", "simple-time"',
         default='uniform'
     )
     args = parser.parse_args()
@@ -133,6 +142,8 @@ if __name__ == '__main__':
 
     if args.weights == 'uniform':
         weights = uniform
+    elif args.weights == 'simple-time':
+        weights = time_simple
     else:
         raise Exception('Unknown weights {}'.format(args.weights))
 
