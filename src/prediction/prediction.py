@@ -49,7 +49,7 @@ def predict(macomreader, linereader, author_texts, non_author_text, w, theta):
         known_text = np.zeros((1, macomreader.max_len), dtype=np.int)
         known_text[0], times[i] = macomreader.read_encoded_line(
             linereader, known, with_date=True)
-        predictions[i] = model.predict([unknown_text, known_text])[0,1]
+        predictions[i] = model.predict([unknown_text, known_text])[0, 1]
 
     return np.average(predictions, weights=w(times)) > theta
 
@@ -59,7 +59,8 @@ def evaluate(macomreader, linereader, problems, w, theta):
     for i, (unknown, knowns, label) in enumerate(problems):
         print('problem', i, 'label', label)
 
-        prediction = predict(macomreader, linereader, knowns, unknown, w, theta)
+        prediction = predict(
+            macomreader, linereader, knowns, unknown, w, theta)
 
         if prediction == label and label == True:
             tps = tps + 1
