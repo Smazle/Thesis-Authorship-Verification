@@ -16,6 +16,10 @@ def get_problems(macomreader, linereader):
 
         author_texts = macomreader.authors[author]
 
+        if len(author_texts) <= 1:
+            print("WARNING NOT ENOUGH TEXTS FOUND")
+            continue
+
         # We want to predict the newest text.
         lines = [
             macomreader.read_encoded_line(linereader, line, with_date=True)
@@ -35,19 +39,17 @@ def get_problems(macomreader, linereader):
 
 
 def predict(macomreader, linereader, author_texts, non_author_text, w, theta):
-    unknown_text = np.zeros(
-        (len(author_texts), macomreader.max_len), dtype=np.int)
-    known_texts = np.zeros(
-        (len(author_texts), macomreader.max_len), dtype=np.int)
+    unknown_text = np.zeros((1, macomreader.max_len), dtype=np.int)
+    unknown_text[0] = reader.read_encoded_line(linereader, non_author_text)
     times = np.zeros((len(author_texts)), dtype=np.int)
+    predictions = np.zeros((len(author_texts), ), dtype=np.float)
 
     # Read texts.
     for i, known in enumerate(author_texts):
-        known_texts[i], times[i] = macomreader.read_encoded_line(
+        known_text = np.zeros((1, macomreader.max_len), dtype=np.int)
+        known_text[0], times[i] = macomreader.read_encoded_line(
             linereader, known, with_date=True)
-        unknown_text[i] = reader.read_encoded_line(linereader, non_author_text)
-
-    predictions = model.predict([unknown_text, known_texts])[:, 1]
+        predictions[i] = model.predict([unknown_text, known_text])[0,1]
 
     return np.average(predictions, weights=w(times)) > theta
 
