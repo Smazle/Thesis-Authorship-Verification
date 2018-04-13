@@ -78,16 +78,26 @@ def evaluate(macomreader, linereader, problems, w, theta):
     return tps, tns, fps, fns
 
 
+# Return uniform distribution over the timestamps.
 def uniform(xs):
     return np.ones((xs.shape[0],), dtype=np.float) / xs.shape[0]
 
 
+# Return a distribution over the times such that the newest time has weight
+# 1/2, the second newest has 1/4 and so on.
 def time_simple(xs):
     weights = [1 / (2**x) for x in range(1, len(xs))]
     weights.append(weights[-1])
     sort = np.argsort(xs)
 
     return np.array(weights)[sort]
+
+
+def time_weighted(xs):
+    weights = xs - np.min(xs)
+    weights = weights / np.sum(weights)
+
+    return weights
 
 
 if __name__ == '__main__':
@@ -119,7 +129,7 @@ if __name__ == '__main__':
         '--weights',
         type=str,
         help='Which weighting of predictions to use. Should be one of ' +
-             '"uniform", "simple-time"',
+             '"uniform", "simple-time" or "advanced-time"',
         default='uniform'
     )
     args = parser.parse_args()
@@ -146,6 +156,8 @@ if __name__ == '__main__':
         weights = uniform
     elif args.weights == 'simple-time':
         weights = time_simple
+    elif args.weights == 'advanced-time':
+        weights = time_weighted
     else:
         raise Exception('Unknown weights {}'.format(args.weights))
 
