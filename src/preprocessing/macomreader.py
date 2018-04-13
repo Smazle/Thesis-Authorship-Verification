@@ -8,6 +8,7 @@ from collections import Counter
 import pickle
 import sys
 from ..util import utilities as util
+from datetime import datetime
 
 
 class LineReader:
@@ -225,7 +226,7 @@ class MacomReader(object):
         self.training_problems = self.problems[:split_point]
         self.validation_problems = self.problems[split_point:]
 
-    def read_encoded_line(self, linereader, line_n):
+    def read_encoded_line(self, linereader, line_n, with_date=False):
         author, date, text = linereader.readline(line_n).split(';')
         unescaped = util.clean(text)
 
@@ -239,7 +240,13 @@ class MacomReader(object):
         len_diff = self.max_len - len(encoded)
         padded = encoded + ([self.padding] * len_diff)
 
-        return np.array(padded)
+        if with_date:
+            epoch = datetime.utcfromtimestamp(0)
+            date = datetime.strptime(date, '%d-%m-%Y')
+            time = (date - epoch).total_seconds() * 1000.0
+            return np.array(padded), time
+        else:
+            return np.array(padded)
 
     # Generate batches of samples.
     def generate(self, problems):
