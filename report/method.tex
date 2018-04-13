@@ -188,6 +188,9 @@ computes is then,
     \right).
 \end{equation}
 
+One has the options to arrange the neurons in what is called layers, to achieve
+a certain desired behavior, more details regarding these specific layers will
+be explained in later chapters.
 The training of a \gls{NN} consists of changing the weights applied at each
 neuron, with the goal of modeling the relationships present in the data.
 
@@ -204,22 +207,54 @@ which are continuously repeated:
 \end{enumerate}
 
 The goal of these three steps is to minimize the overall cost of the network.
-The cost in this case, refers to the loss we end up with. In order to that the
-network makes use of the gradient to optimize each of the individual weights.
-Step 1, feeding forward, is simply a pass through the \gls{NN}. When this is
-done we can compute the cost of that single training example. Looking at each
-of the previous contributing nodes, we can attempt to minimize the final cost
-of the network by tweaking the weights, using the gradient of the activation
-function of that particular layer, with respect to those weights. Doing this
-iteratively throughout the network is back propagation, as we are propagating
-the loss of that single value back throughout the network. In the end, each
-single training sample would have a desired change to each of the weights.
-These desired changes would then be averaged and applied to the weights of the
-network. This approach however, is very cost ineffective in terms of computing
-power. As such the practical application of this entails shuffling and dividing 
-your training data into batches, and doing the 3 steps listed above for each of
-the batches. This results in a very good approximation of the ideal weights,
-without spending as much computational time.
+The cost in this case, refers to the loss we end up with. In order to that
+the network makes use of the gradient to optimize each of the individual
+weights. Step 1, feeding forward, is simply a pass through the \gls{NN}. 
+When this is done with singular training sample, we end up with a final 
+cost of the network for that single training sample. It is this cost
+that back propagation attempts to optimize on. On order to do so
+all one simply has to do is step in direction of the negative gradient
+of the cost function. The cost function however is of cause dependent
+on outputting layer. Each neurons at these layers have 3 values we
+can choose to optimize our gradient on. The bias, the wight, and our
+choice of activation function. In the case of back propagation,
+it is with respect to the weights, we want to optimize our cost function.
+Using the gradient with respect to the weights of each neuron contributing
+the cost function, we can compute a set of desired changes to those desired
+that seek to optimize the output of the neuron. This is done for all neuron
+in the layer, ending up with a set of desired weight changes for each neuron
+in the layer. All the changes a summarized and then applied to that former
+layer, enabling that same process to be performed recursively back through
+the network, which is Step 2. Back Propagate. 
+This is done for all the training samples in our training set, ending
+up with each training sample having a set desired weights. All these
+desires are then average, and applied to the network, which is Step 3.
+Update Weights. That final averaged set of weight are essentially
+the negative gradient of the cost function, which we step in the direction
+of using. A step of a size, specified by the learning rate.
+This process of back propagation however, is really computationally heavy
+as each training sample has to be processed. As such, in practice
+the training data is shuffled, and split into batches which are then fed to
+the network. This means that the final result of the back propagation
+wont be the actual negative gradient of the cost function, but rather a
+very close approximation, a difference which is negligible after
+repeated runs of the back propagation algorithm.
+
+In order to explain this using a more mathematical approach, we need to chose
+a activation function as our example, as it is with regard to that we find our
+gradient. In this case we chose the sigmoid activation function, as it was
+the more easy one to work with.
+
+$$
+\sigma(x) = \frac{1}{1 + e^{-x}}
+$$
+
+The derivative of which is of cause:
+
+\begin{align}
+\frac{d}{dx}\sigma(x) &= \frac{d}{dx}(\frac{1}{1 + e^{-x}})\\
+&= \frac{e^{-x}}{(1+e^{-x})^2}
+\end{align}
 
 TODO: More math!
 
