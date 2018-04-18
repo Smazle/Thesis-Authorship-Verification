@@ -1,20 +1,23 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import numpy as np
 import argparse
-import keras.backend as K
 import jsonpickle
+import keras
+import keras.backend as K
+import numpy as np
 from keras.models import Model
 from keras.layers.embeddings import Embedding
 from keras.layers import Dense, Concatenate, Input, Dropout, GRU, Reshape,\
-    Lambda, Flatten, Activation, merge, CuDNNGRU
+    Lambda, Flatten, Activation, merge, Convolution1D, MaxPooling1D, \
+    LSTM, CuDNNGRU
 from keras.callbacks import ModelCheckpoint
 from keras.utils import plot_model
 from keras.layers.pooling import AveragePooling1D
 from ..preprocessing import MacomReader
 from sklearn.metrics.pairwise import cosine_similarity
 from ..util import CSVWriter
+from tensorflow.python.client import device_lib
 
 # Parse arguments.
 parser = argparse.ArgumentParser(
@@ -58,18 +61,17 @@ else:
         args.datafile,
         vocabulary_frequency_cutoff=1 / 100000,
         validation_split=0.95,
-        pad=False,
-        binary=True
+        pad=False
     )
 
-if args.reader is not None:
     with open('reader.p', mode='w') as reader_out:
         reader_out.write(jsonpickle.encode(reader))
 
-known_in = Input(shape=(None, ), name='Known_Input')
-unknown_in = Input(shape=(None, ), name='Unknown_Input')
+known_in = Input(shape=(None, ), dtype='int32')
+unknown_in = Input(shape=(None, ), dtype='int32')
 
 embedding = Embedding(len(reader.vocabulary_above_cutoff) + 2, 5)
+
 known_emb = embedding(known_in)
 unknown_emb = embedding(unknown_in)
 
@@ -78,19 +80,27 @@ if 'device:GPU' in str('str(device_lib.list_local_devices())'):
 else:
     gru = GRU(200)
 
-gru_known = gru(known_emb)
-gru_unknown = gru(unknown_emb)
+features_known = gru(known_emb)
+features_unknown = gru(unknown_emb)
 
-cos_distance = merge([gru_known, gru_unknown], mode='cos', dot_axes=1)
-cos_distance = Reshape((1,))(cos_distance)
-cos_similarity = Lambda(lambda x: 1 - x)(cos_distance)
+abs_diff = merge(
+    inputs=[features_known, features_unknown],
+    mode=lambda x: abs(x[0] - x[1]),
+    output_shape=lambda x: x[0],
+    name='absolute_difference'
+)
 
-# output = Dense(2, activation='softmax')(cos_similarity)
+dense1 = Dense(500, activation='relu')(abs_diff)
+dense2 = Dense(500, activation='relu')(dense1)
 
-model = Model(inputs=[known_in, unknown_in], outputs=cos_similarity)
+pruned = Dropout(0.3)(dense1)
+
+output = Dense(2, activation='softmax', name='output')(pruned)
+
+model = Model(inputs=[known_in, unknown_in], outputs=output)
 
 model.compile(optimizer='adam',
-              loss='binary_crossentropy',
+              loss='categorical_crossentropy',
               metrics=['accuracy'])
 
 steps_n = len(reader.training_problems) / reader.batch_size
@@ -118,7 +128,6 @@ if args.history is not None:
 # If we are asked to visualize model, do so.
 if args.graph is not None:
     plot_model(model, to_file=args.graph, show_shapes=True)
-    open(args.graph + '.json', 'w').write(model.to_json() + '\n')
 
 # If we are given weights, load them.
 if args.weights is not None:

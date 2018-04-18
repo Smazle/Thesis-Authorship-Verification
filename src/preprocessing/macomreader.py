@@ -121,7 +121,8 @@ class MacomReader(object):
     # TODO: Take argument specifying whether or not to ignore first line in
     # file.
     def __init__(self, filepath, batch_size=32, char=True,
-                 validation_split=0.8, vocabulary_frequency_cutoff=0.0):
+                 validation_split=0.8, vocabulary_frequency_cutoff=0.0,
+                 pad=True, binary=False):
 
         if validation_split > 1.0 or validation_split < 0.0:
             raise ValueError('validation_split between 0 and 1 required')
@@ -137,6 +138,8 @@ class MacomReader(object):
         self.batch_size = batch_size
         self.validation_split = validation_split
         self.vocabulary_frequency_cutoff = vocabulary_frequency_cutoff
+        self.binary = binary
+        self.pad = pad
 
         # Generate representation used to generate training data.
         with LineReader(self.filepath) as linereader:
@@ -145,10 +148,12 @@ class MacomReader(object):
             self.generate_vocabulary_map(linereader)
 
     def generate_training(self):
-        return self.generate(self.training_problems)
+        return self.generate(self.training_problems) if \
+            self.pad else self.padless_generate(self.training_problems)
 
     def generate_validation(self):
-        return self.generate(self.validation_problems)
+        return self.generate(self.validation_problems) if \
+            self.pad else self.padless_generate(self.validation_problems)
 
     def generate_vocabulary_map(self, linereader):
         for author in self.authors:
@@ -237,8 +242,11 @@ class MacomReader(object):
                            if x in self.vocabulary_map else
                            self.garbage, unescaped))
 
-        len_diff = self.max_len - len(encoded)
-        padded = encoded + ([self.padding] * len_diff)
+        if self.pad:
+            len_diff = self.max_len - len(encoded)
+            padded = encoded + ([self.padding] * len_diff)
+        else:
+            padded = encoded
 
         if with_date:
             epoch = datetime.utcfromtimestamp(0)
@@ -264,12 +272,31 @@ class MacomReader(object):
                     X_known[i] = self.read_encoded_line(reader, line1)
                     X_unknown[i] = self.read_encoded_line(reader, line2)
 
-                    if label == 0:
-                        y[i] = np.array([1, 0])
-                    else:
-                        y[i] = np.array([0, 1])
+                    if not self.binary:
+                        y = np.array([1, 0]) if y == 0 else np.array([0, 1])
 
                 yield [X_known, X_unknown], y
+
+    def padless_generate(self, problems):
+        with LineReader(self.filepath, encoding='utf-8') as reader:
+            problems = itertools.cycle(problems)
+
+            while True:
+                known_line, unknown_line, y = next(problems)
+
+                known = self.read_encoded_line(reader, known_line)
+                unknown = self.read_encoded_line(reader, unknown_line)
+
+                known = known.reshape(1, len(known))
+                unknown = unknown.reshape(1, len(unknown))
+
+                if not self.binary:
+                    y = np.array([1, 0]) if y == 0 else np.array([0, 1])
+                    y = y.reshape(1, 2)
+                else:
+                    y = [y]
+
+                yield [known, unknown], y
 
 
 if __name__ == '__main__':
@@ -279,6 +306,7 @@ if __name__ == '__main__':
         validation_split=0.95,
         char=True,
         batch_size=1,
+        pad=False
     )
 
     print(reader1.authors)

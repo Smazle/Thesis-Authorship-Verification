@@ -33,7 +33,6 @@ parser.add_argument(
     default=50
 )
 
-
 args = parser.parse_args()
 
 featureFile = args.file
