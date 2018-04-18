@@ -128,7 +128,7 @@ class MacomReader(object):
     # file.
     def __init__(self, filepath, batch_size=32, char=True,
                  validation_split=0.8, vocabulary_frequency_cutoff=0.0,
-                 pad=True, binary=False):
+                 pad=True, binary=False, batch_normalization='truncate'):
 
         if validation_split > 1.0 or validation_split < 0.0:
             raise ValueError('validation_split between 0 and 1 required')
@@ -138,9 +138,8 @@ class MacomReader(object):
             raise ValueError('vocabulary_frequency_cutoff between 0 and 1 ' +
                              'required')
 
-        if not pad and batch_size != 1:
-            raise ValueError('Texts have to be padded if batch size is ' +
-                             'different than 1')
+        if batch_normalization != 'truncate':
+            raise ValueError('Only truncate is currently supported.')
 
         # Save parameters.
         self.char = char
@@ -150,6 +149,7 @@ class MacomReader(object):
         self.vocabulary_frequency_cutoff = vocabulary_frequency_cutoff
         self.binary = binary
         self.pad = pad
+        self.batch_normalization = batch_normalization
 
         # Generate representation used to generate training data.
         with LineReader(self.filepath) as linereader:
@@ -158,16 +158,10 @@ class MacomReader(object):
             self.generate_vocabulary_map(linereader)
 
     def generate_training(self):
-        if self.pad:
-            return self.generate(self.training_problems)
-        else:
-            return self.padless_generate(self.training_problems)
+        return self.generate(self.training_problems)
 
     def generate_validation(self):
-        if self.pad:
-            return self.generate(self.validation_problems)
-        else:
-            return self.padless_generate(self.validation_problems)
+        return self.generate(self.validation_problems)
 
     def generate_vocabulary_map(self, linereader):
         for author in self.authors:
@@ -273,6 +267,8 @@ class MacomReader(object):
             return np.array(padded)
 
     # Generate batches of samples.
+    # TODO: Refactor this shit. Way to many if, while, with, for. Indentation
+    # should NOT be that long.
     def generate(self, problems):
         if self.binary:
             label_true = np.array([1])
@@ -284,9 +280,6 @@ class MacomReader(object):
         with LineReader(self.filepath, encoding='utf-8') as reader:
             problems = itertools.cycle(problems)
 
-            X_known = np.zeros((self.batch_size, self.max_len))
-            X_unknown = np.zeros((self.batch_size, self.max_len))
-
             if self.binary:
                 y = np.zeros((self.batch_size, 1))
             else:
@@ -295,43 +288,30 @@ class MacomReader(object):
             while True:
                 batch = itertools.islice(problems, self.batch_size)
 
-                for (i, (line1, line2, label)) in enumerate(batch):
-                    X_known[i] = self.read_encoded_line(reader, line1)
-                    X_unknown[i] = self.read_encoded_line(reader, line2)
+                knowns = []
+                unknowns = []
+
+                for (i, (known, unknown, label)) in enumerate(batch):
+                    knowns.append(self.read_encoded_line(reader, known))
+                    unknowns.append(self.read_encoded_line(reader, unknown))
 
                     if label == 0:
                         y[i] = label_false
                     else:
                         y[i] = label_true
 
+                if self.batch_normalization == 'truncate':
+                    known_truncate_len = min(map(lambda x: x.shape[0], knowns))
+                    unknown_truncate_len = min(map(lambda x: x.shape[0], unknowns))
+
+                    X_known = np.zeros((self.batch_size, known_truncate_len))
+                    X_unknown = np.zeros((self.batch_size, unknown_truncate_len))
+
+                    for i, (known, unknown) in enumerate(zip(knowns, unknowns)):
+                        X_known[i] = knowns[i][0:known_truncate_len]
+                        X_unknown[i] = unknowns[i][0:unknown_truncate_len]
+
                 yield [X_known, X_unknown], y
-
-    def padless_generate(self, problems):
-        if self.binary:
-            label_true = np.array([1])
-            label_false = np.array([0])
-        else:
-            label_true = np.array([0, 1]).reshape(1, 2)
-            label_false = np.array([1, 0]).reshape(1, 2)
-
-        with LineReader(self.filepath, encoding='utf-8') as reader:
-            problems = itertools.cycle(problems)
-
-            while True:
-                known_line, unknown_line, label = next(problems)
-
-                known = self.read_encoded_line(reader, known_line)
-                unknown = self.read_encoded_line(reader, unknown_line)
-
-                known = known.reshape(1, len(known))
-                unknown = unknown.reshape(1, len(unknown))
-
-                if label == 0:
-                    y = label_false
-                else:
-                    y = label_true
-
-                yield [known, unknown], y
 
 
 if __name__ == '__main__':
