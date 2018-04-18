@@ -46,7 +46,8 @@ class FeatureSearch:
                             score = cross_val_score(classifier,
                                                     X[:, currentFeatures],
                                                     y,
-                                                    cv=LeaveOneOut())
+                                                    cv=LeaveOneOut(),
+                                                    n_jobs=-1)
 
                             authorScores.append(np.mean(score))
 
