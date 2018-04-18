@@ -202,12 +202,13 @@ class MacomReader(object):
     def generate_authors(self, linereader):
         for i, line in enumerate(linereader.readlines(skipfirst=True)):
             author, date, text = line.split(';')
+            text = util.clean(text)
 
             if len(text) > 30000:
                 print('WARNING: Skipping text longer than 30,000 characters ' +
                       'on line {}'.format(i + 1))
-            elif len(text) < 200:
-                print('WARNING: Skipping text shorter than 200 characters ' +
+            elif len(text) < 400:
+                print('WARNING: Skipping text shorter than 400 characters ' +
                       'on line {}'.format(i + 1))
             elif author in self.authors:
                 self.authors[author].append(i + 1)
@@ -237,13 +238,13 @@ class MacomReader(object):
         self.training_problems = self.problems[:split_point]
         self.validation_problems = self.problems[split_point:]
 
-    def read_encoded_line(self, linereader, line_n, with_date=False,
-                          skip_lines=10):
+    def read_encoded_line(self, linereader, line_n, with_date=False):
         author, date, text = linereader.readline(line_n).split(';')
         unescaped = util.clean(text)
-        lines = unescaped.split('\n')
-        if len(lines) > skip_lines:
-            unescaped = '\n'.join(lines[skip_lines:])
+        if len(unescaped) > 200:
+            unescaped = unescaped[200:]
+        else:
+            raise Exception("Invalid state")
 
         if not self.char:
             unescaped = util.wordProcess(text)
