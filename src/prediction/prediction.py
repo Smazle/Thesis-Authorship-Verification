@@ -97,8 +97,22 @@ def time_simple(xs):
     return np.array(weights)[sort]
 
 
+# Weight by time in seconds such that the newest text is given the highest
+# weight. The oldest text will have weight 0.
 def time_weighted(xs):
     weights = xs - np.min(xs)
+    weights = weights / np.sum(weights)
+
+    return weights
+
+
+# Weight by time monthly and arbitrarily add one to all of them to give the
+# oldest text another weight than 0.
+def time_weighted_2(xs):
+    seconds_per_month = 2629743
+    xs = xs / seconds_per_month
+
+    weights = xs - np.min(xs) + 1
     weights = weights / np.sum(weights)
 
     return weights
@@ -125,15 +139,21 @@ if __name__ == '__main__':
     )
     parser.add_argument(
         '--theta',
+        nargs='+',
+        help='Thresholds to use.',
+        default=list(np.arange(0.0, 1.0, 0.1))
+    )
+    parser.add_argument(
+        '--theta',
         type=float,
-        help='Threshold to use.',
+        help='',
         default=0.5
     )
     parser.add_argument(
         '--weights',
         type=str,
         help='Which weighting of predictions to use. Should be one of ' +
-             '"uniform", "simple-time" or "advanced-time"',
+             '"uniform", "simple-time", "advanced-time" or "advanced-time-2"',
         default='uniform'
     )
     args = parser.parse_args()
@@ -162,14 +182,21 @@ if __name__ == '__main__':
         weights = time_simple
     elif args.weights == 'advanced-time':
         weights = time_weighted
+    elif args.weights == 'advanced-time-2':
+        weights = time_weighted_2
     else:
         raise Exception('Unknown weights {}'.format(args.weights))
 
     with LineReader(args.datafile) as linereader:
         problems = get_problems(validation_reader, linereader)
-        tps, tns, fps, fns = evaluate(
-            validation_reader, linereader, problems, weights, args.theta)
 
-        print(tps, tns, fps, fns)
-        print("Accuracy", (tps + tns) / (tps + tns + fps + fns))
-        print("Errors", fns / (fns + tns))
+        print('Theta\tTPS\tTNS\tFPS\tFNS\tACC\tERR')
+        for theta in args.theta:
+            tps, tns, fps, fns = evaluate(
+                validation_reader, linereader, problems, weights, theta)
+
+            accuracy = (tps + tns) / (tps + tns + fps + fns)
+            errors = fns / (fns + tns)
+
+            print('{}\t{}\t{}\t{}\t{}\t{}\t{}'.format(
+                theta, tps, tns, fps, fns, accuracy, errors))
