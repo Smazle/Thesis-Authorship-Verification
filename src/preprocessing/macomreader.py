@@ -241,10 +241,13 @@ class MacomReader(object):
         self.training_problems = self.problems[:split_point]
         self.validation_problems = self.problems[split_point:]
 
-    def read_encoded_line(self, linereader, line_n, with_date=False):
+    def read_encoded_line(self, linereader, line_n, with_date=False,
+                          skip_lines=10):
         author, date, text = linereader.readline(line_n).split(';')
         unescaped = util.clean(text)
-        unescaped = '\n'.join(unescaped.split('\n')[10:])
+        lines = unescaped.split('\n')
+        if len(lines) > skip_lines:
+            unescaped = '\n'.join(lines[skip_lines:])
 
         if not self.char:
             unescaped = util.wordProcess(text)
