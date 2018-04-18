@@ -118,6 +118,10 @@ def time_weighted_2(xs):
     return weights
 
 
+def softmax(xs):
+    return np.exp(xs) / float(np.sum(np.exp(xs)))
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description='Use neural network to predict authorship of assignments.'
@@ -153,7 +157,8 @@ if __name__ == '__main__':
         '--weights',
         type=str,
         help='Which weighting of predictions to use. Should be one of ' +
-             '"uniform", "simple-time", "advanced-time" or "advanced-time-2"',
+             '"uniform", "simple-time", "advanced-time", "advanced-time-2"' +
+             ' or "softmax"',
         default='uniform'
     )
     args = parser.parse_args()
@@ -184,6 +189,8 @@ if __name__ == '__main__':
         weights = time_weighted
     elif args.weights == 'advanced-time-2':
         weights = time_weighted_2
+    elif args.weights == 'softmax':
+        weights = softmax
     else:
         raise Exception('Unknown weights {}'.format(args.weights))
 
