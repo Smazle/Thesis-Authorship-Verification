@@ -13,6 +13,7 @@ h5py
 tensorflow
 tensorflow-gpu
 jsonpickle
+pandas
 
 [APT]
 graphviz
