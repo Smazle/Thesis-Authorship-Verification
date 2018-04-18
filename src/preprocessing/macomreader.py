@@ -116,13 +116,19 @@ class MacomReader(object):
     validation_problems = None
 
     # Whether or not to word encode or character.
-    char = True
+    char = None
+
+    # Whether or not to pad the texts with a special value.
+    pad = None
+
+    # Whether to return y as binary or categorical crossentropy.
+    binary = None
 
     # TODO: Take argument specifying whether or not to ignore first line in
     # file.
     def __init__(self, filepath, batch_size=32, char=True,
                  validation_split=0.8, vocabulary_frequency_cutoff=0.0,
-                 pad=True, binary=False):
+                 pad=True, binary=False, batch_normalization='truncate'):
 
         if validation_split > 1.0 or validation_split < 0.0:
             raise ValueError('validation_split between 0 and 1 required')
@@ -132,6 +138,9 @@ class MacomReader(object):
             raise ValueError('vocabulary_frequency_cutoff between 0 and 1 ' +
                              'required')
 
+        if batch_normalization != 'truncate':
+            raise ValueError('Only truncate is currently supported.')
+
         # Save parameters.
         self.char = char
         self.filepath = filepath
@@ -140,6 +149,14 @@ class MacomReader(object):
         self.vocabulary_frequency_cutoff = vocabulary_frequency_cutoff
         self.binary = binary
         self.pad = pad
+        self.batch_normalization = batch_normalization
+
+        if self.binary:
+            self.label_true = np.array([1])
+            self.label_false = np.array([0])
+        else:
+            self.label_true = np.array([0, 1]).reshape(1, 2)
+            self.label_false = np.array([1, 0]).reshape(1, 2)
 
         # Generate representation used to generate training data.
         with LineReader(self.filepath) as linereader:
@@ -148,12 +165,10 @@ class MacomReader(object):
             self.generate_vocabulary_map(linereader)
 
     def generate_training(self):
-        return self.generate(self.training_problems) if \
-            self.pad else self.padless_generate(self.training_problems)
+        return self.generate(self.training_problems)
 
     def generate_validation(self):
-        return self.generate(self.validation_problems) if \
-            self.pad else self.padless_generate(self.validation_problems)
+        return self.generate(self.validation_problems)
 
     def generate_vocabulary_map(self, linereader):
         for author in self.authors:
@@ -206,8 +221,6 @@ class MacomReader(object):
             else:
                 self.authors[author] = [i + 1]
 
-    # TODO: The split into train and validation should happen between authors
-    # and not just specific training instances.
     def generate_problems(self):
 
         for author in self.authors:
@@ -231,10 +244,13 @@ class MacomReader(object):
         self.training_problems = self.problems[:split_point]
         self.validation_problems = self.problems[split_point:]
 
-    def read_encoded_line(self, linereader, line_n, with_date=False):
+    def read_encoded_line(self, linereader, line_n, with_date=False,
+                          skip_lines=10):
         author, date, text = linereader.readline(line_n).split(';')
         unescaped = util.clean(text)
-        unescaped = '\n'.join(unescaped.split('\n')[10:])
+        lines = unescaped.split('\n')
+        if len(lines) > skip_lines:
+            unescaped = '\n'.join(lines[skip_lines:])
 
         if not self.char:
             unescaped = util.wordProcess(text)
@@ -264,40 +280,41 @@ class MacomReader(object):
 
             while True:
                 batch = itertools.islice(problems, self.batch_size)
-
-                X_known = np.zeros((self.batch_size, self.max_len))
-                X_unknown = np.zeros((self.batch_size, self.max_len))
-                y = np.zeros((self.batch_size, 2))
-
-                for (i, (line1, line2, label)) in enumerate(batch):
-                    X_known[i] = self.read_encoded_line(reader, line1)
-                    X_unknown[i] = self.read_encoded_line(reader, line2)
-
-                    if not self.binary:
-                        y = np.array([1, 0]) if y == 0 else np.array([0, 1])
-
+                X_known, X_unknown, y = self.generate_batch(batch, reader)
                 yield [X_known, X_unknown], y
 
-    def padless_generate(self, problems):
-        with LineReader(self.filepath, encoding='utf-8') as reader:
-            problems = itertools.cycle(problems)
+    def generate_batch(self, batch, linereader):
+        knowns = []
+        unknowns = []
 
-            while True:
-                known_line, unknown_line, y = next(problems)
+        if self.binary:
+            y = np.zeros((self.batch_size, 1))
+        else:
+            y = np.zeros((self.batch_size, 2))
 
-                known = self.read_encoded_line(reader, known_line)
-                unknown = self.read_encoded_line(reader, unknown_line)
+        for (i, (known, unknown, label)) in enumerate(batch):
+            knowns.append(self.read_encoded_line(linereader, known))
+            unknowns.append(self.read_encoded_line(linereader, unknown))
 
-                known = known.reshape(1, len(known))
-                unknown = unknown.reshape(1, len(unknown))
+            if label == 0:
+                y[i] = self.label_false
+            else:
+                y[i] = self.label_true
 
-                if not self.binary:
-                    y = np.array([1, 0]) if y == 0 else np.array([0, 1])
-                    y = y.reshape(1, 2)
-                else:
-                    y = [y]
+        if self.batch_normalization == 'truncate':
+            known_truncate_len = min(map(lambda x: x.shape[0], knowns))
+            unknown_truncate_len = min(map(lambda x: x.shape[0], unknowns))
 
-                yield [known, unknown], y
+            X_known = np.zeros((self.batch_size, known_truncate_len))
+            X_unknown = np.zeros((self.batch_size, unknown_truncate_len))
+
+            for i, (known, unknown) in enumerate(zip(knowns, unknowns)):
+                X_known[i] = knowns[i][0:known_truncate_len]
+                X_unknown[i] = unknowns[i][0:unknown_truncate_len]
+        else:
+            raise Exception('should never happen')
+
+        return X_known, X_unknown, y
 
 
 if __name__ == '__main__':
