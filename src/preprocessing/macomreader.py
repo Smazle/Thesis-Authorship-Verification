@@ -116,7 +116,13 @@ class MacomReader(object):
     validation_problems = None
 
     # Whether or not to word encode or character.
-    char = True
+    char = None
+
+    # Whether or not to pad the texts with a special value.
+    pad = None
+
+    # Whether to return y as binary or categorical crossentropy.
+    binary = None
 
     # TODO: Take argument specifying whether or not to ignore first line in
     # file.
