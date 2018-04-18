@@ -138,6 +138,10 @@ class MacomReader(object):
             raise ValueError('vocabulary_frequency_cutoff between 0 and 1 ' +
                              'required')
 
+        if not pad and batch_size != 1:
+            raise ValueError('Texts have to be padded if batch size is ' +
+                             'different than 1')
+
         # Save parameters.
         self.char = char
         self.filepath = filepath
