@@ -40,7 +40,7 @@ def get_problems(macomreader, linereader):
 
 def predict(macomreader, linereader, author_texts, non_author_text, w, theta):
     unknown_text = np.zeros((1, macomreader.max_len), dtype=np.int)
-    unknown_text[0] = reader.read_encoded_line(linereader, non_author_text)
+    unknown_text[0] = macomreader.read_encoded_line(linereader, non_author_text)
     times = np.zeros((len(author_texts)), dtype=np.int)
     predictions = np.zeros((len(author_texts), ), dtype=np.float)
 
@@ -57,8 +57,6 @@ def predict(macomreader, linereader, author_texts, non_author_text, w, theta):
 def evaluate(macomreader, linereader, problems, w, theta):
     tps, tns, fps, fns = 0, 0, 0, 0
     for i, (unknown, knowns, label) in enumerate(problems):
-        print('problem', i, 'label', label)
-
         prediction = predict(
             macomreader, linereader, knowns, unknown, w, theta)
 
@@ -72,9 +70,6 @@ def evaluate(macomreader, linereader, problems, w, theta):
             fps = fps + 1
         else:
             raise Exception('This case should be impossible')
-
-        print('tps,tns,fps,fns')
-        print(tps, tns, fps, fns)
 
     return tps, tns, fps, fns
 
@@ -148,12 +143,6 @@ if __name__ == '__main__':
         default=list(np.arange(0.0, 1.0, 0.1))
     )
     parser.add_argument(
-        '--theta',
-        type=float,
-        help='',
-        default=0.5
-    )
-    parser.add_argument(
         '--weights',
         type=str,
         help='Which weighting of predictions to use. Should be one of ' +
@@ -203,7 +192,10 @@ if __name__ == '__main__':
                 validation_reader, linereader, problems, weights, theta)
 
             accuracy = (tps + tns) / (tps + tns + fps + fns)
-            errors = fns / (fns + tns)
+            if fns + tns == 0:
+                errors = 0
+            else:
+                errors = fns / (fns + tns)
 
             print('{}\t{}\t{}\t{}\t{}\t{}\t{}'.format(
                 theta, tps, tns, fps, fns, accuracy, errors))
