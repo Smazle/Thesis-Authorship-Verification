@@ -234,6 +234,7 @@ class MacomReader(object):
     def read_encoded_line(self, linereader, line_n, with_date=False):
         author, date, text = linereader.readline(line_n).split(';')
         unescaped = util.clean(text)
+        unescaped = '\n'.join(unescaped.split('\n')[10:])
 
         if not self.char:
             unescaped = util.wordProcess(text)
