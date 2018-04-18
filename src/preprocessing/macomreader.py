@@ -310,6 +310,8 @@ class MacomReader(object):
                     for i, (known, unknown) in enumerate(zip(knowns, unknowns)):
                         X_known[i] = knowns[i][0:known_truncate_len]
                         X_unknown[i] = unknowns[i][0:unknown_truncate_len]
+                else:
+                    raise Exception('should never happen')
 
                 yield [X_known, X_unknown], y
 
