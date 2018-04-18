@@ -154,12 +154,16 @@ class MacomReader(object):
             self.generate_vocabulary_map(linereader)
 
     def generate_training(self):
-        return self.generate(self.training_problems) if \
-            self.pad else self.padless_generate(self.training_problems)
+        if self.pad:
+            return self.generate(self.training_problems)
+        else:
+            return self.padless_generate(self.training_problems)
 
     def generate_validation(self):
-        return self.generate(self.validation_problems) if \
-            self.pad else self.padless_generate(self.validation_problems)
+        if self.pad:
+            return self.generate(self.validation_problems)
+        else:
+            return self.padless_generate(self.validation_problems)
 
     def generate_vocabulary_map(self, linereader):
         for author in self.authors:
