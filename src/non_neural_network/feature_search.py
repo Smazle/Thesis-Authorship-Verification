@@ -31,12 +31,8 @@ class FeatureSearch:
                 maxIdx = maxVal = 0
 
                 # Loop over the different features
-                loop = 0
-
                 for feature_idx in range(self.maxFeatureCount):
-                    if (feature_idx / (self.maxFeatureCount / 10)) % 1 == 0.0:
-                        print(10 * loop, '%')
-                        loop += 1
+                    print(feature_idx)
 
                     if feature_idx not in selectedFeatures:
                         currentFeatures = selectedFeatures + [feature_idx]
@@ -62,6 +58,7 @@ class FeatureSearch:
 
                 selectedFeatures += [maxIdx]
                 print('Feature Selected', selectedFeatures)
+                open('Features', 'a').write(str(maxIdx) + ', ')
 
     def __generateData__(self, filePath):
         with open(filePath, 'r') as f:
