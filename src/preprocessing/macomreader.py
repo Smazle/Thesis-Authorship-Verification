@@ -220,8 +220,6 @@ class MacomReader(object):
             else:
                 self.authors[author] = [i + 1]
 
-    # TODO: The split into train and validation should happen between authors
-    # and not just specific training instances.
     def generate_problems(self):
 
         for author in self.authors:
@@ -276,31 +274,51 @@ class MacomReader(object):
 
     # Generate batches of samples.
     def generate(self, problems):
+        if self.binary:
+            label_true = np.array([1])
+            label_false = np.array([0])
+        else:
+            label_true = np.array([0, 1]).reshape(1, 2)
+            label_false = np.array([1, 0]).reshape(1, 2)
+
         with LineReader(self.filepath, encoding='utf-8') as reader:
             problems = itertools.cycle(problems)
 
+            X_known = np.zeros((self.batch_size, self.max_len))
+            X_unknown = np.zeros((self.batch_size, self.max_len))
+
+            if self.binary:
+                y = np.zeros((self.batch_size, 1))
+            else:
+                y = np.zeros((self.batch_size, 2))
+
             while True:
                 batch = itertools.islice(problems, self.batch_size)
-
-                X_known = np.zeros((self.batch_size, self.max_len))
-                X_unknown = np.zeros((self.batch_size, self.max_len))
-                y = np.zeros((self.batch_size, 2))
 
                 for (i, (line1, line2, label)) in enumerate(batch):
                     X_known[i] = self.read_encoded_line(reader, line1)
                     X_unknown[i] = self.read_encoded_line(reader, line2)
 
-                    if not self.binary:
-                        y = np.array([1, 0]) if y == 0 else np.array([0, 1])
+                    if label == 0:
+                        y[i] = label_false
+                    else:
+                        y[i] = label_true
 
                 yield [X_known, X_unknown], y
 
     def padless_generate(self, problems):
+        if self.binary:
+            label_true = np.array([1])
+            label_false = np.array([0])
+        else:
+            label_true = np.array([0, 1]).reshape(1, 2)
+            label_false = np.array([1, 0]).reshape(1, 2)
+
         with LineReader(self.filepath, encoding='utf-8') as reader:
             problems = itertools.cycle(problems)
 
             while True:
-                known_line, unknown_line, y = next(problems)
+                known_line, unknown_line, label = next(problems)
 
                 known = self.read_encoded_line(reader, known_line)
                 unknown = self.read_encoded_line(reader, unknown_line)
@@ -308,11 +326,10 @@ class MacomReader(object):
                 known = known.reshape(1, len(known))
                 unknown = unknown.reshape(1, len(unknown))
 
-                if not self.binary:
-                    y = np.array([1, 0]) if y == 0 else np.array([0, 1])
-                    y = y.reshape(1, 2)
+                if label == 0:
+                    y = label_false
                 else:
-                    y = [y]
+                    y = label_true
 
                 yield [known, unknown], y
 
