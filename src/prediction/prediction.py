@@ -4,6 +4,7 @@ import numpy as np
 from keras.models import load_model
 from ..preprocessing import LineReader, MacomReader
 import argparse
+import itertools
 import jsonpickle
 import random
 
@@ -87,7 +88,7 @@ def time_simple(xs):
         weights = [1.0]
     else:
         weights.append(weights[-1])
-    sort = np.argsort(xs)
+    sort = np.flip(np.argsort(xs), 0)
 
     return np.array(weights)[sort]
 
@@ -113,8 +114,17 @@ def time_weighted_2(xs):
     return weights
 
 
-def softmax(xs):
-    return np.exp(xs) / float(np.sum(np.exp(xs)))
+def get_weight(weight_name):
+    if args.weights == 'uniform':
+        return uniform
+    elif args.weights == 'simple-time':
+        return time_simple
+    elif args.weights == 'advanced-time':
+        return time_weighted
+    elif args.weights == 'advanced-time-2':
+        return time_weighted_2
+    else:
+        raise Exception('Unknown weights {}'.format(args.weights))
 
 
 if __name__ == '__main__':
@@ -144,11 +154,10 @@ if __name__ == '__main__':
     )
     parser.add_argument(
         '--weights',
-        type=str,
+        nargs='+',
         help='Which weighting of predictions to use. Should be one of ' +
-             '"uniform", "simple-time", "advanced-time", "advanced-time-2"' +
-             ' or "softmax"',
-        default='uniform'
+             '"uniform", "simple-time", "advanced-time" or "advanced-time-2"',
+        default=['uniform']
     )
     args = parser.parse_args()
 
@@ -170,26 +179,15 @@ if __name__ == '__main__':
     validation_reader.garbage = reader.garbage
     validation_reader.max_len = reader.max_len
 
-    if args.weights == 'uniform':
-        weights = uniform
-    elif args.weights == 'simple-time':
-        weights = time_simple
-    elif args.weights == 'advanced-time':
-        weights = time_weighted
-    elif args.weights == 'advanced-time-2':
-        weights = time_weighted_2
-    elif args.weights == 'softmax':
-        weights = softmax
-    else:
-        raise Exception('Unknown weights {}'.format(args.weights))
-
     with LineReader(args.datafile) as linereader:
         problems = get_problems(validation_reader, linereader)
 
-        print('Theta\tTPS\tTNS\tFPS\tFNS\tACC\tERR')
-        for theta in args.theta:
+        print('Theta,Weights,TPS,TNS,FPS,FNS,ACC,ERR', end='\r\n')
+        for (theta, weight) in itertools.product(args.theta, args.weights):
+            w = get_weight(weight)
+
             tps, tns, fps, fns = evaluate(
-                validation_reader, linereader, problems, weights, theta)
+                validation_reader, linereader, problems, w, theta)
 
             accuracy = (tps + tns) / (tps + tns + fps + fns)
             if fns + tns == 0:
@@ -197,5 +195,6 @@ if __name__ == '__main__':
             else:
                 errors = fns / (fns + tns)
 
-            print('{}\t{}\t{}\t{}\t{}\t{}\t{}'.format(
-                theta, tps, tns, fps, fns, accuracy, errors))
+            print('{},{},{},{},{},{},{},{}'.format(
+                theta, weight, tps, tns, fps, fns, accuracy, errors),
+                end='\r\n')

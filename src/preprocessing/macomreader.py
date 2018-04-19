@@ -151,6 +151,13 @@ class MacomReader(object):
         self.pad = pad
         self.batch_normalization = batch_normalization
 
+        if self.binary:
+            self.label_true = np.array([1])
+            self.label_false = np.array([0])
+        else:
+            self.label_true = np.array([0, 1]).reshape(1, 2)
+            self.label_false = np.array([1, 0]).reshape(1, 2)
+
         # Generate representation used to generate training data.
         with LineReader(self.filepath) as linereader:
             self.generate_authors(linereader)
@@ -268,53 +275,47 @@ class MacomReader(object):
             return np.array(padded)
 
     # Generate batches of samples.
-    # TODO: Refactor this shit. Way to many if, while, with, for. Indentation
-    # should NOT be that long.
     def generate(self, problems):
-        if self.binary:
-            label_true = np.array([1])
-            label_false = np.array([0])
-        else:
-            label_true = np.array([0, 1]).reshape(1, 2)
-            label_false = np.array([1, 0]).reshape(1, 2)
-
         with LineReader(self.filepath, encoding='utf-8') as reader:
             problems = itertools.cycle(problems)
 
-            if self.binary:
-                y = np.zeros((self.batch_size, 1))
-            else:
-                y = np.zeros((self.batch_size, 2))
-
             while True:
                 batch = itertools.islice(problems, self.batch_size)
-
-                knowns = []
-                unknowns = []
-
-                for (i, (known, unknown, label)) in enumerate(batch):
-                    knowns.append(self.read_encoded_line(reader, known))
-                    unknowns.append(self.read_encoded_line(reader, unknown))
-
-                    if label == 0:
-                        y[i] = label_false
-                    else:
-                        y[i] = label_true
-
-                if self.batch_normalization == 'truncate':
-                    known_truncate_len = min(map(lambda x: x.shape[0], knowns))
-                    unknown_truncate_len = min(map(lambda x: x.shape[0], unknowns))
-
-                    X_known = np.zeros((self.batch_size, known_truncate_len))
-                    X_unknown = np.zeros((self.batch_size, unknown_truncate_len))
-
-                    for i, (known, unknown) in enumerate(zip(knowns, unknowns)):
-                        X_known[i] = knowns[i][0:known_truncate_len]
-                        X_unknown[i] = unknowns[i][0:unknown_truncate_len]
-                else:
-                    raise Exception('should never happen')
-
+                X_known, X_unknown, y = self.generate_batch(batch, reader)
                 yield [X_known, X_unknown], y
+
+    def generate_batch(self, batch, linereader):
+        knowns = []
+        unknowns = []
+
+        if self.binary:
+            y = np.zeros((self.batch_size, 1))
+        else:
+            y = np.zeros((self.batch_size, 2))
+
+        for (i, (known, unknown, label)) in enumerate(batch):
+            knowns.append(self.read_encoded_line(linereader, known))
+            unknowns.append(self.read_encoded_line(linereader, unknown))
+
+            if label == 0:
+                y[i] = self.label_false
+            else:
+                y[i] = self.label_true
+
+        if self.batch_normalization == 'truncate':
+            known_truncate_len = min(map(lambda x: x.shape[0], knowns))
+            unknown_truncate_len = min(map(lambda x: x.shape[0], unknowns))
+
+            X_known = np.zeros((self.batch_size, known_truncate_len))
+            X_unknown = np.zeros((self.batch_size, unknown_truncate_len))
+
+            for i, (known, unknown) in enumerate(zip(knowns, unknowns)):
+                X_known[i] = knowns[i][0:known_truncate_len]
+                X_unknown[i] = unknowns[i][0:unknown_truncate_len]
+        else:
+            raise Exception('should never happen')
+
+        return X_known, X_unknown, y
 
 
 if __name__ == '__main__':
