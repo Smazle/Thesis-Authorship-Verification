@@ -391,17 +391,26 @@ used a Siamese network with convolutions and fully connected network on top for
 image analysis. Our approach is to use convolutions in the Siamese network to
 learn important features from the texts. We also use a fully connected network
 on top of the convolutional layers to learn from the features the convolution
-extracted.
+extracted. An example of this architecture can be seen in figure
 
-The network will take two inputs, a text $t_k \in T(\alpha)$ and a text $t_u \in
-T(\beta)$. The network will then try to figure out whether $\alpha = \beta$.
-The convolutions in the network will look at $n$ characters at a time and give
-an output. Therefore the convolutional layers will be able to learn important
-n-grams and extract a representation of $t_k$ and $t_u$. This representation
-will be given to some dense layers which will learn how to compare the
-featuresets extracted. The Siamese part of the network is the convolutional part
-of the network which will share weights when extracting n-grams from the two
-texts.
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.5]{./pictures/method/Siamese.png}
+\caption{The basic architecture of a Siamese neural network, which takes
+in two sources of data, and runs it through two parallelle networks, sharing
+their weights at each layer}
+\end{figure}
+
+The network will take two inputs, a text $t_k \in T_\alpha$ and a text $t_u
+\in T_\beta$. The network will then try to figure out whether $\alpha =
+\beta$. The convolutions in the network will look at $n$ characters at a
+time and give an output. Therefore the convolutional layers will be able to
+learn important n-grams and extract a representation of $t_k$ and $t_u$. This
+representation will be given to some dense layers which will learn how to
+compare the feature-sets extracted. The Siamese part of the network is the
+convolutional part of the network which will share weights when extracting
+n-grams from the two texts.
 
 The final output of the network will be a probability that $\alpha = \beta$.
 Since the MaCom dataset consist of multiple known texts per author and this
@@ -419,16 +428,16 @@ averaged out.
 \begin{definition}[Prediction System]
 
     Our prediction system is a function $P(f, w, \alpha, t_{unkown}, \theta)
-    \rightarrow \{0, 1\}$ where $F$ is a function taking two texts and giving
-    the probability that the texts are written by the same author, $\alpha$ is
-    an author that has written the texts $T_{\alpha}$, $t_{known}$ is a text
-    of unknown authorship, $w$ is a function taking a text and giving a number
-    between 0 and 1 where $\sum_{t_{known} \in T_\alpha} w(t_{known}) = 1$ and
-    $\theta \in [0;1]$ is a threshold. The prediction system then returns,
+    \in \{0, 1\}$ where $f$ is a function taking two texts and giving the
+    probability that the texts are written by the same author, $\alpha$ is an
+    author, $t_{unknown}$ is a text of unknown authorship, $w$ is a function
+    $w:T_\alpha \rightarrow [0,1]$ where $\sum_{t_{known} \in T_\alpha}
+    w(t_{known}) = 1$ and $\theta \in [0,1]$. The prediction system then
+    returns,
 
     \begin{equation}
         P(f, w, \alpha, t_{unkown}, \theta) = \begin{cases}
-            1 & \text{if } \sum_{t_{known} \in T_\alpha} w(t_k) f(t_{known}, t_{unkown}) > \theta \\
+            1 & \text{if } \sum_{t_{known} \in T_\alpha} w(t_{known}) f(t_{known}, t_{unkown}) > \theta \\
             0 & \text{otherwise}.
         \end{cases}
     \end{equation}
