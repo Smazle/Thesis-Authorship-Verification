@@ -182,7 +182,7 @@ neurons compute a weighted sum of its inputs and applies an activation function
 $h$ to the weighted sum. The weights are called $w_i$. The function each neuron
 computes is then,
 
-\begin{equation}
+\begin{equation}\label{eq:neuron}
     z_i = h\left(
         \sum_{i = 1}^d w_ix_i + w_0
     \right).
@@ -207,7 +207,28 @@ which are continuously repeated:
 \end{enumerate}
 
 The goal of these three steps is to minimize the overall cost of the network.
-The cost in this case, refers to the loss we end up with. In order to that
+The cost in this case, refers to the loss we end up with. In order to do so,
+all we have to to do i step in the direction of the negative gradient as this
+points to where the minimum cost can be found. In order to do so however, we
+have to know the gradient of the cost function, in other words we need to find
+the derivative. For us to do this, we have consider the cost function and the
+network for what it is, a series of functions taking as an argument the result
+of a previous function, and a weight, as per the equation \ref{eq:neuron}. This
+process from goes back all the way from the cost function to the initial input.
+As such, we have to make use of the chain rule in order to have a chance of
+computing the gradient of out loss function.
+
+\begin{definition}[Chain Rule]
+    
+    If functions \textbf{f} and \textbf{g} er both differentiable and
+    \textbf{F} is the composite function defined by $F(x) = f(g(x))$,
+    where $F' = f'(g(x)) \cdot g(x)$,
+
+\end{definition}
+
+
+
+In order to that
 the network makes use of the gradient to optimize each of the individual
 weights. Step 1, feeding forward, is simply a pass through the \gls{NN}. 
 When this is done with singular training sample, we end up with a final 
