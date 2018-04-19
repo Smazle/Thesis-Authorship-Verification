@@ -9,7 +9,7 @@ import sys
 
 
 # Make sure we can hold all files in csv file memory.
-csv.field_size_limit(sys.maxsize)
+csv.field_size_limit(2147483647)
 
 # Set random state for reproducible results.
 random.seed = 7
