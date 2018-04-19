@@ -15,51 +15,58 @@ class FeatureSearch:
         self.minFeatureCount = minFeatureCount
         self.authorLimit = authorLimit
 
-    def fit(self, dataFile):
-        self.__generateData__(dataFile)
+    def fit(self, dataFile, outfile):
         print('Starting Feature Search')
+        self.__generateData__(dataFile)
+        with open(outfile, 'w') as f:
+            for feature in self.feature_generator():
+                print('Feature Selected', selectedFeatures)
+                f.write(str(feature) + ', ')
 
-        # Loop over supplied classifers
+    def feature_generator(self,):
+
+        # Loop over supplied classifiers.
         for classifier in self.classifiers:
 
-            # Initialize selected features
+            # Initialize selected features.
             selectedFeatures = []
 
-            # Loop over the minimum amount of features we want
+            # Loop over the minimum amount of features we want.
             for count in range(self.minFeatureCount):
 
                 maxIdx = maxVal = 0
 
-                # Loop over the different features
+                # Loop over the different features.
                 for feature_idx in range(self.maxFeatureCount):
                     print(feature_idx)
 
                     if feature_idx not in selectedFeatures:
                         currentFeatures = selectedFeatures + [feature_idx]
 
-                        # For each feature determine the average
-                        # score per author
-                        authorScores = []
-                        for author in np.unique(self.authors):
-                            X, y = self.__generateAuthorData__(author)
-
-                            score = cross_val_score(classifier,
-                                                    X[:, currentFeatures],
-                                                    y,
-                                                    cv=LeaveOneOut(),
-                                                    n_jobs=-1)
-
-                            authorScores.append(np.mean(score))
+                        score = self.__evaluate_classifier__(
+                            classifier, currentFeatures)
 
                         # If the average over all authors for that features is
                         # is better, replace the former max value/idx
-                        if np.mean(authorScores) > maxVal:
+                        if score > maxVal:
                             maxIdx = feature_idx
-                            maxVal = np.mean(authorScores)
+                            maxVal = score
 
                 selectedFeatures += [maxIdx]
-                print('Feature Selected', selectedFeatures)
-                open('Features', 'a').write(str(maxIdx) + ', ')
+                yield maxIdx
+
+    # Get the average score per author for the current features.
+    def __evaluate_classifier__(self, classifier, features):
+        authorScores = []
+        for author in np.unique(self.authors):
+            X, y = self.__generateAuthorData__(author)
+
+            score = cross_val_score(
+                classifier, X[:, features], y, cv=LeaveOneOut(), n_jobs=-1)
+
+            authorScores.append(np.mean(score))
+
+        return np.mean(authorScores)
 
     def __generateData__(self, filePath):
         with open(filePath, 'r') as f:

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from feature_search import FeatureSearch
+from .feature_search import FeatureSearch
 from sklearn.neighbors import KNeighborsClassifier
 import argparse
 import numpy as np
@@ -11,10 +11,15 @@ parser = argparse.ArgumentParser(
 )
 
 parser.add_argument(
-    'file',
+    'datafile',
     type=str,
     help='Path to feature file',
-    default=''
+)
+
+parser.add_argument(
+    'outfile',
+    type=str,
+    help='Path to file to write features in.'
 )
 
 parser.add_argument(
@@ -36,4 +41,4 @@ args = parser.parse_args()
 
 knn = KNeighborsClassifier(n_jobs=-1)
 search = FeatureSearch([knn], args.features, args.authors)
-search.fit(args.file)
+search.fit(args.datafile, args.outfile)

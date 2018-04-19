@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from feature_search import FeatureSearch
+from .feature_search import FeatureSearch
 from sklearn.svm import SVC
 import argparse
 import numpy as np
@@ -11,10 +11,15 @@ parser = argparse.ArgumentParser(
 )
 
 parser.add_argument(
-    'file',
+    'datafile',
     type=str,
     help='Path to feature file',
-    default=''
+)
+
+parser.add_argument(
+    'outfile',
+    type=str,
+    help='Path to file to save features in.'
 )
 
 parser.add_argument(
@@ -36,4 +41,4 @@ args = parser.parse_args()
 
 svm = SVC()
 search = FeatureSearch([svm], args.features, args.authors)
-search.fit(args.file)
+search.fit(args.datafile, args.outfile)
