@@ -34,6 +34,6 @@ parser.add_argument(
 
 args = parser.parse_args()
 
-knn = KNeighborsClassifier(n_jobs=-1)
+knn = KNeighborsClassifier(3, n_jobs=-1)
 search = FeatureSearch([knn], args.features, args.authors)
 search.fit(args.file)

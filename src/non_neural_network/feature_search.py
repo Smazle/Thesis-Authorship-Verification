@@ -2,6 +2,7 @@
 from sklearn.model_selection import cross_val_score, LeaveOneOut
 import numpy as np
 import pandas as pd
+import time
 
 
 class FeatureSearch:
@@ -41,15 +42,16 @@ class FeatureSearch:
                         # score per author
                         authorScores = []
                         for author in np.unique(self.authors):
+                            t = time.time()
                             X, y = self.__generateAuthorData__(author)
 
                             score = cross_val_score(classifier,
                                                     X[:, currentFeatures],
                                                     y,
-                                                    cv=LeaveOneOut(),
-                                                    n_jobs=-1)
+                                                    cv=3)
 
                             authorScores.append(np.mean(score))
+                            print(np.mean(score), time.time() - t)
 
                         # If the average over all authors for that features is
                         # is better, replace the former max value/idx
