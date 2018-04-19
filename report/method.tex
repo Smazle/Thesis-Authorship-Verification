@@ -390,12 +390,66 @@ different layers.
             \end{pmatrix}.
         \end{equation}
 
-        The weights the convolutional window uses are learnable and is updated
-        via gradient descent. Certain convolutional filters can be used for edge
-        detection and blurring the input. The sliding length can be different
-        than one and is usually referred to as stride.
+        The sliding length can be different than one and is usually referred to
+        as stride. The weights the convolutional window uses are learnable and
+        is updated via gradient descent. Certain convolutional filters can be
+        used for edge detection and blurring the input. Some examples of
+        different convolutional kernels applied to a grayscale image are shown
+        in Figure \ref{fig:convolution_example}.
+
+        \begin{figure}
+            \centering
+            \textbf{Examples of different convolutional kernels}\par\medskip
+            \begin{tabular}{ccc}
+                \textbf{Original} & \textbf{Kernel} & \textbf{Result} \\
+                \includegraphics[width=0.3\textwidth]{./pictures/method/original_convolution.png} &
+                \begin{minipage}{6cm}
+                    \begin{equation*}
+                        \begin{pmatrix}
+                            1 & 0 & -1 \\
+                            0 & 0 & 0  \\
+                            -1 & 0 & 1
+                        \end{pmatrix}
+                    \end{equation*}
+                \end{minipage}
+                    &
+                \includegraphics[width=0.3\textwidth]{./pictures/method/edge_detect_convolution.png} \\
+
+                \includegraphics[width=0.3\textwidth]{./pictures/method/original_convolution.png} &
+                \begin{minipage}{6cm}
+                    \begin{equation*}
+                        \frac{1}{16}\begin{pmatrix}
+                            1 & 2 & 1 \\
+                            2 & 4 & 2  \\
+                            1 & 2 & 1
+                        \end{pmatrix}
+                    \end{equation*}
+                \end{minipage}
+                    &
+                \includegraphics[width=0.3\textwidth]{./pictures/method/blurred_convolution.png} \\
+
+                \includegraphics[width=0.3\textwidth]{./pictures/method/original_convolution.png} &
+                \begin{minipage}{6cm}
+                    \begin{equation*}
+                        \begin{pmatrix}
+                            0  & -1 & 0  \\
+                            -1 & 5  & -1 \\
+                            0  & -1 & 0
+                        \end{pmatrix}
+                    \end{equation*}
+                \end{minipage}
+                    &
+                \includegraphics[width=0.3\textwidth]{./pictures/method/sharpened_convolution.png}
+            \end{tabular}
+            \caption{Examples of convolutional kernels applied to an image. The
+                first kernel is an edge detect kernel, the second a blurring
+                kernel and the third a sharpening kernel.}
+            \label{fig:convolution_example}
+        \end{figure}
 
         % TODO: Show image of different convolutions.
+        % TODO: Show example from text.
+        % TODO: Maybe also explain different filters here.
 
     \item[\gls{LSTM} Layer:] TODO
     \item[\gls{GRU} Layer:] TODO
