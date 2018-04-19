@@ -15,7 +15,7 @@ def main(args, training_inp=None, test_inp=None, features=None):
     # Import data ([features...], truth, author).
 
     trainingRun = training_inp is not None
-    
+
     if test_inp is None:
         test_inp = np.loadtxt(
             args.file, dtype=str, delimiter=' ', skiprows=1)
@@ -52,7 +52,7 @@ def main(args, training_inp=None, test_inp=None, features=None):
         enumeration = list(enumerate(training_authors))
 
         # Find texts written by that author
-        own = list(filter(lambda x: x[1] == author,enumeration))
+        own = list(filter(lambda x: x[1] == author, enumeration))
         own = [x[0] for x in own]
         if trainingRun:
             del own[own.index(i)]

@@ -88,7 +88,7 @@ def time_simple(xs):
         weights = [1.0]
     else:
         weights.append(weights[-1])
-    sort = np.argsort(xs)
+    sort = np.flip(np.argsort(xs), 0)
 
     return np.array(weights)[sort]
 
@@ -114,10 +114,6 @@ def time_weighted_2(xs):
     return weights
 
 
-def softmax(xs):
-    return np.exp(xs) / float(np.sum(np.exp(xs)))
-
-
 def get_weight(weight_name):
     if args.weights == 'uniform':
         return uniform
@@ -127,8 +123,6 @@ def get_weight(weight_name):
         return time_weighted
     elif args.weights == 'advanced-time-2':
         return time_weighted_2
-    elif args.weights == 'softmax':
-        return softmax
     else:
         raise Exception('Unknown weights {}'.format(args.weights))
 
@@ -162,8 +156,7 @@ if __name__ == '__main__':
         '--weights',
         nargs='+',
         help='Which weighting of predictions to use. Should be one of ' +
-             '"uniform", "simple-time", "advanced-time", "advanced-time-2"' +
-             ' or "softmax"',
+             '"uniform", "simple-time", "advanced-time" or "advanced-time-2"',
         default=['uniform']
     )
     args = parser.parse_args()
