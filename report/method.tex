@@ -196,20 +196,20 @@ basis. With this, the increase in research of usages of \gls{BP} increased the
 following decades. As the computational power increased several 1000 folds in
 the 90's and 2000's, so did the practical usage of \gls{BP}, and \gls{NN} in
 general\cite{Schmidhuber:2015}. The real life application of \gls{BP}, will be
-described in section \ref{sec:BP}
+described in Section \ref{sec:BP}
 
 Like with the history of authorship attribution, research in this area of
-science picked up more interest, as we entered the modern computational age,
-and with the introduction of the \gls{CNN}. \gls{CNN}s bases themselves on
-the early work described in \cite{TJP:TJP19681951215}. They showed that cats
-and monkeys visual cortexes contain a set of neurons, each individually
-responding to a receptive field, or area, of their field of view. Neighboring
-receptive fields all have a certain amount of overlap, however in the end
-a cohesive view is created. This is what paved the way for neocognition in
-1980\cite{Fukushima1980}, the basis of \gls{CNN}'s, which works in a very
-similar manner, looking at overlapping subsections of data. These convolutional
-neurons however were rarely used alone, but together with a down-sampling neuron
-such as Max Pooling introduced in 1993.\cite{Schmidhuber:2015}
+science picked up more interest, as we entered the modern computational age, and
+with the introduction of the \gls{CNN}. \gls{CNN}s are based on the early work
+described in \cite{TJP:TJP19681951215}. They showed that cats and monkeys visual
+cortexes contain a set of neurons, each individually responding to a receptive
+field, or area, of their field of view. Neighboring receptive fields all have a
+certain amount of overlap, however in the end a cohesive view is created. This
+is what paved the way for neocognition in 1980\cite{Fukushima1980}, the basis
+of \gls{CNN}'s, which works in a very similar manner, looking at overlapping
+subsections of data. These convolutional neurons however were rarely used alone,
+but together with a down-sampling neuron such as Max Pooling introduced in
+1993.\cite{Schmidhuber:2015}
 
 \subsubsection{Neurons}\label{sec:neurons}
 
@@ -232,6 +232,29 @@ a certain desired behavior, more details regarding these specific layers will
 be explained in later chapters.
 The training of a \gls{NN} consists of changing the weights applied at each
 neuron, with the goal of modeling the relationships present in the data.
+
+\subsubsection{Layers}
+
+\gls{NN}'s are organized in layers. The first layer is called the input layer
+and is connected directly to the input to the model and the last layer is called
+the output layer and gives the output of the model. All layers in between are
+called hidden layers. The input layer could for example be a layer of neurons
+where each neuron is connected to a pixel in an input image. And the output
+layer could consist of a single neuron that computes the probability that the
+picture contained a cat. An example layered \gls{NN} are shown in Figure
+\ref{fig:example_nn}.
+
+\begin{figure}
+    \centering
+    \textbf{Example Neural Network}\par\medskip
+    \includegraphics[width=\textwidth]{./pictures/method/example_neural_network.png}
+    \caption{Example neural network that illustrates how neurons are organized
+        into different layers with a special input layer and a special output
+        layer. The neurons in the input layer are connected to individual pixels
+        in an input image and the output layer is a single neuron computing the
+        probability that the image contains a cat.}
+    \label{fig:example_nn}
+\end{figure}
 
 \subsubsection{TODO: Backpropagation}\label{sec:BP}
 
