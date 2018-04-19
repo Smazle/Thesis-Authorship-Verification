@@ -32,13 +32,13 @@ parser.add_argument(
 
 parser.add_argument(
     '--authors',
-    type=int,
+    type=float,
     help='Number of unique authors to use',
-    default=100
+    default=.5
 )
 
 args = parser.parse_args()
 
 svm = SVC()
-search = FeatureSearch(svm, args.features, args.authors)
+search = FeatureSearch(svm, args.features, args.authors, normalize=False)
 search.fit(args.datafile, args.outfile)
