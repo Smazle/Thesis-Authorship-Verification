@@ -121,6 +121,45 @@ $$
 $$
 Our goal is also to keep this value under a certain threshold specified by MaCom.
 
+
+\subsection{Baseline Methods}
+
+In order to gauge the efficiency of our deep learning approaches, we have chosen
+to implement some baseline methods. These methods were picked based on their
+performance in a previous project written by us \cite{US}. Albeit that project
+was only concerned with English texts provided by the \cite{pan:2015}, and
+\cite{pan:2014} text forensics tasks, we hypothesize that the performance of
+these approaches will perform just as well on Danish texts when being tuned for
+the Danish language.
+
+
+\subsubsection{Extended Delta Method}
+
+One of the best performing methods of \cite{US} was the extended delta method.
+As the name suggests the method extends the already existing delta method
+described by \cite{evert2015towards}. The normal delta methods consists of first
+extracting word frequencies from all texts and using these as the describing
+features. After doing this to the entire sample space of texts, and applying a
+linear transformation to their respective feature-sets, \gls{KNN} is then used
+to determine the author of the introduced texts based on its closest neighbors
+in the word-frequency feature-space. The extended delta method, simply expands
+on the set of possible features to pick from, rather than being limited to only
+using the word-frequencies of the text.
+
+
+\subsubsection{Author Specific SVM}
+
+Another algorithm used in \cite{US}. Heavily inspired by \cite{hansen2014}
+starts out by fetching all texts known to be written by a specific author and an
+equal number of texts known not to be written by that same author. It is upon
+the feature-set extracted from these texts that a \gls{SVM} is trained, allowing
+it to learn the specific author's writing style from the known texts supplied
+and in contrast what the writing style of someone not him is. When a new text,
+with disputed authorship is presented the hope is that the trained \gls{SVM}
+will be able to determine if the author it was trained on, is in fact the author
+of this new text as well.
+
+
 \subsection{Deep Learning}
 
 In this paper we will approach the authorship verification/attribution problem
@@ -336,46 +375,7 @@ probability of each class in a classification problem.
     \label{fig:softmax_activation}
 \end{figure}
 
-
-\subsection{Baseline Methods}
-
-In order to gauge the efficiency of our deep learning approaches, we have chosen
-to implement some baseline methods. These methods were picked based on their
-performance in a previous project written by us \cite{US}. Albeit that project
-was only concerned with English texts provided by the \cite{pan:2015}, and
-\cite{pan:2014} text forensics tasks, we hypothesize that the performance of
-these approaches will perform just as well on Danish texts when being tuned for
-the Danish language.
-
-
-\subsubsection{Extended Delta Method}
-
-One of the best performing methods of \cite{US} was the extended delta method.
-As the name suggests the method extends the already existing delta method
-described by \cite{evert2015towards}. The normal delta methods consists of first
-extracting word frequencies from all texts and using these as the describing
-features. After doing this to the entire sample space of texts, and applying a
-linear transformation to their respective feature-sets, \gls{KNN} is then used
-to determine the author of the introduced texts based on its closest neighbors
-in the word-frequency feature-space. The extended delta method, simply expands
-on the set of possible features to pick from, rather than being limited to only
-using the word-frequencies of the text.
-
-
-\subsubsection{Author Specific SVM}
-
-Another algorithm used in \cite{US}. Heavily inspired by \cite{hansen2014}
-starts out by fetching all texts known to be written by a specific author and an
-equal number of texts known not to be written by that same author. It is upon
-the feature-set extracted from these texts that a \gls{SVM} is trained, allowing
-it to learn the specific author's writing style from the known texts supplied
-and in contrast what the writing style of someone not him is. When a new text,
-with disputed authorship is presented the hope is that the trained \gls{SVM}
-will be able to determine if the author it was trained on, is in fact the author
-of this new text as well.
-
-
-\subsection{Siamese Networks}
+\subsubsection{Siamese Networks}
 
 Classical machine learning approaches for text analysis and all our baseline
 methods are based on handcrafted feature sets. Deep learning has shown
@@ -417,7 +417,7 @@ Since the MaCom dataset consist of multiple known texts per author and this
 network architecture only compares two texts we define a separate system for
 making the final prediction.
 
-\subsubsection{Prediction System}
+\subsection{Prediction System}
 
 In the MaCom problem we are given a set of texts for each author so we can make
 use of multiple texts when making our predictions. We can also use metadata
