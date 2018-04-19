@@ -38,13 +38,14 @@ class FeatureSearch:
 
                 # Loop over the different features.
                 for feature_idx in range(self.maxFeatureCount):
-                    print(feature_idx)
 
                     if feature_idx not in selectedFeatures:
                         currentFeatures = selectedFeatures + [feature_idx]
 
                         score = self.__evaluate_classifier__(
                             classifier, currentFeatures)
+
+                        print(feature_idx, score)
 
                         # If the average over all authors for that features is
                         # is better, replace the former max value/idx
