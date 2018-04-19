@@ -267,10 +267,138 @@ different layers.
         previous layers neurons and applies an activation function. The weights
         for each of the neurons in the layer is different allowing each neuron
         to learn a different combination of the previous layer.
-    \item[Convolutional Layer:] TODO
+    \item[Convolutional Layer:] A convolutional layer is mainly used to extract
+        position independent features from data. The convolution consist of a
+        sliding window that slides over some input data and gives an output for
+        each possible position of the input image. The sliding window use the
+        same weights in all the input and will therefore extract the same
+        features from different locations if it is presented with the same
+        input. The convolution computes a single output for each window
+        position. The output is computed as the sum of the elementwise
+        multiplication of the sliding window and the current part of the input
+        it is looking at. Lets for example consider a two dimensional input,
+
+        \begin{equation}
+            I = \begin{pmatrix}
+                1 & 1 & 1 & 0 \\
+                1 & 0 & 0 & 1 \\
+                0 & 1 & 0 & 1 \\
+                0 & 0 & 1 & 0
+            \end{pmatrix},
+        \end{equation}
+
+        and the convolutional filter,
+
+        \begin{equation}
+            w = \begin{pmatrix}
+                1 & 0 & 0 \\
+                1 & 0 & 0 \\
+                0 & 1 & 0 \\
+            \end{pmatrix}.
+        \end{equation}
+
+        Then we start the sliding window in the top left corner and compute the
+        elementwise product of the matrices,
+
+        \begin{equation}
+            X = I_{1-3,1-3} \circ w =
+            \begin{pmatrix}
+                1 & 1 & 1 \\
+                1 & 0 & 0 \\
+                0 & 1 & 0
+            \end{pmatrix} \circ
+            \begin{pmatrix}
+                1 & 0 & 0 \\
+                1 & 0 & 0 \\
+                0 & 1 & 0
+            \end{pmatrix} =
+            \begin{pmatrix}
+                1 & 0 & 0 \\
+                1 & 0 & 0 \\
+                0 & 1 & 0
+            \end{pmatrix},
+        \end{equation}
+
+        to then compute the final value we take the sum of all the elements in
+        that matrix.
+
+        \begin{equation}
+            \sum_{i,j} X_{i,j} = 1 + 0 + 0 + 1 + 0 + 0 + 0 + 1 + 0 = 3.
+        \end{equation}
+
+        We then slide the window one to the right and repeat the same process,
+
+        \begin{equation}
+            X = I_{2-4,1-3} \circ w =
+            \begin{pmatrix}
+                1 & 1 & 0 \\
+                0 & 0 & 1 \\
+                1 & 0 & 1
+            \end{pmatrix} \circ
+            \begin{pmatrix}
+                1 & 0 & 0 \\
+                1 & 0 & 0 \\
+                0 & 1 & 0
+            \end{pmatrix} =
+            \begin{pmatrix}
+                1 & 0 & 0 \\
+                0 & 0 & 0 \\
+                0 & 0 & 0
+            \end{pmatrix},
+        \end{equation}
+
+        and the final value,
+
+        \begin{equation}
+            \sum_{i,j} X_{i,j} = 1.
+        \end{equation}
+
+        We keep sliding the window right until we run out of input. After that
+        we go back to the left and go one row down. We continue the process for
+        all the input and we end up with the matrix,
+
+        \begin{equation}
+            O = \begin{pmatrix}
+                \sum_{i,j} \left( I_{1-3,1-3} \right)_{i,j} &
+                \sum_{i,j} \left( I_{2-4,1-3} \right)_{i,j} \\
+                \sum_{i,j} \left( I_{1-3,2-3} \right)_{i,j} &
+                \sum_{i,j} \left( I_{2-4,2-3} \right)_{i,j}
+            \end{pmatrix} = \begin{pmatrix}
+                3 & 1 \\
+                1 & 2
+            \end{pmatrix}.
+        \end{equation}
+
+        It can be seen that the output size is smaller than the input size.
+        To prevent that the input can be padded with some value. A normal choice
+        is zero padding. For the above input that would result in,
+
+        \begin{equation}
+            \begin{pmatrix}
+                1 & 1 & 1 & 0 \\
+                1 & 0 & 0 & 1 \\
+                0 & 1 & 0 & 1 \\
+                0 & 0 & 1 & 0
+            \end{pmatrix} \xrightarrow{\text{zero padding}}
+            \begin{pmatrix}
+                0 & 0 & 0 & 0 & 0 & 0 \\
+                0 & 1 & 1 & 1 & 0 & 0 \\
+                0 & 1 & 0 & 0 & 1 & 0 \\
+                0 & 0 & 1 & 0 & 1 & 0 \\
+                0 & 0 & 0 & 1 & 0 & 0 \\
+                0 & 0 & 0 & 0 & 0 & 0
+            \end{pmatrix}.
+        \end{equation}
+
+        The weights the convolutional window uses are learnable and is updated
+        via gradient descent. Certain convolutional filters can be used for edge
+        detection and blurring the input. The sliding length can be different
+        than one and is usually referred to a stride.
+
     \item[\gls{LSTM} Layer:] TODO
     \item[\gls{GRU} Layer:] TODO
     \item[Embedding:] TODO
+    \item[Max Pooling Layer:] TODO.
 \end{description}
 
 \subsubsection{TODO: Backpropagation}\label{sec:BP}
