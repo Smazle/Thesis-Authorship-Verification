@@ -30,6 +30,7 @@ class FeatureSearch:
 
             # Initialize selected features.
             selectedFeatures = []
+            missingFeatures = list(range(self.maxFeatureCount))
 
             # Loop over the minimum amount of features we want.
             for count in range(self.minFeatureCount):
@@ -37,23 +38,22 @@ class FeatureSearch:
                 maxIdx = maxVal = 0
 
                 # Loop over the different features.
-                for feature_idx in range(self.maxFeatureCount):
+                for feature_idx in missingFeatures:
+                    currentFeatures = selectedFeatures + [feature_idx]
 
-                    if feature_idx not in selectedFeatures:
-                        currentFeatures = selectedFeatures + [feature_idx]
+                    score = self.__evaluate_classifier__(
+                        classifier, currentFeatures)
 
-                        score = self.__evaluate_classifier__(
-                            classifier, currentFeatures)
+                    print(feature_idx, score)
 
-                        print(feature_idx, score)
+                    # If the average over all authors for that features is is
+                    # better, replace the former max value/idx.
+                    if score > maxVal:
+                        maxIdx = feature_idx
+                        maxVal = score
 
-                        # If the average over all authors for that features is
-                        # is better, replace the former max value/idx
-                        if score > maxVal:
-                            maxIdx = feature_idx
-                            maxVal = score
-
-                selectedFeatures += [maxIdx]
+                selectedFeatures.append(maxIdx)
+                missingFeatures.remove(maxIdx)
                 yield maxIdx
 
     # Get the average score per author for the current features.
