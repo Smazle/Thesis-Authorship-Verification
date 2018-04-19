@@ -15,6 +15,8 @@ class FeatureSearch:
         self.minFeatureCount = minFeatureCount
         self.authorLimit = authorLimit
 
+    # TODO: The outfile format is very poor if more than 1 classifier is given.
+    # We should probably write a line per classifier or something like that.
     def fit(self, dataFile, outfile):
         print('Starting Feature Search')
         self.__generateData__(dataFile)
@@ -23,7 +25,7 @@ class FeatureSearch:
                 print('Feature Selected', selectedFeatures)
                 f.write(str(feature) + ', ')
 
-    def feature_generator(self,):
+    def feature_generator(self):
 
         # Loop over supplied classifiers.
         for classifier in self.classifiers:
