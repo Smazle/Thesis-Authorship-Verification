@@ -243,23 +243,23 @@ set as the feature set used in the Extended Delta Method but without limiting
 the number of texts per authors. The search are performed on only 100 random
 authors in the set as it otherwise takes to long. The feature search is done
 with fixed SVM hyperparameters which we tune afterwards. The hyperparameters
-used during the search was $C = 100$ and $\gamma = 1000$. The feature search
-surprisingly found only 6 features before no features could improve the
-result further. The specific features were the character-2-gram " -", the
-character-3-gram ", o", the character-4-gram ", at", the character-4-gram ",
-so", the character-6-gram ", der " and the word-1-gram "giver". Most of the
-features seem to look at what authors are writing immediately following commas.
-We found the optimal hyper parameters for the SVM by splitting the dataset
-in two parts. 80\% of the authors went in the training part and 20\% of the
-authors went in the validation part. Then for each author in the training
-dataset we varied $C \in (10^{-2}, 10^0, \dots, 10^{10})$ and $\gamma \in
-(10^{-9}, 10^{-7}, \dots, 10^3)$ and evaluated an SVM using the algorithm in
-Figure \ref{fig:svm_evaluation_algorithm} with the fixed feature set for each
-combination of hyperparameters. After that we took a majority vote between the
-authors chosen hyperparameters and chose that as the final hyperparameters. The
-final hyperparameters were $C = 100$ and $\gamma = 1000$. We then evaluated our
-chosen parameters both feature set and hyperparameters on the validation set. We
-obtained an accuracy of 0.62980.
+used during the search was $C = 100$ and $\gamma = 1000$, and using the default
+rbg kernel. The feature search surprisingly found only 6 features before no
+features could improve the result further. The specific features were the
+character-2-gram " -", the character-3-gram ", o", the character-4-gram ", at",
+the character-4-gram ", so", the character-6-gram ", der " and the word-1-gram
+"giver". Most of the features seem to look at what authors are writing
+immediately following commas. We found the optimal hyper parameters for the SVM
+by splitting the dataset in two parts. 80\% of the authors went in the training
+part and 20\% of the authors went in the validation part. Then for each author
+in the training dataset we varied $C \in (10^{-2}, 10^0, \dots, 10^{10})$ and
+$\gamma \in (10^{-9}, 10^{-7}, \dots, 10^3)$ and evaluated an SVM using the
+algorithm in Figure \ref{fig:svm_evaluation_algorithm} with the fixed feature
+set for each combination of hyperparameters. After that we took a majority
+vote between the authors chosen hyperparameters and chose that as the final
+hyperparameters. The final hyperparameters were $C = 100$ and $\gamma = 1000$.
+We then evaluated our chosen parameters both feature set and hyperparameters on
+the validation set. We obtained an accuracy of 0.62980.
 
 Since we were surprised that only 6 features were used we also tried to take a
 feature set of the 50 most frequent features in each category. We again ran the
@@ -271,7 +271,7 @@ doing a structured search.
 TODO: Try using all features.
 
 
-\subsection{Siamese Networks}
+\subsection{Deep Learning}
 
 The main attraction of our authorship verification task, is the implementation
 and testing of different \gls{NN}. In the following sections we will go through
@@ -280,27 +280,139 @@ different layers used can be seen in figure \ref{glossary}. Throughout out
 experiments, we used a 0.5 threshold for classification.
 
 \begin{landscape}
-\begin{table}[]
-\centering
-\caption{Glossary used when performing experiments, and creating their associated models.\cite{chollet2015keras}}
-\label{glossary}
-\begin{tabular}{|c|c|l|}
-\hline
-\textbf{Layer}     & \textbf{Description}                                                                                                                                                                        & \multicolumn{1}{c|}{\textbf{Actively Used Parameters}}                                                                                                                                                                                                                                                                                         \\ \hline
-Input        & \begin{tabular}[c]{@{}c@{}}Serves as the entrypoint of the network, \\ by receiving a set of texts and feeding it trough the network.\end{tabular}                                          & \textbf{Shape} - The shape of each sample give to the input.                                                                                                                                                                                                                                                                                            \\ \hline
-Embedding          & \begin{tabular}[c]{@{}c@{}}Taking in an encoded sample, \\ it produces a dense vector representation for that text.\end{tabular}                                                            & \begin{tabular}[c]{@{}l@{}}\textbf{Input Dim} - Size of vocabulary.\\\textbf{Output Dim} - Size of vector used to represent embedding.\end{tabular}                                                                                                                                                                                                             \\ \hline
-Convolutional      & \begin{tabular}[c]{@{}c@{}}Applies convulution to the data it \\ recieves according to the decription, \\ found in section *TODO:Section Reference*\end{tabular}                            & \begin{tabular}[c]{@{}l@{}}\textbf{Filters} - Dimensionality of the output, \\ ie. number of filter from the convolution. \\ \textbf{Kernel Size} - Integer or list describing \\ size of convolution window.\\ \textbf{Strides} - Stride length of the \\ convolutional window.\\ \textbf{Activation} The activation function to be \\ applied after the convolution.\end{tabular} \\ \hline
-Global Max Pooling & \begin{tabular}[c]{@{}c@{}}Extracts the maximum value \\ from each of the provided data\end{tabular}                                                                                        & Has no parameters.                                                                                                                                                                                                                                                                                                                             \\ \hline
-Concatenation      & \begin{tabular}[c]{@{}c@{}}As the name suggests, this layers simply \\ concatenates the data it receives from different layers\end{tabular}                                                 & Has no parameters.                                                                                                                                                                                                                                                                                                                             \\ \hline
-Merge              & \begin{tabular}[c]{@{}c@{}}Merges its inputs, \\ using a specified function to generate a single output.\end{tabular}                                                                       & \textbf{Function} - The function used to merge the recieved data.                                                                                                                                                                                                                                                                                       \\ \hline
-Dense              & \begin{tabular}[c]{@{}c@{}}A simple fully connected layer, \\ taking in data and applying \\ the function described in section \ref{sec:neurons}\end{tabular}                               & \begin{tabular}[c]{@{}l@{}}\textbf{Units} - Number of neurons in in the layer.\\ \textbf{Activation} - The activation function to be applied.\end{tabular}                                                                                                                                                                                                       \\ \hline
-Dropout            & \begin{tabular}[c]{@{}c@{}}Drop a fraction it receives, \\ with the goal of preventing overfitting.\end{tabular}                                                                            & \textbf{Rate} -The fraction of data it receives dropped.                                                                                                                                                                                                                                                                                                \\ \hline
-Lambda             & Applies a specified function to the input it receives                                                                                                                                       & \textbf{Function} - The function applied.                                                                                                                                                                                                                                                                                                               \\ \hline
-Reshape            & Reshapes the data it receives                                                                                                                                                               & \textbf{Dim} - Dimensionality to reshape to.                                                                                                                                                                                                                                                                                                            \\ \hline
-GRU                & \begin{tabular}[c]{@{}c@{}}A gated recurrent unit is applied to the data \\ according to the description \\ found in *TODO: Section Reference*\end{tabular}                                 & \textbf{Unit} - Number of neurons in the layer.                                                                                                                                                                                                                                                                                                        \\ \hline
-LSTM               & \begin{tabular}[c]{@{}c@{}}A Long Short-Term Memory layer, \\ which works according to the description in \\ section *TODO: Section Reference" is applied \\ to the given data\end{tabular} & \textbf{Unit} - Number of neurons in the layer.                                                                                                                                                                                                                                                                                                        \\ \hline
-\end{tabular}
-\end{table}
+    \begin{table}
+        \centering
+        \caption{Glossary used when performing experiments, and creating their
+            associated models.\cite{chollet2015keras}}
+        \label{glossary}
+        \begin{tabular}{|L{3cm}|L{9cm}|L{11cm}|}
+            \hline
+            % TODO: Should center header.
+            \textbf{Layer}                                                     &
+            \textbf{Description}                                               &
+            \textbf{Actively Used Parameters}                                 \\
+            \hline
+
+            Input                                                              &
+            Serves as the entrypoint of the network, by receiving a set of
+            texts and feeding it trough the network.                           &
+            \begin{minipage}[t]{\linewidth}
+            \begin{compactdesc}
+                \item[Shape] The dimensions of each sample give to the input.
+            \end{compactdesc}
+            \end{minipage}                                                    \\
+            \hline
+
+            Embedding                                                          &
+            Taking in an encoded sample, it produces a dense vector
+            representation for each different. More details can be found in
+            Section \ref{subsubsec:layers}.                                    &
+            \begin{minipage}[t]{\linewidth}
+            \begin{compactdesc}
+                \item[Input Dim] Size of vocabulary.
+                \item[Output Dim] Size of vector used to represent embedding.
+            \end{compactdesc}
+            \end{minipage}                                                    \\
+            \hline
+
+            Convolutional                                                      &
+            Applies convolution to the data it recieves according to the
+            decription, found in Section \ref{subsubsec:layers}.               &
+            \begin{minipage}[t]{\linewidth}
+            \begin{compactdesc}
+                \item[Filters] Dimensionality of the output, ie. number of
+                    filter from the convolution.
+                \item[Kernel Size] Integer or list describing size of
+                    convolution window.
+                \item[Strides] Stride length of the convolutional window.
+                \item[Activation] The activation function to be applied after
+                    the convolution.
+            \end{compactdesc}
+            \end{minipage}                                                    \\
+            \hline
+
+            Global Max Pooling                                                 &
+            Extracts the maximum value from each of the provided data          &
+            No parameters.                                                    \\
+            \hline
+
+            Concatenation                                                      &
+            As the name suggests, this layers simply concatenates the data it
+            receives from different layers                                     &
+            No parameters.                                                    \\
+            \hline
+
+            Merge                                                              &
+            Merges its inputs, using a specified function to generate a single
+            output.                                                            &
+            \begin{minipage}[t]{\linewidth}
+            \begin{compactdesc}
+                \item[Function] The function used to merge the recieved data.
+            \end{compactdesc}
+            \end{minipage}                                                    \\
+            \hline
+
+            Dense                                                              &
+            A simple fully connected layer, taking in data and applying the
+            function described in Section \ref{sec:neurons}.                   &
+            \begin{minipage}[t]{\linewidth}
+            \begin{compactdesc}
+                \item[Units] Number of neurons in in the layer.
+                \item[Activation] The activation function to be applied.
+            \end{compactdesc}
+            \end{minipage}                                                    \\
+            \hline
+
+            Dropout                                                            &
+            Drops a fraction it receives, with the goal of preventing
+            overfitting.                                                       &
+            \begin{minipage}[t]{\linewidth}
+            \begin{compactdesc}
+                \item[Rate] The fraction of data it receives dropped.
+            \end{compactdesc}
+            \end{minipage}                                                    \\
+            \hline
+
+            Lambda                                                             &
+            Applies a specified function to the input it receives              &
+            \begin{minipage}[t]{\linewidth}
+            \begin{compactdesc}
+                \item[Function] The function applied.
+            \end{compactdesc}
+            \end{minipage}                                                    \\
+            \hline
+
+            Reshape                                                            &
+            Reshapes the data it receives.                                     &
+            \begin{minipage}[t]{\linewidth}
+            \begin{compactdesc}
+                \item[Dim] Dimensionality to reshape to.
+            \end{compactdesc}
+            \end{minipage}                                                    \\
+            \hline
+
+            GRU                                                                &
+            A gated recurrent unit is applied to the data according to the
+            description found in \ref{subsubsec:layers}.                       &
+            \begin{minipage}[t]{\linewidth}
+            \begin{compactdesc}
+                \item[Unit] Number of neurons in the layer.
+            \end{compactdesc}
+            \end{minipage}                                                    \\
+            \hline
+
+            LSTM                                                               &
+            A Long Short-Term Memory layer, which works according to the
+            description in Section \ref{subsubsec:layers} is applied to the
+            given data.                                                        &
+            \begin{minipage}[t]{\linewidth}
+            \begin{compactdesc}
+                \item[Unit] Number of neurons in the layer.
+            \end{compactdesc}
+            \end{minipage}                                                    \\
+            \hline
+        \end{tabular}
+    \end{table}
 \end{landscape}
 
 \subsubsection{Siamese Neural Network - Iteration 1}
@@ -448,7 +560,7 @@ previous network. We have shown the structure of the third network in Figure
 
 \begin{figure}
     \centering
-    \includegraphics[width=\textwidth]{./pictures/experiments/network3.png}
+    \includegraphics[width=\textwidth]{./pictures/experiments/network3/network3.png}
     \caption{Illustrate the structure of our third Siamese Neural Network.
         Weights are shared by the embedding layers and the convolutional
         layers.}
@@ -571,246 +683,6 @@ since we don't have any actual ghost writers. However a ghost writer would write
 the correct class of the student on their submission. Therefore we don't want
 the network to learn that particular feature.
 
-\begin{table}
-    \centering
-    \textbf{Convolutional Filter 1 of Size 8}\par\medskip
-    \begin{tabular}{c|cc}
-        & \textbf{Filter Max String} & \textbf{Filter Max Value} \\ \hline
-        \textbf{Text 13}  & \verb{', så at '{  & 44.41869 \\
-        \textbf{Text 49}  & \verb{'2 se at '{  & 42.97375 \\
-        \textbf{Text 29}  & \verb{'omas at '{  & 42.86139 \\
-        \textbf{Text 21}  & \verb{'n nå at '{  & 42.27350 \\
-        \textbf{Text 48}  & \verb{'r så at '{  & 41.95458 \\
-        \textbf{Text 20}  & \verb{', nu et '{  & 41.92461 \\
-        \textbf{Text 26}  & \verb{'t se at '{  & 41.03944 \\
-        \textbf{Text 17}  & \verb{'m af at '{  & 40.85154 \\
-        \textbf{Text 10}  & \verb{'mene at '{  & 40.75563 \\
-        \textbf{Text 16}  & \verb{'mene at '{  & 40.75563 \\
-        \textbf{Text 27}  & \verb{' bar at '{  & 40.46385 \\
-        \textbf{Text 6}   & \verb{'r os at '{  & 40.32341 \\
-        \textbf{Text 42}  & \verb{' tid at '{  & 39.77865 \\
-        \textbf{Text 30}  & \verb{'også at '{  & 39.58638 \\
-        \textbf{Text 36}  & \verb{'også at '{  & 39.58638 \\
-        \textbf{Text 40}  & \verb{'r nu et '{  & 39.46050 \\
-        \textbf{Text 9}   & \verb{'n af at '{  & 39.40045 \\
-        \textbf{Text 32}  & \verb{'n af at '{  & 39.40045 \\
-        \textbf{Text 41}  & \verb{'n af at '{  & 39.40045 \\
-        \textbf{Text 46}  & \verb{'n af at '{  & 39.40045 \\
-        \textbf{Text 1}   & \verb{'ådan at '{  & 39.32121 \\
-        \textbf{Text 12}  & \verb{', er et '{  & 39.25355 \\
-        \textbf{Text 43}  & \verb{', er et '{  & 39.25355 \\
-        \textbf{Text 14}  & \verb{'ldes at '{  & 38.98859 \\
-        \textbf{Text 24}  & \verb{'rlag at '{  & 38.83994 \\
-        \textbf{Text 15}  & \verb{'g af at '{  & 38.72359 \\
-        \textbf{Text 38}  & \verb{'” er at '{  & 38.71601 \\
-        \textbf{Text 33}  & \verb{'n på at '{  & 38.57942 \\
-        \textbf{Text 18}  & \verb{'t er at '{  & 38.56930 \\
-        \textbf{Text 34}  & \verb{'r på at '{  & 38.48225 \\
-        \textbf{Text 45}  & \verb{'r på at '{  & 38.48225 \\
-        \textbf{Text 4}   & \verb{'vder at '{  & 38.43643 \\
-        \textbf{Text 5}   & \verb{'vder at '{  & 38.43643 \\
-        \textbf{Text 3}   & \verb{'r vi at '{  & 38.40871 \\
-        \textbf{Text 19}  & \verb{'yder at '{  & 38.40115 \\
-        \textbf{Text 25}  & \verb{'yder at '{  & 38.40115 \\
-        \textbf{Text 37}  & \verb{'nder at '{  & 38.37101 \\
-        \textbf{Text 11}  & \verb{'ømme at '{  & 38.25414 \\
-        \textbf{Text 39}  & \verb{'s af at '{  & 38.21890 \\
-        \textbf{Text 23}  & \verb{' var at '{  & 38.07627 \\
-        \textbf{Text 7}   & \verb{'sted at '{  & 37.97903 \\
-        \textbf{Text 47}  & \verb{'fter at '{  & 37.91461 \\
-        \textbf{Text 28}  & \verb{'gter at '{  & 37.87117 \\
-        \textbf{Text 8}   & \verb{'d af at '{  & 37.70177 \\
-        \textbf{Text 35}  & \verb{' til at '{  & 37.03082 \\
-        \textbf{Text 44}  & \verb{' til at '{  & 37.03082 \\
-        \textbf{Text 22}  & \verb{'n er et '{  & 36.88660 \\
-        \textbf{Text 2}   & \verb{' dag i t'{  & 26.28683 \\
-        \textbf{Text 31}  & \verb{'· Frank\n'{ & 21.83477
-    \end{tabular}
-    \caption{The most important part of the first 50 texts according to
-        convolutional filter 1 of size 8. Sorted by the importance score.}
-    \label{fig:features_convolution_8_1}
-\end{table}
-
-\begin{table}
-    \centering
-    \textbf{Convolutional Filter 5 of Size 8}\par\medskip
-    \begin{tabular}{c|cc}
-        & \textbf{Filter Max String} & \textbf{Filter Max Value} \\ \hline
-        \textbf{Text 3} & \verb{' meget k'{ & 18.73260 \\
-        \textbf{Text 10} & \verb{' meget k'{ & 18.73260 \\
-        \textbf{Text 13} & \verb{' meget k'{ & 18.73260 \\
-        \textbf{Text 15} & \verb{' meget k'{ & 18.73260 \\
-        \textbf{Text 21} & \verb{' meget k'{ & 18.73260 \\
-        \textbf{Text 24} & \verb{' meget k'{ & 18.73260 \\
-        \textbf{Text 29} & \verb{' meget k'{ & 18.73260 \\
-        \textbf{Text 32} & \verb{' meget k'{ & 18.73260 \\
-        \textbf{Text 33} & \verb{' meget k'{ & 18.73260 \\
-        \textbf{Text 9} & \verb{' meget g'{ & 18.71884 \\
-        \textbf{Text 20} & \verb{' meget g'{ & 18.71884 \\
-        \textbf{Text 26} & \verb{' meget g'{ & 18.71884 \\
-        \textbf{Text 17} & \verb{' meget s'{ & 18.39024 \\
-        \textbf{Text 22} & \verb{' meget s'{ & 18.39024 \\
-        \textbf{Text 23} & \verb{' meget s'{ & 18.39024 \\
-        \textbf{Text 27} & \verb{' meget s'{ & 18.39024 \\
-        \textbf{Text 28} & \verb{' meget s'{ & 18.39024 \\
-        \textbf{Text 30} & \verb{' meget s'{ & 18.39024 \\
-        \textbf{Text 42} & \verb{' meget s'{ & 18.39024 \\
-        \textbf{Text 46} & \verb{' meget s'{ & 18.39024 \\
-        \textbf{Text 47} & \verb{' meget s'{ & 18.39024 \\
-        \textbf{Text 36} & \verb{' benytte'{ & 18.37530 \\
-        \textbf{Text 37} & \verb{' benytte'{ & 18.37530 \\
-        \textbf{Text 40} & \verb{' benytte'{ & 18.37530 \\
-        \textbf{Text 8} & \verb{' meget n'{ & 17.72581 \\
-        \textbf{Text 16} & \verb{' meget n'{ & 17.72581 \\
-        \textbf{Text 14} & \verb{' kendt s'{ & 17.69235 \\
-        \textbf{Text 18} & \verb{' kendt s'{ & 17.69235 \\
-        \textbf{Text 7} & \verb{' meget i'{ & 17.64814 \\
-        \textbf{Text 25} & \verb{' taget g'{ & 17.53552 \\
-        \textbf{Text 1} & \verb{' blidt k'{ & 17.45398 \\
-        \textbf{Text 5} & \verb{'rkendt s'{ & 17.40653 \\
-        \textbf{Text 12} & \verb{' meget r'{ & 17.39020 \\
-        \textbf{Text 4} & \verb{' taget s'{ & 17.20692 \\
-        \textbf{Text 48} & \verb{' faldt i'{ & 17.18553 \\
-        \textbf{Text 44} & \verb{'åkaldt k'{ & 16.80688 \\
-        \textbf{Text 38} & \verb{'rne om k'{ & 16.71076 \\
-        \textbf{Text 49} & \verb{' Blod,fr'{ & 16.50881 \\
-        \textbf{Text 39} & \verb{' stolthe'{ & 16.18284 \\
-        \textbf{Text 34} & \verb{'vilket k'{ & 16.07917 \\
-        \textbf{Text 43} & \verb{'vilket k'{ & 16.07917 \\
-        \textbf{Text 41} & \verb{'vilket g'{ & 16.06541 \\
-        \textbf{Text 45} & \verb{' herefte'{ & 15.82326 \\
-        \textbf{Text 35} & \verb{'-oprette'{ & 15.73831 \\
-        \textbf{Text 31} & \verb{'rndommen'{ & 15.38827 \\
-        \textbf{Text 6} & \verb{' sendt i'{ & 15.38613 \\
-        \textbf{Text 11} & \verb{'’opret n'{ & 15.11496 \\
-        \textbf{Text 19} & \verb{'rne om f'{ & 14.34204 \\
-        \textbf{Text 2} & \verb{' betydni'{ & 13.36254 \\
-    \end{tabular}
-    \caption{The most important part of the first 50 texts according to
-        convolutional filter 5 of size 8. Sorted by the importance score.}
-    \label{fig:features_convolution_8_5}
-\end{table}
-
-\begin{table}
-    \centering
-    \textbf{Convolutional Filter 100 of Size 8}\par\medskip
-    \begin{tabular}{c|cc}
-        & \textbf{Filter Max String} & \textbf{Filter Max Value} \\ \hline
-        \textbf{Text 20} & \verb{', at De '{ & 14.06486 \\
-        \textbf{Text 3} & \verb{', at de '{ & 13.97819 \\
-        \textbf{Text 5} & \verb{', at de '{ & 13.97819 \\
-        \textbf{Text 21} & \verb{', at de '{ & 13.97819 \\
-        \textbf{Text 24} & \verb{', at de '{ & 13.97819 \\
-        \textbf{Text 25} & \verb{', at de '{ & 13.97819 \\
-        \textbf{Text 40} & \verb{'– \nFælle'{ & 13.60728 \\
-        \textbf{Text 27} & \verb{', at der'{ & 13.18669 \\
-        \textbf{Text 32} & \verb{', at der'{ & 13.18669 \\
-        \textbf{Text 43} & \verb{', at der'{ & 13.18669 \\
-        \textbf{Text 39} & \verb{'– ”hele '{ & 12.20550 \\
-        \textbf{Text 1} & \verb{', klædt '{ & 12.14879 \\
-        \textbf{Text 10} & \verb{', havde '{ & 11.90384 \\
-        \textbf{Text 11} & \verb{', havde '{ & 11.90384 \\
-        \textbf{Text 16} & \verb{', burde '{ & 11.81674 \\
-        \textbf{Text 13} & \verb{', at vi '{ & 11.33311 \\
-        \textbf{Text 23} & \verb{', at vi '{ & 11.33311 \\
-        \textbf{Text 30} & \verb{', at vi '{ & 11.33311 \\
-        \textbf{Text 19} & \verb{'– Sorte '{ & 11.28722 \\
-        \textbf{Text 29} & \verb{'– altid '{ & 11.25181 \\
-        \textbf{Text 6} & \verb{', hf og '{ & 11.11696 \\
-        \textbf{Text 17} & \verb{', Fauli '{ & 10.95995 \\
-        \textbf{Text 4} & \verb{', IB og '{ & 10.94379 \\
-        \textbf{Text 33} & \verb{', og de '{ & 10.79599 \\
-        \textbf{Text 35} & \verb{', og de '{ & 10.79599 \\
-        \textbf{Text 48} & \verb{', og de '{ & 10.79599 \\
-        \textbf{Text 26} & \verb{', EF og '{ & 10.68619 \\
-        \textbf{Text 22} & \verb{'– eller '{ & 10.67318 \\
-        \textbf{Text 38} & \verb{'– eller '{ & 10.67318 \\
-        \textbf{Text 15} & \verb{', da de '{ & 10.57667 \\
-        \textbf{Text 9} & \verb{', fordi '{ & 10.42775 \\
-        \textbf{Text 12} & \verb{', fordi '{ & 10.42775 \\
-        \textbf{Text 18} & \verb{', grund;'{ & 10.22946 \\
-        \textbf{Text 8} & \verb{'n at de '{ & 10.03539 \\
-        \textbf{Text 34} & \verb{', at jo '{ & 10.00943 \\
-        \textbf{Text 46} & \verb{'øget og '{ & 9.95325 \\
-        \textbf{Text 28} & \verb{'– en opl'{ & 9.85135 \\
-        \textbf{Text 7} & \verb{'\n\n\nLader'{ & 9.81295 \\
-        \textbf{Text 37} & \verb{', da der'{ & 9.78517 \\
-        \textbf{Text 41} & \verb{'\n\n\nHele '{ & 9.64712 \\
-        \textbf{Text 49} & \verb{'\n\n\nHele '{ & 9.64712 \\
-        \textbf{Text 47} & \verb{', impres'{ & 9.57604 \\
-        \textbf{Text 14} & \verb{'ørte en '{ & 9.50064 \\
-        \textbf{Text 44} & \verb{', Fædrel'{ & 9.32844 \\
-        \textbf{Text 42} & \verb{', at jor'{ & 9.21792 \\
-        \textbf{Text 45} & \verb{'\n\n\n\nDet '{ & 8.97469 \\
-        \textbf{Text 36} & \verb{', og dyr'{ & 8.87270 \\
-        \textbf{Text 2} & \verb{'8/11-201'{ & 6.90774 \\
-        \textbf{Text 31} & \verb{'\n· Indle'{ & 6.84124 \\
-    \end{tabular}
-    \caption{The most important part of the first 50 texts according to
-        convolutional filter 100 of size 8. Sorted by the importance score.}
-    \label{fig:features_convolution_8_100}
-\end{table}
-
-\begin{table}
-    \centering
-    \textbf{Convolutional Filter 100 of Size 4}\par\medskip
-    \begin{tabular}{c|cc}
-        & \textbf{Filter Max String} & \textbf{Filter Max Value} \\ \hline
-        \textbf{Text 26} & \verb{'2.b\n'{ & 21.85127 \\
-        \textbf{Text 21} & \verb{'2.b '{ & 21.71681 \\
-        \textbf{Text 11} & \verb{'1.p\n'{ & 21.67560 \\
-        \textbf{Text 12} & \verb{'1.p\n'{ & 21.67560 \\
-        \textbf{Text 13} & \verb{'1.p\n'{ & 21.67560 \\
-        \textbf{Text 10} & \verb{'1.p '{ & 21.54113 \\
-        \textbf{Text 30} & \verb{'3.b\n'{ & 21.24523 \\
-        \textbf{Text 39} & \verb{'3.b\n'{ & 21.24523 \\
-        \textbf{Text 22} & \verb{'3.b '{ & 21.11076 \\
-        \textbf{Text 24} & \verb{'3.b '{ & 21.11076 \\
-        \textbf{Text 25} & \verb{'3.b '{ & 21.11076 \\
-        \textbf{Text 7} & \verb{'2.q\n'{ & 20.94562 \\
-        \textbf{Text 8} & \verb{'2.q\n'{ & 20.94562 \\
-        \textbf{Text 9} & \verb{'2.q\n'{ & 20.94562 \\
-        \textbf{Text 14} & \verb{'2.P '{ & 20.86743 \\
-        \textbf{Text 15} & \verb{'2.P '{ & 20.86743 \\
-        \textbf{Text 16} & \verb{'2.P '{ & 20.86743 \\
-        \textbf{Text 43} & \verb{'2.p '{ & 20.84712 \\
-        \textbf{Text 45} & \verb{'2.p '{ & 20.84712 \\
-        \textbf{Text 46} & \verb{'2.p '{ & 20.84712 \\
-        \textbf{Text 49} & \verb{' 2p,'{ & 20.06150 \\
-        \textbf{Text 23} & \verb{',.Ha'{ & 19.09561 \\
-        \textbf{Text 20} & \verb{' IB\n'{ & 18.18488 \\
-        \textbf{Text 29} & \verb{' IB\n'{ & 18.18488 \\
-        \textbf{Text 4} & \verb{' IB '{ & 18.05041 \\
-        \textbf{Text 32} & \verb{' IB '{ & 18.05041 \\
-        \textbf{Text 41} & \verb{' Ib '{ & 17.40574 \\
-        \textbf{Text 35} & \verb{' 1_ '{ & 17.25548 \\
-        \textbf{Text 47} & \verb{'2.pD'{ & 16.93160 \\
-        \textbf{Text 40} & \verb{'· H.'{ & 15.78107 \\
-        \textbf{Text 3} & \verb{', i '{ & 15.21258 \\
-        \textbf{Text 17} & \verb{', i '{ & 15.21258 \\
-        \textbf{Text 19} & \verb{', i '{ & 15.21258 \\
-        \textbf{Text 34} & \verb{', i '{ & 15.21258 \\
-        \textbf{Text 36} & \verb{', i '{ & 15.21258 \\
-        \textbf{Text 37} & \verb{', i '{ & 15.21258 \\
-        \textbf{Text 38} & \verb{', i '{ & 15.21258 \\
-        \textbf{Text 6} & \verb{' be '{ & 14.94927 \\
-        \textbf{Text 5} & \verb{'12\n\n'{ & 14.85548 \\
-        \textbf{Text 48} & \verb{'2.\n\n'{ & 14.70277 \\
-        \textbf{Text 18} & \verb{' ”J.'{ & 14.01408 \\
-        \textbf{Text 1} & \verb{'11\n\n'{ & 14.00959 \\
-        \textbf{Text 33} & \verb{', Ho'{ & 13.92996 \\
-        \textbf{Text 42} & \verb{'2 i '{ & 13.92952 \\
-        \textbf{Text 27} & \verb{'10\n\n'{ & 12.84199 \\
-        \textbf{Text 28} & \verb{'10\n\n'{ & 12.84199 \\
-        \textbf{Text 2} & \verb{' 28/'{ & 12.32219 \\
-        \textbf{Text 44} & \verb{' et '{ & 11.57521 \\
-        \textbf{Text 31} & \verb{'· Br'{ & 10.81910 \\
-    \end{tabular}
-    \caption{The most important part of the first 50 texts according to
-        convolutional filter 100 of size 4. Sorted by the importance score.}
-    \label{fig:features_convolution_4_100}
-\end{table}
-
 Our main problem is that the networks keep using metadata from the texts to
 make the predictions. The metadata will always match even though a ghost writer
 has written the assignment. It is probably not possible for us to remove all
@@ -848,25 +720,32 @@ start using some kind of average.
 The problems in the previous network were mainly due to the use of a global
 max pool. That allowed our networks to look at the presence of certain strings
 in texts. Our fifth iteration therefore does not include any global max pools.
-Furthermore the network is a \gls{RNN}. We used the same basic architecture
-as before. Two texts are presented to the network at a time and features
-are extracted from the texts by a Siamese Network. The features are then
-compared using a normal dense network. In this iteration we used a combination
-of convolutions and \gls{RNN}'s to extract the features. The input is as
-usual encoded in an embedding layer. The embedding layer is followed by a
-convolutional layer of size 8 and stride 1. The idea is that the convolutional
-layer can look at 8 characters at a time and learn features from that. After the
-convolutional layer we have a max pool with pool size 8. That is mainly to save
-computation power as the size of the texts are reduced to $\frac{1}{8}$ of the
-original size. After the max pool we have a \gls{LSTM} layer with 100 output
-neurons. The \gls{LSTM} layer loops through the output from the convolution and
-max pool and extracts 100 features from it. Now we have 100 features from each
-of the input texts. As earlier we combine the features with the elementwise
-absolute difference. On top of that Siamese part of the network we compare the
-features extracted with a classic dense network. The network has a single layer
-with 500 neurons and activated by the \gls{ReLu} activation function. Lastly we
-have a dropout layer with 30\% dropout and the output layer with a softmax as
-before. We have shown the network in Figure \ref{fig:network5}.
+Furthermore the network is an \gls{RNN}. We used an \gls{RNN} since they are
+very good at sequence processing \cite{DBLP:series/sci/2012-385}. A text can
+be viewed as a sequence where each character is a different timestep in the
+sequence. We took inspiration from \cite{DBLP:journals/corr/RuderGB16c} who
+used an \gls{RNN} for authorship verification. However instead of representing
+the text as a sequence of sentences we represent it as a sequence of characters
+and instead of using the output of each timestep we only used the last output
+of the \gls{RNN}. We used the same basic architecture as before. Two texts are
+presented to the network at the same time and features are extracted from the
+texts by a Siamese Network. The features are then compared using a normal dense
+network. In this iteration we used a combination of convolutions and \gls{RNN}'s
+to extract the features. The input is as usual encoded in an embedding layer.
+The embedding layer is followed by a convolutional layer of size 8 and stride
+1. The idea is that the convolutional layer can look at 8 characters at a time
+and learn features from that. After the convolutional layer we have a max pool
+with pool size 8. That is mainly to save computation power as the size of the
+texts are reduced to $\frac{1}{8}$ of the original size. After the max pool we
+have a \gls{LSTM} layer with 100 output neurons. The \gls{LSTM} layer loops
+through the output from the convolution and max pool and extracts 100 features
+from it. Now we have 100 features from each of the input texts. As earlier we
+combine the features with the elementwise absolute difference. On top of that
+Siamese part of the network we compare the features extracted with a classic
+dense network. The network has a single layer with 500 neurons and activated by
+the \gls{ReLu} activation function. Lastly we have a dropout layer with 30\%
+dropout and the output layer with a softmax as before. We have shown the network
+in Figure \ref{fig:network5}.
 
 \begin{figure}
     \centering
@@ -878,9 +757,19 @@ before. We have shown the network in Figure \ref{fig:network5}.
     \label{fig:network5}
 \end{figure}
 
-We have no actual results for the network. The training time is very slow. It
-has run for 3 epochs and rise about 5\% in accuracy each epoch. When we last
-looked at it it was at 71\% validation accuracy.
+The network reached an accuracy of 0.89393 in epoch 18. The training and
+validation accuracies are shown in Figure \ref{fig:network5_accuracies}. At the
+end of the training the network suddenly goes from about 90\% accuracy and back
+to 50\% accuracy. A reason for that happening could be that the optimizer
+overshot a target and therefore ended up with a worse result.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\textwidth]{./pictures/experiments/network_5_accuracies.png}
+    \caption{Shows the training and validation accuracies over the epochs of
+        training on the fourth iteration of network of iteration 5.}
+    \label{fig:network_5_accuracies}
+\end{figure}
 
 
 TODO:

@@ -121,6 +121,45 @@ $$
 $$
 Our goal is also to keep this value under a certain threshold specified by MaCom.
 
+
+\subsection{Baseline Methods}
+
+In order to gauge the efficiency of our deep learning approaches, we have chosen
+to implement some baseline methods. These methods were picked based on their
+performance in a previous project written by us \cite{US}. Albeit that project
+was only concerned with English texts provided by the \cite{pan:2015}, and
+\cite{pan:2014} text forensics tasks, we hypothesize that the performance of
+these approaches will perform just as well on Danish texts when being tuned for
+the Danish language.
+
+
+\subsubsection{Extended Delta Method}
+
+One of the best performing methods of \cite{US} was the extended delta method.
+As the name suggests the method extends the already existing delta method
+described by \cite{evert2015towards}. The normal delta methods consists of first
+extracting word frequencies from all texts and using these as the describing
+features. After doing this to the entire sample space of texts, and applying a
+linear transformation to their respective feature-sets, \gls{KNN} is then used
+to determine the author of the introduced texts based on its closest neighbors
+in the word-frequency feature-space. The extended delta method, simply expands
+on the set of possible features to pick from, rather than being limited to only
+using the word-frequencies of the text.
+
+
+\subsubsection{Author Specific SVM}
+
+Another algorithm used in \cite{US}. Heavily inspired by \cite{hansen2014}
+starts out by fetching all texts known to be written by a specific author and an
+equal number of texts known not to be written by that same author. It is upon
+the feature-set extracted from these texts that a \gls{SVM} is trained, allowing
+it to learn the specific author's writing style from the known texts supplied
+and in contrast what the writing style of someone not him is. When a new text,
+with disputed authorship is presented the hope is that the trained \gls{SVM}
+will be able to determine if the author it was trained on, is in fact the author
+of this new text as well.
+
+
 \subsection{Deep Learning}
 
 In this paper we will approach the authorship verification/attribution problem
@@ -157,20 +196,20 @@ basis. With this, the increase in research of usages of \gls{BP} increased the
 following decades. As the computational power increased several 1000 folds in
 the 90's and 2000's, so did the practical usage of \gls{BP}, and \gls{NN} in
 general\cite{Schmidhuber:2015}. The real life application of \gls{BP}, will be
-described in section \ref{sec:BP}
+described in Section \ref{sec:BP}
 
 Like with the history of authorship attribution, research in this area of
-science picked up more interest, as we entered the modern computational age,
-and with the introduction of the \gls{CNN}. \gls{CNN}s bases themselves on
-the early work described in \cite{TJP:TJP19681951215}. They showed that cats
-and monkeys visual cortexes contain a set of neurons, each individually
-responding to a receptive field, or area, of their field of view. Neighboring
-receptive fields all have a certain amount of overlap, however in the end
-a cohesive view is created. This is what paved the way for neocognition in
-1980\cite{Fukushima1980}, the basis of \gls{CNN}'s, which works in a very
-similar manner, looking at overlapping subsections of data. These convolutional
-neurons however were rarely used alone, but together with a down-sampling neuron
-such as Max Pooling introduced in 1993.\cite{Schmidhuber:2015}
+science picked up more interest, as we entered the modern computational age, and
+with the introduction of the \gls{CNN}. \gls{CNN}s are based on the early work
+described in \cite{TJP:TJP19681951215}. They showed that cats and monkeys visual
+cortexes contain a set of neurons, each individually responding to a receptive
+field, or area, of their field of view. Neighboring receptive fields all have a
+certain amount of overlap, however in the end a cohesive view is created. This
+is what paved the way for neocognition in 1980\cite{Fukushima1980}, the basis
+of \gls{CNN}'s, which works in a very similar manner, looking at overlapping
+subsections of data. These convolutional neurons however were rarely used alone,
+but together with a down-sampling neuron such as Max Pooling introduced in
+1993.\cite{Schmidhuber:2015}
 
 \subsubsection{Neurons}\label{sec:neurons}
 
@@ -182,7 +221,7 @@ neurons compute a weighted sum of its inputs and applies an activation function
 $h$ to the weighted sum. The weights are called $w_i$. The function each neuron
 computes is then,
 
-\begin{equation}
+\begin{equation}\label{eq:neuron}
     z_i = h\left(
         \sum_{i = 1}^d w_ix_i + w_0
     \right).
@@ -193,6 +232,230 @@ a certain desired behavior, more details regarding these specific layers will
 be explained in later chapters.
 The training of a \gls{NN} consists of changing the weights applied at each
 neuron, with the goal of modeling the relationships present in the data.
+
+\subsubsection{Layers} \label{subsubsec:layers}
+
+\gls{NN}'s are organized in layers. The first layer is called the input layer
+and is connected directly to the input to the model and the last layer is called
+the output layer and gives the output of the model. All layers in between are
+called hidden layers. The input layer could for example be a layer of neurons
+where each neuron is connected to a pixel in an input image. And the output
+layer could consist of a single neuron that computes the probability that the
+picture contained a cat. An example layered \gls{NN} are shown in Figure
+\ref{fig:example_nn}.
+
+\begin{figure}
+    \centering
+    \textbf{Example Neural Network}\par\medskip
+    \includegraphics[width=\textwidth]{./pictures/method/example_neural_network.png}
+    \caption{Example neural network that illustrates how neurons are organized
+        into different layers with a special input layer and a special output
+        layer. The neurons in the input layer are connected to individual pixels
+        in an input image and the output layer is a single neuron computing the
+        probability that the image contains a cat.}
+    \label{fig:example_nn}
+\end{figure}
+
+There are different kinds of layers. Below is a non-exhaustive description of
+different layers.
+
+\begin{description}
+    \item[Dense Layer:] A dense layer is the layers that are shown in Figure
+        \ref{fig:example_nn}. In a dense layer the input of each neuron in the
+        layer is connected to the output of every neuron in the previous layer.
+        Each neuron in the layer computes a weighted sum of the outputs of the
+        previous layers neurons and applies an activation function. The weights
+        for each of the neurons in the layer is different allowing each neuron
+        to learn a different combination of the previous layer.
+    \item[Convolutional Layer:] A convolutional layer is mainly used to extract
+        position independent features from data. The convolution consist of a
+        sliding window that slides over some input data and gives an output for
+        each possible position of the input image. The sliding window use the
+        same weights in all the input and will therefore extract the same
+        features from different locations if it is presented with the same
+        input. The convolution computes a single output for each window
+        position. The output is computed as the sum of the elementwise
+        multiplication of the sliding window and the current part of the input
+        it is looking at. Lets for example consider a two dimensional input,
+
+        \begin{equation}
+            I = \begin{pmatrix}
+                1 & 1 & 1 & 0 \\
+                1 & 0 & 0 & 1 \\
+                0 & 1 & 0 & 1 \\
+                0 & 0 & 1 & 0
+            \end{pmatrix},
+        \end{equation}
+
+        and the convolutional filter,
+
+        \begin{equation}
+            w = \begin{pmatrix}
+                1 & 0 & 0 \\
+                1 & 0 & 0 \\
+                0 & 1 & 0 \\
+            \end{pmatrix}.
+        \end{equation}
+
+        Then we start the sliding window in the top left corner and compute the
+        elementwise product of the matrices,
+
+        \begin{equation}
+            X = I_{1-3,1-3} \circ w =
+            \begin{pmatrix}
+                1 & 1 & 1 \\
+                1 & 0 & 0 \\
+                0 & 1 & 0
+            \end{pmatrix} \circ
+            \begin{pmatrix}
+                1 & 0 & 0 \\
+                1 & 0 & 0 \\
+                0 & 1 & 0
+            \end{pmatrix} =
+            \begin{pmatrix}
+                1 & 0 & 0 \\
+                1 & 0 & 0 \\
+                0 & 1 & 0
+            \end{pmatrix},
+        \end{equation}
+
+        to then compute the final value we take the sum of all the elements in
+        that matrix,
+
+        \begin{equation}
+            \sum_{i,j} X_{i,j} = 1 + 0 + 0 + 1 + 0 + 0 + 0 + 1 + 0 = 3.
+        \end{equation}
+
+        We then slide the window one to the right and repeat the same process,
+
+        \begin{equation}
+            X = I_{2-4,1-3} \circ w =
+            \begin{pmatrix}
+                1 & 1 & 0 \\
+                0 & 0 & 1 \\
+                1 & 0 & 1
+            \end{pmatrix} \circ
+            \begin{pmatrix}
+                1 & 0 & 0 \\
+                1 & 0 & 0 \\
+                0 & 1 & 0
+            \end{pmatrix} =
+            \begin{pmatrix}
+                1 & 0 & 0 \\
+                0 & 0 & 0 \\
+                0 & 0 & 0
+            \end{pmatrix},
+        \end{equation}
+
+        and the final value,
+
+        \begin{equation}
+            \sum_{i,j} X_{i,j} = 1.
+        \end{equation}
+
+        We keep sliding the window right until we run out of input. After that
+        we go back to the left and go one row down. We continue the process for
+        all the input and we end up with the matrix,
+
+        \begin{equation}
+            O = \begin{pmatrix}
+                \sum_{i,j} \left( I_{1-3,1-3} \right)_{i,j} &
+                \sum_{i,j} \left( I_{2-4,1-3} \right)_{i,j} \\
+                \sum_{i,j} \left( I_{1-3,2-3} \right)_{i,j} &
+                \sum_{i,j} \left( I_{2-4,2-3} \right)_{i,j}
+            \end{pmatrix} = \begin{pmatrix}
+                3 & 1 \\
+                1 & 2
+            \end{pmatrix}.
+        \end{equation}
+
+        It can be seen that the output size is smaller than the input size.
+        To prevent that the input can be padded with some value. A normal choice
+        is zero padding. For the above input that would result in,
+
+        \begin{equation}
+            \begin{pmatrix}
+                1 & 1 & 1 & 0 \\
+                1 & 0 & 0 & 1 \\
+                0 & 1 & 0 & 1 \\
+                0 & 0 & 1 & 0
+            \end{pmatrix} \xrightarrow{\text{zero padding}}
+            \begin{pmatrix}
+                0 & 0 & 0 & 0 & 0 & 0 \\
+                0 & 1 & 1 & 1 & 0 & 0 \\
+                0 & 1 & 0 & 0 & 1 & 0 \\
+                0 & 0 & 1 & 0 & 1 & 0 \\
+                0 & 0 & 0 & 1 & 0 & 0 \\
+                0 & 0 & 0 & 0 & 0 & 0
+            \end{pmatrix}.
+        \end{equation}
+
+        The sliding length can be different than one and is usually referred to
+        as stride. The weights the convolutional window uses are learnable and
+        is updated via gradient descent. Certain convolutional filters can be
+        used for edge detection and blurring the input. Some examples of
+        different convolutional kernels applied to a grayscale image are shown
+        in Figure \ref{fig:convolution_example}.
+
+        \begin{figure}
+            \centering
+            \textbf{Examples of different convolutional kernels}\par\medskip
+            \begin{tabular}{ccc}
+                \textbf{Original} & \textbf{Kernel} & \textbf{Result} \\
+                \includegraphics[width=0.3\textwidth]{./pictures/method/original_convolution.png} &
+                \begin{minipage}{6cm}
+                    \begin{equation*}
+                        \begin{pmatrix}
+                            1 & 0 & -1 \\
+                            0 & 0 & 0  \\
+                            -1 & 0 & 1
+                        \end{pmatrix}
+                    \end{equation*}
+                \end{minipage}
+                    &
+                \includegraphics[width=0.3\textwidth]{./pictures/method/edge_detect_convolution.png} \\
+
+                \includegraphics[width=0.3\textwidth]{./pictures/method/original_convolution.png} &
+                \begin{minipage}{6cm}
+                    \begin{equation*}
+                        \frac{1}{16}\begin{pmatrix}
+                            1 & 2 & 1 \\
+                            2 & 4 & 2  \\
+                            1 & 2 & 1
+                        \end{pmatrix}
+                    \end{equation*}
+                \end{minipage}
+                    &
+                \includegraphics[width=0.3\textwidth]{./pictures/method/blurred_convolution.png} \\
+
+                \includegraphics[width=0.3\textwidth]{./pictures/method/original_convolution.png} &
+                \begin{minipage}{6cm}
+                    \begin{equation*}
+                        \begin{pmatrix}
+                            0  & -1 & 0  \\
+                            -1 & 5  & -1 \\
+                            0  & -1 & 0
+                        \end{pmatrix}
+                    \end{equation*}
+                \end{minipage}
+                    &
+                \includegraphics[width=0.3\textwidth]{./pictures/method/sharpened_convolution.png}
+            \end{tabular}
+            \caption{Examples of convolutional kernels applied to an image. The
+                first kernel is an edge detect kernel, the second a blurring
+                kernel and the third a sharpening kernel.}
+            \label{fig:convolution_example}
+        \end{figure}
+
+        % TODO: Show image of different convolutions.
+        % TODO: Show example from text.
+        % TODO: Maybe also explain different filters here.
+
+    \item[\gls{LSTM} Layer:] TODO
+    \item[\gls{GRU} Layer:] TODO
+    \item[Embedding:] TODO
+    \item[Max Pooling Layer:] TODO.
+\end{description}
 
 \subsubsection{TODO: Backpropagation}\label{sec:BP}
 
@@ -207,38 +470,54 @@ which are continuously repeated:
 \end{enumerate}
 
 The goal of these three steps is to minimize the overall cost of the network.
-The cost in this case, refers to the loss we end up with. In order to that
-the network makes use of the gradient to optimize each of the individual
-weights. Step 1, feeding forward, is simply a pass through the \gls{NN}. 
-When this is done with singular training sample, we end up with a final 
-cost of the network for that single training sample. It is this cost
-that back propagation attempts to optimize on. On order to do so
-all one simply has to do is step in direction of the negative gradient
-of the cost function. The cost function however is of cause dependent
-on outputting layer. Each neurons at these layers have 3 values we
-can choose to optimize our gradient on. The bias, the wight, and our
-choice of activation function. In the case of back propagation,
-it is with respect to the weights, we want to optimize our cost function.
-Using the gradient with respect to the weights of each neuron contributing
-the cost function, we can compute a set of desired changes to those desired
-that seek to optimize the output of the neuron. This is done for all neuron
-in the layer, ending up with a set of desired weight changes for each neuron
-in the layer. All the changes a summarized and then applied to that former
-layer, enabling that same process to be performed recursively back through
-the network, which is Step 2. Back Propagate. 
-This is done for all the training samples in our training set, ending
-up with each training sample having a set desired weights. All these
-desires are then average, and applied to the network, which is Step 3.
-Update Weights. That final averaged set of weight are essentially
-the negative gradient of the cost function, which we step in the direction
-of using. A step of a size, specified by the learning rate.
-This process of back propagation however, is really computationally heavy
-as each training sample has to be processed. As such, in practice
-the training data is shuffled, and split into batches which are then fed to
-the network. This means that the final result of the back propagation
-wont be the actual negative gradient of the cost function, but rather a
-very close approximation, a difference which is negligible after
-repeated runs of the back propagation algorithm.
+The cost in this case, refers to the loss we end up with. In order to do so,
+all we have to to do i step in the direction of the negative gradient as this
+points to where the minimum cost can be found. In order to do so however, we
+have to know the gradient of the cost function, in other words we need to find
+the derivative. For us to do this, we have consider the cost function and the
+network for what it is, a series of functions taking as an argument the result
+of a previous function, and a weight, as per the equation \ref{eq:neuron}. This
+process from goes back all the way from the cost function to the initial input.
+As such, we have to make use of the chain rule in order to have a chance of
+computing the gradient of out loss function.
+
+\begin{definition}[Chain Rule]
+
+    If functions \textbf{f} and \textbf{g} er both differentiable and
+    \textbf{F} is the composite function defined by $F(x) = f(g(x))$,
+    where $F' = f'(g(x)) \cdot g(x)$,
+
+\end{definition}
+
+In order to that the network makes use of the gradient to optimize each of
+the individual weights. Step 1, feeding forward, is simply a pass through the
+\gls{NN}. When this is done with singular training sample, we end up with a
+final cost of the network for that single training sample. It is this cost that
+back propagation attempts to optimize on. On order to do so all one simply
+has to do is step in direction of the negative gradient of the cost function.
+The cost function however is of cause dependent on outputting layer. Each
+neurons at these layers have 3 values we can choose to optimize our gradient
+on. The bias, the wight, and our choice of activation function. In the case of
+back propagation, it is with respect to the weights, we want to optimize our
+cost function. Using the gradient with respect to the weights of each neuron
+contributing the cost function, we can compute a set of desired changes to
+those desired that seek to optimize the output of the neuron. This is done
+for all neuron in the layer, ending up with a set of desired weight changes
+for each neuron in the layer. All the changes a summarized and then applied
+to that former layer, enabling that same process to be performed recursively
+back through the network, which is Step 2. Back Propagate. This is done for all
+the training samples in our training set, ending up with each training sample
+having a set desired weights. All these desires are then average, and applied
+to the network, which is Step 3. Update Weights. That final averaged set of
+weight are essentially the negative gradient of the cost function, which we
+step in the direction of using. A step of a size, specified by the learning
+rate. This process of back propagation however, is really computationally heavy
+as each training sample has to be processed. As such, in practice the training
+data is shuffled, and split into batches which are then fed to the network.
+This means that the final result of the back propagation wont be the actual
+negative gradient of the cost function, but rather a very close approximation,
+a difference which is negligible after repeated runs of the back propagation
+algorithm.
 
 In order to explain this using a more mathematical approach, we need to chose
 a activation function as our example, as it is with regard to that we find our
@@ -336,46 +615,7 @@ probability of each class in a classification problem.
     \label{fig:softmax_activation}
 \end{figure}
 
-
-\subsection{Baseline Methods}
-
-In order to gauge the efficiency of our deep learning approaches, we have chosen
-to implement some baseline methods. These methods were picked based on their
-performance in a previous project written by us \cite{US}. Albeit that project
-was only concerned with English texts provided by the \cite{pan:2015}, and
-\cite{pan:2014} text forensics tasks, we hypothesize that the performance of
-these approaches will perform just as well on Danish texts when being tuned for
-the Danish language.
-
-
-\subsubsection{Extended Delta Method}
-
-One of the best performing methods of \cite{US} was the extended delta method.
-As the name suggests the method extends the already existing delta method
-described by \cite{evert2015towards}. The normal delta methods consists of first
-extracting word frequencies from all texts and using these as the describing
-features. After doing this to the entire sample space of texts, and applying a
-linear transformation to their respective feature-sets, \gls{KNN} is then used
-to determine the author of the introduced texts based on its closest neighbors
-in the word-frequency feature-space. The extended delta method, simply expands
-on the set of possible features to pick from, rather than being limited to only
-using the word-frequencies of the text.
-
-
-\subsubsection{Author Specific SVM}
-
-Another algorithm used in \cite{US}. Heavily inspired by \cite{hansen2014}
-starts out by fetching all texts known to be written by a specific author and an
-equal number of texts known not to be written by that same author. It is upon
-the feature-set extracted from these texts that a \gls{SVM} is trained, allowing
-it to learn the specific author's writing style from the known texts supplied
-and in contrast what the writing style of someone not him is. When a new text,
-with disputed authorship is presented the hope is that the trained \gls{SVM}
-will be able to determine if the author it was trained on, is in fact the author
-of this new text as well.
-
-
-\subsection{Siamese Networks}
+\subsubsection{Siamese Networks}
 
 Classical machine learning approaches for text analysis and all our baseline
 methods are based on handcrafted feature sets. Deep learning has shown
@@ -391,24 +631,34 @@ used a Siamese network with convolutions and fully connected network on top for
 image analysis. Our approach is to use convolutions in the Siamese network to
 learn important features from the texts. We also use a fully connected network
 on top of the convolutional layers to learn from the features the convolution
-extracted.
+extracted. An example of this architecture can be seen in Figure
+\ref{fig:siamese_example}.
 
-The network will take two inputs, a text $t_k \in T(\alpha)$ and a text $t_u \in
-T(\beta)$. The network will then try to figure out whether $\alpha = \beta$.
-The convolutions in the network will look at $n$ characters at a time and give
-an output. Therefore the convolutional layers will be able to learn important
-n-grams and extract a representation of $t_k$ and $t_u$. This representation
-will be given to some dense layers which will learn how to compare the
-featuresets extracted. The Siamese part of the network is the convolutional part
-of the network which will share weights when extracting n-grams from the two
-texts.
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.5]{./pictures/method/Siamese.png}
+    \caption{The basic architecture of a Siamese neural network, which takes in
+        two sources of data, and runs it through two parallelle networks,
+        sharing their weights at each layer}
+    \label{fig:siamese_example}
+\end{figure}
+
+The network will take two inputs, a text $t_k \in T_\alpha$ and a text $t_u
+\in T_\beta$. The network will then try to figure out whether $\alpha =
+\beta$. The convolutions in the network will look at $n$ characters at a
+time and give an output. Therefore the convolutional layers will be able to
+learn important n-grams and extract a representation of $t_k$ and $t_u$. This
+representation will be given to some dense layers which will learn how to
+compare the feature-sets extracted. The Siamese part of the network is the
+convolutional part of the network which will share weights when extracting
+n-grams from the two texts.
 
 The final output of the network will be a probability that $\alpha = \beta$.
 Since the MaCom dataset consist of multiple known texts per author and this
 network architecture only compares two texts we define a separate system for
 making the final prediction.
 
-\subsubsection{Prediction System}
+\subsection{Prediction System}
 
 In the MaCom problem we are given a set of texts for each author so we can make
 use of multiple texts when making our predictions. We can also use metadata
@@ -418,17 +668,19 @@ averaged out.
 
 \begin{definition}[Prediction System]
 
+    \label{def:prediction_system}
+
     Our prediction system is a function $P(f, w, \alpha, t_{unkown}, \theta)
-    \rightarrow \{0, 1\}$ where $F$ is a function taking two texts and giving
-    the probability that the texts are written by the same author, $\alpha$ is
-    an author that has written the texts $T_{\alpha}$, $t_{known}$ is a text
-    of unknown authorship, $w$ is a function taking a text and giving a number
-    between 0 and 1 where $\sum_{t_{known} \in T_\alpha} w(t_{known}) = 1$ and
-    $\theta \in [0;1]$ is a threshold. The prediction system then returns,
+    \in \{0, 1\}$ where $f$ is a function taking two texts and giving the
+    probability that the texts are written by the same author, $\alpha$ is an
+    author, $t_{unknown}$ is a text of unknown authorship, $w$ is a function
+    $w:T_\alpha \rightarrow [0,1]$ where $\sum_{t_{known} \in T_\alpha}
+    w(t_{known}) = 1$ and $\theta \in [0,1]$. The prediction system then
+    returns,
 
     \begin{equation}
         P(f, w, \alpha, t_{unkown}, \theta) = \begin{cases}
-            1 & \text{if } \sum_{t_{known} \in T_\alpha} w(t_k) f(t_{known}, t_{unkown}) > \theta \\
+            1 & \text{if } \sum_{t_{known} \in T_\alpha} w(t_{known}) f(t_{known}, t_{unkown}) > \theta \\
             0 & \text{otherwise}.
         \end{cases}
     \end{equation}
@@ -445,23 +697,132 @@ as $f$ as they will take two texts and end with a softmax layer that outputs a
 probability distribution.
 
 The $w$ parameter in the prediction system can be used to weigh the known
-texts differently. For example we could define $w$ such that the newest
-text is weighed as most important and older texts are weighed less and less
-important. $w$ could be defined as $w(t_1), w(t_2), \dots, w(t_n) = \frac{1}{2},
-\frac{1}{4}, \dots, \frac{1}{2^{n-1}}, \frac{1}{2^{n-1}}$ where $t_1$ is the
-newest text, $t_2$ is the second newest and so on. Otherwise $w$ can also
-be used to take a simple average of the decisions by defining it as $w(t) =
-\frac{1}{|T_\alpha|}$.
+texts differently. The most obvious weighing scheme is to just use a uniform
+weighting. That way we simply take an average of the predictions of our networks
+over the different texts an author has written. We define all the following
+weight functions as functions taking a sequence of texts written by the same
+author in chronological order and returning a sequence of weights in the same
+order. The weight function were used in \ref{def:prediction_system} as a
+function of a single text $t$ and in that use case it simply returns the weight
+given to that particular text in the following definitions.
 
-The $\theta$ parameter determines when we consider an unknown text to be written
-by an author. The natural choice for $\theta$ is 0.5 since that is what the
-network use when it computes the loss of each training sample. However the
-$\theta$ parameter can be used to enforce how sure we have to be of a decision
-to accuse an author of not having written an assignment. As described earlier
-MaCom does not want to accuse innocent students of cheating. That means that it
-is very important to MaCom to minimize the number accusation error. We can use
-the $\theta$ parameter to control that error. Hopefully the \gls{FN}s generally
-end up with a value closer to 1 than the \gls{TN}s. If that is the case then
-lowering $\theta$ value will lower the fraction since there will be fewer
-\gls{FN}s. That might lower the overall accuracy of the prediction system but
-will make sure that at few students as possible are falsely accused.
+\begin{definition}[Uniform Weighing]
+
+    The uniform weight function $w_\mathcal{U}(T) \in [0.0, 1.0]$
+    where $T$ is a sequence of texts written by the same author $\alpha$ in
+    chronological order, computes the weights as,
+
+    \begin{equation}
+        w_\mathcal{U}(T_1), w_\mathcal{U}(T_2), \dots, w_\mathcal{U}(T_n) =
+        \frac{1}{n}, \dots, \frac{1}{n}
+    \end{equation}
+
+\end{definition}
+
+The uniform weight function does not use any information we have about the
+texts. It is mostly part of our weight functions as a sort of baseline to
+make sure we don't make any weight functions that are worse than a simple
+uniform weighing. Our other weight functions makes use of metadata we know
+about the texts. As an example we have a timestamp of when a text was turned
+in to the MaCom servers. We therefore know when the text was written and
+we assume that newer texts will better reflect the current writing style
+of a studen than older texts. We have therefore defined several weight
+functions using the times the texts was written. In the following we let
+$\tau$ be a function that returns the number of seconds since the epoch
+\footnote{https://en.wikipedia.org/wiki/Unix\_time} that the text was turned in
+at. We start with a simple weight function where the newest text has weight
+$\frac{1}{2}$, the second weight $\frac{1}{4}$ and so on.
+
+\begin{definition}[Time Weighted Simple]
+
+    The time weighted simple function $w_s(T) \in [0.0, 1.0]$ where $T$ is a
+    sequence of texts written by the same author $\alpha$ in chronological
+    order, computes the weights as,
+
+    \begin{equation}
+        w_s(T_1), w_s(T_2), \dots, w_s(T_n) = \frac{1}{2^1}, \frac{1}{2^2},
+        \dots, \frac{1}{2^{n-1}}, \frac{1}{2^{n-1}}
+    \end{equation}
+
+\end{definition}
+
+The problem with the simple time weighted function is that it only looks at the
+order in which the texts are written and not the actual times they were written
+at. It is clear that the newest text should not be weighed twice as important as
+the second newest if they are only turned in a single day apart. We therefore
+defined a function that also took into account the relative time between the
+texts.
+
+\begin{definition}[Time Weighted Relative]
+
+    The relative time weighted function $w_r(T) \in [0.0, 1.0]$ where $T$ is a
+    sequence of texts written by the same author $\alpha$ in chronological
+    order, computes the weights as,
+
+    \begin{equation}
+        w_r(T_1), w_r(T_2), \dots, w_r(T_n) =
+            \frac{\tau(T_1) - \min_{t \in T} \tau(t)}{\sum_{t \in T} \tau(t)},
+            \frac{\tau(T_2) - \min_{t \in T} \tau(t)}{\sum_{t \in T} \tau(t)},
+            \dots,
+            \frac{\tau(T_n) - \min_{t \in T} \tau(t)}{\sum_{t \in T} \tau(t)},
+    \end{equation}
+
+\end{definition}
+
+There the first text will get the lowest weight since $T_1$ is smaller than
+$T_2$ and the time between individual texts are taken into account. The problem
+with that definition is mainly that the first text $T_1$ will always have weight
+0 since $\min_{t \in T} \tau(t) = T_1$. We are guessing that even the oldest
+text we have available will provide some information to the prediction system.
+Another problem is that texts written even a few days apart are rated very
+different since we use the number of seconds since the epoch as the timestamps.
+We therefore defined yet another weighing function that still takes into account
+the time between texts but considers texts written in the same month to have the
+same timestamp. Furthermore it arbitrarily adds one to all the times to prevent
+the first text to get weight 0. In the following the function $\tau_m$ returns
+the number of months since the epoch a text was written.
+
+\begin{definition}[Time Weighted Relative Monthly]
+
+    The relative time weighted function $w_{rm}(T) \in [0.0, 1.0]$ where $T$ is
+    a sequence of texts written by the same author $\alpha$ in chronological
+    order, computes the weights as,
+
+    \begin{align}
+        w_{rm}(T_1), w_{rm}(T_2), \dots, w_{rm}(T_n) =&
+            \frac{(\tau_m(T_1) - \min_{t \in T} \tau_m(t)) + 1}{\sum_{t \in T} \tau_m(t)},
+            \frac{(\tau_m(T_2) - \min_{t \in T} \tau_m(t)) + 1}{\sum_{t \in T} \tau_m(t)}, \\
+            & \dots,
+            \frac{(\tau_m(T_n) - \min_{t \in T} \tau_m(t)) + 1}{\sum_{t \in T} \tau_m(t)}
+    \end{align}
+
+\end{definition}
+
+TODO: Define a weight function that also looks at the length of the texts.
+
+To get an idea of the weights the different functions produce we made a bar
+plot using the texts of a random student in our dataset shown in Figure
+\ref{fig:weights_bar}. The first text in the plot is the oldest and the last is
+the newest.
+
+\begin{figure}
+    \centering
+    \textbf{Example application of weight functions}\par\medskip
+    \includegraphics[width=\textwidth]{./pictures/method/weight_bar.png}
+    \caption{The weights given to texts with different timestamps using
+        different weight functions.}
+    \label{fig:weights_bar}
+\end{figure}
+
+The $\theta$ parameter in the prediction system determines when we consider an
+unknown text to be written by an author. The natural choice for $\theta$ is 0.5
+since that is what the network use when it computes the loss of each training
+sample. However the $\theta$ parameter can be used to enforce how sure we have
+to be of a decision to accuse an author of not having written an assignment. As
+described earlier MaCom does not want to accuse innocent students of cheating.
+That means that it is very important to MaCom to minimize the number accusation
+error. We can use the $\theta$ parameter to control that error. Hopefully the
+\gls{FN}s generally end up with a value closer to 1 than the \gls{TN}s. If that
+is the case then lowering $\theta$ value will lower the fraction since there
+will be fewer \gls{FN}s. That might lower the overall accuracy of the prediction
+system but will make sure that at few students as possible are falsely accused.
