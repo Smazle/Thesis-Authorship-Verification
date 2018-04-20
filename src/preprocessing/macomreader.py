@@ -116,9 +116,6 @@ class MacomReader(object):
     # List of validation problems.
     validation_problems = None
 
-    # Whether or not to word encode or character.
-    char = None
-
     # Whether or not to pad the texts with a special value.
     pad = None
 
@@ -127,9 +124,9 @@ class MacomReader(object):
 
     # TODO: Take argument specifying whether or not to ignore first line in
     # file.
-    def __init__(self, filepath, batch_size=32, char=True,
-                 validation_split=0.8, vocabulary_frequency_cutoff=0.0,
-                 pad=True, binary=False, batch_normalization='truncate'):
+    def __init__(self, filepath, batch_size=32, validation_split=0.8,
+                 vocabulary_frequency_cutoff=0.0, pad=True, binary=False,
+                 batch_normalization='truncate', channels=['char']):
 
         if validation_split > 1.0 or validation_split < 0.0:
             raise ValueError('validation_split between 0 and 1 required')
@@ -142,8 +139,11 @@ class MacomReader(object):
         if batch_normalization not in ['truncate', 'pad']:
             raise ValueError('Only truncate and pad is currently supported.')
 
+        for channel in channels:
+            if channel not in ['char']:
+                raise ValueError('Only char channel allowed')
+
         # Save parameters.
-        self.char = char
         self.filepath = filepath
         self.batch_size = batch_size
         self.validation_split = validation_split
@@ -151,6 +151,7 @@ class MacomReader(object):
         self.binary = binary
         self.pad = pad
         self.batch_normalization = batch_normalization
+        self.channels = channels
 
         if self.binary:
             self.label_true = np.array([1])
@@ -246,31 +247,33 @@ class MacomReader(object):
         self.training_problems = self.problems[:split_point]
         self.validation_problems = self.problems[split_point:]
 
+    # Returns a list of numpy arrays containing integers where each array is an
+    # encoded sequence. The list ordering corresponds to the self.channels
+    # parameter.
     def read_encoded_line(self, linereader, line_n, with_date=False):
+        if self.pad:
+            raise Exception('read_encoded_line does not currently work with global padding')
+
         author, date, text = linereader.readline(line_n).split(';')
         unescaped = util.clean(text)
         unescaped = unescaped[200:]
 
-        if not self.char:
-            unescaped = util.wordProcess(text)
-
-        encoded = list(map(lambda x: self.vocabulary_map[x]
-                           if x in self.vocabulary_map else
-                           self.garbage, unescaped))
-
-        if self.pad:
-            len_diff = self.max_len - len(encoded)
-            padded = encoded + ([self.padding] * len_diff)
-        else:
-            padded = encoded
+        encoded_channels = []
+        for channel in self.channels:
+            if channel == 'char':
+                encoded_channels.append(self.encode_char(unescaped))
+            elif channel == 'word':
+                encoded_channels.append(self.encode_word(unescaped))
+            else:
+                raise Exception('Illegal state')
 
         if with_date:
             epoch = datetime.utcfromtimestamp(0)
             date = datetime.strptime(date, '%d-%m-%Y')
             time = (date - epoch).total_seconds()
-            return np.array(padded), time
+            return encoded_channels, time
         else:
-            return np.array(padded)
+            return encoded_channels
 
     # Generate batches of samples.
     def generate(self, problems):
@@ -279,12 +282,12 @@ class MacomReader(object):
 
             while True:
                 batch = itertools.islice(problems, self.batch_size)
-                X_known, X_unknown, y = self.generate_batch(batch, reader)
-                yield [X_known, X_unknown], y
+                known_inputs, unknown_inputs, y = self.generate_batch(batch, reader)
+                yield known_inputs + unknown_inputs, y
 
     def generate_batch(self, batch, linereader):
-        knowns = []
-        unknowns = []
+        knowns = np.zeros((len(batch), len(self.channels)), dtype=np.object)
+        unknowns = np.zeros((len(batch), len(self.channels)), dtype=np.object)
 
         if self.binary:
             y = np.zeros((self.batch_size, 1))
@@ -292,37 +295,56 @@ class MacomReader(object):
             y = np.zeros((self.batch_size, 2))
 
         for (i, (known, unknown, label)) in enumerate(batch):
-            knowns.append(self.read_encoded_line(linereader, known))
-            unknowns.append(self.read_encoded_line(linereader, unknown))
+            knowns[i] = self.read_encoded_line(linereader, known)
+            unknowns[i] = self.read_encoded_line(linereader, unknown)
 
             if label == 0:
                 y[i] = self.label_false
             else:
                 y[i] = self.label_true
 
-        if self.batch_normalization == 'truncate':
-            known_truncate_len = min(map(lambda x: x.shape[0], knowns))
-            unknown_truncate_len = min(map(lambda x: x.shape[0], unknowns))
+        known_inputs = []
+        unknown_inputs = []
+        for i in range(self.channels):
+            if self.batch_normalization == 'truncate':
+                known_truncate_len = min(map(lambda x: x.shape[0], knowns[:, i]))
+                unknown_truncate_len = min(map(lambda x: x.shape[0], unknowns[:, i]))
 
-            X_known = sequence.pad_sequences(
-                knowns,
-                value=self.padding,
-                maxlen=known_truncate_len,
-                truncating='post')
-            X_unknown = sequence.pad_sequences(
-                unknowns,
-                value=self.padding,
-                maxlen=unknown_truncate_len,
-                truncating='post')
-        elif self.batch_normalization == 'pad':
-            X_known = sequence.pad_sequences(
-                knowns, value=self.padding, padding='post')
-            X_unknown = sequence.pad_sequences(
-                unknowns, value=self.padding, padding='post')
-        else:
-            raise Exception('should never happen')
+                X_known = sequence.pad_sequences(
+                    knowns[:, i],
+                    value=self.padding,
+                    maxlen=known_truncate_len,
+                    truncating='post')
+                X_unknown = sequence.pad_sequences(
+                    unknowns[:, i],
+                    value=self.padding,
+                    maxlen=unknown_truncate_len,
+                    truncating='post')
 
-        return X_known, X_unknown, y
+                known_inputs.append(X_known)
+                unknown_inputs.append(X_unknown)
+            elif self.batch_normalization == 'pad':
+                X_known = sequence.pad_sequences(
+                    knowns[:, i], value=self.padding, padding='post')
+                X_unknown = sequence.pad_sequences(
+                    unknowns[:, i], value=self.padding, padding='post')
+
+                known_inputs.append(X_known)
+                unknown_inputs.append(X_unknown)
+            else:
+                raise Exception('should never happen')
+
+        return known_inputs, unknown_inputs, y
+
+    def encode_char(chars):
+        return np.array(map(lambda x: self.vocabulary_map[x]
+                        if x in self.vocabulary_map else
+                        self.garbage, chars))
+
+    def encode_word(words):
+        return np.array(map(lambda x: self.word_vocabulary_map[x]
+                        if x in self.word_vocabulary_map else
+                        self.word_garbage, words))
 
 
 if __name__ == '__main__':
