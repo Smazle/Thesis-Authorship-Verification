@@ -9,7 +9,7 @@ import numpy as np
 from keras.models import Model
 from keras.layers.embeddings import Embedding
 from keras.layers import Dense, Concatenate, Input, Dropout, GRU, Reshape,\
-    Lambda, Flatten, Activation, merge, Convolution1D, MaxPooling1D, LSTM
+    Lambda, Flatten, Activation, merge, Convolution1D, MaxPooling1D, LSTM, CuDNNGRU
 from keras.callbacks import ModelCheckpoint
 from keras.utils import plot_model
 from keras.layers.pooling import AveragePooling1D
@@ -57,15 +57,17 @@ if args.reader is not None:
 else:
     reader = MacomReader(
         args.datafile,
-        batch_size=1,
+        batch_size=8,
         vocabulary_frequency_cutoff=1 / 100000,
-        validation_split=0.95
+        validation_split=0.95,
+        pad=False,
+        batch_normalization="pad"
     )
 
     with open('reader.p', mode='w') as reader_out:
         reader_out.write(jsonpickle.encode(reader))
 
-inshape = (reader.max_len, )
+inshape = (None, )
 
 known_in = Input(shape=inshape, dtype='int32')
 unknown_in = Input(shape=inshape, dtype='int32')
@@ -75,10 +77,10 @@ embedding = Embedding(len(reader.vocabulary_above_cutoff) + 2, 5)
 known_emb = embedding(known_in)
 unknown_emb = embedding(unknown_in)
 
-conv8 = Convolution1D(filters=500, kernel_size=2, strides=1,
+conv8 = Convolution1D(filters=500, kernel_size=8, strides=1,
                       activation='relu', padding='same')
 pool = MaxPooling1D(pool_size=8)
-gru = LSTM(100)
+gru = CuDNNGRU(100)
 
 features_known = gru(pool(conv8(known_emb)))
 features_unknown = gru(pool(conv8(unknown_emb)))
@@ -138,7 +140,8 @@ model.fit_generator(
     steps_per_epoch=steps_n,
     epochs=100,
     validation_data=reader.generate_validation(),
-    validation_steps=val_steps_n
+    validation_steps=val_steps_n,
+    callbacks=callbacks
 )
 
 model.save('final_model.hdf5')
