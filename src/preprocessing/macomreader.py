@@ -249,10 +249,7 @@ class MacomReader(object):
     def read_encoded_line(self, linereader, line_n, with_date=False):
         author, date, text = linereader.readline(line_n).split(';')
         unescaped = util.clean(text)
-        if len(unescaped) > 200:
-            unescaped = unescaped[200:]
-        else:
-            raise Exception("Invalid state")
+        unescaped = unescaped[200:]
 
         if not self.char:
             unescaped = util.wordProcess(text)
