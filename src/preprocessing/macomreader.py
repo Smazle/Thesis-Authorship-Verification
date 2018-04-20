@@ -139,7 +139,7 @@ class MacomReader(object):
             raise ValueError('vocabulary_frequency_cutoff between 0 and 1 ' +
                              'required')
 
-        if batch_normalization != 'truncate' and batch_normalization != "pad":
+        if batch_normalization not in ['truncate', 'pad']:
             raise ValueError('Only truncate and pad is currently supported.')
 
         # Save parameters.
@@ -307,15 +307,21 @@ class MacomReader(object):
             known_truncate_len = min(map(lambda x: x.shape[0], knowns))
             unknown_truncate_len = min(map(lambda x: x.shape[0], unknowns))
 
-            X_known = np.zeros((self.batch_size, known_truncate_len))
-            X_unknown = np.zeros((self.batch_size, unknown_truncate_len))
-
-            for i, (known, unknown) in enumerate(zip(knowns, unknowns)):
-                X_known[i] = knowns[i][0:known_truncate_len]
-                X_unknown[i] = unknowns[i][0:unknown_truncate_len]
-        elif self.batch_normalization == "pad":
-            X_known = sequence.pad_sequences(knowns, value=self.padding, padding="post")
-            X_unknown = sequence.pad_sequences(unknowns, value= self.padding, padding="post")
+            X_known = sequence.pad_sequences(
+                knowns,
+                value=self.padding,
+                maxlen=known_truncate_len,
+                truncating='post')
+            X_unknown = sequence.pad_sequences(
+                unknowns,
+                value=self.padding,
+                maxlen=unknown_truncate_len,
+                truncating='post')
+        elif self.batch_normalization == 'pad':
+            X_known = sequence.pad_sequences(
+                knowns, value=self.padding, padding='post')
+            X_unknown = sequence.pad_sequences(
+                unknowns, value=self.padding, padding='post')
         else:
             raise Exception('should never happen')
 
