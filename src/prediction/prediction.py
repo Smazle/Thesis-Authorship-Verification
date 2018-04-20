@@ -115,16 +115,16 @@ def time_weighted_2(xs):
 
 
 def get_weight(weight_name):
-    if args.weights == 'uniform':
+    if weight_name == 'uniform':
         return uniform
-    elif args.weights == 'simple-time':
+    elif weight_name == 'simple-time':
         return time_simple
-    elif args.weights == 'advanced-time':
+    elif weight_name == 'advanced-time':
         return time_weighted
-    elif args.weights == 'advanced-time-2':
+    elif weight_name == 'advanced-time-2':
         return time_weighted_2
     else:
-        raise Exception('Unknown weights {}'.format(args.weights))
+        raise Exception('Unknown weights {}'.format(weight_name))
 
 
 if __name__ == '__main__':
@@ -150,7 +150,7 @@ if __name__ == '__main__':
         '--theta',
         nargs='+',
         help='Thresholds to use.',
-        default=list(np.arange(0.0, 1.0, 0.1))
+        default=["0.0", "0.1", "0.2", "0.3", "0.4", "0.5", "0.6", "0.7", "0.8", "0.9", "1.0"]
     )
     parser.add_argument(
         '--weights',
@@ -160,6 +160,8 @@ if __name__ == '__main__':
         default=['uniform']
     )
     args = parser.parse_args()
+
+    theta = list(map(lambda x: float(x), args.theta))
 
     # Load the keras model and the data reader.
     model = load_model(args.network)
@@ -171,6 +173,7 @@ if __name__ == '__main__':
     assert reader.char is not None
     assert reader.garbage is not None
     assert reader.max_len is not None
+    assert reader.pad is not None
 
     validation_reader = MacomReader(args.datafile, char=reader.char,
                                     validation_split=1.0)
@@ -178,12 +181,13 @@ if __name__ == '__main__':
     validation_reader.padding = reader.padding
     validation_reader.garbage = reader.garbage
     validation_reader.max_len = reader.max_len
+    validation_reader.pad = reader.pad
 
     with LineReader(args.datafile) as linereader:
         problems = get_problems(validation_reader, linereader)
 
         print('Theta,Weights,TPS,TNS,FPS,FNS,ACC,ERR', end='\r\n')
-        for (theta, weight) in itertools.product(args.theta, args.weights):
+        for (theta, weight) in itertools.product(theta, args.weights):
             w = get_weight(weight)
 
             tps, tns, fps, fns = evaluate(
