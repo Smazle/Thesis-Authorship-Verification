@@ -9,6 +9,10 @@ import jsonpickle
 import random
 
 
+SECS_PER_MONTH = 2592000
+
+
+# TODO: Take parameter specifying how many negatives to create.
 def get_problems(macomreader, linereader):
     problems = []
     for author in macomreader.authors:
@@ -52,7 +56,10 @@ def predict(macomreader, linereader, author_texts, non_author_text, w, theta):
             linereader, known, with_date=True)
         predictions[i] = model.predict([unknown_text, known_text])[0, 1]
 
-    return np.average(predictions, weights=w(times)) > theta
+    times = np.around((np.max(times) - times) / SECS_PER_MONTH)
+    weights = exp_norm(times, w)
+
+    return np.average(predictions, weights=weights) > theta
 
 
 def evaluate(macomreader, linereader, problems, w, theta):
@@ -75,56 +82,9 @@ def evaluate(macomreader, linereader, problems, w, theta):
     return tps, tns, fps, fns
 
 
-# Return uniform distribution over the timestamps.
-def uniform(xs):
-    return np.ones((xs.shape[0],), dtype=np.float) / xs.shape[0]
-
-
-# Return a distribution over the times such that the newest time has weight
-# 1/2, the second newest has 1/4 and so on.
-def time_simple(xs):
-    weights = [1 / (2**x) for x in range(1, len(xs))]
-    if len(weights) == 0:
-        weights = [1.0]
-    else:
-        weights.append(weights[-1])
-    sort = np.flip(np.argsort(xs), 0)
-
-    return np.array(weights)[sort]
-
-
-# Weight by time in seconds such that the newest text is given the highest
-# weight. The oldest text will have weight 0.
-def time_weighted(xs):
-    weights = xs - np.min(xs)
-    weights = weights / np.sum(weights)
-
-    return weights
-
-
-# Weight by time monthly and arbitrarily add one to all of them to give the
-# oldest text another weight than 0.
-def time_weighted_2(xs):
-    seconds_per_month = 2629743
-    xs = xs / seconds_per_month
-
-    weights = xs - np.min(xs) + 1
-    weights = weights / np.sum(weights)
-
-    return weights
-
-
-def get_weight(weight_name):
-    if weight_name == 'uniform':
-        return uniform
-    elif weight_name == 'simple-time':
-        return time_simple
-    elif weight_name == 'advanced-time':
-        return time_weighted
-    elif weight_name == 'advanced-time-2':
-        return time_weighted_2
-    else:
-        raise Exception('Unknown weights {}'.format(weight_name))
+def exp_norm(xs, l):
+    xs = exp(xs, l)
+    return xs / np.sum(xs)
 
 
 if __name__ == '__main__':
@@ -155,13 +115,14 @@ if __name__ == '__main__':
     parser.add_argument(
         '--weights',
         nargs='+',
-        help='Which weighting of predictions to use. Should be one of ' +
-             '"uniform", "simple-time", "advanced-time" or "advanced-time-2"',
-        default=['uniform']
+        help='The argument given to the exponential dropoff weight ' +
+             'function. If 0.0 is given it is equivalent to uniform weights.'
+        default=["0.0", "0.1", "0.2", "0.3", "0.4", "0.5", "0.6", "0.7", "0.8", "0.9", "1.0"]
     )
     args = parser.parse_args()
 
     theta = list(map(lambda x: float(x), args.theta))
+    weights = list(map(lambda x: float(x), args.weights))
 
     # Load the keras model and the data reader.
     model = load_model(args.network)
@@ -187,11 +148,9 @@ if __name__ == '__main__':
         problems = get_problems(validation_reader, linereader)
 
         print('Theta,Weights,TPS,TNS,FPS,FNS,ACC,ERR', end='\r\n')
-        for (theta, weight) in itertools.product(theta, args.weights):
-            w = get_weight(weight)
-
+        for (theta, weight) in itertools.product(theta, weights):
             tps, tns, fps, fns = evaluate(
-                validation_reader, linereader, problems, w, theta)
+                validation_reader, linereader, problems, weight, theta)
 
             accuracy = (tps + tns) / (tps + tns + fps + fns)
             if fns + tns == 0:
