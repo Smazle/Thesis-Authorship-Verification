@@ -680,7 +680,8 @@ averaged out.
 
     \begin{equation}
         P(f, w, \alpha, t_{unkown}, \theta) = \begin{cases}
-            1 & \text{if } \sum_{t_{known} \in T_\alpha} w(t_{known}) f(t_{known}, t_{unkown}) > \theta \\
+            1 & \text{if } \sum_{t_{known} \in T_\alpha} w(t_{known})
+                f(t_{known}, t_{unkown}) > \theta \\
             0 & \text{otherwise}.
         \end{cases}
     \end{equation}
@@ -696,123 +697,77 @@ probability. We are going to present several different networks that can be used
 as $f$ as they will take two texts and end with a softmax layer that outputs a
 probability distribution.
 
-The $w$ parameter in the prediction system can be used to weigh the known
-texts differently. The most obvious weighing scheme is to just use a uniform
+The $w$ parameter in the prediction system can be used to weigh the known texts
+differently. We are going to try several different weight functions that weigh
+texts based on metadata such as the time they were written and the length of
+the texts. The only constraint on a weight function $w$ is that $\sum_{t \in
+T_\alpha} w(t) = 1$. We will ignore that constraint in the following definitions
+of weight functions. Any function $w: T_\alpha \rightarrow \mathbb{R}^+$ that
+does not follow the constraint can be transformed into a version
+$w^*: T_\alpha \rightarrow [0,1]$ that does follow the constraint where
+$w^*(t) = \frac{w(t)}{\sum_{t \in T_\alpha} w(t)}$. We can therefore define the
+weight functions $w$ while ignoring the constraint but use $w^*$ as the actual
+weight function in the prediction system.
+
+The most obvious weighing scheme is to just use a uniform
 weighting. That way we simply take an average of the predictions of our networks
-over the different texts an author has written. We define all the following
-weight functions as functions taking a sequence of texts written by the same
-author in chronological order and returning a sequence of weights in the same
-order. The weight function were used in \ref{def:prediction_system} as a
-function of a single text $t$ and in that use case it simply returns the weight
-given to that particular text in the following definitions.
+over the different texts an author has written.
 
 \begin{definition}[Uniform Weighing]
 
-    The uniform weight function $w_\mathcal{U}(T) \in [0.0, 1.0]$
-    where $T$ is a sequence of texts written by the same author $\alpha$ in
-    chronological order, computes the weights as,
+    The uniform weight function $w_\mathcal{U}: T_\alpha \rightarrow \{1\}$ is
+    defined as,
 
     \begin{equation}
-        w_\mathcal{U}(T_1), w_\mathcal{U}(T_2), \dots, w_\mathcal{U}(T_n) =
-        \frac{1}{n}, \dots, \frac{1}{n}
+        w_\mathcal{U}(t) = 1
     \end{equation}
 
 \end{definition}
 
-The uniform weight function does not use any information we have about the
-texts. It is mostly part of our weight functions as a sort of baseline to
-make sure we don't make any weight functions that are worse than a simple
-uniform weighing. Our other weight functions makes use of metadata we know
-about the texts. As an example we have a timestamp of when a text was turned
-in to the MaCom servers. We therefore know when the text was written and
-we assume that newer texts will better reflect the current writing style
-of a studen than older texts. We have therefore defined several weight
-functions using the times the texts was written. In the following we let
-$\tau$ be a function that returns the number of seconds since the epoch
-\footnote{https://en.wikipedia.org/wiki/Unix\_time} that the text was turned in
-at. We start with a simple weight function where the newest text has weight
-$\frac{1}{2}$, the second weight $\frac{1}{4}$ and so on.
+The uniform weight function does not use any information we know about the
+texts. It is mostly part of our weight functions as a baseline to make sure we
+don't make any weight functions that are worse than a simple uniform weighing.
+Our other weight functions makes use of metadata we know about the texts. As an
+example we have a timestamp of when a text was turned in to the MaCom servers.
+We therefore know when the text was written and we assume that newer texts will
+better reflect the current writing style of a student than older texts. We
+have therefore defined several weight functions using the times the texts was
+written. Let $\tau: T_\alpha \rightarrow \mathbb{N}$ be the function returning
+the number of months between when the newest text $t \in T_\alpha$ and the
+text it is given were turned in where a month is considered 30 days. Our time
+based weight function are then defined as,
 
-\begin{definition}[Time Weighted Simple]
+\begin{definition}[Exponential Dropoff]
 
-    The time weighted simple function $w_s(T) \in [0.0, 1.0]$ where $T$ is a
-    sequence of texts written by the same author $\alpha$ in chronological
-    order, computes the weights as,
+    The exponential dropoff function $w_e: T_\alpha \rightarrow [0, 1]$ is
+    defined as,
 
     \begin{equation}
-        w_s(T_1), w_s(T_2), \dots, w_s(T_n) = \frac{1}{2^1}, \frac{1}{2^2},
-        \dots, \frac{1}{2^{n-1}}, \frac{1}{2^{n-1}}
+        w_e(t) = e^{-\lambda \tau(t)}
     \end{equation}
 
 \end{definition}
 
-The problem with the simple time weighted function is that it only looks at the
-order in which the texts are written and not the actual times they were written
-at. It is clear that the newest text should not be weighed twice as important as
-the second newest if they are only turned in a single day apart. We therefore
-defined a function that also took into account the relative time between the
-texts.
-
-\begin{definition}[Time Weighted Relative]
-
-    The relative time weighted function $w_r(T) \in [0.0, 1.0]$ where $T$ is a
-    sequence of texts written by the same author $\alpha$ in chronological
-    order, computes the weights as,
-
-    \begin{equation}
-        w_r(T_1), w_r(T_2), \dots, w_r(T_n) =
-            \frac{\tau(T_1) - \min_{t \in T} \tau(t)}{\sum_{t \in T} \tau(t)},
-            \frac{\tau(T_2) - \min_{t \in T} \tau(t)}{\sum_{t \in T} \tau(t)},
-            \dots,
-            \frac{\tau(T_n) - \min_{t \in T} \tau(t)}{\sum_{t \in T} \tau(t)},
-    \end{equation}
-
-\end{definition}
-
-There the first text will get the lowest weight since $T_1$ is smaller than
-$T_2$ and the time between individual texts are taken into account. The problem
-with that definition is mainly that the first text $T_1$ will always have weight
-0 since $\min_{t \in T} \tau(t) = T_1$. We are guessing that even the oldest
-text we have available will provide some information to the prediction system.
-Another problem is that texts written even a few days apart are rated very
-different since we use the number of seconds since the epoch as the timestamps.
-We therefore defined yet another weighing function that still takes into account
-the time between texts but considers texts written in the same month to have the
-same timestamp. Furthermore it arbitrarily adds one to all the times to prevent
-the first text to get weight 0. In the following the function $\tau_m$ returns
-the number of months since the epoch a text was written.
-
-\begin{definition}[Time Weighted Relative Monthly]
-
-    The relative time weighted function $w_{rm}(T) \in [0.0, 1.0]$ where $T$ is
-    a sequence of texts written by the same author $\alpha$ in chronological
-    order, computes the weights as,
-
-    \begin{align}
-        w_{rm}(T_1), w_{rm}(T_2), \dots, w_{rm}(T_n) =&
-            \frac{(\tau_m(T_1) - \min_{t \in T} \tau_m(t)) + 1}{\sum_{t \in T} \tau_m(t)},
-            \frac{(\tau_m(T_2) - \min_{t \in T} \tau_m(t)) + 1}{\sum_{t \in T} \tau_m(t)}, \\
-            & \dots,
-            \frac{(\tau_m(T_n) - \min_{t \in T} \tau_m(t)) + 1}{\sum_{t \in T} \tau_m(t)}
-    \end{align}
-
-\end{definition}
-
-TODO: Define a weight function that also looks at the length of the texts.
-
-To get an idea of the weights the different functions produce we made a bar
-plot using the texts of a random student in our dataset shown in Figure
-\ref{fig:weights_bar}. The first text in the plot is the oldest and the last is
-the newest.
+The $\lambda$ parameter in that weight function can be used to control how
+important the newer texts are. When $\lambda = 0$ the Exponential Dropoff is
+equivalent to the Uniform Weighing and as $\lambda \rightarrow \infty$ more
+weight is given to the latest text. We have shown the weights given to different
+assignments for different $\lambda$ values in Figure \ref{fig:weights}.
 
 \begin{figure}
     \centering
-    \textbf{Example application of weight functions}\par\medskip
-    \includegraphics[width=\textwidth]{./pictures/method/weight_bar.png}
-    \caption{The weights given to texts with different timestamps using
-        different weight functions.}
-    \label{fig:weights_bar}
+    \textbf{Exponential Dropoff Weights}\par\medskip
+    \includegraphics[width=0.49\textwidth]{./pictures/method/weights.png}
+    \includegraphics[width=0.49\textwidth]{./pictures/method/weights_normalized.png}
+    \caption{Illustrate the Exponential Dropoff weight function for different
+        values of lambda. We apply the weight function to the numbers $0, 1,
+        \dots, 35$ since a typical student will attend high school for 3 years
+        (36 months). On the left the pure output of the weight function $w_e$ is
+        shown and on the right the normalized weights $w^*$. We wary $\lambda$
+        from 0 to 1 with step size 0.05.}
 \end{figure}
+
+%TODO: Define a weight function that also looks at the length of the texts.
 
 The $\theta$ parameter in the prediction system determines when we consider an
 unknown text to be written by an author. The natural choice for $\theta$ is 0.5
