@@ -260,17 +260,18 @@ There are different kinds of layers. Below is a non-exhaustive description of
 different layers.
 
 \begin{description}
-    \item[Dense Layer:] A dense layer is the layers that are shown in Figure
-        \ref{fig:example_nn}. In a dense layer the input of each neuron in the
+    \item[Dense Layer:] In a dense layer the input of each neuron in the
         layer is connected to the output of every neuron in the previous layer.
         Each neuron in the layer computes a weighted sum of the outputs of the
-        previous layers neurons and applies an activation function. The weights
-        for each of the neurons in the layer is different allowing each neuron
-        to learn a different combination of the previous layer.
+        previous layers' neurons and applies an activation function. The weights
+        for each of the neurons in the layer are different allowing each neuron
+        to learn a different combination of the previous layer. An example
+        of this can be seen in figure \ref{fig:example_nn}, where the hidden
+        layers are Dense.
     \item[Convolutional Layer:] A convolutional layer is mainly used to extract
         position independent features from data. The convolution consist of a
         sliding window that slides over some input data and gives an output for
-        each possible position of the input image. The sliding window use the
+        each possible position of the input image. The sliding window uses the
         same weights in all the input and will therefore extract the same
         features from different locations if it is presented with the same
         input. The convolution computes a single output for each window
@@ -453,11 +454,23 @@ different layers.
 
     \item[\gls{LSTM} Layer:] TODO
     \item[\gls{GRU} Layer:] TODO
-    \item[Embedding:] TODO
+
+    \item[Embedding:] In simple terms the Embedding layer as a layer mapping a
+    value intro into a continuous vector space. Given a sequence of integers is
+    uses the weights associated with the layer, to map that singular value to a
+    vector of predetermined size. This can be done on any sort of data, as longs
+    as it is encoded as a sequence of integers. In \gls{NLP} circumstances, this
+    can be applied to characters or words for example, where each element in
+    the sequence is firstly encoded as an integer value, and then fed to the
+    embedding layer, which maps it to the continuous vector space. The ambition
+    with using a layer such as this, that characters for example, get mapped to
+    a point close to other very similar characters. In addition it also adds
+    another trainable layer to optimize on.
+
     \item[Max Pooling Layer:] TODO.
 \end{description}
 
-\subsubsection{TODO: Backpropagation}\label{sec:BP}
+\subsubsection{TODO: Back-Propagation}\label{sec:BP}
 
 The neural network learns by updating the weights in the network. The weights
 are updated using \gls{BP}. The process can be split into three distinct steps
