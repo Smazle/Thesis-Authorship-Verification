@@ -177,8 +177,6 @@ class MacomReader(object):
             for line_n in self.authors[author]:
                 autor, date, text = linereader.readline(line_n).split(';')
                 decoded = util.clean(text)
-                if not self.char:
-                    decoded = util.wordProcess(decoded)
 
                 self.vocabulary = self.vocabulary.union(decoded)
                 self.vocabulary_usage = self.vocabulary_usage + \
@@ -281,7 +279,7 @@ class MacomReader(object):
             problems = itertools.cycle(problems)
 
             while True:
-                batch = itertools.islice(problems, self.batch_size)
+                batch = list(itertools.islice(problems, self.batch_size))
                 known_inputs, unknown_inputs, y = self.generate_batch(batch, reader)
                 yield known_inputs + unknown_inputs, y
 
@@ -305,7 +303,7 @@ class MacomReader(object):
 
         known_inputs = []
         unknown_inputs = []
-        for i in range(self.channels):
+        for i in range(len(self.channels)):
             if self.batch_normalization == 'truncate':
                 known_truncate_len = min(map(lambda x: x.shape[0], knowns[:, i]))
                 unknown_truncate_len = min(map(lambda x: x.shape[0], unknowns[:, i]))
@@ -336,12 +334,12 @@ class MacomReader(object):
 
         return known_inputs, unknown_inputs, y
 
-    def encode_char(chars):
+    def encode_char(self, chars):
         return np.array(map(lambda x: self.vocabulary_map[x]
                         if x in self.vocabulary_map else
                         self.garbage, chars))
 
-    def encode_word(words):
+    def encode_word(self, words):
         return np.array(map(lambda x: self.word_vocabulary_map[x]
                         if x in self.word_vocabulary_map else
                         self.word_garbage, words))
