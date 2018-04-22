@@ -470,7 +470,7 @@ different layers.
     \item[Max Pooling Layer:] TODO.
 \end{description}
 
-\subsubsection{TODO: Back-Propagation}\label{sec:BP}
+\subsubsection{Back-Propagation}\label{sec:BP}
 
 The neural network learns by updating the weights in the network. The weights
 are updated using \gls{BP}. The process can be split into three distinct steps
@@ -485,70 +485,128 @@ which are continuously repeated:
 The goal of these three steps is to minimize the overall cost of the network.
 The cost in this case, refers to the loss we end up with. In order to do so,
 all we have to to do i step in the direction of the negative gradient as this
-points to where the minimum cost can be found. In order to do so however, we
-have to know the gradient of the cost function, in other words we need to find
-the derivative. For us to do this, we have consider the cost function and the
-network for what it is, a series of functions taking as an argument the result
-of a previous function, and a weight, as per the equation \ref{eq:neuron}. This
-process from goes back all the way from the cost function to the initial input.
-As such, we have to make use of the chain rule in order to have a chance of
-computing the gradient of out loss function.
+points to where the minimum cost can be found. Looking at the structure
+of our network, we can quickly identify the error function being dependent
+on 2 values. The weights and the biases of the network that produces
+the output it computes its' cost based on. In other words
+we have to determine the partial derivative of of the cost function
+with respect to the weights and the biases of the network (In our
+case the bias is just, and as such, isn't relevant in 
+this context due to is be differentiated out).
 
-\begin{definition}[Chain Rule]
+\begin{lemma}[Chain Rule]
+\label{lemma:chainrule}
 
     If functions \textbf{f} and \textbf{g} er both differentiable and
     \textbf{F} is the composite function defined by $F(x) = f(g(x))$,
-    where $F' = f'(g(x)) \cdot g(x)$,
+    then $F' = f'(g(x)) \cdot g'(x)$,
 
-\end{definition}
+\end{lemma}
 
-In order to that the network makes use of the gradient to optimize each of
-the individual weights. Step 1, feeding forward, is simply a pass through the
-\gls{NN}. When this is done with singular training sample, we end up with a
-final cost of the network for that single training sample. It is this cost that
-back propagation attempts to optimize on. On order to do so all one simply
-has to do is step in direction of the negative gradient of the cost function.
-The cost function however is of cause dependent on outputting layer. Each
-neurons at these layers have 3 values we can choose to optimize our gradient
-on. The bias, the wight, and our choice of activation function. In the case of
-back propagation, it is with respect to the weights, we want to optimize our
-cost function. Using the gradient with respect to the weights of each neuron
-contributing the cost function, we can compute a set of desired changes to
-those desired that seek to optimize the output of the neuron. This is done
-for all neuron in the layer, ending up with a set of desired weight changes
-for each neuron in the layer. All the changes a summarized and then applied
-to that former layer, enabling that same process to be performed recursively
-back through the network, which is Step 2. Back Propagate. This is done for all
-the training samples in our training set, ending up with each training sample
-having a set desired weights. All these desires are then average, and applied
-to the network, which is Step 3. Update Weights. That final averaged set of
-weight are essentially the negative gradient of the cost function, which we
-step in the direction of using. A step of a size, specified by the learning
-rate. This process of back propagation however, is really computationally heavy
-as each training sample has to be processed. As such, in practice the training
-data is shuffled, and split into batches which are then fed to the network.
-This means that the final result of the back propagation wont be the actual
-negative gradient of the cost function, but rather a very close approximation,
-a difference which is negligible after repeated runs of the back propagation
-algorithm.
-
-In order to explain this using a more mathematical approach, we need to chose
-a activation function as our example, as it is with regard to that we find our
-gradient. In this case we chose the sigmoid activation function, as it was
-the more easy one to work with.
+But before actually being able to do so, we have took look at a neural
+network for what it is, which is a series of function calling each other
+in a recursive manner, applying the equation \ref{eq:neuron} at each
+step of the way. As such we seek the assistance of the
+chain rule (Lemma. \ref{lemma:chainrule}), a simple network for example
+purposes \ref{fig:simple_NN}, and a error function.
 
 $$
-\sigma(x) = \frac{1}{1 + e^{-x}}
+E = \frac{1}{2N}\sum_{x=1}^N(\hat{y}_x - y(x))^2
 $$
 
-The derivative of which is of cause:
+Where N is the total number of training samples, $\hat{y}$ is the predicted
+result, and $y$ is the correct one.
+For simplicity's sake, we choose to focus on a single sample. When
+this sample is run through the network(Step 1) seen in figure 
+\ref{fig:simple_NN}, some things changes. Firstly, we only a single
+sample, so the error can be rewritten to 
+
+$$
+E = \frac{1}{2}(\hat{y} - y)^2
+$$
+
+Additionally, the network only has one neuron per layer, and has a bias 
+of 1, so we can rewrite the neuron function \ref{eq:neuron}, to
+
+\begin{equation}\label{eq:neuron:small}
+    \hat(y) = z_i = h_i\left(
+        w_ix + 1
+    \right)
+\end{equation}
+
+Where i donotes the index of the layer this computation happens.
+This can be further rewritten to include the fact that x is in fact the output
+of the previous layer.
 
 \begin{align}
-\frac{d}{dx}\sigma(x) &= \frac{d}{dx}(\frac{1}{1 + e^{-x}})\\
-&= \frac{e^{-x}}{(1+e^{-x})^2}
+    z_i = h_i\left(
+        w_iz_{i-1} + 1
+    \right)
 \end{align}
 
-TODO: More math!
+For easy reference, lets also give the input the activation function a name $k_i$.
+
+\begin{equation}\label{eq:k_small}
+k_i = w_iz_{i-1}+1
+\end{equation}
+
+The scenario is that we have performed step 1, and passed out samples through
+the network. Step 2, back progropagation seeks to finding the partial derivative
+of the cost function E, and each weight of the network, so as to alow for the
+each weight to step in the direction that positively influences the cost of the
+network. Starting out, this is to be done to the output node of the network.
+As such we want to compute:
+$$
+\frac{\partial E}{\partial w_{L_N}}
+$$
+
+Which with all variables switched our is computed as such:
+
+\begin{align}
+\frac{\partial E}{\partial w_{L}} &= \frac{\partial}{\partial w_{L}}\left(\frac{1}{2}(\hat{y} - y)^2\right) &\\
+&= \frac{\partial}{\partial w_{L}} \left(\frac{1}{2}(z_L - y)^2\right) & \text{Substitute $\hat{y}$, as per equality \eqref{eq:neuron:small}}\\
+&= \frac{\partial}{\partial w_{L}} \left(\frac{1}{2}(h_L(w_{L}z_{L-1} + 1) - y)\right) & \text{Further substitute}\\
+&= \frac{\partial}{\partial w_{L}} \left(\frac{1}{2}(h_L(k_L) - y)\right) & \text{Use equality \eqref{eq:k_small} to simplify}\\
+&= \frac{\partial}{\partial w_{L}} \left(E(h_L(k_L))\right) & \text{Substitute with E}\\
+&= \frac{\partial E}{\partial h_L}\frac{\partial h_L}{\partial k_L}\frac{\partial k_L}{\partial w_{L}} & \text{Application of Lemma \ref{lemma:chainrule}}
+\end{align}
+
+This reveals the partials derivative dependace on the output of the former layer
+of the network. As such, back propagation performs this partial derivative back
+throughout the network, getting the partial derivative at each node. Using the
+final cost, we are then able to determine the desired weight change at this
+node. After averaging the desired changes over all the training samples, the
+weights are updated (Step 3), by stepping in the negative direction of the
+matrix comprised of all the partial derivatives computed, mulitiplied by a
+pre-determined step-size. 
+
+These three steps Forward Feed, Back-Propagate and update weights are repeated
+throughout the training cycle of the neural networks, so as to optimize the
+weights after each full iteration on the training set. As is to be expected
+this algorithm as very expensive computationally. For this reason in pratice,
+a method called batching is used. This method, shuffles and split the training
+data-set up into smaller batches. These batches are then run through the network
+one at a time, performing back-propagation after each run-through. This 
+results in the gradient not being as accurate after each batch, but this
+introduced inaccuracy is negligible compared to the computational time won.
+
+
+\begin{figure}
+\centering
+\begin{neuralnetwork}[height=1]
+    \newcommand{\nodetextclear}[2]{}
+    \newcommand{\nodetextx}[2]{$x_#2$}
+    \newcommand{\nodetexty}[2]{$y_#2$}
+    \inputlayer[count=1, bias=false, title=$L-3$, text=\nodetextclear]
+    \hiddenlayer[count=1, bias=false, title=$L-2$, text=\nodetextclear] \linklayers
+    \hiddenlayer[count=1, bias=false, title=$L-1$, text=\nodetextclear] \linklayers
+    \outputlayer[count=1, title=$L$, text=\nodetextclear] \linklayers
+\end{neuralnetwork}
+\caption{A simple single neuron per layer, neural network. Where $L$ describes
+the layer, and N notes the total number of layers in the network. The green
+nodel is the input layer, and the red is the output}
+\label{fig:simple_NN}
+\end{figure}
 
 
 \subsubsection{Activation Functions}
