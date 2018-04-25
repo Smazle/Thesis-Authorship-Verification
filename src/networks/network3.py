@@ -52,7 +52,7 @@ if args.reader is not None:
 else:
     reader = MacomReader(
         args.datafile,
-        batch_size=1,
+        batch_size=8,
         vocabulary_frequency_cutoff=1 / 100000,
         validation_split=0.95,
         batch_normalization='pad',
@@ -156,7 +156,7 @@ if args.weights is not None:
 model.fit_generator(
     generator=reader.generate_training(),
     steps_per_epoch=steps_n,
-    epochs=1,
+    epochs=1000,
     validation_data=reader.generate_validation(),
     validation_steps=val_steps_n,
     callbacks=callbacks
