@@ -3,6 +3,7 @@
 
 from .feature_search import FeatureSearch
 from sklearn.neighbors import KNeighborsClassifier
+from sklearn.model_selection import StratifiedShuffleSplit
 import argparse
 import numpy as np
 
@@ -40,5 +41,6 @@ parser.add_argument(
 args = parser.parse_args()
 
 knn = KNeighborsClassifier(3)
-search = FeatureSearch(knn, args.features, args.authors, normalize=True)
+search = FeatureSearch(knn, args.features, args.authors, normalize=True,
+                       validator=StratifiedShuffleSplit(3))
 search.fit(args.datafile, args.outfile)
