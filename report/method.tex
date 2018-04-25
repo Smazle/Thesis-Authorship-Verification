@@ -448,24 +448,24 @@ different layers.
             \label{fig:convolution_example}
         \end{figure}
 
-        % TODO: Show image of different convolutions.
         % TODO: Show example from text.
         % TODO: Maybe also explain different filters here.
 
     \item[\gls{LSTM} Layer:] TODO
     \item[\gls{GRU} Layer:] TODO
 
-    \item[Embedding:] In simple terms the Embedding layer as a layer mapping a
-    value intro into a continuous vector space. Given a sequence of integers is
-    uses the weights associated with the layer, to map that singular value to a
-    vector of predetermined size. This can be done on any sort of data, as longs
-    as it is encoded as a sequence of integers. In \gls{NLP} circumstances, this
-    can be applied to characters or words for example, where each element in
-    the sequence is firstly encoded as an integer value, and then fed to the
-    embedding layer, which maps it to the continuous vector space. The ambition
-    with using a layer such as this, that characters for example, get mapped to
-    a point close to other very similar characters. In addition it also adds
-    another trainable layer to optimize on.
+    \item[Embedding:] The Embedding layer is a layer that maps a value into a
+        continuous vector space. Given a sequence of integers it uses the
+        weights associated with the layer, to map that singular value to a
+        vector of predetermined size. This can be done on any sort of data, as
+        longs as it is encoded as a sequence of integers. In \gls{NLP}
+        circumstances, this can be applied to characters or words for example,
+        where each element in the sequence is firstly encoded as an integer
+        value, and then fed to the embedding layer, which maps it to the
+        continuous vector space. The hope with using a layer such as this, that
+        characters for example, get mapped to a point close to other
+        similar characters. In addition it also adds another trainable layer to
+        optimize on.
 
     \item[Max Pooling Layer:] TODO.
 \end{description}
@@ -478,21 +478,33 @@ which are continuously repeated:
 
 \begin{enumerate}
     \item Feed Forward,
-    \item Back Propagate,
+    \item Back Propagate, and
     \item Update Weights.
 \end{enumerate}
 
+% TODO: The gradient does not point the minimum. It points towards the maximum
+% which is why we take a step in the opposite direction of the gradient.
+% Furthermore it does not necessarily point towards the maximum. It only points
+% in the direction which is "up" if we take an infinitesimally small step in
+% that direction which is why you "zigzag" towards the goal and don't go in a
+% strait line.
+%
+% TODO: Maybe refer to where we are "looking at the structure of our network".
+%
+% TODO: Rewrite sentence "The weights and the biases of the network that
+% produces the output it computes its cost based on.".
+%
+% TODO: "In our case the bias is just, and as such, ...". What is the bias just?
 The goal of these three steps is to minimize the overall cost of the network.
-The cost in this case, refers to the loss we end up with. In order to do so,
-all we have to to do i step in the direction of the negative gradient as this
-points to where the minimum cost can be found. Looking at the structure
-of our network, we can quickly identify the error function being dependent
-on 2 values. The weights and the biases of the network that produces
-the output it computes its' cost based on. In other words
-we have to determine the partial derivative of of the cost function
-with respect to the weights and the biases of the network (In our
-case the bias is just, and as such, isn't relevant in 
-this context due to is be differentiated out).
+The cost refers to the loss we end up with. In order to do so, we take a step
+in the direction of the negative gradient as the gradient points to where the
+minimum cost can be found. Looking at the structure of our network, we can
+quickly identify the error function being dependent on 2 values. The weights
+and the biases of the network that produces the output it computes its cost
+based on. In other words we have to determine the partial derivative of the
+cost function with respect to the weights and the biases of the network (In our
+case the bias is just, and as such, isn't relevant in this context due to is be
+differentiated out).
 
 \begin{lemma}[Chain Rule]
 \label{lemma:chainrule}
@@ -503,40 +515,41 @@ this context due to is be differentiated out).
 
 \end{lemma}
 
-But before actually being able to do so, we have took look at a neural
-network for what it is, which is a series of function calling each other
-in a recursive manner, applying the equation \ref{eq:neuron} at each
-step of the way. As such we seek the assistance of the
-chain rule (Lemma. \ref{lemma:chainrule}), a simple network for example
-purposes \ref{fig:simple_NN}, and a error function.
+But before actually being able to do so, we have took look at a neural network
+for what it is, which is a series of functions calling each other in a recursive
+manner, applying Equation \ref{eq:neuron} at each step of the way. As such we
+seek the assistance of the chain rule (Lemma. \ref{lemma:chainrule}), a simple
+network for example purposes (Figure \ref{fig:simple_NN}), and an error
+function,
 
+% TODO: Maybe use i as index variable instead of x. Also shouldn't it be y_x
+% like it is \hat{y}_x?
 $$
-E = \frac{1}{2N}\sum_{x=1}^N(\hat{y}_x - y(x))^2
+E = \frac{1}{2N}\sum_{x=1}^N(\hat{y}_x - y(x))^2.
 $$
 
 Where N is the total number of training samples, $\hat{y}$ is the predicted
-result, and $y$ is the correct one.
-For simplicity's sake, we choose to focus on a single sample. When
-this sample is run through the network(Step 1) seen in figure 
-\ref{fig:simple_NN}, some things changes. Firstly, we only a single
-sample, so the error can be rewritten to 
+result, and $y$ is the correct one. For simplicity's sake, we chose to focus
+on a single sample. When this sample is run through the network(Step 1) seen
+in Figure \ref{fig:simple_NN}, some things changes. Firstly, we only a single
+sample, so the error can be rewritten to,
 
 $$
-E = \frac{1}{2}(\hat{y} - y)^2
+E = \frac{1}{2}(\hat{y} - y)^2.
 $$
 
-Additionally, the network only has one neuron per layer, and has a bias 
-of 1, so we can rewrite the neuron function \ref{eq:neuron}, to
+Additionally, the network only has one neuron per layer and a bias of 1, so
+we can rewrite the neuron function from Equation \ref{eq:neuron} to,
 
 \begin{equation}\label{eq:neuron:small}
-    \hat(y) = z_i = h_i\left(
+    \hat{y} = z_i = h_i\left(
         w_ix + 1
-    \right)
+    \right).
 \end{equation}
 
-Where i donotes the index of the layer this computation happens.
-This can be further rewritten to include the fact that x is in fact the output
-of the previous layer.
+Where i denotes the index of the layer in which this computation happens. This
+can be further rewritten to include the fact that $x$ is in fact the output of
+the previous layer.
 
 \begin{align}
     z_i = h_i\left(
@@ -544,18 +557,21 @@ of the previous layer.
     \right)
 \end{align}
 
-For easy reference, lets also give the input the activation function a name $k_i$.
+For easy reference we give the input of the activation function a name,
 
 \begin{equation}\label{eq:k_small}
-k_i = w_iz_{i-1}+1
+k_i = w_iz_{i-1}+1.
 \end{equation}
 
-The scenario is that we have performed step 1, and passed out samples through
-the network. Step 2, back progropagation seeks to finding the partial derivative
-of the cost function E, and each weight of the network, so as to alow for the
-each weight to step in the direction that positively influences the cost of the
-network. Starting out, this is to be done to the output node of the network.
-As such we want to compute:
+% TODO: Positively influences sound like the cost function increases which is
+% the opposite of what happend.
+The scenario is that we have performed step 1, and passed the sample through the
+network. Step 2 (Back Progropagation) seeks to find the partial derivative of
+the cost function $E$, and each weight of the network, to allow for each weight
+to step in the direction that positively influences the cost of the network.
+Starting out, this is to be done to the output node of the network. As such we
+want to compute:
+
 $$
 \frac{\partial E}{\partial w_{L_N}}
 $$
