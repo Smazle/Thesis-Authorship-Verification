@@ -116,10 +116,14 @@ as to not wrongfully accuse anyone of not having written their assignment.
 This however leaves out a equally important metric. While a low \gls{FNR}
 is the goal, MaCom also wants to minimize the number of \gls{FN}s compared
 to the total number of accusations made. This can be described as:
-$$
-\text{Accusation Error} = \frac{FN}{FN + TN}
-$$
-Our goal is also to keep this value under a certain threshold specified by MaCom.
+
+\begin{equation}
+    \text{Accusation Error} = \frac{FN}{FN + TN}
+\end{equation}
+
+% TODO: Specify what threshold we are talking about here.
+Our goal is also to keep this value under a certain threshold specified by
+MaCom.
 
 
 \subsection{Baseline Methods}
@@ -271,13 +275,14 @@ different layers.
     \item[Convolutional Layer:] A convolutional layer is mainly used to extract
         position independent features from data. The convolution consist of a
         sliding window that slides over some input data and gives an output for
-        each possible position of the input image. The sliding window uses the
+        each possible position in the input image. The sliding window uses the
         same weights in all the input and will therefore extract the same
         features from different locations if it is presented with the same
         input. The convolution computes a single output for each window
         position. The output is computed as the sum of the elementwise
         multiplication of the sliding window and the current part of the input
-        it is looking at. Lets for example consider a two dimensional input,
+        it is looking at \cite{oshea2015}. Let us for example consider a two
+        dimensional input,
 
         \begin{equation}
             I = \begin{pmatrix}
@@ -466,6 +471,24 @@ different layers.
         characters for example, get mapped to a point close to other
         similar characters. In addition it also adds another trainable layer to
         optimize on.
+
+        \begin{figure}
+            \centering
+            \textbf{Example Character Embedding}\par\medskip
+            \includegraphics[width=\textwidth]{./pictures/method/example_character_embeddings.png}
+            \caption{Character embeddings learned by a neural network. The
+                embeddings were originally in 5 dimensional vectorspace and what
+                is shown here is the first two principal components. Vowels are
+                shown in blue and consonants in green.}
+            \label{fig:embeddings}
+        \end{figure}
+
+        In Figure \ref{fig:embeddings} we have shown an embedding one of our
+        networks produces. The characters are embedded in 5 dimensions so the
+        plot shows the first two principal components only. We can see that
+        several lower and upper case letters have ended up close to each other.
+        That means that the network has learned that those characters are
+        interchangeable.
 
     \item[Max Pooling Layer:] TODO.
 \end{description}
@@ -743,6 +766,18 @@ representation will be given to some dense layers which will learn how to
 compare the feature-sets extracted. The Siamese part of the network is the
 convolutional part of the network which will share weights when extracting
 n-grams from the two texts.
+
+\cite{DBLP:journals/corr/0001KYS17} presented a comparative study of \gls{CNN}'s
+and \gls{RNN}'s in common \gls{NLP} tasks. They found that \gls{RNN}'s generally
+performed better in tasks where understanding the whole text was important while
+\gls{CNN}'s performed better when understanding were secondary and it was mainly
+about finding key phrases or statistical information from a text. In authorship
+verification the understanding of the text is generally irrelevant since we
+don't have to say anything about what a text is about but only whether or not it
+is written by the same author as some other text. Furthermore classical
+authorship verification methods have relied on statistical information from the
+texts and not on an actual understanding of the texts. We have therefore chosen
+to start out with using convolutional neural networks.
 
 The final output of the network will be a probability that $\alpha = \beta$.
 Since the MaCom dataset consist of multiple known texts per author and this

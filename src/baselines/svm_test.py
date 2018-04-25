@@ -93,7 +93,7 @@ for author in training_authors:
 
     # Leave one out cross validation over C and gamma range.
     C_range = np.logspace(-2, 10, 7)
-    gamma_range = np.logspace(-9, 3, 7)
+    gamma_range = np.logspace(-7, 5, 7)
     param_grid = dict(gamma=gamma_range, C=C_range)
     cv = LeaveOneOut()
     grid = GridSearchCV(SVC(kernel='rbf'), param_grid=param_grid, cv=cv)

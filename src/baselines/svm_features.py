@@ -41,6 +41,8 @@ parser.add_argument(
 args = parser.parse_args()
 
 svm = SVC()
+# TODO: This should not be the LeaveOneOut cross validation since that does not
+# work for SVM's.
 search = FeatureSearch(svm, args.features, args.authors, normalize=False,
                        validator=StratifiedKFold(3))
 search.fit(args.datafile, args.outfile)

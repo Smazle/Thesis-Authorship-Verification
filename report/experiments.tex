@@ -823,16 +823,35 @@ overshot a target and therefore ended up with a worse result.
     \centering
     \includegraphics[width=0.5\textwidth]{./pictures/experiments/network_5_accuracies.png}
     \caption{Shows the training and validation accuracies over the epochs of
-        training on the fourth iteration of network of iteration 5.}
+        training on the fifth iteration of our networks.}
     \label{fig:network_5_accuracies}
 \end{figure}
 
+The students normally write their personal information in the beginning of
+assignments. Earlier we described that MaCom removed most of the names from
+the assignment. But they still contain information such as classes, dates and
+a different number of new line characters per student. We were suspicious
+that the networks still made use of some meta data from the texts so we tried
+training the network again but where we removed the 200 first characters from
+each text. Since most of the metadata are located in the beginning of the
+text we hoped that that would remove the problem. On this new dataset the
+best validation accuracy was obtained in epoch 3 with an accuracy of 0.53233.
+Clearly the network relied exclusively on the metadata in the beginning of
+the texts. We have shown the training and validation accuracies in Figure
+\ref{fig:network_5_accuracies_2}.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\textwidth]{./pictures/experiments/network_5_accuracies_2.png}
+    \caption{Shows the training and validation accuracies over the epochs of
+        training on the fifth iteration of our networks where we removed the 200
+        first characters.}
+    \label{fig:network_5_accuracies_2}
+\end{figure}
 
 TODO:
 \begin{itemize}
-    \item Describe Backpropagration
     \item Describe Optimizers
-    \item Describe Convolutions
     \item Describe Dropout
     \item Describe RNN
     \item Use squared distance as merge function to get larger differences
