@@ -467,6 +467,24 @@ different layers.
         similar characters. In addition it also adds another trainable layer to
         optimize on.
 
+        \begin{figure}
+            \centering
+            \textbf{Example Character Embedding}\par\medskip
+            \includegraphics[width=\textwidth]{./pictures/method/example_character_embeddings.png}
+            \caption{Character embeddings learned by a neural network. The
+                embeddings were originally in 5 dimensional vectorspace and what
+                is shown here is the first two principal components. Vowels are
+                shown in blue and consonants in green.}
+            \label{fig:embeddings}
+        \end{figure}
+
+        In Figure \ref{fig:embeddings} we have shown an embedding one of our
+        networks produces. The characters are embedded in 5 dimensions so the
+        plot shows the first two principal components only. We can see that
+        several lower and upper case letters have ended up close to each other.
+        That means that the network has learned that those characters are
+        interchangeable.
+
     \item[Max Pooling Layer:] TODO.
 \end{description}
 
