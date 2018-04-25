@@ -3,6 +3,66 @@
 \subsection{Computer Specifications}
 \verbinput{./data/DxDiag.txt}
 
+\subsection{SVM Feature Selection}
+\begin{table}[]
+\centering
+\caption{The SVM feature that caused the best accuracy}
+\label{table:svm_feature}
+\begin{tabular}{lll}
+Feature Type & Frequency Rank & Feature \\
+char-2-gram&11&', '\\
+char-3-gram&1&' de'\\
+char-2-gram&206&'as'\\
+word-3-gram&264&('som', 'er', 'blevet')\\
+char-4-gram&11&' den'\\
+word-3-gram&304&('grunden', 'til', 'at')\\
+word-4-gram&132&('med', 'det', 'forml', 'at')\\
+word-4-gram&409&('er', 'ndvendige', 'for', 'at')\\
+char-10-gram&32&'opa-Parlam'\\
+word-2-gram&182&('indre', 'marked')\\
+char-6-gram&108&'lighed'\\
+char-8-gram&111&'ke Union'\\
+char-9-gram&215&' demokrat'\\
+word-4-gram&476&('for', 'det', 'frste', 'vil')\\
+char-8-gram&108&'ingen af'\\
+char-4-gram&210&'ære '\\
+word-gram&187&'se'\\
+word-3-gram&463&('i', 'den', 'flles')\\
+char-8-gram&6&'arlament'\\
+word-3-gram&400&('om', 'retlige', 'anliggender')\\
+word-3-gram&166&('om', 'at', 'der')\\
+word-gram&140&'store'\\
+word-3-gram&207&('jeg', 'gerne', 'sige')\\
+word-gram&26&'ogs'\\
+word-2-gram&270&('behov', 'for')\\
+word-4-gram&302&('og', 'frem', 'for', 'alt')\\
+char-9-gram&1&'Kommissio'\\
+char-5-gram&227&' hr. '\\
+word-3-gram&201&('ret', 'til', 'at')\\
+char-9-gram&274&'ering af '\\
+char-9-gram&23&'Hr. forma'\\
+char-6-gram&187&'en og '\\
+char-3-gram&273&'Kom'\\
+word-3-gram&487&('formanden', 'for', 'rdet')\\
+char-6-gram&37&' denne'\\
+word-gram&73&'bliver'\\
+word-2-gram&180&('af', 'disse')\\
+char-5-gram&86&'er er'\\
+char-10-gram&286&'repræsenta'\\
+char-10-gram&92&'ed hensyn '\\
+special-2-gram&37&'-/'\\
+pos-4-gram&34&("b'NOUN'", "b'ADP'", "b'PROPN'", "b'PUNCT'")\\
+char-5-gram&67&'. Jeg'\\
+char-3-gram&133&'vi '\\
+char-5-gram&267&'nings'\\
+char-6-gram&30&'rlamen'\\
+char-10-gram&106&'nstitution'\\
+char-2-gram&58&'m '\\
+word-3-gram&125&('for', 'at', 'de')\\
+word-2-gram&420&('og', 'sociale')
+\end{tabular}
+\end{table}
+
 \subsection{Convolution	Filters}
 \begin{table}
     \centering
@@ -243,4 +303,5 @@
         convolutional filter 100 of size 4. Sorted by the importance score.}
     \label{fig:features_convolution_4_100}
 \end{table}
+
 
