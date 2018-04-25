@@ -12,15 +12,15 @@ class FeatureSearch:
 
     authors = None
 
-    def __init__(self, classifier, minFeatureCount, authorLimit=None,
-                 normalize=True):
+    def __init__(self, classifier,
+                 minFeatureCount, authorLimit=None,
+                 normalize=True, validator=3):
         self.classifier = classifier
         self.minFeatureCount = minFeatureCount
         self.authorLimit = authorLimit
         self.normalize = normalize
+        self.validator = validator
 
-    # TODO: The outfile format is very poor if more than 1 classifier is given.
-    # We should probably write a line per classifier or something like that.
     def fit(self, dataFile, outfile):
         print('Starting Feature Search')
         self.__generateData__(dataFile)
@@ -67,7 +67,7 @@ class FeatureSearch:
             X, y = self.__generateAuthorData__(author)
 
             score = cross_val_score(
-                classifier, X[:, features], y, cv=3)
+                classifier, X[:, features], y, cv=self.validator)
 
             authorScores.append(np.mean(score))
 
