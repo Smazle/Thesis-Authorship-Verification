@@ -6,13 +6,13 @@
 In this section we will go through the experiments performed in order to get
 our baseline results. While many different features can be used when performing
 \gls{NLP}, we chose the same features, as was used in \cite{US}, since they
-span several several of the different linguistic layers. The linguistic
-layers are different areas which all serve to describe a certain text. An
-example this could be the character level layer, which as the name implies,
-focuses on the individual characters used in a specific text. Other examples
-of this, could the sentence layer, that focuses on the sentences of the text,
-and the meta layer, that focuses on things such as publishing/delivery date,
-and file format. The features available to pick from in this case are:
+span several several of the different linguistic layers. The linguistic layers
+are different areas which all serve to describe a certain text. An example this
+could be the character level layer, which as the name implies, focuses on the
+individual characters used in a specific text. Other examples of this, could the
+sentence layer, that focuses on the sentences of the text, and the meta layer,
+that focuses on things such as publishing/delivery date, and file format. The
+features available to pick from in this case are:
 
 \begin{itemize}
     \item Word-N-grams,
@@ -35,13 +35,12 @@ corpus consists of 22,476 sentences, and 563,358 words.
 The actual implementation of both the \gls{SVM} and the Extended Delta method,
 very closely resembles the implementation used in \cite{US}. There is however
 a very big difference, with the actual application of the delta method.
-Contrary to the scenario in \cite{US}, where PAN data was used, there isn't
-an instance where we only have 1 text per author. As such the original
-version of the delta method can be used. This is where, when given a new text
-$x$ supposedly written by an author $\alpha \in \mathcal{A}$, 
-his texts $T_\alpha$ are extracted, and so is a 
-set of texts no written by him $\overline{T}_alpha$ where 
-$|\overline{T}_\alpha| = |T_\alpha|$. The text, along with a negative
+Contrary to the scenario in \cite{US}, where PAN data was used, there isn't an
+instance where we only have 1 text per author. As such the original version
+of the delta method can be used. This is where, when given a new text $x$
+supposedly written by an author $\alpha \in \mathcal{A}$, his texts $T_\alpha$
+are extracted, and so is a set of texts no written by him $\overline{T}_alpha$
+where $|\overline{T}_\alpha| = |T_\alpha|$. The text, along with a negative
 sample text $z$, we know now to be written by $\alpha$ is given to a \gls{KNN}
 classifier, which determine if $x \in T_\alpha$ and $z \in \overline{T}_alpha$.
 
@@ -125,21 +124,20 @@ This greedy algorithm works as described by \cite{kanDeng}, which is a simple
 forward feature selection. Having out previously created feature set, we loop
 through each single feature, validating its' accuracy when applied to each
 $\alpha \in \mathcal{A}$. As eluded to earlier, this consists of fetching
-$T_{\alpha}$ and a set $\overline{T}_{\alpha}$, where $|\overline{T}_\alpha|
-= |T_\alpha|$. Using this set of positive and negative cases, we make use
-k-fold cross validation to determine the performance of the feature
-for that author. This is done for all authors, and when averaged we have the
-performance of that single feature. This process is then repeated for all
-features. The best performing feature is then added to out candidate set of
-features. The next iteration we loop through all the feature again, but we
-validate against each feature in combination with the already selected features.
-This process is repeated until a set number of features are selected. At this
-point we determine at which point we had the best candidate set, and use that
-hence fourth.
+$T_{\alpha}$ and a set $\overline{T}_{\alpha}$, where $|\overline{T}_\alpha| =
+|T_\alpha|$. Using this set of positive and negative cases, we make use k-fold
+cross validation to determine the performance of the feature for that author.
+This is done for all authors, and when averaged we have the performance of
+that single feature. This process is then repeated for all features. The best
+performing feature is then added to out candidate set of features. The next
+iteration we loop through all the feature again, but we validate against each
+feature in combination with the already selected features. This process is
+repeated until a set number of features are selected. At this point we determine
+at which point we had the best candidate set, and use that hence fourth.
 
-Even this greedy approach proved to be very time consuming. As such, we only
-did as described and found the best features, but left out the hyper-parameters
-C, and gamma for the SVM, and K and the distance metric for the extended delta
+Even this greedy approach proved to be very time consuming. As such, we only did
+as described and found the best features, but left out the hyper-parameters C,
+and $\gamma$ for the SVM, and K and the distance metric for the extended delta
 method. These hyper-parameters were also selected through a separate process
 which will be described in a later section.
 
@@ -151,20 +149,19 @@ had the 2 class training set consisting of 6 value, evenly split between the
 2 classes. In the case where we split those 6 values into 3 folds, there is a
 chance that a fold contains two value of the same class, which means that if $K
 = 3$ in our case, both of those wont ever be able to classified correctly as
-there is only 1 of that class in the training set. As such, stratified
-K fold cross validation is used instead, as it uphold the class distribution
-in its' folds.
-Leave one out cross validation would of course also work in the case
-of both out methods, but we were limited by the computation time, and for that
+there is only 1 of that class in the training set. As such, stratified K fold
+cross validation is used instead, as it uphold the class distribution in its'
+folds. Leave one out cross validation would of course also work in the case of
+both out methods, but we were limited by the computation time, and for that
 reason we opted for K folds instead.
 
-For both the \gls{SVM} and Extended Delta method, we ran this algorithm 
-until 250 features were selected. Computation time was still and issue,
-so additionally we only made use of 5\% of the total number of authors.
-The SVM performed its' feature selection using the default RBF kernel,
-a C with value 1, and $\gamma = 1 / \text{n\_features}$.
-Due to some authors having below 3 texts, the default K value of \gls{KNN}s 
-K parameter was set to 3 for the feature selection. 
+For both the \gls{SVM} and Extended Delta method, we ran this algorithm
+until 250 features were selected. Computation time was still and issue, so
+additionally we only made use of 5\% of the total number of authors. The SVM
+performed its' feature selection using the default RBF kernel, a C with value 1,
+and $\gamma = \frac{1}{\text{n\_features}}$. Due to some authors having below
+3 texts, the default K value of \gls{KNN}s K parameter was set to 3 for the
+feature selection.
 
 The results of both the SVM and the Extended Delta method feature selection
 can be seen in figure \ref{fig:fs_results}. (DISCLAIMER: Extended Delta is
@@ -208,7 +205,8 @@ SVM&:
         \end{array}
 \end{align}
 
-The one parameter yet to be explained i $p$, which refers to the p in the minkowski distance.
+The one parameter yet to be explained i $p$, which refers to the p in the
+minkowski distance.
 
 $$
 D(X,Y) = \left(\sum_{i = 1}^n |x_i - y_i|^p\right)^{1/p}
@@ -221,15 +219,14 @@ hyper parameters we average the performance of the method over all unique
 authors in the training set, in a manner very similar to the feature selection.
 A key difference is that rather than using 3 fold cross validation, we now use
 leave one out cross validation. We aren't performing nearly as many iterations
-this time around, which is why this change was made. In this case, we loop over
-all unique authors one time for each combination of hyper parameter, the number
-of which dwarfs the amount in the feature selection. The accuracy of each
+this time around, which is why this change was made. In this case, we loop
+over all unique authors one time for each combination of hyper parameter, the
+number of which dwarfs the amount in the feature selection. The accuracy of each
 parameter configuration can be seen in figure TODO:ref, and figure TODO: ref.
 
-After the best parameters were found, we apply the methods to the 20\%
-we set aside for validation originally. This resulted in
-the SVM getting an accuracy of 0.713 with its best parameters being
-$C=100.0$ and $\gamma=1000$.
+After the best parameters were found, we apply the methods to the 20\% we set
+aside for validation originally. This resulted in the SVM getting an accuracy of
+0.713 with its best parameters being $C=100.0$ and $\gamma=1000$.
 
 TODO: Extended Delta Results
 
