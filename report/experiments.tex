@@ -9,10 +9,10 @@ our baseline results. While many different features can be used when performing
 span several several of the different linguistic layers. The linguistic layers
 are different areas which all serve to describe a certain text. An example this
 could be the character level layer, which as the name implies, focuses on the
-individual characters used in a specific text. Other examples of this, could the
-sentence layer, that focuses on the sentences of the text, and the meta layer,
-that focuses on things such as publishing/delivery date, and file format. The
-features available to pick from in this case are:
+individual characters used in a specific text. Other examples of this, could
+be the sentence layer, that focuses on the sentences of the text, and the meta
+layer, that focuses on things such as publishing/delivery date, and file format.
+The features available to pick from in this case are:
 
 \begin{itemize}
     \item Word-N-grams,
@@ -42,7 +42,7 @@ supposedly written by an author $\alpha \in \mathcal{A}$, his texts $T_\alpha$
 are extracted, and so is a set of texts no written by him $\overline{T}_alpha$
 where $|\overline{T}_\alpha| = |T_\alpha|$. The text, along with a negative
 sample text $z$, we know now to be written by $\alpha$ is given to a \gls{KNN}
-classifier, which determine if $x \in T_\alpha$ and $z \in \overline{T}_alpha$.
+classifier, which determine if $x \in T_\alpha$ and $z \in \overline{T}_\alpha$.
 
 \subsubsection{Feature Selection}
 
@@ -811,7 +811,7 @@ in Figure \ref{fig:network5}.
 \end{figure}
 
 The network reached an accuracy of 0.89393 in epoch 18. The training and
-validation accuracies are shown in Figure \ref{fig:network5_accuracies}. At the
+validation accuracies are shown in Figure \ref{fig:network_5_accuracies}. At the
 end of the training the network suddenly goes from about 90\% accuracy and back
 to 50\% accuracy. A reason for that happening could be that the optimizer
 overshot a target and therefore ended up with a worse result.
