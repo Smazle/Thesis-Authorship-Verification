@@ -44,6 +44,8 @@ with open(args.featurefile, 'r') as feature_file:
 
     datacolumns = filter(lambda x: x != 'author', data.columns)
     X = data.as_matrix(columns=datacolumns)
+    total_text_number = X.shape[0]
+    total_feature_number = X.shape[1]
 
 # Get list of unique authors in a scrambled order so we don't have any bias in
 # the order of the datafile.
@@ -58,7 +60,15 @@ validation_authors = unique_authors[split:]
 
 # Read which features we should train on.
 with open(args.features, 'r') as f:
-    features_to_use = np.loadtxt(f).astype(np.bool)
+    data = pd.read_csv(f, header=None)
+    indices = data.as_matrix(columns=[data.columns[0]]).flatten()
+    accuracies = data.as_matrix(columns=[data.columns[1]]).flatten()
+
+    feature_n = np.argmax(accuracies)
+    feature_set = indices[0:feature_n]
+
+    features_to_use = np.zeros((total_feature_number, ), dtype=np.bool)
+    features_to_use[feature_set] = 1
 
 X = X[:, features_to_use]
 

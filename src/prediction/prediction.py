@@ -9,7 +9,7 @@ import jsonpickle
 import random
 
 
-SECS_PER_MONTH = 2592000
+SECS_PER_MONTH = 60 * 60 * 24 * 30
 
 
 # TODO: Take parameter specifying how many negatives to create.
