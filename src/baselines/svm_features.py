@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from .feature_search import FeatureSearch
-from sklearn.model_selection import LeaveOneOut
+from sklearn.model_selection import StratifiedKFold
 from sklearn.svm import SVC
 import argparse
 import numpy as np
@@ -42,5 +42,5 @@ args = parser.parse_args()
 
 svm = SVC()
 search = FeatureSearch(svm, args.features, args.authors, normalize=False,
-                       validator=LeaveOneOut())
+                       validator=StratifiedKFold(3))
 search.fit(args.datafile, args.outfile)
