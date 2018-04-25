@@ -55,7 +55,7 @@ else:
         batch_size=8,
         vocabulary_frequency_cutoff=1 / 100000,
         validation_split=0.95,
-        batch_normalization="pad",
+        batch_normalization='pad',
         pad=False
     )
 

@@ -9,6 +9,7 @@
 \usepackage{verbatim}
 \usepackage[all]{xy}
 \usepackage{amssymb}
+\usepackage{neuralnetwork}
 \usepackage{listings}
 \usepackage{glossaries}
 \usepackage{hyperref}
@@ -66,6 +67,10 @@
 \newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
 \newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
 \newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
 
 \author{
     \begin{tabular}{ccc}

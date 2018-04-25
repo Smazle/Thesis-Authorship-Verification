@@ -260,17 +260,18 @@ There are different kinds of layers. Below is a non-exhaustive description of
 different layers.
 
 \begin{description}
-    \item[Dense Layer:] A dense layer is the layers that are shown in Figure
-        \ref{fig:example_nn}. In a dense layer the input of each neuron in the
+    \item[Dense Layer:] In a dense layer the input of each neuron in the
         layer is connected to the output of every neuron in the previous layer.
         Each neuron in the layer computes a weighted sum of the outputs of the
-        previous layers neurons and applies an activation function. The weights
-        for each of the neurons in the layer is different allowing each neuron
-        to learn a different combination of the previous layer.
+        previous layers' neurons and applies an activation function. The weights
+        for each of the neurons in the layer are different allowing each neuron
+        to learn a different combination of the previous layer. An example
+        of this can be seen in figure \ref{fig:example_nn}, where the hidden
+        layers are Dense.
     \item[Convolutional Layer:] A convolutional layer is mainly used to extract
         position independent features from data. The convolution consist of a
         sliding window that slides over some input data and gives an output for
-        each possible position of the input image. The sliding window use the
+        each possible position of the input image. The sliding window uses the
         same weights in all the input and will therefore extract the same
         features from different locations if it is presented with the same
         input. The convolution computes a single output for each window
@@ -447,17 +448,29 @@ different layers.
             \label{fig:convolution_example}
         \end{figure}
 
-        % TODO: Show image of different convolutions.
         % TODO: Show example from text.
         % TODO: Maybe also explain different filters here.
 
     \item[\gls{LSTM} Layer:] TODO
     \item[\gls{GRU} Layer:] TODO
-    \item[Embedding:] TODO
+
+    \item[Embedding:] The Embedding layer is a layer that maps a value into a
+        continuous vector space. Given a sequence of integers it uses the
+        weights associated with the layer, to map that singular value to a
+        vector of predetermined size. This can be done on any sort of data, as
+        longs as it is encoded as a sequence of integers. In \gls{NLP}
+        circumstances, this can be applied to characters or words for example,
+        where each element in the sequence is firstly encoded as an integer
+        value, and then fed to the embedding layer, which maps it to the
+        continuous vector space. The hope with using a layer such as this, that
+        characters for example, get mapped to a point close to other
+        similar characters. In addition it also adds another trainable layer to
+        optimize on.
+
     \item[Max Pooling Layer:] TODO.
 \end{description}
 
-\subsubsection{TODO: Backpropagation}\label{sec:BP}
+\subsubsection{Back-Propagation}\label{sec:BP}
 
 The neural network learns by updating the weights in the network. The weights
 are updated using \gls{BP}. The process can be split into three distinct steps
@@ -465,77 +478,155 @@ which are continuously repeated:
 
 \begin{enumerate}
     \item Feed Forward,
-    \item Back Propagate,
+    \item Back Propagate, and
     \item Update Weights.
 \end{enumerate}
 
+% TODO: The gradient does not point the minimum. It points towards the maximum
+% which is why we take a step in the opposite direction of the gradient.
+% Furthermore it does not necessarily point towards the maximum. It only points
+% in the direction which is "up" if we take an infinitesimally small step in
+% that direction which is why you "zigzag" towards the goal and don't go in a
+% strait line.
+%
+% TODO: Maybe refer to where we are "looking at the structure of our network".
+%
+% TODO: Rewrite sentence "The weights and the biases of the network that
+% produces the output it computes its cost based on.".
+%
+% TODO: "In our case the bias is just, and as such, ...". What is the bias just?
 The goal of these three steps is to minimize the overall cost of the network.
-The cost in this case, refers to the loss we end up with. In order to do so,
-all we have to to do i step in the direction of the negative gradient as this
-points to where the minimum cost can be found. In order to do so however, we
-have to know the gradient of the cost function, in other words we need to find
-the derivative. For us to do this, we have consider the cost function and the
-network for what it is, a series of functions taking as an argument the result
-of a previous function, and a weight, as per the equation \ref{eq:neuron}. This
-process from goes back all the way from the cost function to the initial input.
-As such, we have to make use of the chain rule in order to have a chance of
-computing the gradient of out loss function.
+The cost refers to the loss we end up with. In order to do so, we take a step
+in the direction of the negative gradient as the gradient points to where the
+minimum cost can be found. Looking at the structure of our network, we can
+quickly identify the error function being dependent on 2 values. The weights
+and the biases of the network that produces the output it computes its cost
+based on. In other words we have to determine the partial derivative of the
+cost function with respect to the weights and the biases of the network (In our
+case the bias is just, and as such, isn't relevant in this context due to is be
+differentiated out).
 
-\begin{definition}[Chain Rule]
+\begin{lemma}[Chain Rule]
+\label{lemma:chainrule}
 
     If functions \textbf{f} and \textbf{g} er both differentiable and
     \textbf{F} is the composite function defined by $F(x) = f(g(x))$,
-    where $F' = f'(g(x)) \cdot g(x)$,
+    then $F' = f'(g(x)) \cdot g'(x)$,
 
-\end{definition}
+\end{lemma}
 
-In order to that the network makes use of the gradient to optimize each of
-the individual weights. Step 1, feeding forward, is simply a pass through the
-\gls{NN}. When this is done with singular training sample, we end up with a
-final cost of the network for that single training sample. It is this cost that
-back propagation attempts to optimize on. On order to do so all one simply
-has to do is step in direction of the negative gradient of the cost function.
-The cost function however is of cause dependent on outputting layer. Each
-neurons at these layers have 3 values we can choose to optimize our gradient
-on. The bias, the wight, and our choice of activation function. In the case of
-back propagation, it is with respect to the weights, we want to optimize our
-cost function. Using the gradient with respect to the weights of each neuron
-contributing the cost function, we can compute a set of desired changes to
-those desired that seek to optimize the output of the neuron. This is done
-for all neuron in the layer, ending up with a set of desired weight changes
-for each neuron in the layer. All the changes a summarized and then applied
-to that former layer, enabling that same process to be performed recursively
-back through the network, which is Step 2. Back Propagate. This is done for all
-the training samples in our training set, ending up with each training sample
-having a set desired weights. All these desires are then average, and applied
-to the network, which is Step 3. Update Weights. That final averaged set of
-weight are essentially the negative gradient of the cost function, which we
-step in the direction of using. A step of a size, specified by the learning
-rate. This process of back propagation however, is really computationally heavy
-as each training sample has to be processed. As such, in practice the training
-data is shuffled, and split into batches which are then fed to the network.
-This means that the final result of the back propagation wont be the actual
-negative gradient of the cost function, but rather a very close approximation,
-a difference which is negligible after repeated runs of the back propagation
-algorithm.
+But before actually being able to do so, we have took look at a neural network
+for what it is, which is a series of functions calling each other in a recursive
+manner, applying Equation \ref{eq:neuron} at each step of the way. As such we
+seek the assistance of the chain rule (Lemma. \ref{lemma:chainrule}), a simple
+network for example purposes (Figure \ref{fig:simple_NN}), and an error
+function,
 
-In order to explain this using a more mathematical approach, we need to chose
-a activation function as our example, as it is with regard to that we find our
-gradient. In this case we chose the sigmoid activation function, as it was
-the more easy one to work with.
-
+% TODO: Maybe use i as index variable instead of x. Also shouldn't it be y_x
+% like it is \hat{y}_x?
 $$
-\sigma(x) = \frac{1}{1 + e^{-x}}
+E = \frac{1}{2N}\sum_{x=1}^N(\hat{y}_x - y(x))^2.
 $$
 
-The derivative of which is of cause:
+Where N is the total number of training samples, $\hat{y}$ is the predicted
+result, and $y$ is the correct one. For simplicity's sake, we chose to focus
+on a single sample. When this sample is run through the network(Step 1) seen
+in Figure \ref{fig:simple_NN}, some things changes. Firstly, we only a single
+sample, so the error can be rewritten to,
+
+$$
+E = \frac{1}{2}(\hat{y} - y)^2.
+$$
+
+Additionally, the network only has one neuron per layer and a bias of 1, so
+we can rewrite the neuron function from Equation \ref{eq:neuron} to,
+
+\begin{equation}\label{eq:neuron:small}
+    \hat{y} = z_i = h_i\left(
+        w_ix + 1
+    \right).
+\end{equation}
+
+Where i denotes the index of the layer in which this computation happens. This
+can be further rewritten to include the fact that $x$ is in fact the output of
+the previous layer.
 
 \begin{align}
-\frac{d}{dx}\sigma(x) &= \frac{d}{dx}(\frac{1}{1 + e^{-x}})\\
-&= \frac{e^{-x}}{(1+e^{-x})^2}
+    z_i = h_i\left(
+        w_iz_{i-1} + 1
+    \right)
 \end{align}
 
-TODO: More math!
+For easy reference we give the input of the activation function a name,
+
+\begin{equation}\label{eq:k_small}
+k_i = w_iz_{i-1}+1.
+\end{equation}
+
+% TODO: Positively influences sound like the cost function increases which is
+% the opposite of what happend.
+The scenario is that we have performed step 1, and passed the sample through the
+network. Step 2 (Back Progropagation) seeks to find the partial derivative of
+the cost function $E$, and each weight of the network, to allow for each weight
+to step in the direction that positively influences the cost of the network.
+Starting out, this is to be done to the output node of the network. As such we
+want to compute:
+
+$$
+\frac{\partial E}{\partial w_{L_N}}
+$$
+
+Which with all variables switched our is computed as such:
+
+% TODO: Why is it now w_L instead of w_{L_N}?
+\begin{align}
+\frac{\partial E}{\partial w_{L}} &= \frac{\partial}{\partial w_{L}}\left(\frac{1}{2}(\hat{y} - y)^2\right) &\\
+&= \frac{\partial}{\partial w_{L}} \left(\frac{1}{2}(z_L - y)^2\right) & \text{Substitute $\hat{y}$, as per equality \eqref{eq:neuron:small}}\\
+&= \frac{\partial}{\partial w_{L}} \left(\frac{1}{2}(h_L(w_{L}z_{L-1} + 1) - y)\right) & \text{Further substitute}\\
+&= \frac{\partial}{\partial w_{L}} \left(\frac{1}{2}(h_L(k_L) - y)\right) & \text{Use equality \eqref{eq:k_small} to simplify}\\
+&= \frac{\partial}{\partial w_{L}} \left(E(h_L(k_L))\right) & \text{Substitute with E}\\
+&= \frac{\partial E}{\partial h_L}\frac{\partial h_L}{\partial k_L}\frac{\partial k_L}{\partial w_{L}} & \text{Application of Lemma \ref{lemma:chainrule}}
+\end{align}
+
+% TODO: "matrix comprised of all the partial derivatives". Is this the gradient?
+% If yes why not write that?
+This reveals the partial derivatives dependence on the output of the former
+layer of the network. As such, back propagation propagates the partial
+derivative back throughout the network, getting the partial derivative at each
+node. Using the final cost, we are then able to determine the desired weight
+change at this node. After averaging the desired changes over all the training
+samples, the weights are updated (Step 3), by stepping in the negative direction
+of the matrix comprised of all the partial derivatives computed, mulitiplied by
+a pre-determined step-size.
+
+These three steps Feed-Forward, Back-Propagate and update weights are repeated
+throughout the training cycle of the neural networks, so as to optimize the
+weights after each full iteration on the training set. As is to be expected
+this algorithm as very expensive computationally. For this reason in pratice,
+a method called batching is used. This method, shuffles and split the training
+dataset up into smaller batches. These batches are then run through the network
+one at a time, performing back-propagation after each run-through. This results
+in the gradient not being as accurate after each batch, but this introduced
+inaccuracy is negligible compared to the computational time won.
+
+
+\begin{figure}
+\centering
+\begin{neuralnetwork}[height=1]
+    \newcommand{\nodetextclear}[2]{}
+    \newcommand{\nodetextx}[2]{$x_#2$}
+    \newcommand{\nodetexty}[2]{$y_#2$}
+    \inputlayer[count=1, bias=false, title=$L-3$, text=\nodetextclear]
+    \hiddenlayer[count=1, bias=false, title=$L-2$, text=\nodetextclear] \linklayers
+    \hiddenlayer[count=1, bias=false, title=$L-1$, text=\nodetextclear] \linklayers
+    \outputlayer[count=1, title=$L$, text=\nodetextclear] \linklayers
+\end{neuralnetwork}
+\caption{A simple single neuron per layer, neural network. Where $L$ describes
+the layer, and $N$ notes the total number of layers in the network. The green
+node is the input layer, and the red is the output}
+\label{fig:simple_NN}
+% TODO: N is not in the figure so maybe it doesn't have to be in the caption.
+\end{figure}
 
 
 \subsubsection{Activation Functions}
@@ -670,17 +761,18 @@ averaged out.
 
     \label{def:prediction_system}
 
-    Our prediction system is a function $P(f, w, \alpha, t_{unkown}, \theta)
-    \in \{0, 1\}$ where $f$ is a function taking two texts and giving the
-    probability that the texts are written by the same author, $\alpha$ is an
-    author, $t_{unknown}$ is a text of unknown authorship, $w$ is a function
-    $w:T_\alpha \rightarrow [0,1]$ where $\sum_{t_{known} \in T_\alpha}
+    Our prediction system is a function $P:f, w, \alpha, t_{unkown}, \theta
+    \rightarrow \{0, 1\}$ where $f$ is a function taking two texts and giving
+    the probability that the texts are written by the same author, $\alpha$
+    is an author, $t_{unknown}$ is a text of unknown authorship, $w:T_\alpha
+    \rightarrow [0,1]$ is a function where $\sum_{t_{known} \in T_\alpha}
     w(t_{known}) = 1$ and $\theta \in [0,1]$. The prediction system then
     returns,
 
     \begin{equation}
         P(f, w, \alpha, t_{unkown}, \theta) = \begin{cases}
-            1 & \text{if } \sum_{t_{known} \in T_\alpha} w(t_{known}) f(t_{known}, t_{unkown}) > \theta \\
+            1 & \text{if } \sum_{t_{known} \in T_\alpha} w(t_{known})
+                f(t_{known}, t_{unkown}) > \theta \\
             0 & \text{otherwise}.
         \end{cases}
     \end{equation}
@@ -696,123 +788,78 @@ probability. We are going to present several different networks that can be used
 as $f$ as they will take two texts and end with a softmax layer that outputs a
 probability distribution.
 
-The $w$ parameter in the prediction system can be used to weigh the known
-texts differently. The most obvious weighing scheme is to just use a uniform
+The $w$ parameter in the prediction system can be used to weigh the known texts
+differently. We are going to try several different weight functions that weigh
+texts based on metadata such as the time they were written and the length of
+the texts. The only constraint on a weight function $w$ is that $\sum_{t \in
+T_\alpha} w(t) = 1$. We will ignore that constraint in the following definitions
+of weight functions. Any function $w: T_\alpha \rightarrow \mathbb{R}^+$ that
+does not follow the constraint can be transformed into a version
+$w^*: T_\alpha \rightarrow [0,1]$ that does follow the constraint where
+$w^*(t) = \frac{w(t)}{\sum_{t \in T_\alpha} w(t)}$. We can therefore define the
+weight functions $w$ while ignoring the constraint but use $w^*$ as the actual
+weight function in the prediction system.
+
+The most obvious weighing scheme is to just use a uniform
 weighting. That way we simply take an average of the predictions of our networks
-over the different texts an author has written. We define all the following
-weight functions as functions taking a sequence of texts written by the same
-author in chronological order and returning a sequence of weights in the same
-order. The weight function were used in \ref{def:prediction_system} as a
-function of a single text $t$ and in that use case it simply returns the weight
-given to that particular text in the following definitions.
+over the different texts an author has written.
 
 \begin{definition}[Uniform Weighing]
 
-    The uniform weight function $w_\mathcal{U}(T) \in [0.0, 1.0]$
-    where $T$ is a sequence of texts written by the same author $\alpha$ in
-    chronological order, computes the weights as,
+    The uniform weight function $w_\mathcal{U}: T_\alpha \rightarrow \{1\}$ is
+    defined as,
 
     \begin{equation}
-        w_\mathcal{U}(T_1), w_\mathcal{U}(T_2), \dots, w_\mathcal{U}(T_n) =
-        \frac{1}{n}, \dots, \frac{1}{n}
+        w_\mathcal{U}(t) = 1
     \end{equation}
 
 \end{definition}
 
-The uniform weight function does not use any information we have about the
-texts. It is mostly part of our weight functions as a sort of baseline to
-make sure we don't make any weight functions that are worse than a simple
-uniform weighing. Our other weight functions makes use of metadata we know
-about the texts. As an example we have a timestamp of when a text was turned
-in to the MaCom servers. We therefore know when the text was written and
-we assume that newer texts will better reflect the current writing style
-of a studen than older texts. We have therefore defined several weight
-functions using the times the texts was written. In the following we let
-$\tau$ be a function that returns the number of seconds since the epoch
-\footnote{https://en.wikipedia.org/wiki/Unix\_time} that the text was turned in
-at. We start with a simple weight function where the newest text has weight
-$\frac{1}{2}$, the second weight $\frac{1}{4}$ and so on.
+The uniform weight function does not use any information we know about the
+texts. It is mostly part of our weight functions as a baseline to make sure we
+don't make any weight functions that are worse than a simple uniform weighing.
+Our other weight functions makes use of metadata we know about the texts. As an
+example we have a timestamp of when a text was turned in to the MaCom servers.
+We therefore know when the text was written and we assume that newer texts will
+better reflect the current writing style of a student than older texts. We
+have therefore defined several weight functions using the times the texts was
+written. Let $\tau: T_\alpha \rightarrow \mathbb{N}$ be the function returning
+the number of months between when the newest text $t \in T_\alpha$ and the
+text it is given were turned in where a month is considered 30 days. Our time
+based weight function are then defined as,
 
-\begin{definition}[Time Weighted Simple]
+\begin{definition}[Exponential Dropoff]
 
-    The time weighted simple function $w_s(T) \in [0.0, 1.0]$ where $T$ is a
-    sequence of texts written by the same author $\alpha$ in chronological
-    order, computes the weights as,
+    The exponential dropoff function $w_e: T_\alpha \rightarrow [0, 1]$ is
+    defined as,
 
     \begin{equation}
-        w_s(T_1), w_s(T_2), \dots, w_s(T_n) = \frac{1}{2^1}, \frac{1}{2^2},
-        \dots, \frac{1}{2^{n-1}}, \frac{1}{2^{n-1}}
+        w_e(t) = e^{-\lambda \tau(t)}
     \end{equation}
 
 \end{definition}
 
-The problem with the simple time weighted function is that it only looks at the
-order in which the texts are written and not the actual times they were written
-at. It is clear that the newest text should not be weighed twice as important as
-the second newest if they are only turned in a single day apart. We therefore
-defined a function that also took into account the relative time between the
-texts.
-
-\begin{definition}[Time Weighted Relative]
-
-    The relative time weighted function $w_r(T) \in [0.0, 1.0]$ where $T$ is a
-    sequence of texts written by the same author $\alpha$ in chronological
-    order, computes the weights as,
-
-    \begin{equation}
-        w_r(T_1), w_r(T_2), \dots, w_r(T_n) =
-            \frac{\tau(T_1) - \min_{t \in T} \tau(t)}{\sum_{t \in T} \tau(t)},
-            \frac{\tau(T_2) - \min_{t \in T} \tau(t)}{\sum_{t \in T} \tau(t)},
-            \dots,
-            \frac{\tau(T_n) - \min_{t \in T} \tau(t)}{\sum_{t \in T} \tau(t)},
-    \end{equation}
-
-\end{definition}
-
-There the first text will get the lowest weight since $T_1$ is smaller than
-$T_2$ and the time between individual texts are taken into account. The problem
-with that definition is mainly that the first text $T_1$ will always have weight
-0 since $\min_{t \in T} \tau(t) = T_1$. We are guessing that even the oldest
-text we have available will provide some information to the prediction system.
-Another problem is that texts written even a few days apart are rated very
-different since we use the number of seconds since the epoch as the timestamps.
-We therefore defined yet another weighing function that still takes into account
-the time between texts but considers texts written in the same month to have the
-same timestamp. Furthermore it arbitrarily adds one to all the times to prevent
-the first text to get weight 0. In the following the function $\tau_m$ returns
-the number of months since the epoch a text was written.
-
-\begin{definition}[Time Weighted Relative Monthly]
-
-    The relative time weighted function $w_{rm}(T) \in [0.0, 1.0]$ where $T$ is
-    a sequence of texts written by the same author $\alpha$ in chronological
-    order, computes the weights as,
-
-    \begin{align}
-        w_{rm}(T_1), w_{rm}(T_2), \dots, w_{rm}(T_n) =&
-            \frac{(\tau_m(T_1) - \min_{t \in T} \tau_m(t)) + 1}{\sum_{t \in T} \tau_m(t)},
-            \frac{(\tau_m(T_2) - \min_{t \in T} \tau_m(t)) + 1}{\sum_{t \in T} \tau_m(t)}, \\
-            & \dots,
-            \frac{(\tau_m(T_n) - \min_{t \in T} \tau_m(t)) + 1}{\sum_{t \in T} \tau_m(t)}
-    \end{align}
-
-\end{definition}
-
-TODO: Define a weight function that also looks at the length of the texts.
-
-To get an idea of the weights the different functions produce we made a bar
-plot using the texts of a random student in our dataset shown in Figure
-\ref{fig:weights_bar}. The first text in the plot is the oldest and the last is
-the newest.
+The $\lambda$ parameter in that weight function can be used to control how
+important the newer texts are. When $\lambda = 0$ the Exponential Dropoff is
+equivalent to the Uniform Weighing and as $\lambda \rightarrow \infty$ more
+weight is given to the latest text. We have shown the weights given to different
+assignments for different $\lambda$ values in Figure \ref{fig:weights}.
 
 \begin{figure}
     \centering
-    \textbf{Example application of weight functions}\par\medskip
-    \includegraphics[width=\textwidth]{./pictures/method/weight_bar.png}
-    \caption{The weights given to texts with different timestamps using
-        different weight functions.}
-    \label{fig:weights_bar}
+    \textbf{Exponential Dropoff Weights}\par\medskip
+    \includegraphics[width=0.49\textwidth]{./pictures/method/weights.png}
+    \includegraphics[width=0.49\textwidth]{./pictures/method/weights_normalized.png}
+    \caption{Illustrate the Exponential Dropoff weight function for different
+        values of lambda. We apply the weight function to the numbers $0, 1,
+        \dots, 35$ since a typical student will attend high school for 3 years
+        (36 months). On the left the pure output of the weight function $w_e$ is
+        shown and on the right the normalized weights $w^*$. We wary $\lambda$
+        from 0 to 1 with step size 0.05.}
+    \label{fig:weights}
 \end{figure}
+
+%TODO: Define a weight function that also looks at the length of the texts.
 
 The $\theta$ parameter in the prediction system determines when we consider an
 unknown text to be written by an author. The natural choice for $\theta$ is 0.5
