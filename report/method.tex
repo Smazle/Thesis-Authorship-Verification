@@ -116,10 +116,14 @@ as to not wrongfully accuse anyone of not having written their assignment.
 This however leaves out a equally important metric. While a low \gls{FNR}
 is the goal, MaCom also wants to minimize the number of \gls{FN}s compared
 to the total number of accusations made. This can be described as:
-$$
-\text{Accusation Error} = \frac{FN}{FN + TN}
-$$
-Our goal is also to keep this value under a certain threshold specified by MaCom.
+
+\begin{equation}
+    \text{Accusation Error} = \frac{FN}{FN + TN}
+\end{equation}
+
+% TODO: Specify what threshold we are talking about here.
+Our goal is also to keep this value under a certain threshold specified by
+MaCom.
 
 
 \subsection{Baseline Methods}
