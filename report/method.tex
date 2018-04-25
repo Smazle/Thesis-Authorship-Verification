@@ -578,6 +578,7 @@ $$
 
 Which with all variables switched our is computed as such:
 
+% TODO: Why is it now w_L instead of w_{L_N}?
 \begin{align}
 \frac{\partial E}{\partial w_{L}} &= \frac{\partial}{\partial w_{L}}\left(\frac{1}{2}(\hat{y} - y)^2\right) &\\
 &= \frac{\partial}{\partial w_{L}} \left(\frac{1}{2}(z_L - y)^2\right) & \text{Substitute $\hat{y}$, as per equality \eqref{eq:neuron:small}}\\
@@ -587,24 +588,26 @@ Which with all variables switched our is computed as such:
 &= \frac{\partial E}{\partial h_L}\frac{\partial h_L}{\partial k_L}\frac{\partial k_L}{\partial w_{L}} & \text{Application of Lemma \ref{lemma:chainrule}}
 \end{align}
 
-This reveals the partials derivative dependace on the output of the former layer
-of the network. As such, back propagation performs this partial derivative back
-throughout the network, getting the partial derivative at each node. Using the
-final cost, we are then able to determine the desired weight change at this
-node. After averaging the desired changes over all the training samples, the
-weights are updated (Step 3), by stepping in the negative direction of the
-matrix comprised of all the partial derivatives computed, mulitiplied by a
-pre-determined step-size. 
+% TODO: "matrix comprised of all the partial derivatives". Is this the gradient?
+% If yes why not write that?
+This reveals the partial derivatives dependence on the output of the former
+layer of the network. As such, back propagation propagates the partial
+derivative back throughout the network, getting the partial derivative at each
+node. Using the final cost, we are then able to determine the desired weight
+change at this node. After averaging the desired changes over all the training
+samples, the weights are updated (Step 3), by stepping in the negative direction
+of the matrix comprised of all the partial derivatives computed, mulitiplied by
+a pre-determined step-size.
 
-These three steps Forward Feed, Back-Propagate and update weights are repeated
+These three steps Feed-Forward, Back-Propagate and update weights are repeated
 throughout the training cycle of the neural networks, so as to optimize the
 weights after each full iteration on the training set. As is to be expected
 this algorithm as very expensive computationally. For this reason in pratice,
 a method called batching is used. This method, shuffles and split the training
-data-set up into smaller batches. These batches are then run through the network
-one at a time, performing back-propagation after each run-through. This 
-results in the gradient not being as accurate after each batch, but this
-introduced inaccuracy is negligible compared to the computational time won.
+dataset up into smaller batches. These batches are then run through the network
+one at a time, performing back-propagation after each run-through. This results
+in the gradient not being as accurate after each batch, but this introduced
+inaccuracy is negligible compared to the computational time won.
 
 
 \begin{figure}
@@ -619,9 +622,10 @@ introduced inaccuracy is negligible compared to the computational time won.
     \outputlayer[count=1, title=$L$, text=\nodetextclear] \linklayers
 \end{neuralnetwork}
 \caption{A simple single neuron per layer, neural network. Where $L$ describes
-the layer, and N notes the total number of layers in the network. The green
-nodel is the input layer, and the red is the output}
+the layer, and $N$ notes the total number of layers in the network. The green
+node is the input layer, and the red is the output}
 \label{fig:simple_NN}
+% TODO: N is not in the figure so maybe it doesn't have to be in the caption.
 \end{figure}
 
 
