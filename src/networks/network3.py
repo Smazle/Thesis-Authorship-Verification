@@ -52,16 +52,18 @@ if args.reader is not None:
 else:
     reader = MacomReader(
         args.datafile,
-        batch_size=2,
+        batch_size=8,
         vocabulary_frequency_cutoff=1 / 100000,
-        validation_split=0.95
+        validation_split=0.95,
+        batch_normalization="pad",
+        pad=False
     )
 
 if args.reader is not None:
     with open('reader.p', mode='w') as reader_out:
         reader_out.write(jsonpickle.encode(reader))
 
-inshape = (reader.max_len, )
+inshape = (None, )
 
 known_in = Input(shape=inshape, name='known_input')
 unknown_in = Input(shape=inshape, name='unknown_input')
@@ -154,7 +156,7 @@ if args.weights is not None:
 model.fit_generator(
     generator=reader.generate_training(),
     steps_per_epoch=steps_n,
-    epochs=1,
+    epochs=1000,
     validation_data=reader.generate_validation(),
     validation_steps=val_steps_n,
     callbacks=callbacks
