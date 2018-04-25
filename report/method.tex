@@ -505,29 +505,25 @@ which are continuously repeated:
     \item Update Weights.
 \end{enumerate}
 
-% TODO: The gradient does not point the minimum. It points towards the maximum
-% which is why we take a step in the opposite direction of the gradient.
-% Furthermore it does not necessarily point towards the maximum. It only points
-% in the direction which is "up" if we take an infinitesimally small step in
-% that direction which is why you "zigzag" towards the goal and don't go in a
-% strait line.
-%
-% TODO: Maybe refer to where we are "looking at the structure of our network".
-%
-% TODO: Rewrite sentence "The weights and the biases of the network that
-% produces the output it computes its cost based on.".
-%
-% TODO: "In our case the bias is just, and as such, ...". What is the bias just?
 The goal of these three steps is to minimize the overall cost of the network.
-The cost refers to the loss we end up with. In order to do so, we take a step
-in the direction of the negative gradient as the gradient points to where the
-minimum cost can be found. Looking at the structure of our network, we can
-quickly identify the error function being dependent on 2 values. The weights
-and the biases of the network that produces the output it computes its cost
-based on. In other words we have to determine the partial derivative of the
-cost function with respect to the weights and the biases of the network (In our
-case the bias is just, and as such, isn't relevant in this context due to is be
-differentiated out).
+The cost refers to the loss we end up with. In order to do so, we take look at
+the gradient. The gradient is a multi-variable generalization of the derivative
+of a function. It can be used for describing the slope of a function at a
+certain value. Not only that, but its' most desired property for our purposes is
+the fact that contrary to the derivative it returns a vector, and this vector
+points to the direction of greatest increase in value for the function at a
+specific point. As such, we can apply what is called gradient decent to our
+network, which is simply the act of changing our loss function parameters, so we
+step in the negative direction of the gradient, which would be the direction of
+greatest decrease in value. When this is done enough we will potentially reach a
+global minimum in cost, or that is at least the goal. Looking at the structure
+of our network, we can quickly identify the error function being dependent on
+2 values, the weights and biases which are the only independent variables of the
+equation applied at each neuron \ref{eq:neuron}.
+As such, we have to determine the partial
+derivative of the cost function with respect to the weights and the biases of
+the network (In our case the bias is 1, and as such, isn't relevant in this
+context due to is be differentiated out).
 
 \begin{lemma}[Chain Rule]
 \label{lemma:chainrule}
@@ -540,15 +536,13 @@ differentiated out).
 
 But before actually being able to do so, we have took look at a neural network
 for what it is, which is a series of functions calling each other in a recursive
-manner, applying Equation \ref{eq:neuron} at each step of the way. As such we
+manner, applying equation \ref{eq:neuron} at each step of the way. As such we
 seek the assistance of the chain rule (Lemma. \ref{lemma:chainrule}), a simple
 network for example purposes (Figure \ref{fig:simple_NN}), and an error
 function,
 
-% TODO: Maybe use i as index variable instead of x. Also shouldn't it be y_x
-% like it is \hat{y}_x?
 $$
-E = \frac{1}{2N}\sum_{x=1}^N(\hat{y}_x - y(x))^2.
+E = \frac{1}{2N}\sum_{i=1}^N(\hat{y}_i - y_i)^2.
 $$
 
 Where N is the total number of training samples, $\hat{y}$ is the predicted
@@ -586,22 +580,19 @@ For easy reference we give the input of the activation function a name,
 k_i = w_iz_{i-1}+1.
 \end{equation}
 
-% TODO: Positively influences sound like the cost function increases which is
-% the opposite of what happend.
 The scenario is that we have performed step 1, and passed the sample through the
 network. Step 2 (Back Progropagation) seeks to find the partial derivative of
 the cost function $E$, and each weight of the network, to allow for each weight
-to step in the direction that positively influences the cost of the network.
+to step in the direction of greatest decrease of the cost of the network.
 Starting out, this is to be done to the output node of the network. As such we
 want to compute:
 
 $$
-\frac{\partial E}{\partial w_{L_N}}
+\frac{\partial E}{\partial w_{L}}
 $$
 
 Which with all variables switched our is computed as such:
 
-% TODO: Why is it now w_L instead of w_{L_N}?
 \begin{align}
 \frac{\partial E}{\partial w_{L}} &= \frac{\partial}{\partial w_{L}}\left(\frac{1}{2}(\hat{y} - y)^2\right) &\\
 &= \frac{\partial}{\partial w_{L}} \left(\frac{1}{2}(z_L - y)^2\right) & \text{Substitute $\hat{y}$, as per equality \eqref{eq:neuron:small}}\\
@@ -612,20 +603,21 @@ Which with all variables switched our is computed as such:
 \end{align}
 
 % TODO: "matrix comprised of all the partial derivatives". Is this the gradient?
-% If yes why not write that?
-This reveals the partial derivatives dependence on the output of the former
-layer of the network. As such, back propagation propagates the partial
-derivative back throughout the network, getting the partial derivative at each
-node. Using the final cost, we are then able to determine the desired weight
-change at this node. After averaging the desired changes over all the training
-samples, the weights are updated (Step 3), by stepping in the negative direction
-of the matrix comprised of all the partial derivatives computed, mulitiplied by
-a pre-determined step-size.
+% If yes why not write that? This reveals the partial derivatives dependence
+on the output of the former layer of the network. As such, back propagation
+propagates the partial derivative back throughout the network, getting the
+partial derivative at each node, which is the gradient of the error function.
+Using the final cost, we are then able to determine the desired weight change at
+this node. After averaging the desired changes over all the training samples,
+the weights are updated (Step 3), by stepping in the negative direction of the
+computed gradient, multiplied by a pre-determined step-size.
+
+TODO: Write about the rest of the layers
 
 These three steps Feed-Forward, Back-Propagate and update weights are repeated
 throughout the training cycle of the neural networks, so as to optimize the
 weights after each full iteration on the training set. As is to be expected
-this algorithm as very expensive computationally. For this reason in pratice,
+this algorithm as very expensive computationally. For this reason in practice,
 a method called batching is used. This method, shuffles and split the training
 dataset up into smaller batches. These batches are then run through the network
 one at a time, performing back-propagation after each run-through. This results
@@ -645,10 +637,9 @@ inaccuracy is negligible compared to the computational time won.
     \outputlayer[count=1, title=$L$, text=\nodetextclear] \linklayers
 \end{neuralnetwork}
 \caption{A simple single neuron per layer, neural network. Where $L$ describes
-the layer, and $N$ notes the total number of layers in the network. The green
+the layer. The green
 node is the input layer, and the red is the output}
 \label{fig:simple_NN}
-% TODO: N is not in the figure so maybe it doesn't have to be in the caption.
 \end{figure}
 
 
