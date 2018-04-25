@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from sklearn.model_selection import cross_val_score,
+from sklearn.model_selection import cross_val_score
 from sklearn.preprocessing import StandardScaler
 import numpy as np
 import pandas as pd

@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from .feature_search import FeatureSearch
+from sklearn.model_selection import LeaveOneOut
 from sklearn.svm import SVC
 import argparse
 import numpy as np
@@ -40,5 +41,6 @@ parser.add_argument(
 args = parser.parse_args()
 
 svm = SVC()
-search = FeatureSearch(svm, args.features, args.authors, normalize=False)
+search = FeatureSearch(svm, args.features, args.authors, normalize=False,
+                       validator=LeaveOneOut())
 search.fit(args.datafile, args.outfile)
