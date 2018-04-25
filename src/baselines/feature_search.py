@@ -12,9 +12,9 @@ class FeatureSearch:
 
     authors = None
 
-    def __init__(self, classifier,
-                 minFeatureCount, authorLimit=None,
+    def __init__(self, classifier, minFeatureCount, authorLimit=None,
                  normalize=True, validator=3):
+
         self.classifier = classifier
         self.minFeatureCount = minFeatureCount
         self.authorLimit = authorLimit
@@ -22,9 +22,8 @@ class FeatureSearch:
         self.validator = validator
 
     def fit(self, dataFile, outfile):
-        print('Starting Feature Search')
         self.__generateData__(dataFile)
-        print(len(np.unique(self.authors)))
+        print('Unique authors', len(np.unique(self.authors)))
         with open(outfile, 'w') as f:
             for feature, value in self.feature_generator():
                 print('Feature Selected', feature)
