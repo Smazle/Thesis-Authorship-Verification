@@ -59,7 +59,6 @@ else:
         pad=False
     )
 
-if args.reader is not None:
     with open('reader.p', mode='w') as reader_out:
         reader_out.write(jsonpickle.encode(reader))
 
