@@ -64,5 +64,5 @@ validationData.insert(loc=0, column='author', value=validationAuthors)
 fName = args.featurefile.split('.')
 
 print('Writing to files {}.(training/validation)'.format(args.featurefile))
-trainingData.to_csv(args.featurefile + '.training')
-validationData.to_csv(args.featurefile + '.validation')
+trainingData.to_csv(args.featurefile + '.training', index=False)
+validationData.to_csv(args.featurefile + '.validation', index=False)

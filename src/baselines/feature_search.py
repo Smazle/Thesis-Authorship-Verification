@@ -24,6 +24,8 @@ class FeatureSearch:
     def fit(self, dataFile, outfile):
         self.__generateData__(dataFile)
         print('Unique authors', len(np.unique(self.authors)))
+        print("Training Data Shape", self.xTrain.shape)
+        print(sorted(np.unique(self.authors)))
         with open(outfile, 'w') as f:
             for feature, value in self.feature_generator():
                 print('Feature Selected', feature)
@@ -91,8 +93,8 @@ class FeatureSearch:
             np.random.shuffle(unique_authors)
             unique_authors = \
                 unique_authors[:int(len(unique_authors) * self.authorLimit)]
-            self.xTrain = self.xTrain[np.isin(self.authors, unique_authors)]
-            self.authors = self.authors[np.isin(self.authors, unique_authors)]
+            self.xTrain = self.xTrain[np.isin(self.authors, unique_authors)].astype(np.float)
+            self.authors = self.authors[np.isin(self.authors, unique_authors)].astype(np.int)
 
         if self.normalize:
             scaler = StandardScaler()
