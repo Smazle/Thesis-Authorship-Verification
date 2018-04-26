@@ -34,9 +34,8 @@ print('Reading Files')
 with open(args.featurefile, 'r') as featurefile:
     data = pd.read_csv(featurefile)
     authors = data.as_matrix(columns=['author']).flatten()
-    datacols = filter(lambda x: x != 'author', data.columns)
+    datacols = list(filter(lambda x: x != 'author', data.columns))
     data = data.as_matrix(columns=datacols)
-
 
 print('Shuffling Authors')
 unique_authors = np.unique(authors)
@@ -52,16 +51,15 @@ trainingData = data[np.isin(authors, trainingAuthors)]
 validationData = data[np.isin(authors, validationAuthors)]
 
 trainingAuthors = authors[np.isin(authors, trainingAuthors)]
-validationAuthors = authors[np.isin(authors, validationAuthors)] 
-
+validationAuthors = authors[np.isin(authors, validationAuthors)]
 
 trainingData = pd.DataFrame(data=trainingData,
                             columns=datacols)
-trainingData["author"] = trainingAuthors
+trainingData.insert(loc=0, column='author', value=trainingAuthors)
 
 validationData = pd.DataFrame(data=validationData,
                               columns=datacols)
-validationData["author"] = validationAuthors
+validationData.insert(loc=0, column='author', value=validationAuthors)
 
 fName = args.featurefile.split('.')
 
