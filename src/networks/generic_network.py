@@ -114,8 +114,6 @@ create_reader.add_argument(
 )
 args = parser.parse_args()
 
-print('Binary', args.binary)
-
 # Either load reader from file or create a new one.
 if hasattr(args, 'reader') and args.reader is not None:
     print('Loading reader from {}'.format(args.reader))
@@ -145,6 +143,7 @@ else:
 steps_n = len(reader.training_problems) / reader.batch_size
 val_steps_n = len(reader.validation_problems) / reader.batch_size
 
+# Load the network we are asked to train.
 if args.networkname == 'network1':
     model = network1.model(reader)
 elif args.networkname == 'network2':
