@@ -202,10 +202,10 @@ class MacomReader(object):
         self.vocabulary_map = {}
 
         for i, c in enumerate(self.vocabulary_above_cutoff):
-            self.vocabulary_map[c] = encoding[i]
+            self.vocabulary_map[c] = encoding[i+2]
 
-        self.padding = encoding[-1]
-        self.garbage = encoding[-2]
+        self.padding = encoding[0]
+        self.garbage = encoding[1]
 
     def generate_authors(self, linereader):
         for i, line in enumerate(linereader.readlines(skipfirst=True)):
