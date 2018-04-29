@@ -15,6 +15,7 @@ from keras.callbacks import ModelCheckpoint
 from ..preprocessing import MacomReader
 import jsonpickle
 
+
 # Parse arguments.
 parser = argparse.ArgumentParser(
     description='Simple NN for authorship verification'
@@ -159,7 +160,7 @@ elif args.networkname == 'r_network3':
 elif args.networkname == 'r_network4':
     model = r_network4.model(reader)
 else:
-    raise Exception('Unknown network')
+    raise Exception('Unknown network {}'.format(args.networkname))
 
 # Setup callbacks.
 callbacks = [
