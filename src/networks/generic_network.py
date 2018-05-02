@@ -5,6 +5,7 @@ from . import network1
 from . import network2
 from . import network3
 from . import network4
+from . import network5
 from . import r_network1
 from . import r_network2
 from . import r_network3
@@ -159,6 +160,8 @@ elif args.networkname == 'network2':
 elif args.networkname == 'network3':
     model = network3.model(reader)
 elif args.networkname == 'network4':
+    model = network4.model(reader)
+elif args.networkname == 'network5':
     model = network4.model(reader)
 elif args.networkname == 'r_network1':
     model = r_network1.model(reader)
