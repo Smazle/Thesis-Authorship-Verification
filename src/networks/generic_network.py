@@ -14,6 +14,11 @@ from keras.utils import plot_model
 from keras.callbacks import ModelCheckpoint
 from ..preprocessing import MacomReader
 import jsonpickle
+import jsonpickle.ext.numpy as jsonpickle_numpy
+
+
+# Make sure that jsonpickle works on numpy arrays.
+jsonpickle_numpy.register_handlers()
 
 
 # Parse arguments.
