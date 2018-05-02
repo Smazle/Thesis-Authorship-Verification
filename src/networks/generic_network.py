@@ -4,6 +4,7 @@
 from . import network1
 from . import network2
 from . import network3
+from . import network4
 from . import r_network1
 from . import r_network2
 from . import r_network3
@@ -122,10 +123,11 @@ if hasattr(args, 'reader') and args.reader is not None:
         reader = jsonpickle.decode(reader_in.read())
 else:
     print(('Creating new MaCom reader with parameters, batch_size={}, ' +
-          'vocabulary_frequency_cutoff={}, batch_normalization={}, ' +
-          'pad={}, binary={}').format(args.batch_size,
-              args.vocabulary_frequency_cutoff, args.batch_normalization,
-              args.pad, args.binary))
+           'vocabulary_frequency_cutoff={}, batch_normalization={}, ' +
+           'pad={}, binary={}').format(args.batch_size,
+                                       args.vocabulary_frequency_cutoff,
+                                       args.batch_normalization,
+                                       args.pad, args.binary))
 
     reader = MacomReader(
         args.datafile,
@@ -151,6 +153,8 @@ elif args.networkname == 'network2':
     model = network2.model(reader)
 elif args.networkname == 'network3':
     model = network3.model(reader)
+elif args.networkname == 'network4':
+    model = network4.model(reader)
 elif args.networkname == 'r_network1':
     model = r_network1.model(reader)
 elif args.networkname == 'r_network2':
