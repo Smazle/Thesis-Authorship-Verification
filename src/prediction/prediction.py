@@ -12,8 +12,7 @@ import random
 SECS_PER_MONTH = 60 * 60 * 24 * 30
 
 
-# TODO: Take parameter specifying how many negatives to create.
-def get_problems(macomreader, linereader):
+def get_problems(macomreader, linereader, negative_chance=1.0):
     problems = []
     for author in macomreader.authors:
         other = list(macomreader.authors.keys())
@@ -38,7 +37,9 @@ def get_problems(macomreader, linereader):
         author_texts.remove(chosen_text_author)
 
         problems.append((chosen_text_author, author_texts, True))
-        problems.append((chosen_text_other, author_texts, False))
+
+        if random.random() <= negative_chance:
+            problems.append((chosen_text_other, author_texts, False))
 
     return problems
 
@@ -119,6 +120,12 @@ if __name__ == '__main__':
              'function. If 0.0 is given it is equivalent to uniform weights.',
         default=["0.0", "0.1", "0.2", "0.3", "0.4", "0.5", "0.6", "0.7", "0.8", "0.9", "1.0"]
     )
+    parser.add_argument(
+        '--negative-chance',
+        help='The fraction of negative problems wanted.',
+        default=1.0,
+        type=float
+    )
     args = parser.parse_args()
 
     theta = list(map(lambda x: float(x), args.theta))
@@ -153,7 +160,14 @@ if __name__ == '__main__':
     validation_reader.max_len = reader.max_len
 
     with LineReader(args.datafile) as linereader:
-        problems = get_problems(validation_reader, linereader)
+        problems = get_problems(validation_reader, linereader,
+                                negative_chance=args.negative_chance)
+
+        positive_n = sum([1 for (_, _, label) in problems if label])
+        negative_n = sum([1 for (_, _, label) in problems if not label])
+
+        print('Generated {} positives and {} negatives'
+              .format(positive_n, negative_n))
 
         print('Theta,Weights,TPS,TNS,FPS,FNS,ACC,ERR', end='\r\n')
         for (theta, weight) in itertools.product(theta, weights):
