@@ -474,12 +474,11 @@ different layers.
         vector of predetermined size. This can be done on any sort of data, as
         longs as it is encoded as a sequence of integers. In \gls{NLP}
         circumstances, this can be applied to characters or words for example,
-        where each element in the sequence is firstly encoded as an integer
-        value, and then fed to the embedding layer, which maps it to the
-        continuous vector space. The hope with using a layer such as this, that
-        characters for example, get mapped to a point close to other
-        similar characters. In addition it also adds another trainable layer to
-        optimize on.
+        where each element in the sequence is first encoded as an integer value,
+        and then fed to the embedding layer, which maps it to the continuous
+        vector space. The hope with using a layer such as this, that characters
+        for example, get mapped to a point close to other similar characters. In
+        addition it also adds another trainable layer to optimize on.
 
         \begin{figure}
             \centering
@@ -498,6 +497,14 @@ different layers.
         several lower and upper case letters have ended up close to each other.
         That means that the network has learned that those characters are
         interchangeable.
+
+        Embedding layers are widely used in \gls{NLP}. They are mainly used to
+        embed words in some vector space. \cite{mikolov2013linguistic} found
+        that embedding layers are able to learn more that just word
+        similarities. They for example found that $vec("king") - vec("man") +
+        vec("woman") \circ vec("queen")$ that is the embeddings learned the
+        relation between the words king and queen and not just that they are
+        similar words.
 
     \item[Max Pooling Layer:] TODO.
 \end{description}
@@ -814,17 +821,17 @@ averaged out.
 
     \label{def:prediction_system}
 
-    Our prediction system is a function $P:f, w, \alpha, t_{unkown}, \theta
+    Our prediction system is a function $P:f, w, T, t_{unkown}, \theta
     \rightarrow \{0, 1\}$ where $f$ is a function taking two texts and giving
-    the probability that the texts are written by the same author, $\alpha$
-    is an author, $t_{unknown}$ is a text of unknown authorship, $w:T_\alpha
-    \rightarrow [0,1]$ is a function where $\sum_{t_{known} \in T_\alpha}
-    w(t_{known}) = 1$ and $\theta \in [0,1]$. The prediction system then
+    the probability that the texts are written by the same author, $T$ is a set
+    of texts written by a candidate author, $t_{unknown}$ is a text of unknown
+    authorship, $w:T \rightarrow [0,1]$ is a function where $\sum_{t_{known}
+    \in T} w(t_{known}) = 1$ and $\theta \in [0,1]$. The prediction system then
     returns,
 
     \begin{equation}
-        P(f, w, \alpha, t_{unkown}, \theta) = \begin{cases}
-            1 & \text{if } \sum_{t_{known} \in T_\alpha} w(t_{known})
+        P(f, w, T, t_{unkown}, \theta) = \begin{cases}
+            1 & \text{if } \sum_{t_{known} \in T} w(t_{known})
                 f(t_{known}, t_{unkown}) > \theta \\
             0 & \text{otherwise}.
         \end{cases}
@@ -833,8 +840,9 @@ averaged out.
 \end{definition}
 
 That is the prediction system returns 1 if the weighted average of the
-probability that $t_{unknown}$ is written by the same author as $t_{known}$ for
-each $t_k \in T_\alpha$ is greater than the threshold $\theta$ and 0 otherwise.
+probability that $t_{unknown}$ is written by the same author as $t_{known}$
+for each $t_{known} \in T_\alpha$ is greater than the threshold $\theta$ and 0
+otherwise.
 
 The $f$ parameter can be anything that takes two texts and returns a
 probability. We are going to present several different networks that can be used

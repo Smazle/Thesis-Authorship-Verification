@@ -195,7 +195,7 @@ if args.history is not None:
 
 # If we are asked to visualize model, do so.
 if args.graph is not None:
-    plot_model(model, to_file=args.graph)
+    plot_model(model, to_file=args.graph, show_shapes=True)
 
 # If we are given weights, load them.
 if args.weights is not None:

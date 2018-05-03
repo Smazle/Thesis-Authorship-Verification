@@ -52,9 +52,9 @@ def model(reader):
         name='absolute_difference'
     )
 
-    pruned = L.Dropout(0.5)(abs_diff)
-    dense1 = L.Dense(500, activation='relu')(pruned)
-    dense2 = L.Dense(500, activation='relu')(dense1)
+    dense1 = L.Dense(500, activation='relu')(abs_diff)
+    pruned = L.Dropout(0.3)(dense1)
+    dense2 = L.Dense(500, activation='relu')(pruned)
     dense3 = L.Dense(500, activation='relu')(dense2)
     dense4 = L.Dense(500, activation='relu')(dense3)
 
