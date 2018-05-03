@@ -573,7 +573,23 @@ points to the direction of greatest increase in value for the function at a
 specific point. As such, we can apply what is called gradient decent to our
 network, which is simply the act of changing our loss function arguments, so we
 step in the negative direction of the gradient, which would be the direction of
-greatest decrease in value. We are given a certain error function
+greatest decrease in value. A model illustrating this process can be seen in
+figure \ref{fig:grad}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.8\textwidth]{./pictures/method/GradientDesc.png}
+
+\caption{An illustration of how gradient decent works. Each iteration steps in
+the direction of the global minimum of the specific function used, which in this
+case is signified by a black ring}
+
+\label{fig:grad}
+\end{figure}
+
+
+
+We are given a certain error function
 
 $$
 E(W) = \sum_{n=1}^N E_n(W)
