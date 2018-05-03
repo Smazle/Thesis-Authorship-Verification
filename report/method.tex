@@ -497,6 +497,16 @@ different layers.
         obvious choice is 0 however better results have been found using non
         zero initial hidden unit values \cite{DBLP:series/sci/2012-385}.
 
+        An \gls{RNN} network are normally optimized using the backpropagation
+        through time algorithm. For data where a sense of time does not make
+        sense and where the context from both sides of each timesteps is usefull
+        such as for text it is normal to use bidirectional \gls{RNN}'s. Then
+        both a forwards and a backwards pass is made through the sequence. The
+        output of each network at each time step can then depend both on the
+        context before and after the input.
+
+        % TODO: Maybe add a drawing of an RNN network.
+
     \item[\gls{LSTM} Layer:] TODO
     \item[\gls{GRU} Layer:] TODO
 
