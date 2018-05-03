@@ -220,16 +220,25 @@ but together with a down-sampling neuron such as Max Pooling introduced in
 As mentioned previously a \gls{NN} consists of a collection of neurons. Each
 neuron is a simplified mathematical model, which behaves much like neurons in
 the brain would, receiving, processing and transmitting data/information. Each
-neuron has a set of inputs called $x_i$ and a single output called $z_i$. The
+neuron has a set of inputs called $x_{ij}$ and a single output called $z_i$, where $i$
+refers to the neuron, and $j$ refers to the specific input. The
 neurons compute a weighted sum of its inputs and applies an activation function
-$h$ to the weighted sum. The weights are called $w_i$. The function each neuron
-computes is then,
+$h$ to the weighted sum. The weights are called $w_{ij}$, and the bias $w_{i0}$. The
+function each neuron computes is then,
 
 \begin{equation}\label{eq:neuron}
-    z_i = h\left(
-        \sum_{i = 1}^d w_ix_i + w_0
+    z_i = h(a_i) = h\left(
+        \sum_{i = 1}^d w_{ij}x_i + w_{i0}
     \right).
 \end{equation}
+
+A more intuitive model of such a neuron can be seen in figure \ref{fig:neuron}.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.5\textwidth]{./pictures/method/Neuron.png}
+\caption{The inner workings of a single neuron with a bias TODO:Cite Igel}
+\end{figure}
 
 One has the options to arrange the neurons in what is called layers, to achieve
 a certain desired behavior, more details regarding these specific layers will
@@ -513,16 +522,67 @@ certain value. Not only that, but its' most desired property for our purposes is
 the fact that contrary to the derivative it returns a vector, and this vector
 points to the direction of greatest increase in value for the function at a
 specific point. As such, we can apply what is called gradient decent to our
-network, which is simply the act of changing our loss function parameters, so we
+network, which is simply the act of changing our loss function arguments, so we
 step in the negative direction of the gradient, which would be the direction of
-greatest decrease in value. When this is done enough we will potentially reach a
-global minimum in cost, or that is at least the goal. Looking at the structure
-of our network, we can quickly identify the error function being dependent on 2
-values, the weights and biases which are the only independent variables of the
-equation applied at each neuron \ref{eq:neuron}. As such, we have to determine
-the partial derivative of the cost function with respect to the weights and the
-biases of the network (In our case the bias is 1, and as such, isn't relevant in
-this context due to is be differentiated out).
+greatest decrease in value. We are given a certain error function
+
+$$
+E(W) = \sum_{n=1}^N E_n(W)
+E_n(W) = \frac{1}{2}(\hat{y}_n - y_n)^2
+$$
+
+Where N is the number of training samples, $\hat{y}_n$ is the predicted results,
+and $y_n$ is the correct one, and W is a set of weights. The goal is minimize
+this function. In order to do so, we need to have a independent variable we
+can tweak using gradient decent as per the above description. In the case of
+neural networks we can view this variable as being the weights and the biases,
+which are defined used as described in section \ref{sec:neurons}. In other
+words we want to update each individual weight by doing the following operation
+repeatedly.
+
+\begin{equation}\label{eq:update}
+w^{t+1} = w^t + \Delta w^t
+\end{equation}
+
+Where w is a singular weight value, and t refers to a specific step, in the 
+chain of steps performed by gradient decent.
+
+\begin{equation}
+\Delta w^t = -\eta \nabla E|_{w^t}
+\end{equation}
+
+$\eta$ in this case, is what a predetermined value called either the learning rate
+of the step size.$\nabla E|_{w^t}$ refers to the gradient of the error function
+relative to that specific weight, or rewritten.
+
+$$
+\nabla E|_{w^t} = \frac{\partial E}{\partial w^t}
+$$
+
+
+This is the function we attempting to solve, not for one weight, but for all
+of them. Not only that, we also want to do this for every training sample,
+averaging $\Delta w^t$ for over all of them. As such, the goal is clear, we want
+to find the gradient of our error function with respect to all the weights in
+our network.
+
+In order to do so, lets first define a network on which to base our computations
+on. This can be seen in figure \ref{fig:simple_NN}. After performing step 1(Feed
+forward), which entails running a training sample through the network, we want
+to determine by how much we have to tweak each weights using gradient decent.
+Due to the hidden nature of the entire network, the natural starting point for 
+this process is at the output node. If we for simplicity's sake focus on only a
+single training sample, we can compute the loss as follows
+
+$$
+E = \frac{1}{2}(\hat{y} - y)^2
+$$
+
+As mentioned we want to determine the gradient of this with respect to all the
+weights $w_{ij} \in W$ in our network. In order to do that, we need to find
+partial derivatives for those same weights, and since each specific weight is
+tied to a specific neuron, we need to differentiate the entire network. But
+before doing so, we need to establish the chain rule.
 
 \begin{lemma}[Chain Rule]
 \label{lemma:chainrule}
@@ -533,106 +593,77 @@ this context due to is be differentiated out).
 
 \end{lemma}
 
-But before actually being able to do so, we have took look at a neural network
-for what it is, which is a series of functions calling each other in a recursive
-manner, applying equation \ref{eq:neuron} at each step of the way. As such we
-seek the assistance of the chain rule (Lemma. \ref{lemma:chainrule}), a simple
-network for example purposes (Figure \ref{fig:simple_NN}), and an error
-function,
-
-$$
-E = \frac{1}{2N}\sum_{i=1}^N(\hat{y}_i - y_i)^2.
-$$
-
-Where N is the total number of training samples, $\hat{y}$ is the predicted
-result, and $y$ is the correct one. For simplicity's sake, we chose to focus
-on a single sample. When this sample is run through the network(Step 1) seen
-in Figure \ref{fig:simple_NN}, some things changes. Firstly, we only a single
-sample, so the error can be rewritten to,
-
-$$
-E = \frac{1}{2}(\hat{y} - y)^2.
-$$
-
-Additionally, the network only has one neuron per layer and a bias of 1, so
-we can rewrite the neuron function from Equation \ref{eq:neuron} to,
-
-\begin{equation}\label{eq:neuron:small}
-    \hat{y} = z_i = h_i\left(
-        w_ix + 1
-    \right).
-\end{equation}
-
-Where $i$ denotes the index of the layer in which this computation happens. This
-can be further rewritten to include the fact that $x$ is in fact the output of
-the previous layer.
+The reason behind the need of the chain rule is that the loss function
+is essentially a giant recursive function call, that spans the entire
+network. This fact becomes apparent if we do a little rewriting.
 
 \begin{align}
-    z_i = h_i\left(
-        w_iz_{i-1} + 1
-    \right)
+E &= \frac{1}{2}(\hat{y} - y)^2\\ 
+&= \frac{1}{2}(z_5 - y)^2\\
+&= \frac{1}{2}(h(a_5) - y) 
 \end{align}
 
-For easy reference we give the input of the activation function a name,
-
-\begin{equation}\label{eq:k_small}
-k_i = w_iz_{i-1}+1.
-\end{equation}
-
-The scenario is that we have performed step 1, and passed the sample through the
-network. Step 2 (Back Progropagation) seeks to find the partial derivative of
-the cost function $E$, and each weight of the network, to allow for each weight
-to step in the direction of greatest decrease of the cost of the network.
-Starting out, this is to be done to the output node of the network. As such we
-want to compute:
-
-$$
-\frac{\partial E}{\partial w_{L}}
-$$
-
-Which with all variables switched our is computed as such:
+Due to this recursive nature, differentiating the entire network entails simply
+taking the partial derivative of the cost function, with respect to the weight,
+a fact that will become apparent in a moment.
+The partial derivative of our loss function with respect to a
+specific weight, is calculated as such by using the chain rule:
 
 \begin{align}
-\frac{\partial E}{\partial w_{L}} &= \frac{\partial}{\partial w_{L}}\left(\frac{1}{2}(\hat{y} - y)^2\right) &\\
-&= \frac{\partial}{\partial w_{L}} \left(\frac{1}{2}(z_L - y)^2\right) & \text{Substitute $\hat{y}$, as per equality \eqref{eq:neuron:small}}\\
-&= \frac{\partial}{\partial w_{L}} \left(\frac{1}{2}(h_L(w_{L}z_{L-1} + 1) - y)\right) & \text{Further substitute}\\
-&= \frac{\partial}{\partial w_{L}} \left(\frac{1}{2}(h_L(k_L) - y)\right) & \text{Use equality \eqref{eq:k_small} to simplify}\\
-&= \frac{\partial}{\partial w_{L}} \left(E(h_L(k_L))\right) & \text{Substitute with E}\\
-&= \frac{\partial E}{\partial h_L}\frac{\partial h_L}{\partial k_L}\frac{\partial k_L}{\partial w_{L}} & \text{Application of Lemma \ref{lemma:chainrule}}
+\frac{\partial E}{\partial w_{ji}} &= \frac{\partial}{\partial w_{ij}} \left(\frac{1}{2}(h(a_5) - y) \right)\\
+&= \frac{\partial}{\partial w_{ij}}\left(E(h(a_5))\right) & \text{Substitute E back in}\\
+&= \frac{\partial E}{\partial h}\frac{\partial h}{\partial a_5}\frac{\partial a_5}{\partial w_{ij}}\\
 \end{align}
 
-This reveals the partial derivatives dependence on the output of the former
-layer of the network. As such, back propagation propagates the partial
-derivative back throughout the network, getting the partial derivative at each
-node, which is the gradient of the error function. Using the final cost, we are
-then able to determine the desired weight change at this node. After averaging
-the desired changes over all the training samples, the weights are updated (Step
-3), by stepping in the negative direction of the computed gradient, multiplied
-by a pre-determined step-size.
+This reveals the output neuron dependence on the output of the former neurons in
+the network, revealing that the differentiation can't stop at this point, since we 
+need to compute.
+$$\frac{\partial a_5}{\partial w_{ij}}$$
 
-TODO: Write about the rest of the layers
+In other words we wont stop computing the derivatives until we each either a
+bias neuron on the point where we give the network its' input, ending up
+with the partial derivative at each node. It is at this point we perform
+step 2, Back-Propagate. We propagate the final cost of our network back 
+through those same partial derivatives computed earlier. By doing this
+we get the gradient of the error function, or in other words, the
+desired change of each weight, on which we can apply equation \eqref{eq:update},
+which is step 3, update weights.
 
 These three steps Feed-Forward, Back-Propagate and update weights are repeated
 throughout the training cycle of the neural networks, so as to optimize the
 weights after each full iteration on the training set. As is to be expected
-this algorithm as very expensive computationally. For this reason in practice,
-a method called batching is used. This method, shuffles and split the training
-dataset up into smaller batches. These batches are then run through the network
-one at a time, performing back-propagation after each run-through. This results
-in the gradient not being as accurate after each batch, but this introduced
-inaccuracy is negligible compared to the computational time won.
+this algorithm as very expensive computationally, as it runs in $O(W)$ time.
+Due to the highly inflated number of weights compared to neurons, this time
+might not seem desirable at first. However an alternative described by
+\cite{Bishop}, which involves perturbing each weight instead, and approximating
+the derivatives. This method does however run in $O(W^2)$ time, making the
+run-time of $O(W)$ that back-propagation provides the desired choice. However,
+in order to improve on those that $O(W)$ time-complexity a method called
+batching is used. This method, shuffles and split the training dataset up into
+smaller batches. These batches are then run through the network one at a time,
+performing back-propagation after each run-through. This results in the gradient
+not being as accurate after each batch, but this introduced inaccuracy is
+negligible compared to the computational time won.\cite{Bishop}
 
 \begin{figure}
     \centering
-    \begin{neuralnetwork}[height=1]
-        \newcommand{\nodetextclear}[2]{}
-        \newcommand{\nodetextx}[2]{$x_#2$}
-        \newcommand{\nodetexty}[2]{$y_#2$}
-        \inputlayer[count=1, bias=false, title=$L-3$, text=\nodetextclear]
-        \hiddenlayer[count=1, bias=false, title=$L-2$, text=\nodetextclear] \linklayers
-        \hiddenlayer[count=1, bias=false, title=$L-1$, text=\nodetextclear] \linklayers
-        \outputlayer[count=1, title=$L$, text=\nodetextclear] \linklayers
-    \end{neuralnetwork}
+\begin{neuralnetwork}[height=3]
+  \newcommand{\nodetextx}[2]{\ifthenelse{\equal{#2}{0}}{$b_0$}{$x_{#2}$}}
+  \newcommand{\nodetextz}[2]{\ifthenelse{\equal{#2}{0}}{$b_1$}{$z_{#2}$}}
+  \newcommand{\nodetextzi}[2]{%
+      \pgfmathsetmacro\num{int(#2+2)}%
+      \ifthenelse{\equal{#2}{0}}{$b_2$}{$z_{\num}$}}
+  \newcommand{\nodetextzii}[2]{%
+      \pgfmathsetmacro\num{int(#2+4)}%
+      {$z_{\num}$}}
+  \inputlayer[count=1, title={Input}, text=\nodetextx]
+  \hiddenlayer[count=2, title={Hidden 1}, text=\nodetextz]
+  \linklayers
+  \hiddenlayer[count=2, title={Hidden  2}, text=\nodetextzi]
+  \linklayers
+  \outputlayer[count=1, title={Output}, text=\nodetextzii] 
+  \linklayers
+\end{neuralnetwork}
     \caption{A simple single neuron per layer, neural network. Where $L$
         describes the layer. The green node is the input layer, and the red is
         the output}

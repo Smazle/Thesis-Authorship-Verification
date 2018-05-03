@@ -27,6 +27,10 @@ the case where that element is characters, and n is 3, the string "hello" would
 produce the character-3-grams "hel", "ell" and "llo". This also means that a
 feature such as word frequencies can be considered word-1-grams.
 
+\gls{POS} tags, refer to the grammatical class a certain words belongs to,
+such as nouns and adjectives. In order to extract these we made use
+of a POS-tag extractor, provided by \cite{polyglot}.
+
 For all of these experiments a Danish third party corpus, provided by
 \texttt{NLTK}\footnote{\url{http://www.nltk.org/index.html}}, was used as the
 basis for all the feature extraction, as was done in \cite{US} as well. This
@@ -116,9 +120,9 @@ authors has a certain amount of bias towards the authors with a large
 amount of texts compared to the test.
 
 Having the features, we could start doing our feature selection. This whole
-process proved very expensive computationally. Having to check every permutation
-of 5000 features, simply wasn't feasible. It was for that reason we opted for
-a greedy algorithm instead.
+process proved very expensive computationally. Having to check every combination
+of 5000 features, simply wasn't feasible. It was for that reason we opted for a
+greedy algorithm instead.
 
 This greedy algorithm works as described by \cite{kanDeng}, which is a simple
 forward feature selection. Having out previously created feature set, we loop
