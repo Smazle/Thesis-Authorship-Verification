@@ -164,7 +164,7 @@ and $\gamma = \frac{1}{\text{n\_features}}$. Due to some authors having below
 feature selection.
 
 The results of both the SVM and the Extended Delta method feature selection
-can be seen in figure \ref{fig:fs_results}. (DISCLAIMER: Extended Delta is
+can be seen in Figure \ref{fig:fs_results}. (DISCLAIMER: Extended Delta is
 erroneous)
 
 The SVM ended up peaking having selected 225 features, with an accuracy of
@@ -174,10 +174,10 @@ seen in \ref{table:svm_feature}
 TODO: Extended Delta Results
 
 \begin{figure}
-\centering
-\includegraphics[scale=0.8]{./pictures/experiments/baselines/FeatureSelect.png}
-\caption{The process of the greedy feature selection of the SVM and the Extended Delta Method}
-\label{fig:fs_results}
+    \centering
+    \includegraphics[scale=0.8]{./pictures/experiments/baselines/FeatureSelect.png}
+    \caption{The process of the greedy feature selection of the SVM and the Extended Delta Method}
+    \label{fig:fs_results}
 \end{figure}
 
 
@@ -222,7 +222,7 @@ leave one out cross validation. We aren't performing nearly as many iterations
 this time around, which is why this change was made. In this case, we loop
 over all unique authors one time for each combination of hyper parameter, the
 number of which dwarfs the amount in the feature selection. The accuracy of each
-parameter configuration can be seen in figure TODO:ref, and figure TODO: ref.
+parameter configuration can be seen in Figure TODO:ref, and Figure TODO: ref.
 
 After the best parameters were found, we apply the methods to the 20\% we set
 aside for validation originally. This resulted in the SVM getting an accuracy of
@@ -230,97 +230,6 @@ aside for validation originally. This resulted in the SVM getting an accuracy of
 
 TODO: Extended Delta Results
 
-%\subsubsection{Author Specific SVM}
-%
-%The author specific SVM is a authorship verification method that learns from
-%hand crafted features. Similar to the Extended Delta method we perform a feature
-%search in a large set of features to find the optimal features for the SVM. To
-%evaluate different feature sets and different hyperparameters we use the
-%algorithm shown in Figure \ref{fig:svm_evaluation_algorithm}. The algorithm
-%computes the average accuracy of the SVM via leave one out cross validation. For
-%each author it takes a set of texts written by that author and a set of texts of
-%similar size written by another author. Then it successively leaves out one of
-%the texts, train an SVM on the rest and then use that SVM to predict the class
-%of the text that was left out. The score is then the average accuracy of that
-%prediction.
-%
-%\begin{figure}
-%    \begin{algorithm}[H]
-%        \KwData{$A$ a set of authors, $F$ a set of features, $C$ SVM
-%        hyperparameter, $\gamma$ SVM hyperparamter}
-%        Let $S = \emptyset$\;
-%        \For {$\alpha \in A$} {
-%            Let $T_k = T(\alpha)$\;
-%            Let $T_u = \{
-%                x_i\ |\ x_i \in \mathcal{U}\left(
-%                    \overline{T}(\alpha)
-%                \right), 1 \leq i \leq \left| T_k \right|
-%            \}$\;
-%            \label{line:draw_opposition}
-%            Let $F_k = \{ f(t, F)\ |\ t \in T_k\}$\;
-%            \label{line:feature_extract_1}
-%            Let $F_u = \{ f(t, F)\ |\ t \in T_u\}$\;
-%            \label{line:feature_extract_2}
-%            \For {$x \in F_k \cup F_u$} {
-%                Let $m = SVM(F_k \setminus x, F_u \setminus x, C, \gamma)$\;
-%                \uIf {$m(x) = a(x)$} {
-%                    Let $S = S \cup \{1\}$\;
-%                } \uElse {
-%                    Let $S = S \cup \{0\}$\;
-%                }
-%            }
-%        }
-%        \Return {$\mu(S)$}
-%        \caption{SVM evaluation}
-%    \end{algorithm}
-%    \caption{Algorithm to evaluate an SVM on a set of authors. The algorithm is
-%        given a set of authors $A$ to evaluate over, a set of features $F$ to
-%        use and the hyperparameters for the SVM. On Line
-%        \ref{line:draw_opposition} $\mathcal{U}$ denotes the uniform
-%        distribution and $T_u$ is a set of texts of the same size as $T_k$ where
-%        each text in the set is written by a different author than $\alpha$. On
-%        Line \ref{line:feature_extract_1} and Line \ref{line:feature_extract_2}
-%        $f$ denotes a function that computes the features $F$ of the text $t$.
-%        The algorithm computes the average accuracy of an SVM with the paramters
-%        given over all authors given.}
-%    \label{fig:svm_evaluation_algorithm}
-%\end{figure}
-%
-%The search in a set of features $F$ are performed by starting with an
-%empty set of features $FC$. Then in each iteration we add a single
-%$f \in F$ to $FC$ and evaluate the SVM with the algorithm in Figure
-%\ref{fig:svm_evaluation_algorithm}. At the end we add only the single feature
-%that gives the best performance in the evaluation algorithm and repeat again
-%with the rest of the features. The feature set we search in are the same feature
-%set as the feature set used in the Extended Delta Method but without limiting
-%the number of texts per authors. The search are performed on only 100 random
-%authors in the set as it otherwise takes to long. The feature search is done
-%with fixed SVM hyperparameters which we tune afterwards. The hyperparameters
-%used during the search was $C = 100$ and $\gamma = 1000$, and using the default
-%rbg kernel. The feature search surprisingly found only 6 features before no
-%features could improve the result further. The specific features were the
-%character-2-gram " -", the character-3-gram ", o", the character-4-gram ", at",
-%the character-4-gram ", so", the character-6-gram ", der " and the word-1-gram
-%"giver". Most of the features seem to look at what authors are writing
-%immediately following commas. We found the optimal hyper parameters for the SVM
-%by splitting the dataset in two parts. 80\% of the authors went in the training
-%part and 20\% of the authors went in the validation part. Then for each author
-%in the training dataset we varied $C \in (10^{-2}, 10^0, \dots, 10^{10})$ and
-%$\gamma \in (10^{-9}, 10^{-7}, \dots, 10^3)$ and evaluated an SVM using the
-%algorithm in Figure \ref{fig:svm_evaluation_algorithm} with the fixed feature
-%set for each combination of hyperparameters. After that we took a majority
-%vote between the authors chosen hyperparameters and chose that as the final
-%hyperparameters. The final hyperparameters were $C = 100$ and $\gamma = 1000$.
-%We then evaluated our chosen parameters both feature set and hyperparameters on
-%the validation set. We obtained an accuracy of 0.62980.
-%
-%Since we were surprised that only 6 features were used we also tried to take a
-%feature set of the 50 most frequent features in each category. We again ran the
-%search for hyperparameters. This time we found that $C = 100$ and $\gamma = 10$
-%worked the best. We obtained an accuracy of 0.69552. So we were able to obtain a
-%higher accuracy by arbitrarily choosing the 50 most frequent features instead of
-%doing a structured search.
-%
 %TODO: Try using all features.
 
 
@@ -329,7 +238,7 @@ TODO: Extended Delta Results
 The main attraction of our authorship verification task, is the implementation
 and testing of different \gls{NN}. In the following sections we will go through
 the different iterations of networks we have produced. A glossary of the
-different layers used can be seen in figure \ref{glossary}. Throughout out
+different layers used can be seen in Figure \ref{glossary}. Throughout out
 experiments, we used a 0.5 threshold for classification.
 
 \begin{landscape}
@@ -844,6 +753,171 @@ the texts. We have shown the training and validation accuracies in Figure
         training on the fifth iteration of our networks where we removed the 200
         first characters.}
     \label{fig:network_5_accuracies_2}
+\end{figure}
+
+
+\subsubsection{Siamese Neural Network - Iteration 6}
+\label{subsubsec:siamese_neuraon_network_iteration_6}
+
+In this iteration we trained our third network again but this time with the 200
+first characters removed like in Iteration 5. We wanted to see how much worse
+the network would perform now that we had hopefully removed some more personal
+information from what the network had available to look at. We have shown the
+training and validation accuracies in Figure \ref{fig:network_6_accuracies}. The
+best validation accuracy was obtained in epoch 57 with an accuracy of 0.74370.
+That means that we lost about 5\% accuracy by removing the first 200 characters.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\textwidth]{./pictures/experiments/network_6_accuracies.png}
+    \caption{Shows the training and validation accuracies over the epochs of
+        training on the sixth iteration of our networks.}
+    \label{fig:network_6_accuracies}
+\end{figure}
+
+
+\subsection{Prediction System}
+
+Our prediction system has several hyperparameters we have to choose to get
+the best results. We recall that MaCom wanted a system that had an accusation
+error of less than 10\%. We can use the threshold parameter $\theta$ in the
+prediction system to control how many people we accuse. The best parameters
+for the prediction system is those parameters that gives the highest accuracy
+subject to the constraint that the accusation error should be less than 10\%.
+To tune the parameters we use a validation dataset $V$ consisting of a set of
+tuples $(\alpha, t_u)$ where $\alpha$ is a candidate author and $t_u$ is a text
+of unknown authorship. None of the authors in $V$ has been seen by the networks
+during training and none of the texts $t_u$ has been seen by the networks during
+training. The parameters that maximize the accuracy subject to the bounded
+accusation error is the same as the parameters that minimize the error rate
+subject to the bounded accusation error. That optimization problem is,
+
+\begin{equation}
+    \label{eq:prediction_system_minimization}
+    \begin{aligned}
+        & \underset{\theta, w}{\text{minimize}}
+        & & \sum_{(\alpha, t_u) \in V} \left|
+            P(f, w, T_\alpha \setminus \{t_u\}, t_u, \theta) -
+            \mathbbm{1}_{T_\alpha}(t_u)
+        \right| \\
+        & \text{subject to}
+        & & \sum_{(\alpha, t_u) \in V} \mathbbm{1}_{T_\alpha}(t_u) \cdot
+            \left(1 - P(f, w, T_\alpha \setminus \{t_u\}, t_u, \theta)\right) <
+            \frac{1}{10} \sum_{(\alpha, t_u) \in V}
+                 (1 - P(f, w, T_\alpha \setminus \{t_u\}, t_u, \theta)
+    \end{aligned}
+\end{equation}
+
+In the optimization problem we fix the network $f$ we validate. The expression
+we minimize is the number of errors made in prediction over the validation set
+$V$. Consider a problem $(\alpha, t_u) \in V$ where $t_u \in T_\alpha$. Then we
+know that $\mathbbm{1}_{T_\alpha}(t_u) = 1$ from the definition of the indicator
+function then if the prediction system returns the correct result 1 we have,
+
+\begin{equation}
+    e = \left|
+        P(f, w, T_\alpha \setminus \{t_u\}, t_u, \theta) -
+        \mathbbm{1}_{T_\alpha}(t_u)
+    \right| = |1 - 1| = 0,
+\end{equation}
+
+and if the prediction system returns the incorrect result 0 we have,
+
+\begin{equation}
+    e = \left|
+        P(f, w, T_\alpha \setminus \{t_u\}, t_u, \theta) -
+        \mathbbm{1}_{T_\alpha}(t_u)
+    \right| = |0 - 1| = 1.
+\end{equation}
+
+Similarly for a problem $(\alpha, t_u) \in V$ where $t_u \notin T_\alpha$ we
+know that $\mathbbm{1}_{T_\alpha}(t_u) = 0$ from the definition of the indicator
+function. Then if the prediction system returns the correct result 0 we have,
+
+\begin{equation}
+    e = \left|
+        P(f, w, T_\alpha \setminus \{t_u\}, t_u, \theta) -
+        \mathbbm{1}_{T_\alpha}(t_u)
+    \right| = |0 - 0| = 0,
+\end{equation}
+
+and if the prediction system returns the incorrect result 1 we have,
+
+\begin{equation}
+    e = \left|
+        P(f, w, T_\alpha \setminus \{t_u\}, t_u, \theta) -
+        \mathbbm{1}_{T_\alpha}(t_u)
+    \right| = |1 - 0| = 1.
+\end{equation}
+
+That is the expression we minimize is 0 whenever there is no error and 1
+whenever there is an error. So we minimize the number of errors we make. The
+subject to expression makes sure that the fraction of false accusations we make
+is less than $10\%$ of the accusations we make. The expression should be read
+as, $\textit{false accusations} < \frac{1}{10} \textit{total accusations}$.
+Consider the value of the left hand side,
+
+\begin{equation}
+    \textit{false accusations} = \sum_{(\alpha, t_u) \in V}
+    \mathbbm{1}_{T_\alpha}(t_u) \cdot
+    \left(1 - P(f, w, T_\alpha \setminus \{t_u\}, t_u, \theta)\right).
+\end{equation}
+
+For a $(\alpha, t_u) \in V$ where $t_u \in T_\alpha$ we have that
+$\mathbbm{1}_{T_\alpha}(t_u) = 1$ then if $P$ is correct it returns 1 and we
+get,
+
+\begin{equation}
+    \mathbbm{1}_{T_\alpha}(t_u) \cdot
+    \left(1 - P(f, w, T_\alpha \setminus \{t_u\}, t_u, \theta)\right) =
+    1 \cdot (1 - 1) = 0,
+\end{equation}
+
+and if $P$ is incorrect and returns 0 we have,
+
+\begin{equation}
+    \mathbbm{1}_{T_\alpha}(t_u) \cdot
+    \left(1 - P(f, w, T_\alpha \setminus \{t_u\}, t_u, \theta)\right) =
+    1 \cdot (1 - 0) = 1.
+\end{equation}
+
+Similarly for a $(\alpha, t_u) \in V$ where $t_u \in T_\alpha$ we have that
+$\mathbbm{1}_{T_\alpha}(t_u) = 0$ and therefore the expression is always
+0. Therefore the expression is 1 whenever we have a false accusation and 0
+otherwise. The right hand side of the inequality simply counts the number of
+accusations by inverting the output of $P$ and divides that by 10. So the
+condition makes sure that only 10\% of the accusations we make are false
+accusations.
+
+We have chosen to run our prediction system on the network described in Section
+\ref{subsubsec:siamese_neuraon_network_iteration_6}. That is the convolutional
+neural network using max-over-time pooling after the convolutional layer.
+The validation set we run on consists as described only of previously unseen
+authors. It consist of 411 different authors and from them we generate two
+problems each meaning that we end up with 822 different problems. For each
+of the authors we generate a positive sample by taking the newest text as
+the unknown text and a negative sample by choosing a random text from some
+other author in the set. That is we have a 0.5 split between positive and
+negative samples. To find the $\theta$ and $w$ that minimizes equation
+\ref{eq:prediction_system_minimization} we cross validate with $\theta \in
+0, 0.1, \dots, 1.0$ and $w \in 0, 0.1, \dots, 1.0$ (when $w = 0$ the weights
+are uniform). The results of that cross validation are shown in Figure
+\ref{fig:prediction_system_results_1}.
+
+\begin{figure}
+    \centering
+    \textbf{Prediction System Results for 0.5 Split}\par\medskip
+    \includegraphics[width=0.49\textwidth]{./pictures/experiments/network3_prediction_system_accuracies.png}
+    \includegraphics[width=0.49\textwidth]{./pictures/experiments/network3_prediction_system_accusation_error.png}
+    \caption{Results of running the prediction system with our best
+        convolutional network. In the left graph we show the accuracies
+        obtained as a function of $\theta$. There is one line for each weight.
+        We can see that as expected the worst weight function are the uniform
+        weights. On the right we have shown the accusation error as a function
+        $\theta$ again with one line for each weight. We can see that as the
+        threshold increases and we accuse more people of cheating the accusation
+        error rises.}
+    \label{fig:prediction_system_results_1}
 \end{figure}
 
 TODO:

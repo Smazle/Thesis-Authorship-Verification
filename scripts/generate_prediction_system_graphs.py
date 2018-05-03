@@ -6,7 +6,7 @@ import pandas as pd
 import sys
 
 # TODO: Use argparse instead of just using the first argument.
-data = pd.read_csv(sys.argv[1])
+data = pd.read_csv(sys.argv[1], skiprows=[0])
 
 thetas = data.as_matrix(columns=['Theta'])
 weights = data.as_matrix(columns=['Weights'])

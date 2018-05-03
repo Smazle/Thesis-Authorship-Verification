@@ -783,17 +783,17 @@ averaged out.
 
     \label{def:prediction_system}
 
-    Our prediction system is a function $P:f, w, \alpha, t_{unkown}, \theta
+    Our prediction system is a function $P:f, w, T, t_{unkown}, \theta
     \rightarrow \{0, 1\}$ where $f$ is a function taking two texts and giving
-    the probability that the texts are written by the same author, $\alpha$
-    is an author, $t_{unknown}$ is a text of unknown authorship, $w:T_\alpha
-    \rightarrow [0,1]$ is a function where $\sum_{t_{known} \in T_\alpha}
-    w(t_{known}) = 1$ and $\theta \in [0,1]$. The prediction system then
+    the probability that the texts are written by the same author, $T$ is a set
+    of texts written by a candidate author, $t_{unknown}$ is a text of unknown
+    authorship, $w:T \rightarrow [0,1]$ is a function where $\sum_{t_{known}
+    \in T} w(t_{known}) = 1$ and $\theta \in [0,1]$. The prediction system then
     returns,
 
     \begin{equation}
-        P(f, w, \alpha, t_{unkown}, \theta) = \begin{cases}
-            1 & \text{if } \sum_{t_{known} \in T_\alpha} w(t_{known})
+        P(f, w, T, t_{unkown}, \theta) = \begin{cases}
+            1 & \text{if } \sum_{t_{known} \in T} w(t_{known})
                 f(t_{known}, t_{unkown}) > \theta \\
             0 & \text{otherwise}.
         \end{cases}
