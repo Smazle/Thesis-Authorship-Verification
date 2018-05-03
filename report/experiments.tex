@@ -902,7 +902,9 @@ negative samples. To find the $\theta$ and $w$ that minimizes equation
 \ref{eq:prediction_system_minimization} we cross validate with $\theta \in
 0, 0.1, \dots, 1.0$ and $w \in 0, 0.1, \dots, 1.0$ (when $w = 0$ the weights
 are uniform). The results of that cross validation are shown in Figure
-\ref{fig:prediction_system_results_1}.
+\ref{fig:prediction_system_results_1}. The $\theta$ and $w$ that gave the best
+accuracy while adhering to the constraint was $\theta = 0.2$ and $w = 0.3$ which
+had an accuracy of $0.67153$ and an accusation error of $0.09714$.
 
 \begin{figure}
     \centering
@@ -910,7 +912,8 @@ are uniform). The results of that cross validation are shown in Figure
     \includegraphics[width=0.49\textwidth]{./pictures/experiments/network3_prediction_system_accuracies.png}
     \includegraphics[width=0.49\textwidth]{./pictures/experiments/network3_prediction_system_accusation_error.png}
     \caption{Results of running the prediction system with our best
-        convolutional network. In the left graph we show the accuracies
+        convolutional network on a validation dataset with 50\% positive samples
+        and 50\% negative samples. In the left graph we show the accuracies
         obtained as a function of $\theta$. There is one line for each weight.
         We can see that as expected the worst weight function are the uniform
         weights. On the right we have shown the accusation error as a function
@@ -919,6 +922,38 @@ are uniform). The results of that cross validation are shown in Figure
         error rises.}
     \label{fig:prediction_system_results_1}
 \end{figure}
+
+We also tried our prediction system on another validation
+set. In the real world it has been estimated that 4\% of
+turn ins for the \gls{SRP} are written by "ghost writers"
+\footnote{https://politiken.dk/indland/uddannelse/art5603163/Gymnasieelever-\%C2
+\% BBSnyderi-beviser-hvor-vanvittig-betydningsfuld-SRP-er-blevet\%C2\%AB}. We
+therefore also wanted to find $\theta$ and $w$ for a validation set with only
+4\% negative samples instead of 50\% negative samples. We generated 411 positive
+samples as before and then for each sample we added a negative sample with a
+4\% chance. We ended up with a validation set with 411 positive samples and 16
+negative samples. The $\theta$ and $w$ that gave the best accuracy while still
+fulfilling the constraint were $\theta = 0.1$ and $w = 0.0$ with an accuracy of
+0.97189 and an accusation error of 0.0. With that configuration we caught
+$\frac{4}{16}$ of the cheaters with 0 false accusations. We have shown the cross
+validation results in Figure \ref{fig:prediction_system_results_2}.
+
+\begin{figure}
+    \centering
+    \textbf{Prediction System Results for 0.04 Split}\par\medskip
+    \includegraphics[width=0.49\textwidth]{./pictures/experiments/network3_prediction_system_accuracies_4_percent.png}
+    \includegraphics[width=0.49\textwidth]{./pictures/experiments/network3_prediction_system_accusation_error_4_percent.png}
+    \caption{Results of running the prediction system with our best
+        convolutional network on a validation dataset with about 96\% positive
+        samples and about 4\% negative samples. In the left graph we show the
+        accuracies obtained as a function of $\theta$. There is one line for
+        each weight. On the right we have shown the accusation error as a
+        function $\theta$ again with one line for each weight. We can see that
+        as the threshold increases and we accuse more people of cheating the
+        accusation error rises.}
+    \label{fig:prediction_system_results_2}
+\end{figure}
+
 
 TODO:
 \begin{itemize}
