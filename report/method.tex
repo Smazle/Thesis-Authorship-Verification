@@ -235,9 +235,9 @@ function each neuron computes is then,
 A more intuitive model of such a neuron can be seen in figure \ref{fig:neuron}.
 
 \begin{figure}
-\centering
-\includegraphics[width=0.5\textwidth]{./pictures/method/Neuron.png}
-\caption{The inner workings of a single neuron with a bias TODO:Cite Igel}
+    \centering
+    \includegraphics[width=0.5\textwidth]{./pictures/method/Neuron.png}
+    \caption{The inner workings of a single neuron with a bias TODO:Cite Igel}
 \end{figure}
 
 One has the options to arrange the neurons in what is called layers, to achieve
@@ -471,15 +471,21 @@ different layers.
         remember previous inputs and an RNN therefore has a sense of history of
         previous input and output. In the forward pass of an \gls{RNN} network
         each neuron get both the current input and the activation of the neuron
-        in the previous timestep. That means that instead of the formula for the
-        activation of a normal neuron shown in Equation \ref{eq:neuron} we get
-        the formula,
+        in the previous timestep. Therefore the output of a neuron now not only
+        depends on the inputs, weights and activation function of the neuron but
+        also on the previous activation of the neuron. That means that instead
+        of the formula for the activation of a normal neuron shown in Equation
+        \ref{eq:neuron} we get the formula of the activation of the $j$ neuron
+        in the $t$'th timestep,
 
-        %\begin{equation}
-            %z_i = h(a_i) = h \left(
-                %\sum_{i=1}^d w_{ij} x_i^t + \sum_{i=1}^d
-            %\right)
-        %\end{equation}
+        \begin{equation}
+            z_i^t = h(a_i^t) = h \left(
+                \sum_{i=1}^d w_{ij} x_i^t + \sum_{i=1}^H w_{ij} x_i^{t-1}
+            \right),
+        \end{equation}
+
+        where $H$ is the number of hidden units in the RNN neuron and $d$ is the
+        number of neurons in the previous layer.
 
     \item[\gls{LSTM} Layer:] TODO
     \item[\gls{GRU} Layer:] TODO
