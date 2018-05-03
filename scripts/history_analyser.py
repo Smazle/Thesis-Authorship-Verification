@@ -28,7 +28,7 @@ fps = data.as_matrix(columns=['false_positives']).flatten()
 fns = data.as_matrix(columns=['false_negatives']).flatten()
 
 print('Best validation', np.max(val_accuracies),
-      'in epoch', np.argmax(val_accuracies))
+      'in epoch', np.argmax(val_accuracies) + 1)
 
 plt.plot(epochs, accuracies, c='r', label='Training')
 plt.plot(epochs, val_accuracies, c='b', label='Validation')
