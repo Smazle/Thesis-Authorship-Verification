@@ -465,12 +465,11 @@ different layers.
         vector of predetermined size. This can be done on any sort of data, as
         longs as it is encoded as a sequence of integers. In \gls{NLP}
         circumstances, this can be applied to characters or words for example,
-        where each element in the sequence is firstly encoded as an integer
-        value, and then fed to the embedding layer, which maps it to the
-        continuous vector space. The hope with using a layer such as this, that
-        characters for example, get mapped to a point close to other
-        similar characters. In addition it also adds another trainable layer to
-        optimize on.
+        where each element in the sequence is first encoded as an integer value,
+        and then fed to the embedding layer, which maps it to the continuous
+        vector space. The hope with using a layer such as this, that characters
+        for example, get mapped to a point close to other similar characters. In
+        addition it also adds another trainable layer to optimize on.
 
         \begin{figure}
             \centering
@@ -489,6 +488,14 @@ different layers.
         several lower and upper case letters have ended up close to each other.
         That means that the network has learned that those characters are
         interchangeable.
+
+        Embedding layers are widely used in \gls{NLP}. They are mainly used to
+        embed words in some vector space. \cite{mikolov2013linguistic} found
+        that embedding layers are able to learn more that just word
+        similarities. They for example found that $vec("king") - vec("man") +
+        vec("woman") \circ vec("queen")$ that is the embeddings learned the
+        relation between the words king and queen and not just that they are
+        similar words.
 
     \item[Max Pooling Layer:] TODO.
 \end{description}
