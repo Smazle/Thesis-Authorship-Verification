@@ -471,12 +471,12 @@ different layers.
         remember previous inputs and an RNN therefore has a sense of history of
         previous input and output. In the forward pass of an \gls{RNN} network
         each neuron get both the current input and the activation of the neuron
-        in the previous timestep. Therefore the output of a neuron now not only
+        in the previous timestep. Therefore the output of a neuron not only
         depends on the inputs, weights and activation function of the neuron but
         also on the previous activation of the neuron. That means that instead
         of the formula for the activation of a normal neuron shown in Equation
-        \ref{eq:neuron} we get the formula of the activation of the $j$ neuron
-        in the $t$'th timestep,
+        \ref{eq:neuron} we get the formula of the activation of the $j$'th
+        neuron in the $t$'th timestep to be,
 
         \begin{equation}
             z_i^t = h(a_i^t) = h \left(
@@ -484,8 +484,18 @@ different layers.
             \right),
         \end{equation}
 
-        where $H$ is the number of hidden units in the RNN neuron and $d$ is the
-        number of neurons in the previous layer.
+        where $H$ is the number of hidden units in the RNN neuron and $d$ is
+        the number of neurons in the previous layer. That is a neuron in an
+        \gls{RNN} network has access to the activation values of the same
+        neurons hidden units in the previous timestep. The neuron can therefore
+        keep an internal state that can remember what it has seen before and
+        use that to give different outputs \cite{DBLP:series/sci/2012-385}. The
+        complete sequence of hidden activations are computed by starting at time
+        $t=1$ and recursively calling the function above until the end of the
+        sequence is reached incrementing $t$ by one in each recusive call. The
+        initial values of the hidden units can be any initialization value. The
+        obvious choice is 0 however better results have been found using non
+        zero initial hidden unit values \cite{DBLP:series/sci/2012-385}.
 
     \item[\gls{LSTM} Layer:] TODO
     \item[\gls{GRU} Layer:] TODO
