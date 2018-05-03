@@ -29,7 +29,7 @@ def model(reader):
 
     # Convolution 2
 
-    conv8_2 = L.Convolution1D(filters=500, kernel_size=8, strides=1,
+    conv8_2 = L.Convolution1D(filters=250, kernel_size=8, strides=1,
                               activation='relu', name='convolutional_8_2')
 
     max_2_2 = L.MaxPooling1D()
@@ -39,7 +39,7 @@ def model(reader):
     conv8_2_unknown = max_2_2(conv8_2(conv8_1_unknown))
 
     # Convolution 3
-    conv8_3 = L.Convolution1D(filters=500, kernel_size=8, strides=1,
+    conv8_3 = L.Convolution1D(filters=100, kernel_size=8, strides=1,
                               activation='relu', name='convolutional_8_3')
 
     # Glob Max Pool
