@@ -465,7 +465,22 @@ different layers.
         % TODO: Show example from text.
         % TODO: Maybe also explain different filters here.
 
-    \item[\gls{RNN} Layer:] TODO
+    \item[\gls{RNN} Layer:] An RNN network is a normal feed forward neural
+        network except that it allows circular connections
+        \cite{DBLP:series/sci/2012-385}. The circular connections can be used to
+        remember previous inputs and an RNN therefore has a sense of history of
+        previous input and output. In the forward pass of an \gls{RNN} network
+        each neuron get both the current input and the activation of the neuron
+        in the previous timestep. That means that instead of the formula for the
+        activation of a normal neuron shown in Equation \ref{eq:neuron} we get
+        the formula,
+
+        %\begin{equation}
+            %z_i = h(a_i) = h \left(
+                %\sum_{i=1}^d w_{ij} x_i^t + \sum_{i=1}^d
+            %\right)
+        %\end{equation}
+
     \item[\gls{LSTM} Layer:] TODO
     \item[\gls{GRU} Layer:] TODO
 
@@ -503,7 +518,7 @@ different layers.
         embed words in some vector space. \cite{mikolov2013linguistic} found
         that embedding layers are able to learn more that just word
         similarities. They for example found that $vec("king") - vec("man") +
-        vec("woman") \circ vec("queen")$ that is the embeddings learned the
+        vec("woman") \approx vec("queen")$ that is the embeddings learned the
         relation between the words king and queen and not just that they are
         similar words.
 
