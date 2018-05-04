@@ -1,5 +1,6 @@
 \documentclass[11pt]{article}
 \usepackage[a4paper, hmargin={2.8cm, 2.8cm}, vmargin={2.5cm, 2.5cm}]{geometry}
+\usepackage[table]{xcolor}
 \usepackage{eso-pic}
 \usepackage{graphicx}
 \usepackage{placeins}
@@ -62,16 +63,18 @@
 \newacronym{FPR}{FPR}{False Positive Rate}
 \newacronym{FNR}{FNR}{False Negative Rate}
 
-\theoremstyle{plain}
-\newtheorem{definition}{Definition}[section]
 
 \newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
 \newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
 \newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
 
+\theoremstyle{plain}
+\newtheorem{definition}{Definition}[section]
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{corollary}{Corollary}[theorem]
 \newtheorem{lemma}[theorem]{Lemma}
+
+\newcommand{\cc}{\cellcolor}
 
 \author{
     \begin{tabular}{ccc}
