@@ -471,12 +471,12 @@ different layers.
         remember previous inputs and an RNN therefore has a sense of history of
         previous input and output. In the forward pass of an \gls{RNN} network
         each neuron get both the current input and the activation of the neuron
-        in the previous timestep. Therefore the output of a neuron now not only
+        in the previous timestep. Therefore the output of a neuron not only
         depends on the inputs, weights and activation function of the neuron but
         also on the previous activation of the neuron. That means that instead
         of the formula for the activation of a normal neuron shown in Equation
-        \ref{eq:neuron} we get the formula of the activation of the $j$ neuron
-        in the $t$'th timestep,
+        \ref{eq:neuron} we get the formula of the activation of the $j$'th
+        neuron in the $t$'th timestep to be,
 
         \begin{equation}
             z_i^t = h(a_i^t) = h \left(
@@ -484,8 +484,28 @@ different layers.
             \right),
         \end{equation}
 
-        where $H$ is the number of hidden units in the RNN neuron and $d$ is the
-        number of neurons in the previous layer.
+        where $H$ is the number of hidden units in the RNN neuron and $d$ is
+        the number of neurons in the previous layer. That is a neuron in an
+        \gls{RNN} network has access to the activation values of the same
+        neurons hidden units in the previous timestep. The neuron can therefore
+        keep an internal state that can remember what it has seen before and
+        use that to give different outputs \cite{DBLP:series/sci/2012-385}. The
+        complete sequence of hidden activations are computed by starting at time
+        $t=1$ and recursively calling the function above until the end of the
+        sequence is reached incrementing $t$ by one in each recusive call. The
+        initial values of the hidden units can be any initialization value. The
+        obvious choice is 0 however better results have been found using non
+        zero initial hidden unit values \cite{DBLP:series/sci/2012-385}.
+
+        An \gls{RNN} network are normally optimized using the backpropagation
+        through time algorithm. For data where a sense of time does not make
+        sense and where the context from both sides of each timesteps is usefull
+        such as for text it is normal to use bidirectional \gls{RNN}'s. Then
+        both a forwards and a backwards pass is made through the sequence. The
+        output of each network at each time step can then depend both on the
+        context before and after the input.
+
+        % TODO: Maybe add a drawing of an RNN network.
 
     \item[\gls{LSTM} Layer:] TODO
     \item[\gls{GRU} Layer:] TODO
@@ -557,17 +577,15 @@ greatest decrease in value. A model illustrating this process can be seen in
 figure \ref{fig:grad}
 
 \begin{figure}
-\centering
-\includegraphics[width=0.8\textwidth]{./pictures/method/GradientDesc.png}
-
-\caption{An illustration of how gradient decent works. Each iteration steps in
-the direction of the global minimum of the specific function used, which in this
-case is signified by a black ring}
-
-\label{fig:grad}
+    \centering
+    \includegraphics[width=0.8\textwidth]{./pictures/method/GradientDesc.png}
+    \caption{An illustration of how gradient decent works. Each iteration steps
+        in the direction of the global minimum of the specific function used,
+        which in this case is signified by a black ring. The Figure is generated
+        using code from
+        \url{https://scipython.com/blog/visualizing-the-gradient-descent-method/}.}
+    \label{fig:grad}
 \end{figure}
-
-
 
 We are given a certain error function
 
