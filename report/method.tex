@@ -1,4 +1,4 @@
-\section{Method} \label{sec:method} 
+\section{Method} \label{sec:method}
 
 In this section we will describe the method we have used to solve the Authorship
 Verification problem presented. In general there are two methods of representing
@@ -238,6 +238,7 @@ A more intuitive model of such a neuron can be seen in figure \ref{fig:neuron}.
     \centering
     \includegraphics[width=0.5\textwidth]{./pictures/method/Neuron.png}
     \caption{The inner workings of a single neuron with a bias TODO:Cite Igel}
+    \label{fig:neuron}
 \end{figure}
 
 One has the options to arrange the neurons in what is called layers, to achieve
@@ -507,7 +508,12 @@ different layers.
 
         % TODO: Maybe add a drawing of an RNN network.
 
-    \item[\gls{LSTM} Layer:] TODO
+    \item[\gls{LSTM} Layer:] As described the main benefit of \gls{RNN}'s are
+        their ability to use previous context to make predictions. Unfortunately
+        the \gls{RNN} architecture described above in practise does not allow
+        context from far away to influence current output. The problem is known
+        as the vanishing gradient problem.
+
     \item[\gls{GRU} Layer:] TODO
 
     \item[Embedding:] The Embedding layer is a layer that maps a value into a
