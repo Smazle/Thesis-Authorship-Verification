@@ -238,6 +238,7 @@ A more intuitive model of such a neuron can be seen in figure \ref{fig:neuron}.
     \centering
     \includegraphics[width=0.5\textwidth]{./pictures/method/Neuron.png}
     \caption{The inner workings of a single neuron with a bias TODO:Cite Igel}
+    \label{fig:neuron}
 \end{figure}
 
 One has the options to arrange the neurons in what is called layers, to achieve
@@ -548,7 +549,66 @@ different layers.
         relation between the words king and queen and not just that they are
         similar words.
 
-    \item[Max Pooling Layer:] TODO.
+    \item[Pooling Layer:]
+
+        The purpose of a pooling layer, or down-sampling layer, is as the name
+        suggest, to pool the data it receives. It does so with the goal of
+        reducing the data down to a number a number of key features found within
+        that same data. This of course decreases the computation time of the
+        network as a whole, and with a smaller amount of parameters, comes a 
+        smaller chance of over-fitting. 
+
+        Working in similar fashion as the convolutional layer, the max pooling
+        layer it too uses a sliding window. This sliding window of a certain
+        dimensionality, is moved over the data given to it. The max value inside
+        that window is then extracted, and determined to be the output for that
+        specific placement of the window. The window then moved a specified
+        stride size, and the process is repeated. The result is a data-set which
+        is down-sampled in proportion with the sliding windows dimensions, and
+        the stride. An example of this max pooling process can be seen
+        in figure \ref{fig:max_pool}.
+
+        Pooling layers are however, not restricted to only the Max Pooling
+        layer. The average pooling layers, works in a very similar fashion, but
+        instead of extracting the max value, it simply averages values currently
+        in the window. The L2-Norm Pooling computes the L2 norm of the contents
+        of the sliding window. The Global Max Pooling Layer, which we use quite
+        frequently in our networks does not use a window like the other ones
+        described, but instead simply extracts the maximum value across the
+        data-samples the layer is provided.
+
+    \begin{figure}
+    \centering
+    \begin{equation}
+        \begin{tabular}{|llll|}
+        \hline
+        1 & 8 & 7 & 2 \\ 
+        9 & 7 & 9 & 8 \\ 
+        3 & 6 & 2 & 4 \\ 
+        5 & 7 & 9 & 9 \\\hline
+        \end{tabular}
+            \Longrightarrow
+        \begin{tabular}{|ll|ll|}
+        \hline
+        \cc{blue}1 & \cc{blue}8 & \cc{red}7 & \cc{red}2 \\
+        \cc{blue}9 & \cc{blue}7 & \cc{red}3 & \cc{red}8 \\ \hline
+        \cc{orange}3 & \cc{orange}6 & \cc{green}2 & \cc{green}4 \\
+        \cc{orange}5 & \cc{orange}7 & \cc{green}9 & \cc{green}9\\
+        \hline
+        \end{tabular}
+            \Longrightarrow
+        \begin{tabular}{|l|l|}
+        \hline
+        \cc{blue}9 & \cc{red}8\\\hline
+        \cc{orange}7 & \cc{green}9\\
+        \hline
+        \end{tabular}
+    \end{equation}
+    \caption{An example of a max pooling performing using a 2x2 kernel, and a
+    size of 2}
+    \label{fig:max_pool}
+    \end{figure}
+
 \end{description}
 
 \subsubsection{Back-Propagation}\label{sec:BP}
