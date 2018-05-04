@@ -243,9 +243,10 @@ A more intuitive model of such a neuron can be seen in figure \ref{fig:neuron}.
 
 One has the options to arrange the neurons in what is called layers, to achieve
 a certain desired behavior, more details regarding these specific layers will
-be explained in later chapters.
-The training of a \gls{NN} consists of changing the weights applied at each
-neuron, with the goal of modeling the relationships present in the data.
+be explained in later chapters. The training of a \gls{NN} consists of changing
+the weights applied at each neuron, with the goal of modeling the relationships
+present in the data.
+
 
 \subsubsection{Layers} \label{subsubsec:layers}
 
@@ -512,7 +513,20 @@ different layers.
         their ability to use previous context to make predictions. Unfortunately
         the \gls{RNN} architecture described above in practise does not allow
         context from far away to influence current output. The problem is known
-        as the vanishing gradient problem.
+        as the vanishing/exploding gradient problem. When backpropagating
+        through an \gls{RNN} network each timestep corresponds to a separate
+        layer in a normal feed forward neural network. So for sequences of
+        several thousand timesteps backpropagation has to go through several
+        thousand layers. The gradient will at each layer either blow up or scale
+        down and through the hundreds or thousands of layers that leads to the
+        gradient either blowing exponentially up or vanishing to nothing. In
+        practise the main problem is the vanishing gradient and not the
+        exploding gradient. The vanishing gradient means that weights early in
+        the network are not updated according to the final output since the
+        gradient has disappeared while backpropagating back to the early
+        weights. Therefore the network will not learn to use context over long
+        periods of time but only to use the local context around a particular
+        timestep.
 
     \item[\gls{GRU} Layer:] TODO
 
