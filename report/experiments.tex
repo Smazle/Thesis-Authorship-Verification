@@ -805,10 +805,10 @@ subject to the bounded accusation error. That optimization problem is,
             \mathbbm{1}_{T_\alpha}(t_u)
         \right| \\
         & \text{subject to}
-        & & \sum_{(\alpha, t_u) \in V} \mathbbm{1}_{T_\alpha}(t_u) \cdot
-            \left(1 - P(f, w, T_\alpha \setminus \{t_u\}, t_u, \theta)\right) <
-            \frac{1}{10} \sum_{(\alpha, t_u) \in V}
-                 (1 - P(f, w, T_\alpha \setminus \{t_u\}, t_u, \theta)
+        & & \frac{\sum_{(\alpha, t_u) \in V} \mathbbm{1}_{T_\alpha}(t_u) \cdot
+            \left(1 - P(f, w, T_\alpha \setminus \{t_u\}, t_u, \theta)\right)}
+{\sum_{(\alpha, t_u) \in V} (1 - P(f, w, T_\alpha \setminus \{t_u\}, t_u, \theta)} <
+            \frac{1}{10} 
     \end{aligned}
 \end{equation}
 

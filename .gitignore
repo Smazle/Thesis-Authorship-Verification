@@ -7,6 +7,9 @@
 *.blg
 *.txt
 *.gz
+*.p
+*.npy
+*.hdf5
 
 *__pycache__
 *.csv

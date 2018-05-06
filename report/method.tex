@@ -12,8 +12,7 @@ illustrated in Figure \ref{fig:profile_based}.
 \begin{figure}[htb]
     \centering
     \textbf{Instance Based Authorship Verification or Authorship Attribution}
-    \includegraphics[scale=0.5]{./pictures/method/InstanceBased.png}
-
+    \includegraphics[scale=0.5]{./pictures/method/InstanceBased.png} 
     \caption{Illustrate the typical instance based Authorship Verification or
     Authorship Attribution solution setup. Inspired by \cite{stamatos2009} a
     set of authors are given as input each with a set of texts. Some Machine
@@ -235,11 +234,18 @@ function each neuron computes is then,
 
 A more intuitive model of such a neuron can be seen in figure \ref{fig:neuron}.
 
-\begin{figure}
-    \centering
-    \includegraphics[width=0.5\textwidth]{./pictures/method/Neuron.png}
-    \caption{The inner workings of a single neuron with a bias TODO:Cite Igel}
-    \label{fig:neuron}
+\begin{figure}[!tbp]
+  \centering
+  \begin{minipage}[b]{0.45\textwidth}
+    \includegraphics[width=\textwidth]{./pictures/method/Neuron.png}
+    \caption{The inner workings of a single neuron with a bias \cite{Igel}}
+  \end{minipage}
+  \hfill
+  \begin{minipage}[b]{0.45\textwidth}
+    \includegraphics[width=\textwidth]{./pictures/method/NeuronBias.png}
+    \caption{That same neuron, but with an implicit bias of 1 \cite{Igel}}
+  \end{minipage}
+\label{fig:neuron}
 \end{figure}
 
 One has the options to arrange the neurons in what is called layers, to achieve
@@ -247,7 +253,6 @@ a certain desired behavior, more details regarding these specific layers will
 be explained in later chapters. The training of a \gls{NN} consists of changing
 the weights applied at each neuron, with the goal of modeling the relationships
 present in the data.
-
 
 \subsubsection{Activation Functions}
 
@@ -715,23 +720,23 @@ are updated using \gls{BP}. The process can be split into three distinct steps
 which are continuously repeated:
 
 \begin{enumerate}
-    \item Feed Forward,
-    \item Back Propagate, and
-    \item Update Weights.
+    \item Feed Forward
+    \item Back Propagate
+    \item Update Weights
 \end{enumerate}
 
 The goal of these three steps is to minimize the overall cost of the network.
 The cost refers to the loss we end up with. In order to do so, we take look at
 the gradient. The gradient is a multi-variable generalization of the derivative
 of a function. It can be used for describing the slope of a function at a
-certain value. Not only that, but its' most desired property for our purposes is
-the fact that contrary to the derivative it returns a vector, and this vector
-points to the direction of greatest increase in value for the function at a
-specific point. As such, we can apply what is called gradient decent to our
-network, which is simply the act of changing our loss function arguments, so we
-step in the negative direction of the gradient, which would be the direction of
-greatest decrease in value. A model illustrating this process can be seen in
-figure \ref{fig:grad}
+certain value. Not only that, but its most desired property for our purposes is
+the fact that contrary to the derivative it a vector, and this vector points
+to the direction of greatest increase in value for the function at a specific
+point. As such, we can apply gradient decent to our network, which is simply
+the act of changing our loss function arguments, so we step in the negative
+direction of the gradient, which would be the direction of greatest decrease
+in value, that is, it point towards the local minimum of the error function. A
+model illustrating this process can be seen in Figure \ref{fig:grad}
 
 \begin{figure}
     \centering
@@ -746,13 +751,13 @@ figure \ref{fig:grad}
 
 We are given a certain error function
 
-$$
-E(W) = \sum_{n=1}^N E_n(W)
-E_n(W) = \frac{1}{2}(\hat{y}_n - y_n)^2
-$$
+\begin{align}
+E(W) &= \sum_{n=1}^N E_n(W)\\
+E_n(W) &= \frac{1}{2}(\hat{y}_n - y_n)^2
+\end{align}
 
 Where N is the number of training samples, $\hat{y}_n$ is the predicted results,
-and $y_n$ is the correct one, and W is a set of weights. The goal is minimize
+and $y_n$ is the target, and W is a set of weights. The goal is minimize
 this function. In order to do so, we need to have a independent variable we
 can tweak using gradient decent as per the above description. In the case of
 neural networks we can view this variable as being the weights and the biases,
@@ -820,7 +825,7 @@ network. This fact becomes apparent if we do a little rewriting.
 \begin{align}
 E &= \frac{1}{2}(\hat{y} - y)^2\\ 
 &= \frac{1}{2}(z_5 - y)^2\\
-&= \frac{1}{2}(h(a_5) - y) 
+&= \frac{1}{2}(h(a_5) - y)^2
 \end{align}
 
 Due to this recursive nature, differentiating the entire network entails simply
@@ -852,18 +857,24 @@ which is step 3, update weights.
 These three steps Feed-Forward, Back-Propagate and update weights are repeated
 throughout the training cycle of the neural networks, so as to optimize the
 weights after each full iteration on the training set. As is to be expected
-this algorithm as very expensive computationally, as it runs in $O(W)$ time.
-Due to the highly inflated number of weights compared to neurons, this time
-might not seem desirable at first. However an alternative described by
-\cite{Bishop}, which involves perturbing each weight instead, and approximating
-the derivatives. This method does however run in $O(W^2)$ time, making the
-run-time of $O(W)$ that back-propagation provides the desired choice. However,
-in order to improve on those that $O(W)$ time-complexity a method called
-batching is used. This method, shuffles and split the training dataset up into
-smaller batches. These batches are then run through the network one at a time,
-performing back-propagation after each run-through. This results in the gradient
-not being as accurate after each batch, but this introduced inaccuracy is
-negligible compared to the computational time won.\cite{Bishop}
+this algorithm as very expensive computationally, as it runs in $O(W)$. This is
+only for a single training sample though. Thus run-time becomes $O(N\cdot W)$,
+where $N$ is the number of training samples. Additionally, if one trains over
+several epochs, this run-time becomes even more inflated $O(\mathcal{E}\cdot
+N\cdot W)$ iteration having do be computed, where $\mathcal{E}$ is the number
+of epochs run during training. For that reason this run-time might not seem
+very disable at first, and is indeed the reason why neural networks need such
+a long training time. However an alternative described by \cite{Bishop}, which
+involves perturbing each weight instead, and approximating the derivatives. This
+method does however run in $O(W^2)$ time, making the run-time of $O(W)$ 
+back-propagation provides the desired choice. However, in order to improve on
+those that $O(W)$ time-complexity a method called batching is used. This method,
+shuffles and split the training dataset up into smaller batches. These batches
+are then run through the network one at a time, performing back-propagation
+after each run-through. This results in the gradient not being as accurate
+after each batch, but this introduced inaccuracy is negligible compared to the
+computational time won, by reducing the size of N in $O(\mathcal{E}\cdot N\cdot
+W)$.\cite{Bishop}
 
 \begin{figure}
     \centering

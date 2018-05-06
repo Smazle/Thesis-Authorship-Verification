@@ -7,6 +7,22 @@ import time
 
 
 class FeatureSearch:
+    """
+        Given a set of extracted training freatures and a classifier
+        the goal of this class is to determine the best set of features
+        for the given classifier, using forward greedy selection,
+        and stratified cross validation.
+
+        The class is initalized with a classifier, the minimum
+        features one wants selected, how many authors to use,
+        if the data should be normalized, and how many folds in cross
+        validation shuold be used.
+
+        Attributes:
+            xTrain (Numpy Matrix): Extracted training features
+            authors (List): List of limited authors selected
+
+    """
 
     xTrain = None
 
@@ -24,7 +40,7 @@ class FeatureSearch:
     def fit(self, dataFile, outfile):
         self.__generateData__(dataFile)
         print('Unique authors', len(np.unique(self.authors)))
-        print("Training Data Shape", self.xTrain.shape)
+        print('Training Data Shape', self.xTrain.shape)
         print(sorted(np.unique(self.authors)))
         with open(outfile, 'w') as f:
             for feature, value in self.feature_generator():
@@ -93,8 +109,10 @@ class FeatureSearch:
             np.random.shuffle(unique_authors)
             unique_authors = \
                 unique_authors[:int(len(unique_authors) * self.authorLimit)]
-            self.xTrain = self.xTrain[np.isin(self.authors, unique_authors)].astype(np.float)
-            self.authors = self.authors[np.isin(self.authors, unique_authors)].astype(np.int)
+            self.xTrain = self.xTrain[np.isin(
+                self.authors, unique_authors)].astype(np.float)
+            self.authors = self.authors[np.isin(
+                self.authors, unique_authors)].astype(np.int)
 
         if self.normalize:
             scaler = StandardScaler()
