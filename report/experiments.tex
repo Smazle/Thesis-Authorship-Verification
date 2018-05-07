@@ -856,10 +856,14 @@ and if the prediction system returns the incorrect result 1 we have,
 
 That is the expression we minimize is 0 whenever there is no error and 1
 whenever there is an error. So we minimize the number of errors we make. The
-subject to expression makes sure that the fraction of false accusations we make
-is less than $10\%$ of the accusations we make. The expression should be read
-as, $\textit{false accusations} < \frac{1}{10} \textit{total accusations}$.
-Consider the value of the left hand side,
+subject to expression makes sure that the fraction of false accusations we
+make is less than $10\%$ of the accusations we make. The expression should be
+read as, 
+
+$$ \frac{\textit{false accusations}}{\textit{total accusations}} <
+\frac{1}{10} $$
+
+Consider the numerator of the fraction on the left hand side,
 
 \begin{equation}
     \textit{false accusations} = \sum_{(\alpha, t_u) \in V}
