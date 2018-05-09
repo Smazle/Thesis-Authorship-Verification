@@ -3,7 +3,7 @@
 
 from .feature_search import FeatureSearch
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.model_selection import StratifiedShuffleSplit, StratifiedKFold
+from sklearn.model_selection import StratifiedKFold
 import argparse
 import numpy as np
 

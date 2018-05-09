@@ -1,15 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-from . import network1
-from . import network2
-from . import network3
-from . import network4
-from . import network5
-from . import r_network1
-from . import r_network2
-from . import r_network3
-from . import r_network4
+from .network_factory import construct_network, Network
 import argparse
 from ..util import CSVWriter
 from keras.utils import plot_model
@@ -120,6 +112,14 @@ create_reader.add_argument(
     default=False,
     action='store_true'
 )
+create_reader.add_argument(
+    '--word',
+    dest='word',
+    help='Whether to use characters or words as input to the networks. Both ' +
+         'will be changed to a sequence of ints.',
+    default=False,
+    action='store_true'
+)
 args = parser.parse_args()
 
 # Either load reader from file or create a new one.
@@ -130,10 +130,12 @@ if hasattr(args, 'reader') and args.reader is not None:
 else:
     print(('Creating new MaCom reader with parameters, batch_size={}, ' +
            'vocabulary_frequency_cutoff={}, batch_normalization={}, ' +
-           'pad={}, binary={}').format(args.batch_size,
-                                       args.vocabulary_frequency_cutoff,
-                                       args.batch_normalization,
-                                       args.pad, args.binary))
+           'pad={}, binary={}, char={}'
+           ).format(args.batch_size,
+                    args.vocabulary_frequency_cutoff,
+                    args.batch_normalization,
+                    args.pad, args.binary,
+                    not args.word))
 
     reader = MacomReader(
         args.datafile,
@@ -142,7 +144,8 @@ else:
         validation_split=args.validation_split,
         batch_normalization=args.batch_normalization,
         pad=args.pad,
-        binary=args.binary
+        binary=args.binary,
+        char=not args.word
     )
 
     print('Writing new MaCom reader to reader.p')
@@ -152,27 +155,7 @@ else:
 steps_n = len(reader.training_problems) / reader.batch_size
 val_steps_n = len(reader.validation_problems) / reader.batch_size
 
-# Load the network we are asked to train.
-if args.networkname == 'network1':
-    model = network1.model(reader)
-elif args.networkname == 'network2':
-    model = network2.model(reader)
-elif args.networkname == 'network3':
-    model = network3.model(reader)
-elif args.networkname == 'network4':
-    model = network4.model(reader)
-elif args.networkname == 'network5':
-    model = network4.model(reader)
-elif args.networkname == 'r_network1':
-    model = r_network1.model(reader)
-elif args.networkname == 'r_network2':
-    model = r_network2.model(reader)
-elif args.networkname == 'r_network3':
-    model = r_network3.model(reader)
-elif args.networkname == 'r_network4':
-    model = r_network4.model(reader)
-else:
-    raise Exception('Unknown network {}'.format(args.networkname))
+model = construct_network(Network(args.networkname), reader)
 
 # Setup callbacks.
 callbacks = [

@@ -12,11 +12,11 @@ def clean(txt):
 
 
 def wordProcess(txt):
-    txt = txt.replace('\n', ' ')
-    txt = txt.split(' ')
-    txt = [''.join(list(filter(lambda x: x.isalnum(), q))) for q in txt]
-    txt = list(filter(lambda x: x != '', txt))
-    return txt
+    txt = re.sub(r'([^\s\w]|_)+', '', txt)
+    words = re.split(r'\s', txt)
+    words = list(filter(lambda x: x != '', words))
+
+    return words
 
 
 if __name__ == '__main__':
