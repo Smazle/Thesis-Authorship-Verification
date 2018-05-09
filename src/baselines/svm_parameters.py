@@ -33,8 +33,8 @@ args = parser.parse_args()
 
 # Load data.
 print('Loading Data')
-with open(args.featurefile, 'r') as feature_file:
-    data = pd.read_csv(feature_file)
+with open(args.featurefile, 'r', encoding = 'utf8') as feature_file:
+    data = pd.read_csv(feature_file, )
     authors = data.as_matrix(columns=['author']).flatten()
 
     datacolumns = filter(lambda x: x != 'author', data.columns)

@@ -16,7 +16,7 @@ class FeatureSearch:
         The class is initalized with a classifier, the minimum
         features one wants selected, how many authors to use,
         if the data should be normalized, and how many folds in cross
-        validation shuold be used.
+        validation should be used.
 
         Attributes:
             xTrain (Numpy Matrix): Extracted training features
