@@ -39,7 +39,7 @@ args = parser.parse_args()
 features = np.loadtxt(args.features, dtype=float, delimiter=',')
 features = features[:np.argmax(features, axis=0)[0]][:, 0].astype(int)
 
-fs = FeatureSearch(None, None, authorLimit=False, normalize=True)
+fs = FeatureSearch(None, None, authorLimit=None, normalize=True)
 fs.__generateData__(args.featurefile)
 
 fs.data = fs.data[:, features]

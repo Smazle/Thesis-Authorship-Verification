@@ -9,6 +9,9 @@ f2 = sys.argv[-1]
 data1 = np.loadtxt(f1, dtype=float, delimiter=',')
 data2 = np.loadtxt(f2, dtype=float, delimiter=',')
 
+m = min(len(data1), len(data2))
+data1 = data1[:m]
+data2 = data2[:m]
 
 X = range(len(data1))
 

@@ -170,15 +170,10 @@ value 1, and $\gamma = \frac{1}{\text{n\_features}}$. Due to some authors having
 below 3 texts, the default K value of \gls{KNN}s K parameter was set to 3 for
 the feature selection.
 
-The results of both the SVM and the Extended Delta method feature selection
-can be seen in Figure \ref{fig:fs_results}. (DISCLAIMER: Extended Delta is
-erroneous)
-
-The SVM ended up peaking having selected 75 features, with an accuracy of
-0.675. The features whose addition causes the largest accuracy values can be
-seen in \ref{table:svm_feature}
-
-TODO: Extended Delta Results
+The results of both the SVM and the Extended Delta method feature selection can
+be seen in Figure \ref{fig:fs_results}. We got that the best number of selected
+feature were 75 for the SVM and 10 for the Extended Delta Method, scoring an
+accuracy of 0.675 and 0.666 respectively.
 
 \begin{figure}
     \centering
