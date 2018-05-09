@@ -4,6 +4,7 @@ from sklearn.preprocessing import StandardScaler
 import numpy as np
 import pandas as pd
 import time
+import pickle
 
 
 class FeatureSearch:
@@ -19,12 +20,12 @@ class FeatureSearch:
         validation should be used.
 
         Attributes:
-            xTrain (Numpy Matrix): Extracted training features
+            data (Numpy Matrix): Extracted training features
             authors (List): List of limited authors selected
 
     """
 
-    xTrain = None
+    data = None
 
     authors = None
 
@@ -40,7 +41,7 @@ class FeatureSearch:
     def fit(self, dataFile, outfile):
         self.__generateData__(dataFile)
         print('Unique authors', len(np.unique(self.authors)))
-        print('Training Data Shape', self.xTrain.shape)
+        print('Training Data Shape', self.data.shape)
         print(sorted(np.unique(self.authors)))
         with open(outfile, 'w') as f:
             for feature, value in self.feature_generator():
@@ -96,35 +97,36 @@ class FeatureSearch:
             self.authors = data.as_matrix(columns=['author']).flatten()
 
             datacols = filter(lambda x: x != 'author', data.columns)
-            self.xTrain = data.as_matrix(columns=datacols)
+            self.data = data.as_matrix(columns=datacols)
 
         if self.authorLimit is not None:
             unique_authors = np.unique(self.authors)
 
             unique_authors = np.array([x for x in unique_authors if
                                        len(
-                                           self.xTrain[self.authors == x]
+                                           self.data[self.authors == x]
                                        ) > 3])
 
             np.random.shuffle(unique_authors)
             unique_authors = \
                 unique_authors[:int(len(unique_authors) * self.authorLimit)]
-            self.xTrain = self.xTrain[np.isin(
+            self.data = self.data[np.isin(
                 self.authors, unique_authors)].astype(np.float)
             self.authors = self.authors[np.isin(
                 self.authors, unique_authors)].astype(np.int)
 
         if self.normalize:
             scaler = StandardScaler()
-            scaler.fit(self.xTrain)
-            self.xTrain = scaler.transform(self.xTrain)
+            scaler.fit(self.data)
+            pickle.dump(scaler, open('Scaler.p', 'wb'))
+            self.data = scaler.transform(self.data)
 
-        self.maxFeatureCount = self.xTrain.shape[1]
+        self.maxFeatureCount = self.data.shape[1]
 
     def __generateAuthorData__(self, author):
 
         # Fetch own texts
-        own_texts = self.xTrain[self.authors == author]
+        own_texts = self.data[self.authors == author]
 
         # Fetch other texts
         enum_authors = enumerate(self.authors)
@@ -135,7 +137,7 @@ class FeatureSearch:
         other_texts = [x[0] for x in other_texts[:len(own_texts)]]
 
         # Extract the actual texts using the idx
-        other_texts = self.xTrain[other_texts]
+        other_texts = self.data[other_texts]
 
         X = np.append(own_texts, other_texts, axis=0)
         y = np.array([1] * len(own_texts) + [0] * len(other_texts))
