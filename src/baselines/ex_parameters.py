@@ -7,8 +7,6 @@ import argparse
 import numpy as np
 import pandas as pd
 from .feature_search import FeatureSearch
-import pickle
-
 
 parser = argparse.ArgumentParser(
     description='Run to determine the best hyperparmeters for\
@@ -16,13 +14,13 @@ parser = argparse.ArgumentParser(
 )
 
 parser.add_argument(
-    'datafile',
+    'featurefile',
     type=str,
-    help='Path to file containing the data'
+    help='Path to file containing raw features'
 )
 
 parser.add_argument(
-    'featurefile',
+    'features',
     type=str,
     help='Path to the file containing the selected features'
 )
@@ -32,24 +30,19 @@ parser.add_argument(
     type=int,
     nargs='+',
     help='Which K in KNN to to determine accuracy of, from and\
-        to'
-)
-
-parser.add_argument(
-    '--features',
-    type=str,
-    help='File to save the selected features in'
+        to',
+    default=[1, 15]
 )
 
 args = parser.parse_args()
 
-features = np.loadtxt(args.featurefile, dtype=float, delimiter=',')
+features = np.loadtxt(args.features, dtype=float, delimiter=',')
 features = features[:np.argmax(features, axis=0)[0]][:, 0].astype(int)
 
 fs = FeatureSearch(None, None, None)
-fs.__generateData__(args.datafile)
+fs.__generateData__(args.featurefile)
 
-fs.xTrain = fs.xTrain[:, features]
+fs.data = fs.data[:, features]
 
 results = {}
 for p in range(1, 6):
@@ -75,5 +68,3 @@ for p in range(1, 6):
         else:
             results[p][K] = {'authors': len(scores), 'score': np.mean(scores)}
             print(results[p][K])
-
-pickle.dump(results, open('Ex_Parameters.Results', 'wb'))
