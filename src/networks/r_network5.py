@@ -9,18 +9,15 @@ def model(reader):
     known_in = L.Input(shape=(None, ), dtype='int32')
     unknown_in = L.Input(shape=(None, ), dtype='int32')
 
-    embedding = L.Embedding(len(reader.vocabulary_above_cutoff) + 2, 5)
+    embedding = L.Embedding(len(reader.vocabulary_above_cutoff) + 2, 150)
 
     known_emb = embedding(known_in)
     unknown_emb = embedding(unknown_in)
 
-    if 'device:GPU' in str('str(device_lib.list_local_devices())'):
-        gru = L.CuDNNGRU(200)
-    else:
-        gru = L.GRU(200)
+    feature_extractor = L.Bidirectional(L.LSTM(500))
 
-    features_known = gru(known_emb)
-    features_unknown = gru(unknown_emb)
+    features_known = feature_extractor(known_emb)
+    features_unknown = feature_extractor(unknown_emb)
 
     abs_diff = L.merge(
         inputs=[features_known, features_unknown],
@@ -29,12 +26,7 @@ def model(reader):
         name='absolute_difference'
     )
 
-    dense1 = L.Dense(500, activation='relu')(abs_diff)
-    dense2 = L.Dense(500, activation='relu')(dense1)
-
-    pruned = L.Dropout(0.3)(dense1)
-
-    output = L.Dense(2, activation='softmax', name='output')(pruned)
+    output = L.Dense(2, activation='softmax', name='output')(abs_diff)
 
     model = Model(inputs=[known_in, unknown_in], outputs=output)
 

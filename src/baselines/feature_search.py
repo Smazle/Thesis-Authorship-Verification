@@ -7,24 +7,41 @@ import time
 
 
 class FeatureSearch:
+    """
+        Given a set of extracted training features and a classifier
+        the goal of this class is to determine the best set of features
+        for the given classifier, using forward greedy selection,
+        and stratified cross validation.
+
+        The class is initialized with a classifier, the minimum
+        features one wants selected, how many authors to use,
+        if the data should be normalized, and how many folds in cross
+        validation should be used.
+
+        Attributes:
+            xTrain (Numpy Matrix): Extracted training features
+            authors (List): List of limited authors selected
+
+    """
 
     xTrain = None
 
     authors = None
 
     def __init__(self, classifier, minFeatureCount, authorLimit=None,
-                 normalize=True):
+                 normalize=True, validator=3):
+
         self.classifier = classifier
         self.minFeatureCount = minFeatureCount
         self.authorLimit = authorLimit
         self.normalize = normalize
+        self.validator = validator
 
-    # TODO: The outfile format is very poor if more than 1 classifier is given.
-    # We should probably write a line per classifier or something like that.
     def fit(self, dataFile, outfile):
-        print('Starting Feature Search')
         self.__generateData__(dataFile)
-        print(len(np.unique(self.authors)))
+        print('Unique authors', len(np.unique(self.authors)))
+        print('Training Data Shape', self.xTrain.shape)
+        print(sorted(np.unique(self.authors)))
         with open(outfile, 'w') as f:
             for feature, value in self.feature_generator():
                 print('Feature Selected', feature)
@@ -67,7 +84,7 @@ class FeatureSearch:
             X, y = self.__generateAuthorData__(author)
 
             score = cross_val_score(
-                classifier, X[:, features], y, cv=3)
+                classifier, X[:, features], y, cv=self.validator)
 
             authorScores.append(np.mean(score))
 
@@ -92,8 +109,10 @@ class FeatureSearch:
             np.random.shuffle(unique_authors)
             unique_authors = \
                 unique_authors[:int(len(unique_authors) * self.authorLimit)]
-            self.xTrain = self.xTrain[np.isin(self.authors, unique_authors)]
-            self.authors = self.authors[np.isin(self.authors, unique_authors)]
+            self.xTrain = self.xTrain[np.isin(
+                self.authors, unique_authors)].astype(np.float)
+            self.authors = self.authors[np.isin(
+                self.authors, unique_authors)].astype(np.int)
 
         if self.normalize:
             scaler = StandardScaler()

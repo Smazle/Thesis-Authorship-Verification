@@ -6,13 +6,13 @@
 In this section we will go through the experiments performed in order to get
 our baseline results. While many different features can be used when performing
 \gls{NLP}, we chose the same features, as was used in \cite{US}, since they
-span several several of the different linguistic layers. The linguistic
-layers are different areas which all serve to describe a certain text. An
-example this could be the character level layer, which as the name implies,
-focuses on the individual characters used in a specific text. Other examples
-of this, could the sentence, that focuses on the sentences of the text,
-and the meta layer, that focuses on things such as publishing/delivery date,
-and file format. The features available to pick from in this case are:
+span several several of the different linguistic layers. The linguistic layers
+are different areas which all serve to describe a certain text. An example this
+could be the character level layer, which as the name implies, focuses on the
+individual characters used in a specific text. Other examples of this, could
+be the sentence layer, that focuses on the sentences of the text, and the meta
+layer, that focuses on things such as publishing/delivery date, and file format.
+The features available to pick from in this case are:
 
 \begin{itemize}
     \item Word-N-grams,
@@ -27,45 +27,48 @@ the case where that element is characters, and n is 3, the string "hello" would
 produce the character-3-grams "hel", "ell" and "llo". This also means that a
 feature such as word frequencies can be considered word-1-grams.
 
+\gls{POS} tags, refer to the grammatical class a certain words belongs to,
+such as nouns and adjectives. In order to extract these we made use
+of a POS-tag extractor, provided by \cite{polyglot}.
+
 For all of these experiments a Danish third party corpus, provided by
 \texttt{NLTK}\footnote{\url{http://www.nltk.org/index.html}}, was used as the
 basis for all the feature extraction, as was done in \cite{US} as well. This
 corpus consists of 22,476 sentences, and 563,358 words.
 
+The actual implementation of both the \gls{SVM} and the Extended Delta method,
+very closely resembles the implementation used in \cite{US}. There is however
+a very big difference, with the actual application of the delta method.
+Contrary to the scenario in \cite{US}, where PAN data was used, there isn't an
+instance where we only have 1 text per author. As such the original version
+of the delta method can be used. This is where, when given a new text $x$
+supposedly written by an author $\alpha \in \mathcal{A}$, his texts $T_\alpha$
+are extracted, and so is a set of texts no written by him $\overline{T}_alpha$
+where $|\overline{T}_\alpha| = |T_\alpha|$. The text, along with a negative
+sample text $z$, we know now to be written by $\alpha$ is given to a \gls{KNN}
+classifier, which determine if $x \in T_\alpha$ and $z \in \overline{T}_\alpha$.
 
-\subsubsection{Extended Delta Method}
+\subsubsection{Feature Selection}
 
-A large part of the experiments performed when applying the extended delta
-method was parameter tuning. The extended delta method, does not do any
-mitigation of noisy data or feature selection it self. Thus we would have
-to do the feature selection ourselves. Not only that, but contrary to the
-circumstances our previous paper \cite{US} was written in, we have more than
-one text per author. As such, we don't need the opposing author approach any
-more. When given a text $x$ and a proposed author $\alpha$, we pick out all
-text written that author $T(\alpha)$, and a set different authored texts
-$T_{diff}(\alpha)$ of same length. Using those sets, we create a \gls{KNN}
-model, and apply it to $x$, returning 1 if $x \in T(\alpha)$ and zero otherwise.
-Additionally we also apply the model to the negative case, where we pick text
-randomly from the training-set, returning 1 if this new text is predicted as
-being in $T_{diff}(\alpha)$ and 0 otherwise.
+A large part of the experiments performed when applying the extended delta and
+\gls{SVM} method was parameter tuning. Neither method does any quality analysis
+of the feature they are applied on, as other methods such as the random forest
+does. This means that they are susceptible to noisy feature, and as a result
+would most likely benefit from us selecting the features for them.
 
-Thus we need to tune the K in \gls{KNN}, instead of the number of opposing
-author that was used in \cite{US}
+Before starting any kind of feature selection or hyper-parameter tuning,
+we split the training data up into training and validation, with a 
+80/20 respective split. All the work described from this point on,
+was done on the 80\% training.
 
-So the parameter selection consists of finding the best features, and the best
-K.
+Contrary to our previous work made in \cite{US}, this process wont
+consist of trying out some random selection of features, but rather
+a more systematic approach was used. 
 
-Rather than finding the best features, using the somewhat random approach used
-in our previous paper\cite{US}, we chose to do it more systematically this time
-around. This however proved a greater task than anticipated. In order to find
-the best set of feature, one would have to extract a very large set of features,
-thousands in our case and determine the best combination of those features. A
-task like that would take an incredible amount of computing power, and time.
-Thus, we opted for a forward greedy selection approach.
-
-We initially wanted to extract of large set of features, to perform our greedy
-selection on. The corpus used had the following quantities of the different
-features.
+However, before starting to do that, a feature set was to be created
+first. In order for us to find the very best set of features, we wanted
+to create a very large feature set, so as to increase our search space.
+The corpus used had the following quantities of the different features.
 
 \begin{itemize}
     \item Word-2-grams - 188,472
@@ -75,14 +78,14 @@ features.
     \item Special-character-2-grams - 524
 \end{itemize}
 
-These numbers are of course inflated due to the size of the corpus relative
-to the actual text we are training on, and will continue to increase as we
-increase the N in the N-grams. As a result of this, the frequency of each N-gram
-decreases, and so does the impact each individual N-gram has. For this reason we
-choose to only focus on a subset most frequent instances of each feature, which
-also serves to limit the parameter search space.
+The quantities here are of course very large due to the size of the corpus,
+and will continue to rise as N increases. Rather than extracting all
+of those feature from our texts, we chose to focus on the most N-grams
+with highest frequency, as we would reach a point where a specific N-gram
+determined to be in the corpus, would be unique that same corpus, making it
+irrelevant for new texts, not associated with the corpus.
 
-Using the quantities listed above as inspiration, a feature set of 8,600
+Using the quantities listed above as inspiration, a feature set of around 5000
 features was produced, containing
 
 \begin{itemize}
@@ -103,172 +106,135 @@ could be seen with the special-character-N-grams, where an increase in N,
 wouldn't contribute anything. \gls{POS}-tag-N-grams were a really big burden
 computationally, as such a reduction in possible N-values, had to be made.
 
-These features were extracted from subset of the data-set described earlier
-in section \ref{sec:data}. However it wasn't beholden to the same upper limit
-character and unique character constraint, as the lack of memory isn't nearly
-as severe as in the case of our \gls{NN}s. This data-set contained 14646
-entries. The distribution of the texts over authors in this data-set isn't
-very evenly spread. As such, we removed some data-entries, so $$\{\forall \alpha
-\in \mathcal{A}: |T(\alpha)| = T_{min}\}$$ Where $T_{min}$ is the smallest amount
-of texts associated with one author, in the case 4. Doing this decreased the
-data-set entry quantity to 3748, with 937 different authors.
+These features were extracted from the same data-set described earlier in
+section \ref{sec:data}. However it wasn't beholden to the same exact limits to
+character and unique characters. In the case of the upper limit the lack of
+memory wasn't nearly as severe as in the case of our \gls{NN}s. As for the lower
+limit, and natural boundary would occur throughout the extraction process.
+If a file did not have 500 unique words for example, the extraction
+of the 500 most frequent words would cause an error, resulting in that
+text being ignored.
+The distribution of the texts over authors in this data-set isn't
+very evenly spread. As such, the random selection of random opposing
+authors has a certain amount of bias towards the authors with a large
+amount of texts compared to the test.
 
-Having the features, we could then proceed with the greedy algorithm, which
-works as follows. It starts out only using the most frequent of each of
-the different features. Using this set it loops through each $\alpha \in
-\mathcal{A}$ applying the extended delta methods, as described earlier in this
-section. After each iteration the next, most frequent of each of the feature
-is added to our active set of features, and then the extended delta method is
-applied again. For each of these iteration, the best result is saved. If the
-result doesn't improve for three iterations, or no more features are available,
-the saved best result is returned. As each feature only has a certain of amount
-of most frequent values, the greedy algorithm will reach a point where it want
-to take grab the next most frequent feature, but it isn't available. In this
-case, simple stop taking entries from that feature, but we keep taking from the
-others. This greedy approach was applied using different configurations of the
-N in KNN and distance metric, with $N \in {1,...,7}$, and the distance metric
-being either Manhattan or Euclidean.
+Having the features, we could start doing our feature selection. This whole
+process proved very expensive computationally. Having to check every combination
+of 5000 features, simply wasn't feasible. It was for that reason we opted for a
+greedy algorithm instead.
 
-The results of the selection can be seen in figures \ref{fig:resultsMan} and 
-\ref{fig:resultsEuc}. 
+This greedy algorithm works as described by \cite{kanDeng}, which is a simple
+forward feature selection. Having out previously created feature set, we loop
+through each single feature, validating its' accuracy when applied to each
+$\alpha \in \mathcal{A}$. As eluded to earlier, this consists of fetching
+$T_{\alpha}$ and a set $\overline{T}_{\alpha}$, where $|\overline{T}_\alpha| =
+|T_\alpha|$. Using this set of positive and negative cases, we make use k-fold
+cross validation to determine the performance of the feature for that author.
+This is done for all authors, and when averaged we have the performance of
+that single feature. This process is then repeated for all features. The best
+performing feature is then added to out candidate set of features. The next
+iteration we loop through all the feature again, but we validate against each
+feature in combination with the already selected features. This process is
+repeated until a set number of features are selected. At this point we determine
+at which point we had the best candidate set, and use that hence fourth.
 
-\begin{table}
-    \centering
-    \begin{tabular}{|c|c|c|}
-    \hline
-    KNN & Frequent Feature Count & Result          \\ \hline
-    1   & 12                     & \textbf{0.7705} \\ \hline
-    2   & 10                     & 0.6927          \\ \hline
-    3   & 6                      & 0.6742          \\ \hline
-    4   & 2                      & 0.6378          \\ \hline
-    5   & 13                     & 0.6391          \\ \hline
-    6   & 2                      & 0.6053          \\ \hline
-    7   & 10                     & 0.5989          \\ \hline
-    \end{tabular}
-    \caption{Results of the forward greedy selection of the extended delta
-        method using the Manhattan distance. The point where a single feature
-        had no more entries to pick from, was never reached. As such Frequent
-        Feature Count describes how many most frequent entries were picked out
-        from each feature.}
-    \label{fig:resultsMan}
-\end{table}
+Even this greedy approach proved to be very time consuming. As such, we only did
+as described and found the best features, but left out the hyper-parameters C,
+and $\gamma$ for the SVM, and K and the distance metric for the extended delta
+method. These hyper-parameters were also selected through a separate process
+which will be described in a later section.
 
-\begin{table}[]
-    \centering
-    \begin{tabular}{|c|c|c|}
-    \hline
-    KNN & Frequent Feature Count & Result          \\ \hline
-    1   & 10                     & \textbf{0.7772} \\ \hline
-    2   & 13                     & 0.6990          \\ \hline
-    3   & 3                      & 0.6791          \\ \hline
-    4   & 4                      & 0.6499          \\ \hline
-    5   & 2                      & 0.6288          \\ \hline
-    6   & 2                      & 0.6065          \\ \hline
-    7   & 2                      & 0.5959          \\ \hline
-    \end{tabular}
-    \caption{Results of the forward greedy selection of the extended delta
-        method using the Euclidean distance. The point where a single feature
-        had no more entries to pick from, was never reached. As such Frequent
-        Feature Count describes how many most frequent entries were picked out
-        from each feature.}
-    \label{fig:resultsEuc}
-\end{table}
+The cross validation used differs from each method. The SVM uses normal 3 fold
+cross validation. This however was not the case for the extended delta method.
+The reason for this was that there was a scenario where an unlucky split of
+folds would cause a lot of error. A generic example of this would be if we
+had the 2 class training set consisting of 6 value, evenly split between the
+2 classes. In the case where we split those 6 values into 3 folds, there is a
+chance that a fold contains two value of the same class, which means that if $K
+= 3$ in our case, both of those wont ever be able to classified correctly as
+there is only 1 of that class in the training set. As such, stratified K fold
+cross validation is used instead, as it uphold the class distribution in its'
+folds. Leave one out cross validation would of course also work in the case of
+both out methods, but we were limited by the computation time, and for that
+reason we opted for K folds instead.
 
-As such, the best configuration is Euclidean distance, with the 10 most frequent
-of the different features, is what we will be using on the test data.
+For both the \gls{SVM} and Extended Delta method, we ran this algorithm
+until 250 features were selected. Computation time was still and issue, so
+additionally we only made use of 5\% of the total number of authors. The SVM
+performed its' feature selection using the default RBF kernel, a C with value 1,
+and $\gamma = \frac{1}{\text{n\_features}}$. Due to some authors having below
+3 texts, the default K value of \gls{KNN}s K parameter was set to 3 for the
+feature selection.
 
-\subsubsection{Author Specific SVM}
+The results of both the SVM and the Extended Delta method feature selection
+can be seen in Figure \ref{fig:fs_results}. (DISCLAIMER: Extended Delta is
+erroneous)
 
-The author specific SVM is a authorship verification method that learns from
-hand crafted features. Similar to the Extended Delta method we perform a feature
-search in a large set of features to find the optimal features for the SVM. To
-evaluate different feature sets and different hyperparameters we use the
-algorithm shown in Figure \ref{fig:svm_evaluation_algorithm}. The algorithm
-computes the average accuracy of the SVM via leave one out cross validation. For
-each author it takes a set of texts written by that author and a set of texts of
-similar size written by another author. Then it successively leaves out one of
-the texts, train an SVM on the rest and then use that SVM to predict the class
-of the text that was left out. The score is then the average accuracy of that
-prediction.
+The SVM ended up peaking having selected 225 features, with an accuracy of
+0.649. The features whose addition causes the largest accuracy values can be
+seen in \ref{table:svm_feature}
+
+TODO: Extended Delta Results
 
 \begin{figure}
-    \begin{algorithm}[H]
-        \KwData{$A$ a set of authors, $F$ a set of features, $C$ SVM
-        hyperparameter, $\gamma$ SVM hyperparamter}
-        Let $S = \emptyset$\;
-        \For {$\alpha \in A$} {
-            Let $T_k = T(\alpha)$\;
-            Let $T_u = \{
-                x_i\ |\ x_i \in \mathcal{U}\left(
-                    \overline{T}(\alpha)
-                \right), 1 \leq i \leq \left| T_k \right|
-            \}$\;
-            \label{line:draw_opposition}
-            Let $F_k = \{ f(t, F)\ |\ t \in T_k\}$\;
-            \label{line:feature_extract_1}
-            Let $F_u = \{ f(t, F)\ |\ t \in T_u\}$\;
-            \label{line:feature_extract_2}
-            \For {$x \in F_k \cup F_u$} {
-                Let $m = SVM(F_k \setminus x, F_u \setminus x, C, \gamma)$\;
-                \uIf {$m(x) = a(x)$} {
-                    Let $S = S \cup \{1\}$\;
-                } \uElse {
-                    Let $S = S \cup \{0\}$\;
-                }
-            }
-        }
-        \Return {$\mu(S)$}
-        \caption{SVM evaluation}
-    \end{algorithm}
-    \caption{Algorithm to evaluate an SVM on a set of authors. The algorithm is
-        given a set of authors $A$ to evaluate over, a set of features $F$ to
-        use and the hyperparameters for the SVM. On Line
-        \ref{line:draw_opposition} $\mathcal{U}$ denotes the uniform
-        distribution and $T_u$ is a set of texts of the same size as $T_k$ where
-        each text in the set is written by a different author than $\alpha$. On
-        Line \ref{line:feature_extract_1} and Line \ref{line:feature_extract_2}
-        $f$ denotes a function that computes the features $F$ of the text $t$.
-        The algorithm computes the average accuracy of an SVM with the paramters
-        given over all authors given.}
-    \label{fig:svm_evaluation_algorithm}
+    \centering
+    \includegraphics[scale=0.8]{./pictures/experiments/baselines/FeatureSelect.png}
+    \caption{The process of the greedy feature selection of the SVM and the Extended Delta Method}
+    \label{fig:fs_results}
 \end{figure}
 
-The search in a set of features $F$ are performed by starting with an
-empty set of features $FC$. Then in each iteration we add a single
-$f \in F$ to $FC$ and evaluate the SVM with the algorithm in Figure
-\ref{fig:svm_evaluation_algorithm}. At the end we add only the single feature
-that gives the best performance in the evaluation algorithm and repeat again
-with the rest of the features. The feature set we search in are the same feature
-set as the feature set used in the Extended Delta Method but without limiting
-the number of texts per authors. The search are performed on only 100 random
-authors in the set as it otherwise takes to long. The feature search is done
-with fixed SVM hyperparameters which we tune afterwards. The hyperparameters
-used during the search was $C = 100$ and $\gamma = 1000$, and using the default
-rbg kernel. The feature search surprisingly found only 6 features before no
-features could improve the result further. The specific features were the
-character-2-gram " -", the character-3-gram ", o", the character-4-gram ", at",
-the character-4-gram ", so", the character-6-gram ", der " and the word-1-gram
-"giver". Most of the features seem to look at what authors are writing
-immediately following commas. We found the optimal hyper parameters for the SVM
-by splitting the dataset in two parts. 80\% of the authors went in the training
-part and 20\% of the authors went in the validation part. Then for each author
-in the training dataset we varied $C \in (10^{-2}, 10^0, \dots, 10^{10})$ and
-$\gamma \in (10^{-9}, 10^{-7}, \dots, 10^3)$ and evaluated an SVM using the
-algorithm in Figure \ref{fig:svm_evaluation_algorithm} with the fixed feature
-set for each combination of hyperparameters. After that we took a majority
-vote between the authors chosen hyperparameters and chose that as the final
-hyperparameters. The final hyperparameters were $C = 100$ and $\gamma = 1000$.
-We then evaluated our chosen parameters both feature set and hyperparameters on
-the validation set. We obtained an accuracy of 0.62980.
 
-Since we were surprised that only 6 features were used we also tried to take a
-feature set of the 50 most frequent features in each category. We again ran the
-search for hyperparameters. This time we found that $C = 100$ and $\gamma = 10$
-worked the best. We obtained an accuracy of 0.69552. So we were able to obtain a
-higher accuracy by arbitrarily choosing the 50 most frequent features instead of
-doing a structured search.
+\subsection{Hyper Parameter Selection}
 
-TODO: Try using all features.
+As mentioned in the previous section, due to computational time, we were unable
+to do the hyper parameter selection parallel with the feature selection. 
+For that reason we chose to split it up, selecting our features first, and the 
+fine tuning our parameters based on those selected features.
+
+This means that our implementation very closely mimics the one used in the
+previous example. On both cases we start out with two lists of possible hyper
+parameter values:
+
+\begin{align}
+SVM&:
+		\begin{array}{lr}
+        C=\{10^{-2}, 10^0, 10^2, 10^4, 10^6, 10^8, 10^{10}\}\\
+        \gamma=\{10^{-7}, 10^{-5}, 10^{-3}, 10^{-1}, 10^{1}, 10^3, 10^5\}
+        \end{array}\\
+\text{Extended Delta}&:
+		\begin{array}{lr}
+        p=\{1,2,3,4,5\}\\
+        K=\{1,2,3,4,5,6,7,8,9,10,11,12,13,14,15\}
+        \end{array}
+\end{align}
+
+The one parameter yet to be explained i $p$, which refers to the p in the
+minkowski distance.
+
+$$
+D(X,Y) = \left(\sum_{i = 1}^n |x_i - y_i|^p\right)^{1/p}
+$$
+
+Where $p=1$ and $p=2$ is the manhattan and eucledian distance respective.
+
+We perform a grid search over all these parameters. For each variation of the
+hyper parameters we average the performance of the method over all unique
+authors in the training set, in a manner very similar to the feature selection.
+A key difference is that rather than using 3 fold cross validation, we now use
+leave one out cross validation. We aren't performing nearly as many iterations
+this time around, which is why this change was made. In this case, we loop
+over all unique authors one time for each combination of hyper parameter, the
+number of which dwarfs the amount in the feature selection. The accuracy of each
+parameter configuration can be seen in Figure TODO:ref, and Figure TODO: ref.
+
+After the best parameters were found, we apply the methods to the 20\% we set
+aside for validation originally. This resulted in the SVM getting an accuracy of
+0.713 with its best parameters being $C=100.0$ and $\gamma=1000$.
+
+TODO: Extended Delta Results
+
+%TODO: Try using all features.
 
 
 \subsection{Deep Learning}
@@ -276,7 +242,7 @@ TODO: Try using all features.
 The main attraction of our authorship verification task, is the implementation
 and testing of different \gls{NN}. In the following sections we will go through
 the different iterations of networks we have produced. A glossary of the
-different layers used can be seen in figure \ref{glossary}. Throughout out
+different layers used can be seen in Figure \ref{glossary}. Throughout out
 experiments, we used a 0.5 threshold for classification.
 
 \begin{landscape}
@@ -393,7 +359,7 @@ experiments, we used a 0.5 threshold for classification.
 
             GRU                                                                &
             A gated recurrent unit is applied to the data according to the
-            description found in \ref{subsubsec:layers}.                       &
+            description found in Section \ref{subsubsec:layers}.               &
             \begin{minipage}[t]{\linewidth}
             \begin{compactdesc}
                 \item[Unit] Number of neurons in the layer.
@@ -758,7 +724,7 @@ in Figure \ref{fig:network5}.
 \end{figure}
 
 The network reached an accuracy of 0.89393 in epoch 18. The training and
-validation accuracies are shown in Figure \ref{fig:network5_accuracies}. At the
+validation accuracies are shown in Figure \ref{fig:network_5_accuracies}. At the
 end of the training the network suddenly goes from about 90\% accuracy and back
 to 50\% accuracy. A reason for that happening could be that the optimizer
 overshot a target and therefore ended up with a worse result.
@@ -767,16 +733,239 @@ overshot a target and therefore ended up with a worse result.
     \centering
     \includegraphics[width=0.5\textwidth]{./pictures/experiments/network_5_accuracies.png}
     \caption{Shows the training and validation accuracies over the epochs of
-        training on the fourth iteration of network of iteration 5.}
+        training on the fifth iteration of our networks.}
     \label{fig:network_5_accuracies}
+\end{figure}
+
+The students normally write their personal information in the beginning of
+assignments. Earlier we described that MaCom removed most of the names from
+the assignment. But they still contain information such as classes, dates and
+a different number of new line characters per student. We were suspicious
+that the networks still made use of some meta data from the texts so we tried
+training the network again but where we removed the 200 first characters from
+each text. Since most of the metadata are located in the beginning of the
+text we hoped that that would remove the problem. On this new dataset the
+best validation accuracy was obtained in epoch 3 with an accuracy of 0.53233.
+Clearly the network relied exclusively on the metadata in the beginning of
+the texts. We have shown the training and validation accuracies in Figure
+\ref{fig:network_5_accuracies_2}.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\textwidth]{./pictures/experiments/network_5_accuracies_2.png}
+    \caption{Shows the training and validation accuracies over the epochs of
+        training on the fifth iteration of our networks where we removed the 200
+        first characters.}
+    \label{fig:network_5_accuracies_2}
+\end{figure}
+
+
+\subsubsection{Siamese Neural Network - Iteration 6}
+\label{subsubsec:siamese_neuraon_network_iteration_6}
+
+In this iteration we trained our third network again but this time with the 200
+first characters removed like in Iteration 5. We wanted to see how much worse
+the network would perform now that we had hopefully removed some more personal
+information from what the network had available to look at. We have shown the
+training and validation accuracies in Figure \ref{fig:network_6_accuracies}. The
+best validation accuracy was obtained in epoch 57 with an accuracy of 0.74370.
+That means that we lost about 5\% accuracy by removing the first 200 characters.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\textwidth]{./pictures/experiments/network_6_accuracies.png}
+    \caption{Shows the training and validation accuracies over the epochs of
+        training on the sixth iteration of our networks.}
+    \label{fig:network_6_accuracies}
+\end{figure}
+
+
+\subsection{Prediction System}
+
+Our prediction system has several hyperparameters we have to choose to get
+the best results. We recall that MaCom wanted a system that had an accusation
+error of less than 10\%. We can use the threshold parameter $\theta$ in the
+prediction system to control how many people we accuse. The best parameters
+for the prediction system is those parameters that gives the highest accuracy
+subject to the constraint that the accusation error should be less than 10\%.
+To tune the parameters we use a validation dataset $V$ consisting of a set of
+tuples $(\alpha, t_u)$ where $\alpha$ is a candidate author and $t_u$ is a text
+of unknown authorship. None of the authors in $V$ has been seen by the networks
+during training and none of the texts $t_u$ has been seen by the networks during
+training. The parameters that maximize the accuracy subject to the bounded
+accusation error is the same as the parameters that minimize the error rate
+subject to the bounded accusation error. That optimization problem is,
+
+\begin{equation}
+    \label{eq:prediction_system_minimization}
+    \begin{aligned}
+        & \underset{\theta, w}{\text{minimize}}
+        & & \sum_{(\alpha, t_u) \in V} \left|
+            P(f, w, T_\alpha \setminus \{t_u\}, t_u, \theta) -
+            \mathbbm{1}_{T_\alpha}(t_u)
+        \right| \\
+        & \text{subject to}
+        & & \frac{\sum_{(\alpha, t_u) \in V} \mathbbm{1}_{T_\alpha}(t_u) \cdot
+            \left(1 - P(f, w, T_\alpha \setminus \{t_u\}, t_u, \theta)\right)}
+{\sum_{(\alpha, t_u) \in V} (1 - P(f, w, T_\alpha \setminus \{t_u\}, t_u, \theta)} <
+            \frac{1}{10} 
+    \end{aligned}
+\end{equation}
+
+In the optimization problem we fix the network $f$ we validate. The expression
+we minimize is the number of errors made in prediction over the validation set
+$V$. Consider a problem $(\alpha, t_u) \in V$ where $t_u \in T_\alpha$. Then we
+know that $\mathbbm{1}_{T_\alpha}(t_u) = 1$ from the definition of the indicator
+function then if the prediction system returns the correct result 1 we have,
+
+\begin{equation}
+    e = \left|
+        P(f, w, T_\alpha \setminus \{t_u\}, t_u, \theta) -
+        \mathbbm{1}_{T_\alpha}(t_u)
+    \right| = |1 - 1| = 0,
+\end{equation}
+
+and if the prediction system returns the incorrect result 0 we have,
+
+\begin{equation}
+    e = \left|
+        P(f, w, T_\alpha \setminus \{t_u\}, t_u, \theta) -
+        \mathbbm{1}_{T_\alpha}(t_u)
+    \right| = |0 - 1| = 1.
+\end{equation}
+
+Similarly for a problem $(\alpha, t_u) \in V$ where $t_u \notin T_\alpha$ we
+know that $\mathbbm{1}_{T_\alpha}(t_u) = 0$ from the definition of the indicator
+function. Then if the prediction system returns the correct result 0 we have,
+
+\begin{equation}
+    e = \left|
+        P(f, w, T_\alpha \setminus \{t_u\}, t_u, \theta) -
+        \mathbbm{1}_{T_\alpha}(t_u)
+    \right| = |0 - 0| = 0,
+\end{equation}
+
+and if the prediction system returns the incorrect result 1 we have,
+
+\begin{equation}
+    e = \left|
+        P(f, w, T_\alpha \setminus \{t_u\}, t_u, \theta) -
+        \mathbbm{1}_{T_\alpha}(t_u)
+    \right| = |1 - 0| = 1.
+\end{equation}
+
+That is the expression we minimize is 0 whenever there is no error and 1
+whenever there is an error. So we minimize the number of errors we make. The
+subject to expression makes sure that the fraction of false accusations we
+make is less than $10\%$ of the accusations we make. The expression should be
+read as, 
+
+$$ \frac{\textit{false accusations}}{\textit{total accusations}} <
+\frac{1}{10} $$
+
+Consider the numerator of the fraction on the left hand side,
+
+\begin{equation}
+    \textit{false accusations} = \sum_{(\alpha, t_u) \in V}
+    \mathbbm{1}_{T_\alpha}(t_u) \cdot
+    \left(1 - P(f, w, T_\alpha \setminus \{t_u\}, t_u, \theta)\right).
+\end{equation}
+
+For a $(\alpha, t_u) \in V$ where $t_u \in T_\alpha$ we have that
+$\mathbbm{1}_{T_\alpha}(t_u) = 1$ then if $P$ is correct it returns 1 and we
+get,
+
+\begin{equation}
+    \mathbbm{1}_{T_\alpha}(t_u) \cdot
+    \left(1 - P(f, w, T_\alpha \setminus \{t_u\}, t_u, \theta)\right) =
+    1 \cdot (1 - 1) = 0,
+\end{equation}
+
+and if $P$ is incorrect and returns 0 we have,
+
+\begin{equation}
+    \mathbbm{1}_{T_\alpha}(t_u) \cdot
+    \left(1 - P(f, w, T_\alpha \setminus \{t_u\}, t_u, \theta)\right) =
+    1 \cdot (1 - 0) = 1.
+\end{equation}
+
+Similarly for a $(\alpha, t_u) \in V$ where $t_u \in T_\alpha$ we have that
+$\mathbbm{1}_{T_\alpha}(t_u) = 0$ and therefore the expression is always
+0. Therefore the expression is 1 whenever we have a false accusation and 0
+otherwise. The right hand side of the inequality simply counts the number of
+accusations by inverting the output of $P$ and divides that by 10. So the
+condition makes sure that only 10\% of the accusations we make are false
+accusations.
+
+We have chosen to run our prediction system on the network described in Section
+\ref{subsubsec:siamese_neuraon_network_iteration_6}. That is the convolutional
+neural network using max-over-time pooling after the convolutional layer.
+The validation set we run on consists as described only of previously unseen
+authors. It consist of 411 different authors and from them we generate two
+problems each meaning that we end up with 822 different problems. For each
+of the authors we generate a positive sample by taking the newest text as
+the unknown text and a negative sample by choosing a random text from some
+other author in the set. That is we have a 0.5 split between positive and
+negative samples. To find the $\theta$ and $w$ that minimizes equation
+\ref{eq:prediction_system_minimization} we cross validate with $\theta \in
+0, 0.1, \dots, 1.0$ and $w \in 0, 0.1, \dots, 1.0$ (when $w = 0$ the weights
+are uniform). The results of that cross validation are shown in Figure
+\ref{fig:prediction_system_results_1}. The $\theta$ and $w$ that gave the best
+accuracy while adhering to the constraint was $\theta = 0.2$ and $w = 0.3$ which
+had an accuracy of $0.67153$ and an accusation error of $0.09714$.
+
+\begin{figure}
+    \centering
+    \textbf{Prediction System Results for 0.5 Split}\par\medskip
+    \includegraphics[width=0.49\textwidth]{./pictures/experiments/network3_prediction_system_accuracies.png}
+    \includegraphics[width=0.49\textwidth]{./pictures/experiments/network3_prediction_system_accusation_error.png}
+    \caption{Results of running the prediction system with our best
+        convolutional network on a validation dataset with 50\% positive samples
+        and 50\% negative samples. In the left graph we show the accuracies
+        obtained as a function of $\theta$. There is one line for each weight.
+        We can see that as expected the worst weight function are the uniform
+        weights. On the right we have shown the accusation error as a function
+        $\theta$ again with one line for each weight. We can see that as the
+        threshold increases and we accuse more people of cheating the accusation
+        error rises.}
+    \label{fig:prediction_system_results_1}
+\end{figure}
+
+We also tried our prediction system on another validation
+set. In the real world it has been estimated that 4\% of
+turn ins for the \gls{SRP} are written by "ghost writers"
+\footnote{https://politiken.dk/indland/uddannelse/art5603163/Gymnasieelever-\%C2
+\% BBSnyderi-beviser-hvor-vanvittig-betydningsfuld-SRP-er-blevet\%C2\%AB}. We
+therefore also wanted to find $\theta$ and $w$ for a validation set with only
+4\% negative samples instead of 50\% negative samples. We generated 411 positive
+samples as before and then for each sample we added a negative sample with a
+4\% chance. We ended up with a validation set with 411 positive samples and 16
+negative samples. The $\theta$ and $w$ that gave the best accuracy while still
+fulfilling the constraint were $\theta = 0.1$ and $w = 0.0$ with an accuracy of
+0.97189 and an accusation error of 0.0. With that configuration we caught
+$\frac{4}{16}$ of the cheaters with 0 false accusations. We have shown the cross
+validation results in Figure \ref{fig:prediction_system_results_2}.
+
+\begin{figure}
+    \centering
+    \textbf{Prediction System Results for 0.04 Split}\par\medskip
+    \includegraphics[width=0.49\textwidth]{./pictures/experiments/network3_prediction_system_accuracies_4_percent.png}
+    \includegraphics[width=0.49\textwidth]{./pictures/experiments/network3_prediction_system_accusation_error_4_percent.png}
+    \caption{Results of running the prediction system with our best
+        convolutional network on a validation dataset with about 96\% positive
+        samples and about 4\% negative samples. In the left graph we show the
+        accuracies obtained as a function of $\theta$. There is one line for
+        each weight. On the right we have shown the accusation error as a
+        function $\theta$ again with one line for each weight. We can see that
+        as the threshold increases and we accuse more people of cheating the
+        accusation error rises.}
+    \label{fig:prediction_system_results_2}
 \end{figure}
 
 
 TODO:
 \begin{itemize}
-    \item Describe Backpropagration
     \item Describe Optimizers
-    \item Describe Convolutions
     \item Describe Dropout
     \item Describe RNN
     \item Use squared distance as merge function to get larger differences

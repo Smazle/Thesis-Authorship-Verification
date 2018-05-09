@@ -42,7 +42,8 @@ def model(reader):
         conv16(unknown_embed))
 
     repr_known = L.Concatenate()([repr_known1, repr_known2, repr_known3])
-    repr_unknown = L.Concatenate()([repr_unknown1, repr_unknown2, repr_unknown3])
+    repr_unknown = L.Concatenate()(
+        [repr_unknown1, repr_unknown2, repr_unknown3])
 
     abs_diff = L.merge(
         inputs=[repr_known, repr_unknown],
@@ -52,13 +53,12 @@ def model(reader):
     )
 
     dense1 = L.Dense(500, activation='relu')(abs_diff)
-    dense2 = L.Dense(500, activation='relu')(dense1)
+    pruned = L.Dropout(0.3)(dense1)
+    dense2 = L.Dense(500, activation='relu')(pruned)
     dense3 = L.Dense(500, activation='relu')(dense2)
     dense4 = L.Dense(500, activation='relu')(dense3)
 
-    pruned = L.Dropout(0.3)(dense4)
-
-    output = L.Dense(2, activation='softmax', name='output')(pruned)
+    output = L.Dense(2, activation='softmax', name='output')(dense4)
 
     model = Model(inputs=[known_in, unknown_in], outputs=output)
 
