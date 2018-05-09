@@ -33,7 +33,7 @@ args = parser.parse_args()
 
 # Load data.
 print('Loading Data')
-with open(args.featurefile, 'r', encoding = 'utf8') as feature_file:
+with open(args.featurefile, 'r', encoding='utf8') as feature_file:
     data = pd.read_csv(feature_file, )
     authors = data.as_matrix(columns=['author']).flatten()
 
@@ -105,6 +105,6 @@ for author in training_authors:
 
 ((C, gamma), count) = best_params.most_common()[0]
 
+print('final best parameters', 'C', C, 'gamma', gamma)
+print('Score', np.mean(res[(C, gamma)]))
 print([(key, np.mean(value)) for key, value in res.iteritem()])
-print('final best parameters', 'C', C, 'gamma',
-      gamma, 'score', np.mean(res[(C, gamma)]))
