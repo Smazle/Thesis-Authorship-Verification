@@ -66,6 +66,7 @@ X = X[:, features_to_use]
 
 # Find the best hyperparameters using the training authors.
 best_params = Counter()
+res = {}
 for author in training_authors:
     # Split texts into those written by same and different authors.
     same_author = X[authors == author]
@@ -85,7 +86,7 @@ for author in training_authors:
 
     # Leave one out cross validation over C and gamma range.
     C_range = np.logspace(-2, 10, 7)
-    gamma_range = np.logspace(-7, 5, 7)
+    gamma_range = np.logspace(-3, 9, 7)
     param_grid = dict(gamma=gamma_range, C=C_range)
     cv = LeaveOneOut()
     grid = GridSearchCV(SVC(kernel='rbf'), param_grid=param_grid, cv=cv)
@@ -97,6 +98,13 @@ for author in training_authors:
     best_C_gamma = (grid.best_params_['C'], grid.best_params_['gamma'])
     best_params = best_params + Counter([best_C_gamma])
 
+    if best_C_gamma not in res:
+        res[best_C_gamma] = [grid.best_score_]
+    else:
+        res[best_C_gamma].append(grid.best_score_)
+
 ((C, gamma), count) = best_params.most_common()[0]
 
-print('final best parameters', 'C', C, 'gamma', gamma)
+print([(key, np.mean(value)) for key, value in res.iteritem()])
+print('final best parameters', 'C', C, 'gamma',
+      gamma, 'score', np.mean(res[(C, gamma)]))
