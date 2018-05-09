@@ -12,9 +12,7 @@ data2 = np.loadtxt(f2, dtype=float, delimiter=',')
 
 X = range(len(data1))
 
-
 print([int(x[0]) for x in sorted(data1, key=lambda x:x[-1])[:50]])
-
 
 m = [np.argmax(data1[:, -1]), np.argmax(data2[:, -1])]
 y = [data1[:, -1][m[0]], data2[:, -1][m[1]]]

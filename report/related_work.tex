@@ -14,24 +14,30 @@ series of authorship verification problems. To attribute the author of a text
 you can perform a series of authorship verifications of each candidate author
 and return the author that reported true. Their experiment consisted of a
 network where they first had a Convolutional layer, after that a max-over-time
-pooling layer and then a densely connected network on the top of that. Character
-level features has previously been shown to be important for both authorship
-verification and attribution (TODO: cite something). The hope was that the
-convolutional layer would learn important features from sequences of characters.
-The max-over-time pooling would take the most important value from each
-convolutional filter and would extract a similar number of features for each
-text even though the texts are of differing length. The dense network was then
-supposed to take the features extracted from the text and determine authorship
-of the text from them.
+pooling layer and then a densely connected network on the top of that.
+Character level features has previously been shown to be important for both
+authorship attribution and in turn authorship verification as well. A point
+which is emphasized when looking at the results of \cite{hansen2014}, and
+\cite{aalykke2016}, who both not only got good results using Character level
+features, but also did so working on data from the same source as we did during
+the creation of this paper. The hope was that the convolutional layer would
+learn important features from sequences of characters. The max-over-time pooling
+would take the most important value from each convolutional filter and would
+extract a similar number of features for each text even though the texts are
+of differing length. The dense network was then supposed to take the features
+extracted from the text and determine authorship of the text from them.
 
 \cite{DBLP:journals/corr/RuderGB16c} also used multiple channels in their
 network. Each channel was a different token sequence some of them were word
 embeddings and some were character embeddings. Some of the channels were static
 while some of the channels were non-static meaning that the word/char-embedded
 vectors would change during training. The point of the channels was that the
-network were able to extract features from multiple levels of features (TODO:
-reference some explanation of different levels of features). Specifically they
-used networks with the following channels
+network were able to extract features from multiple linguistic layers, all
+describing a different stylometric feature of text. These layers span from
+character specific features, all the way to application specific features, as
+explanation in \cite[Section 2]{stamatos2009}. We will elaborate more on these
+features, as we get to feature extraction in section \ref{subsec:baseline}.
+They specifically used networks with the following channels
 
 \begin{description}
     \item[CNN-char:] Single non-static character channel.
@@ -193,7 +199,7 @@ in the case of authorship verification, and a multi-class classification problem
 in the case of authorship attribution.
 
 
-\subsection{What we learned (TODO: Rename)}
+\subsection{Extracted Knowledge}
 
 Several of the methods for authorship attribution obtained excellent results
 using convolutional methods on the character level. That was however in the
