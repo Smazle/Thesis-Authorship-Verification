@@ -8,12 +8,12 @@ import time
 
 class FeatureSearch:
     """
-        Given a set of extracted training freatures and a classifier
+        Given a set of extracted training features and a classifier
         the goal of this class is to determine the best set of features
         for the given classifier, using forward greedy selection,
         and stratified cross validation.
 
-        The class is initalized with a classifier, the minimum
+        The class is initialized with a classifier, the minimum
         features one wants selected, how many authors to use,
         if the data should be normalized, and how many folds in cross
         validation should be used.
