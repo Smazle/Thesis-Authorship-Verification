@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-from .network_factory import NetworkFactory
+from .network_factory import construct_network, Network
 import argparse
 from ..util import CSVWriter
 from keras.utils import plot_model
@@ -155,7 +155,7 @@ else:
 steps_n = len(reader.training_problems) / reader.batch_size
 val_steps_n = len(reader.validation_problems) / reader.batch_size
 
-model = NetworkFactory().get_network(args.networkname, reader)
+model = construct_network(Network(args.networkname), reader)
 
 # Setup callbacks.
 callbacks = [

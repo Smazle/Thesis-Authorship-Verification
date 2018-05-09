@@ -12,34 +12,38 @@ from . import r_network4
 from . import r_network5
 from enum import Enum
 
-class NetworkFactory:
+class Network(Enum):
+    NETWORK1 = 'network1'
+    NETWORK2 = 'network2'
+    NETWORK3 = 'network3'
+    NETWORK4 = 'network4'
+    NETWORK5 = 'network5'
+    R_NETWORK1 = 'r_network1'
+    R_NETWORK2 = 'r_network2'
+    R_NETWORK3 = 'r_network3'
+    R_NETWORK4 = 'r_network4'
+    R_NETWORK5 = 'r_network5'
 
-    def __init__(self):
-        pass
-
-    # Load the network we are asked to train.
-    def get_network(self, networkname, reader):
-        if networkname == 'network1':
-            return network1.model(reader)
-        elif networkname == 'network2':
-            return network2.model(reader)
-        elif networkname == 'network3':
-            return network3.model(reader)
-        elif networkname == 'network4':
-            return network4.model(reader)
-        elif networkname == 'network5':
-            return network4.model(reader)
-        elif networkname == 'r_network1':
-            return r_network1.model(reader)
-        elif networkname == 'r_network2':
-            return r_network2.model(reader)
-        elif networkname == 'r_network3':
-            return r_network3.model(reader)
-        elif networkname == 'r_network4':
-            return r_network4.model(reader)
-        elif networkname == 'r_network5':
-            return r_network5.model(reader)
-        else:
-            raise Exception('Unknown network {}'.format(networkname))
-
-
+def construct_network(network, reader):
+    if network == Network.NETWORK1:
+        return network1.model(reader)
+    elif network == Network.NETWORK2:
+        return network2.model(reader)
+    elif network == Network.NETWORK3:
+        return network3.model(reader)
+    elif network == Network.NETWORK4:
+        return network4.model(reader)
+    elif network == Network.NETWORK5:
+        return network4.model(reader)
+    elif network == Network.R_NETWORK1:
+        return r_network1.model(reader)
+    elif network == Network.R_NETWORK2:
+        return r_network2.model(reader)
+    elif network == Network.R_NETWORK3:
+        return r_network3.model(reader)
+    elif network == Network.R_NETWORK4:
+        return r_network4.model(reader)
+    elif network == Network.R_NETWORK5:
+        return r_network5.model(reader)
+    else:
+        raise Exception('Unknown network {}'.format(networkname))
