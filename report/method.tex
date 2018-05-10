@@ -553,35 +553,62 @@ different layers.
 
     \item[\gls{RNN} Layer:] An RNN network is a normal feed forward neural
         network except that it allows circular connections
-        \cite{DBLP:series/sci/2012-385}. The circular connections can be used to
-        remember previous inputs and an RNN therefore has a sense of history of
-        previous input and output. In the forward pass of an \gls{RNN} network
-        each neuron get both the current input and the activation of the neuron
-        in the previous timestep. Therefore the output of a neuron not only
-        depends on the inputs, weights and activation function of the neuron but
-        also on the previous activation of the neuron. That means that instead
-        of the formula for the activation of a normal neuron shown in Equation
-        \ref{eq:neuron} we get the formula of the activation of the $j$'th
-        neuron in the $t$'th timestep to be,
+        \cite{DBLP:series/sci/2012-385}. The circular connections can be used
+        to remember previous inputs and an \gls{RNN} therefore has a sense of
+        history of previous input and output. Classical feed forward neural
+        networks can be viewed as mappings from and to vectors while \gls{RNN}'s
+        can be viewed as mappings from and to sequences. An \gls{RNN} does not
+        view its input as a vector but as a sequence of inputs in different
+        timesteps. We have shown an example of an \gls{RNN} network in Figure
+        \ref{fig:rnn_illustration}.
+
+        \begin{figure}
+            \centering
+            \textbf{Illustration of an \gls{RNN} Layer}\par\medskip
+            \includegraphics[width=\textwidth]{./pictures/method/RNN_figure.png}
+            \caption{Illustrates the structure of an \gls{RNN}. The \gls{RNN}
+                consist of three layers, an input layer, a hidden layer and an
+                output layer. The \gls{RNN} shown consist of $I$ input units,
+                $H$ hidden units and $K$ output units. In the hidden layer each
+                neuron is connected to every other neuron in the layer including
+                itself.}
+            \label{fig:rnn_illustration}
+        \end{figure}
+
+        In the forward pass of an \gls{RNN} network both the activation of the
+        hidden units and the activation of the output units has to be computed.
+        In the computation of the activation of the hidden units the activation
+        of the hidden units in the previous timestep are required. We let
+        $a^{<t>}_h$ denote the activation of neuron $h$ in the hidden layer in
+        timestep $t$. That is computed as,
 
         \begin{equation}
-            z_i^t = h(a_i^t) = h \left(
-                \sum_{i=1}^d w_{ij} x_i^t + \sum_{i=1}^H w_{ij} x_i^{t-1}
-            \right),
+            a^{<t>}_h = \psi_h\left(
+                \sum_{i=1}^I w_{ih} x^{<t>}_i +
+                \sum_{h'=1}^H w_{h'h} a^{<t-1>}_{h'},
+            \right)
         \end{equation}
 
-        where $H$ is the number of hidden units in the RNN neuron and $d$ is
-        the number of neurons in the previous layer. That is a neuron in an
-        \gls{RNN} network has access to the activation values of the same
-        neurons hidden units in the previous timestep. The neuron can therefore
-        keep an internal state that can remember what it has seen before and
-        use that to give different outputs \cite{DBLP:series/sci/2012-385}. The
-        complete sequence of hidden activations are computed by starting at time
-        $t=1$ and recursively calling the function above until the end of the
-        sequence is reached incrementing $t$ by one in each recusive call. The
-        initial values of the hidden units can be any initialization value. The
-        obvious choice is 0 however better results have been found using non
-        zero initial hidden unit values \cite{DBLP:series/sci/2012-385}.
+        where $\psi_h$ is the activation function of the hidden unit, $I$ is the
+        number of input units, $H$ is the number of hidden units and $w_{ij}$ is
+        the weight between neuron $i$ and neuron $j$. That is the activation of
+        the hidden units is an activation function applied to a weighted sum of
+        the current inputs and the activation of all hidden units in the
+        previous timestep \cite{DBLP:series/sci/2012-385}. The output of the
+        \gls{RNN} is then computed as,
+
+        \begin{equation}
+            a^{<t>}_k = \sum_{h=1}^H w_{hk} a_{h}^{<t>}.
+        \end{equation}
+
+        That is the output of an \gls{RNN} layer is a weighted sum of its
+        hidden units.The complete sequence of hidden activations are computed
+        by starting at time $t=1$ and recursively calling the functions above
+        until the end of the sequence is reached incrementing $t$ by one in
+        each recursive call. The initial values of the hidden units can be
+        any initialization value. The obvious choice is 0 however better
+        results have been found using non zero initial hidden unit values
+        \cite{DBLP:series/sci/2012-385}.
 
         An \gls{RNN} network are normally optimized using the backpropagation
         through time algorithm. For data where a sense of time does not make
@@ -590,8 +617,6 @@ different layers.
         both a forwards and a backwards pass is made through the sequence. The
         output of each network at each time step can then depend both on the
         context before and after the input.
-
-        % TODO: Maybe add a drawing of an RNN network.
 
     \item[\gls{LSTM} Layer:] As described the main benefit of \gls{RNN}'s are
         their ability to use previous context to make predictions. Unfortunately
