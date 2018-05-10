@@ -10,6 +10,7 @@ import sys
 from ..util import utilities as util
 from datetime import datetime
 from keras.preprocessing import sequence
+from enum import Enum
 
 
 class LineReader:
@@ -126,15 +127,10 @@ class MacomReader(object):
     # file.
     def __init__(self, filepath, batch_size=32, validation_split=0.8,
                  vocabulary_frequency_cutoff=0.0, pad=True, binary=False,
-                 batch_normalization='truncate', channels=['char']):
+                 batch_normalization='truncate', channels=[ChannelType.CHAR]):
 
         if validation_split > 1.0 or validation_split < 0.0:
             raise ValueError('validation_split between 0 and 1 required')
-
-        if vocabulary_frequency_cutoff > 1.0 or\
-                vocabulary_frequency_cutoff < 0.0:
-            raise ValueError('vocabulary_frequency_cutoff between 0 and 1 ' +
-                             'required')
 
         if batch_normalization not in ['truncate', 'pad']:
             raise ValueError('Only truncate and pad is currently supported.')
@@ -147,11 +143,11 @@ class MacomReader(object):
         self.filepath = filepath
         self.batch_size = batch_size
         self.validation_split = validation_split
-        self.vocabulary_frequency_cutoff = vocabulary_frequency_cutoff
+        self.vocabulary_frequency_cutoff = vocabulary_frequency_cutoff # TODO: Should be list.
         self.binary = binary
         self.pad = pad
         self.batch_normalization = batch_normalization
-        self.channels = channels
+        self.channeltypes = channels
 
         if self.binary:
             self.label_true = np.array([1])
@@ -172,39 +168,25 @@ class MacomReader(object):
     def generate_validation(self):
         return self.generate(self.validation_problems)
 
-    def generate_vocabulary_map(self, linereader):
-        for author in self.authors:
-            for line_n in self.authors[author]:
-                autor, date, text = linereader.readline(line_n).split(';')
-                decoded = util.clean(text)
+    def generate_vocabulary_maps(self, linereader):
+        def linegen():
+            for author in self.authors:
+                for line_n in self.authors[author]:
+                    autor, date, text = linereader.readline(line_n).split(';')
+                    decoded = util.clean(text)
+                    yield decoded
 
-                self.vocabulary = self.vocabulary.union(decoded)
-                self.vocabulary_usage = self.vocabulary_usage + \
-                    Counter(decoded)
-
-                if len(decoded) > self.max_len:
-                    self.max_len = len(decoded)
-
-        total_chars = sum(self.vocabulary_usage.values())
-        self.vocabulary_frequencies = {k: v / total_chars for k, v in
-                                       self.vocabulary_usage.items()}
-
-        self.vocabulary_above_cutoff =\
-            {k for k, v in self.vocabulary_frequencies.items()
-             if v > self.vocabulary_frequency_cutoff}
-        self.vocabulary_below_cutoff =\
-            {k for k, v in self.vocabulary_frequencies.items()
-             if v < self.vocabulary_frequency_cutoff}
-
-        encoding = list(range(0, len(self.vocabulary_above_cutoff) + 2))
-
-        self.vocabulary_map = {}
-
-        for i, c in enumerate(self.vocabulary_above_cutoff):
-            self.vocabulary_map[c] = encoding[i+2]
-
-        self.padding = encoding[0]
-        self.garbage = encoding[1]
+        self.channels = []
+        for channeltype in self.channeltypes:
+            if channeltype == ChannelType.CHAR:
+                newchannel = CharVocabulary(
+                    self.vocabulary_frequency_cutoff,
+                    linegen()
+                )
+                self.channels.append(newchannel)
+            # TODO: Add words.
+            else:
+                raise Exception('Illegal state, unknown channel.')
 
     def generate_authors(self, linereader):
         for i, line in enumerate(linereader.readlines(skipfirst=True)):
@@ -343,6 +325,59 @@ class MacomReader(object):
         return np.array(map(lambda x: self.word_vocabulary_map[x]
                         if x in self.word_vocabulary_map else
                         self.word_garbage, words))
+
+
+class CharVocabulary:
+
+    def __init__(self, vocabulary_frequency_cutoff, str_generator):
+
+        if vocabulary_frequency_cutoff < 0 or vocabulary_frequency_cutoff > 1:
+            raise Exception('vocabulary_frequency_cutoff should be between 0 and 1')
+
+        self.vocabulary_frequency_cutoff = vocabulary_frequency_cutoff
+        self.vocabulary = set()
+        self.vocabulary_usage = Counter()
+        self.max_len = 0
+
+        for txt in str_generator:
+            self.add_vocabulary(txt)
+
+        total_chars = sum(self.vocabulary_usage.values())
+        self.vocabulary_frequencies = {k: v / total_chars for k, v in
+                                       self.vocabulary_usage.items()}
+
+        self.vocabulary_above_cutoff =\
+            {k for k, v in self.vocabulary_frequencies.items()
+             if v > self.vocabulary_frequency_cutoff}
+        self.vocabulary_below_cutoff =\
+            {k for k, v in self.vocabulary_frequencies.items()
+             if v < self.vocabulary_frequency_cutoff}
+
+        encoding = list(range(0, len(self.vocabulary_above_cutoff) + 2))
+
+        self.vocabulary_map = {}
+
+        for i, c in enumerate(self.vocabulary_above_cutoff):
+            self.vocabulary_map[c] = encoding[i + 2]
+
+        self.garbage = encoding[1]
+
+    def add_vocabulary(self, txt):
+        self.vocabulary = self.vocabulary.union(txt)
+        self.vocabulary_usage = self.vocabulary_usage + Counter(txt)
+
+        if len(txt) > self.max_len:
+            self.max_len = len(decoded)
+
+    def encode(self, chars):
+        return np.array(map(lambda x: self.vocabulary_map[x]
+                        if x in self.vocabulary_map else
+                        self.garbage, chars))
+
+
+class ChannelType(Enum):
+    CHAR = 'char'
+    WORD = 'word'
 
 
 if __name__ == '__main__':
