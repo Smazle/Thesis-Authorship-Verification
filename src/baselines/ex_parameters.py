@@ -4,9 +4,13 @@
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import cross_val_score, StratifiedKFold
 import argparse
+import random
 import numpy as np
 import pandas as pd
 from .feature_search import FeatureSearch
+
+np.random.seed(1337)
+random.seed(1337)
 
 parser = argparse.ArgumentParser(
     description='Run to determine the best hyperparmeters for\

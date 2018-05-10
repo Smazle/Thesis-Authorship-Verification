@@ -504,7 +504,8 @@ different layers.
             \begin{tabular}{ccc}
                 \textbf{Original} & \textbf{Kernel} & \textbf{Result} \\
                 \includegraphics[width=0.3\textwidth]{./pictures/method/original_convolution.png} &
-                \begin{minipage}{6cm}
+                \raisebox{1.2\height}{
+                \begin{minipage}[b]{6cm}
                     \begin{equation*}
                         \begin{pmatrix}
                             1 & 0 & -1 \\
@@ -512,11 +513,12 @@ different layers.
                             -1 & 0 & 1
                         \end{pmatrix}
                     \end{equation*}
-                \end{minipage}
+                \end{minipage}}
                     &
                 \includegraphics[width=0.3\textwidth]{./pictures/method/edge_detect_convolution.png} \\
 
                 \includegraphics[width=0.3\textwidth]{./pictures/method/original_convolution.png} &
+                \raisebox{1.2\height}{
                 \begin{minipage}{6cm}
                     \begin{equation*}
                         \frac{1}{16}\begin{pmatrix}
@@ -525,11 +527,12 @@ different layers.
                             1 & 2 & 1
                         \end{pmatrix}
                     \end{equation*}
-                \end{minipage}
+                \end{minipage}}
                     &
                 \includegraphics[width=0.3\textwidth]{./pictures/method/blurred_convolution.png} \\
 
                 \includegraphics[width=0.3\textwidth]{./pictures/method/original_convolution.png} &
+                \raisebox{1.2\height}{
                 \begin{minipage}{6cm}
                     \begin{equation*}
                         \begin{pmatrix}
@@ -538,7 +541,7 @@ different layers.
                             0  & -1 & 0
                         \end{pmatrix}
                     \end{equation*}
-                \end{minipage}
+                \end{minipage}}
                     &
                 \includegraphics[width=0.3\textwidth]{./pictures/method/sharpened_convolution.png}
             \end{tabular}
