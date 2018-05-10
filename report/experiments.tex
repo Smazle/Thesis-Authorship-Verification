@@ -1,7 +1,7 @@
 \section{Experiments} \label{sec:experiments}
 
 
-\subsection{Baseline Methods}
+\subsection{Baseline Methods} \label{subsec:baseline}
 
 In this section we will go through the experiments performed in order to get
 our baseline results. While many different features can be used when performing
@@ -56,11 +56,6 @@ of the feature they are applied on, as other methods such as the random forest
 does. This means that they are susceptible to noisy feature, and as a result
 would most likely benefit from us selecting the features for them.
 
-Before starting any kind of feature selection or hyper-parameter tuning,
-we split the training data up into training and validation, with a 
-80/20 respective split. All the work described from this point on,
-was done on the 80\% training.
-
 Contrary to our previous work made in \cite{US}, this process wont
 consist of trying out some random selection of features, but rather
 a more systematic approach was used. 
@@ -85,7 +80,7 @@ with highest frequency, as we would reach a point where a specific N-gram
 determined to be in the corpus, would be unique that same corpus, making it
 irrelevant for new texts, not associated with the corpus.
 
-Using the quantities listed above as inspiration, a feature set of around 5000
+Using the quantities listed above as inspiration, a feature set of 4950
 features was produced, containing
 
 \begin{itemize}
@@ -124,7 +119,12 @@ process proved very expensive computationally. Having to check every combination
 of 5000 features, simply wasn't feasible. It was for that reason we opted for a
 greedy algorithm instead.
 
-This greedy algorithm works as described by \cite{kanDeng}, which is a simple
+Before starting any kind of feature selection or hyper-parameter tuning,
+we split the training data up into training and validation, with a 
+80/20 respective split. All the work described from this point on,
+was done on the 80\% training data set.
+
+The greedy algorithm works as described by \cite{kanDeng}, which is a simple
 forward feature selection. Having out previously created feature set, we loop
 through each single feature, validating its' accuracy when applied to each
 $\alpha \in \mathcal{A}$. As eluded to earlier, this consists of fetching
@@ -142,11 +142,14 @@ at which point we had the best candidate set, and use that hence fourth.
 Even this greedy approach proved to be very time consuming. As such, we only did
 as described and found the best features, but left out the hyper-parameters C,
 and $\gamma$ for the SVM, and K and the distance metric for the extended delta
-method. These hyper-parameters were also selected through a separate process
+method. These hyper-parameters were selected through a separate process
 which will be described in a later section.
 
-The cross validation used differs from each method. The SVM uses normal 3 fold
-cross validation. This however was not the case for the extended delta method.
+Due to the increased run-time when using leave one out cross validation,
+we had to make use of some other model selection approach. Under normal
+circumstances, normal X-fold cross validation would work out fine, but a complication
+arose when doing this with the extended delta method, which yielded normal
+cross validation unfit for that specific classifier.
 The reason for this was that there was a scenario where an unlucky split of
 folds would cause a lot of error. A generic example of this would be if we
 had the 2 class training set consisting of 6 value, evenly split between the
@@ -155,27 +158,22 @@ chance that a fold contains two value of the same class, which means that if $K
 = 3$ in our case, both of those wont ever be able to classified correctly as
 there is only 1 of that class in the training set. As such, stratified K fold
 cross validation is used instead, as it uphold the class distribution in its'
-folds. Leave one out cross validation would of course also work in the case of
-both out methods, but we were limited by the computation time, and for that
-reason we opted for K folds instead.
+folds. While this problem wouldn't plague the SVM classifier, we also opted 
+the stratified K fold cross, so we would more directly compare the feature selection
+of the two models.
 
-For both the \gls{SVM} and Extended Delta method, we ran this algorithm
-until 250 features were selected. Computation time was still and issue, so
-additionally we only made use of 5\% of the total number of authors. The SVM
-performed its' feature selection using the default RBF kernel, a C with value 1,
-and $\gamma = \frac{1}{\text{n\_features}}$. Due to some authors having below
-3 texts, the default K value of \gls{KNN}s K parameter was set to 3 for the
-feature selection.
+For both the \gls{SVM} and Extended Delta method, we ran this algorithm until
+350 features were selected. Computation time was still and issue, so we also
+limited the computed on dataset to only 5\% of the total number of authors. The
+SVM performed its' feature selection using the default RBF kernel, a C with
+value 1, and $\gamma = \frac{1}{\text{n\_features}}$. Due to some authors having
+below 3 texts, the default K value of \gls{KNN}s K parameter was set to 3 for
+the feature selection.
 
-The results of both the SVM and the Extended Delta method feature selection
-can be seen in Figure \ref{fig:fs_results}. (DISCLAIMER: Extended Delta is
-erroneous)
-
-The SVM ended up peaking having selected 225 features, with an accuracy of
-0.649. The features whose addition causes the largest accuracy values can be
-seen in \ref{table:svm_feature}
-
-TODO: Extended Delta Results
+The results of both the SVM and the Extended Delta method feature selection can
+be seen in Figure \ref{fig:fs_results}. We got that the best number of selected
+feature were 75 for the SVM and 10 for the Extended Delta Method, scoring an
+accuracy of 0.675 and 0.666 respectively.
 
 \begin{figure}
     \centering
