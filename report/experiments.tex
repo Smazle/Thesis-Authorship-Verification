@@ -183,7 +183,7 @@ accuracy of 0.675 and 0.666 respectively.
 \end{figure}
 
 
-\subsection{Hyper Parameter Selection}
+\subsubsection{Hyper Parameter Selection}
 
 As mentioned in the previous section, due to computational time, we were unable
 to do the hyper parameter selection parallel with the feature selection. 
@@ -203,7 +203,7 @@ SVM&:
 \text{Extended Delta}&:
 		\begin{array}{lr}
         p=\{1,2,3,4,5\}\\
-        K=\{1,2,3,4,5,6,7,8,9,10,11,12,13,14,15\}
+        K=\{1,3,5,7,9,11,13,15\}
         \end{array}
 \end{align}
 
@@ -223,17 +223,44 @@ A key difference is that rather than using 3 fold cross validation, we now use
 leave one out cross validation. We aren't performing nearly as many iterations
 this time around, which is why this change was made. In this case, we loop
 over all unique authors one time for each combination of hyper parameter, the
-number of which dwarfs the amount in the feature selection. The accuracy of each
-parameter configuration can be seen in Figure TODO:ref, and Figure TODO: ref.
+number of which dwarfs the amount in the feature selection, thus the concern for
+run-time isn't that lead us away from leave one out cross validation no longer
+applies. The accuracy of each parameter configuration can be seen in table
+\ref{table:KNN} for \gls{KNN}, and for \gls{SVM}.
 
-After the best parameters were found, we apply the methods to the 20\% we set
-aside for validation originally. This resulted in the SVM getting an accuracy of
-0.713 with its best parameters being $C=100.0$ and $\gamma=1000$.
 
-TODO: Extended Delta Results
+\begin{table}[]
+\centering
+\caption{The results from performing a grid search of the p and K parameter
+of the \gls{KNN} algorithm}
+\label{table:KNN}
+\begin{tabular}{|c|ccccc|}
+\hline
+\backslashbox{$K$}{$p$}   & 1     & 2     & 3     & 4     & 5     \\ \hline
+1  & \textbf{0.668} & 0.656 & 0.636 & 0.631 & 0.618 \\
+3  & 0.656 & 0.633 & 0.614 & 0.600 & 0.592 \\
+5  & 0.648 & 0.616 & 0.595 & 0.581 & 0.573 \\
+7  & 0.632 & 0.594 & 0.570 & 0.561 & 0.551 \\
+9  & 0.623 & 0.578 & 0.555 & 0.545 & 0.533 \\
+11 & 0.601 & 0.556 & 0.535 & 0.522 & 0.512 \\
+13 & 0.583 & 0.534 & 0.508 & 0.492 & 0.496 \\
+15 & 0.550 & 0.508 & 0.479 & 0.467 & 0.465 \\ \hline
+\end{tabular}
+\end{table}
 
-%TODO: Try using all features.
 
+It is at this point we grab the 20\% of we set aside at the start of our 
+experimentation. While applying these finely tuned methods to a validation set
+wont change anything in terms of the parameters we have selected, it will give
+us the ability to gauge the accuracy of our methods when applied to a new, never
+before seen, test-set.
+
+\begin{center}
+\begin{verbatim}
+Extended Delta Validation Accuracy: 0.604
+SVM Validation Accuracy: 
+\end{verbatim}
+\end{center}
 
 \subsection{Deep Learning}
 
@@ -251,10 +278,9 @@ experiments, we used a 0.5 threshold for classification.
         \label{glossary}
         \begin{tabular}{|L{3cm}|L{9cm}|L{11cm}|}
             \hline
-            % TODO: Should center header.
-            \textbf{Layer}                                                     &
-            \textbf{Description}                                               &
-            \textbf{Actively Used Parameters}                                 \\
+            \multicolumn{1}{|c|}{\textbf{Layer}}                            &
+            \multicolumn{1}{|c|}{\textbf{Description}}                                               &
+            \multicolumn{1}{|c|}{\textbf{Actively Used Parameters}}                                 \\
             \hline
 
             Input                                                              &
@@ -426,24 +452,11 @@ quickly overfits the training data and no longer learns anything general.
 
 \subsubsection{Siamese Neural Network - Iteration 2}
 
-% TODO: Illustrate how dropout corresponds to training different subnetworks in
-% each iteration.
-
 In our last network we observed that the network after a few number of epochs
 overfitted on the training dataset. The validation accuracy quickly began
 stalling as the training accuracy went to 100\%. We therefore focused our
 second network architecture on limiting overfitting. We added a dropout layer
-before the output layer. The layer prevents overfitting by making sure that
-the network cannot rely on the output of all neurons during training. This
-unpredictability makes it harder for the network to learn specific quirks of
-the training dataset since small quirks will only be picked up by a small
-amount of neurons while larger trends will be represented by a larger set
-of neurons. \cite{JMLR:v15:srivastava14a} investigated the use of dropout
-layers in different problem settings. They found that dropout layers reduced
-overfitting in all problems they looked at. In particular they found that
-document classification which is similar to what we are doing were also
-improved. The main drawback of a dropout layer is that it increase the run time
-of training the networks (\cite{JMLR:v15:srivastava14a}).
+before the output layer. 
 
 In iteration 1 the function we used to merge features from the known and unknown
 text together were a concatenation. If we let the extracted features of the
