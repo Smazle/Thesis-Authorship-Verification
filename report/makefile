@@ -1,5 +1,5 @@
-PNGS = $(find ./pictures -type f -name "*.png")
-JPGS = $(find ./pictures -type f -name "*.jpg")
+PNGS = $(shell find ./pictures -type f -name "*.png")
+JPGS = $(shell find ./pictures -type f -name "*.jpg")
 TEXFILES = $(shell ls *.tex)
 
 .PHONY: clean
