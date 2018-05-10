@@ -12,8 +12,8 @@ import pickle
 import time
 
 # Set random state for reproducible results.
-#   np.random.seed(1337)
-#   random.seed(1337)
+np.random.seed(1337)
+random.seed(1337)
 
 parser = argparse.ArgumentParser(
     description='Use features in feature file specified by the boolean ' +
@@ -70,11 +70,13 @@ if args.features is not None:
     X = X[:, features_to_use]
 
 # Find the best hyperparameters using the training authors.
+C_range = [float(10**x) for x in range(-16, 0, 2)]
+gamma_range = [float(10**x) for x in range(-3, 9, 2)]
 best_params = Counter()
 res = {}
 pickle.dump(res, open('Pick.p', 'wb'))
 length = len(training_authors)
-for idx, author in enumerate(training_authors[:3]):
+for idx, author in enumerate(training_authors):
     t = time.time()
     # Split texts into those written by same and different authors.
     same_author = X[authors == author]
@@ -93,12 +95,14 @@ for idx, author in enumerate(training_authors[:3]):
     y_train = np.array([1] * same_author_n + [0] * same_author_n)
 
     # Leave one out cross validation over C and gamma range.
-    C_range = np.logspace(-2, 10, 7)
-    gamma_range = np.logspace(-3, 9, 7)
     cv = StratifiedKFold(3)
     param_grid = dict(gamma=gamma_range, C=C_range)
     grid = GridSearchCV(SVC(kernel='rbf'), param_grid=param_grid, cv=cv)
-    grid.fit(X_train, y_train)
+    try:
+        grid.fit(X_train, y_train)
+    except ValueError:
+        print('Skipped, length, ', same_author_n)
+        continue
 
     print('\t', 'best params', grid.best_params_)
     print('\t', 'best score', grid.best_score_)
@@ -119,6 +123,7 @@ for idx, author in enumerate(training_authors[:3]):
             res[c_gamma].append(s)
 
 ((C, gamma), count) = best_params.most_common()[0]
+print(best_params.most_common())
 
 print('final best parameters', 'C', C, 'gamma', gamma)
 print('Score', np.mean(res[(C, gamma)]))

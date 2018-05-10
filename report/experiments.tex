@@ -197,8 +197,8 @@ parameter values:
 \begin{align}
 SVM&:
 		\begin{array}{lr}
-        C=\{10^{-2}, 10^0, 10^2, 10^4, 10^6, 10^8, 10^{10}\}\\
-        \gamma=\{10^{-7}, 10^{-5}, 10^{-3}, 10^{-1}, 10^{1}, 10^3, 10^5\}
+        C=\{10^{-16}, 10^{-14}, 10^{-12}, 10^{-10}, 10^{-8}, 10^{-6}, 10^{-4}, 10^{-2}\}\\
+        \gamma=\{10^{-3}, 10^{-1}, 10^{1}, 10^{3}, 10^{5}, 10^7\}
         \end{array}\\
 \text{Extended Delta}&:
 		\begin{array}{lr}
@@ -219,35 +219,48 @@ Where $p=1$ and $p=2$ is the manhattan and eucledian distance respective.
 We perform a grid search over all these parameters. For each variation of the
 hyper parameters we average the performance of the method over all unique
 authors in the training set, in a manner very similar to the feature selection.
-A key difference is that rather than using 3 fold cross validation, we now use
-leave one out cross validation. We aren't performing nearly as many iterations
-this time around, which is why this change was made. In this case, we loop
-over all unique authors one time for each combination of hyper parameter, the
-number of which dwarfs the amount in the feature selection, thus the concern for
-run-time isn't that lead us away from leave one out cross validation no longer
-applies. The accuracy of each parameter configuration can be seen in table
-\ref{table:KNN} for \gls{KNN}, and for \gls{SVM}.
+We make use of the same 3-fold stratified cross validation, and arrange each
+authors with set of opposing set of text, amounting to the same number he has
+written himself. The accuracy of each parameter configuration can be seen in
+table \ref{table:KNN} for \gls{KNN}, and \ref{table:SVM} for \gls{SVM}.
 
-
-\begin{table}[]
+\begin{table}[h]
 \centering
 \caption{The results from performing a grid search of the p and K parameter
 of the \gls{KNN} algorithm}
 \label{table:KNN}
 \begin{tabular}{|c|ccccc|}
 \hline
-\backslashbox{$K$}{$p$}   & 1     & 2     & 3     & 4     & 5     \\ \hline
-1  & \textbf{0.668} & 0.656 & 0.636 & 0.631 & 0.618 \\
-3  & 0.656 & 0.633 & 0.614 & 0.600 & 0.592 \\
-5  & 0.648 & 0.616 & 0.595 & 0.581 & 0.573 \\
-7  & 0.632 & 0.594 & 0.570 & 0.561 & 0.551 \\
-9  & 0.623 & 0.578 & 0.555 & 0.545 & 0.533 \\
-11 & 0.601 & 0.556 & 0.535 & 0.522 & 0.512 \\
-13 & 0.583 & 0.534 & 0.508 & 0.492 & 0.496 \\
-15 & 0.550 & 0.508 & 0.479 & 0.467 & 0.465 \\ \hline
+\backslashbox{$K$}{$p$}  & 1     & 2     & 3     & 4     & 5     \\\hline
+1  & \textbf{0.647} & 0.622 & 0.608 & 0.593 & 0.591 \\
+3  & 0.646 & 0.617 & 0.598 & 0.586 & 0.580 \\
+5  & 0.640 & 0.603 & 0.586 & 0.572 & 0.565 \\
+7  & 0.627 & 0.593 & 0.571 & 0.561 & 0.554 \\
+9  & 0.620 & 0.581 & 0.562 & 0.550 & 0.543 \\
+11 & 0.608 & 0.566 & 0.549 & 0.541 & 0.535 \\
+13 & 0.598 & 0.558 & 0.539 & 0.533 & 0.529 \\
+15 & 0.590 & 0.546 & 0.536 & 0.527 & 0.522 \\\hline
 \end{tabular}
 \end{table}
 
+\begin{table}[h]
+\centering
+\caption{The results from performing a grid search for C and gamma, of the
+\gls{SVM} algorithm}
+\label{table:SVM}
+\begin{tabular}{|c|cccccc|}
+\hline
+\backslashbox{$C$}{gamma}  & $10^{-3}$ & $10^{-1}$ & $10^{1}$ & $10^{3}$ & $10^{5}$       & $10^{7}$ \\\hline
+$10^{-16}$ & 0.592     & 0.592     & 0.592    & 0.593    & 0.648          & 0.621    \\
+$10^{-14}$ & 0.592     & 0.592     & 0.592    & 0.630    & \textbf{0.679} & 0.601    \\
+$10^{-12}$ & 0.592     & 0.592     & 0.628    & 0.631    & 0.678          & 0.591    \\
+$10^{-10}$ & 0.592     & 0.629     & 0.629    & 0.631    & 0.678          & 0.585    \\
+$10^{-8}$  & 0.589     & 0.629     & 0.629    & 0.631    & 0.678          & 0.581    \\
+$10^{-6}$  & 0.587     & 0.629     & 0.629    & 0.631    & 0.678          & 0.576    \\
+$10^{-4}$  & 0.587     & 0.629     & 0.629    & 0.631    & 0.678          & 0.573    \\
+$10^{-2}$  & 0.587     & 0.629     & 0.629    & 0.631    & 0.678          & 0.568   \\\hline
+\end{tabular}
+\end{table}
 
 It is at this point we grab the 20\% of we set aside at the start of our 
 experimentation. While applying these finely tuned methods to a validation set
@@ -257,8 +270,8 @@ before seen, test-set.
 
 \begin{center}
 \begin{verbatim}
-Extended Delta Validation Accuracy: 0.604
-SVM Validation Accuracy: 
+Extended Delta Validation Accuracy: 0.602
+SVM Validation Accuracy:  0.684
 \end{verbatim}
 \end{center}
 
