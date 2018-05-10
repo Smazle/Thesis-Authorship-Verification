@@ -626,16 +626,24 @@ different layers.
         through an \gls{RNN} network each timestep corresponds to a separate
         layer in a normal feed forward neural network. So for sequences of
         several thousand timesteps backpropagation has to go through several
-        thousand layers. The gradient will at each layer either blow up or scale
-        down and through the hundreds or thousands of layers that leads to the
-        gradient either blowing exponentially up or vanishing to nothing. In
-        practise the main problem is the vanishing gradient and not the
-        exploding gradient. The vanishing gradient means that weights early in
-        the network are not updated according to the final output since the
-        gradient has disappeared while backpropagating back to the early
+        thousand layers. The magnitude of the gradient will at each layer either
+        increase up or decrease and through the hundreds or thousands of layers
+        that leads to the gradient either blowing up exponentially or vanishing
+        to nothing. In practise the main problem is the vanishing gradient and
+        not the exploding gradient. The vanishing gradient means that weights
+        early in the network are not updated according to the final output since
+        the gradient has disappeared while backpropagating back to the early
         weights. Therefore the network will not learn to use context over long
         periods of time but only to use the local context around a particular
         timestep.
+
+        There are several solutions to that problem and one of them are
+        \gls{LSTM} networks. \gls{LSTM} networks are designed to be able to
+        remember things over long periouds of time, hence the name. They have
+        several \gls{RNN} constructs with specific purposes.
+
+        %They have a cell
+        %that functions as its memory, a 
 
     \item[\gls{GRU} Layer:] TODO
 
