@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.model_selection import cross_val_score, LeaveOneOut
+from sklearn.model_selection import cross_val_score, StratifiedKFold
 import argparse
 import numpy as np
 import pandas as pd
@@ -49,7 +49,7 @@ for p in range(1, 6):
     results[p] = {}
 
     for K in range(args.K[0], args.K[-1] + 2, 2):
-        print('Determining Accuracy of K = {}, and p = {}'.format(K, p))
+        # print('Determining Accuracy of K = {}, and p = {}'.format(K, p))
 
         knn = KNeighborsClassifier(n_neighbors=K, metric='minkowski', p=p)
         scores = []
@@ -57,7 +57,7 @@ for p in range(1, 6):
             X, y = fs.__generateAuthorData__(author)
 
             try:
-                score = cross_val_score(knn, X, y, cv=LeaveOneOut())
+                score = cross_val_score(knn, X, y, cv=StratifiedKFold(3))
                 scores.append(np.mean(score))
             except ValueError:
                 continue
@@ -67,4 +67,5 @@ for p in range(1, 6):
             break
         else:
             results[p][K] = {'authors': len(scores), 'score': np.mean(scores)}
-            print(results[p][K])
+            param = (K, p)
+            print((param, results[p][K]['score']))
