@@ -83,3 +83,36 @@ new character wont have an impact on the data integrity either, due to the
 $\frac{1}{100.000}$ frequency threshold described earlier.
 
 % TODO: Describe how we constructed the authorship verification dataset.
+
+We split the dataset we are given into multiple datasets for different purposes.
+We have shown an illustration of the splits we have made in Figure
+\ref{fig:data_split}. We define 7 different datasets with the names $A, B,
+\dots, G$. Each of the datasets has a different purpose.
+
+\begin{enumerate}[A)]
+    \item The original dataset consisting of TODO authors.
+    \item The training dataset used to train our Siamese Neural Networks and
+        choosing hyperparameters for our baseline methods.
+    \item Dataset for choosing hyperparameters for the prediction system and
+        thresholds for baseline methods.
+    \item Dataset for giving an unbiased estimate of the final test error for
+        both our networks and our baseline methods.
+    \item Test set to give an unbiased estimate of performance in the real
+        world.
+    \item Dataset of training "problems" for the neural network. The problems
+        that are actually shown to the network during training.
+    \item Dataset of validation "problems" for the neural network. The problems
+        are not shown to the network during training. The network we choose to
+        use is the one from the epoch where the error on this dataset is
+        minimized.
+\end{enumerate}
+
+\begin{figure}
+    \centering
+    \textbf{Illustration of Datasets}\par\medskip
+    \includegraphics[width=\textwidth]{./pictures/data/data_split.jpg}
+    \caption{Shows how we have split the dataset we are given. The first split
+        is a split on percentages of authors in each subsequent dataset and the
+        second split is on the number of "problems" in each subsequent dataset.}
+    \label{fig:data_split}
+\end{figure}
