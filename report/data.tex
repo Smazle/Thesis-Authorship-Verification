@@ -91,28 +91,29 @@ We have shown an illustration of the splits we have made in Figure
 
 \begin{enumerate}[A)]
     \item The original dataset consisting of TODO authors.
-    \item The training dataset used to train our Siamese Neural Networks and
-        choosing hyperparameters for our baseline methods.
-    \item Dataset for choosing hyperparameters for the prediction system and
-        thresholds for baseline methods.
-    \item Dataset for giving an unbiased estimate of the final test error for
-        both our networks and our baseline methods.
-    \item Test set to give an unbiased estimate of performance in the real
-        world.
-    \item Dataset of training "problems" for the neural network. The problems
-        that are actually shown to the network during training.
-    \item Dataset of validation "problems" for the neural network. The problems
-        are not shown to the network during training. The network we choose to
-        use is the one from the epoch where the error on this dataset is
-        minimized.
+    \item Training dataset used to train all networks and choose all
+        hyperparameters.
+    \item Validation set used to give an unbiased estimate of the final test
+        results.
+    \item Test dataset used to give the final results we present.
+    \item Dataset used during neural networks training.
+    \item Dataset used to find hyperparamters for the prediction system.
+    \item Dataset used for the actual training of the neural network. Consist
+        not of authors but of a set of "problems".
+    \item Dataset used to give a validation accuracy during training. We use the
+        network that has the highest validation accuracy.
+    \item Dataset used for feature selection for the baseline methods.
+    \item Dataset used to select parameters for the baseline methods.
 \end{enumerate}
 
 \begin{figure}
     \centering
     \textbf{Illustration of Datasets}\par\medskip
     \includegraphics[width=\textwidth]{./pictures/data/data_split.jpg}
-    \caption{Shows how we have split the dataset we are given. The first split
-        is a split on percentages of authors in each subsequent dataset and the
-        second split is on the number of "problems" in each subsequent dataset.}
+    \caption{Shows how we have split the dataset we are given. Most of the
+        splits are performed on authors such that all of an authors texts are
+        in the same dataset. The only split that is not performed on that basis
+        is the split of the $E$ dataset to $G$ and $H$. That split is performed
+        on problem instances and not on authors.}
     \label{fig:data_split}
 \end{figure}
