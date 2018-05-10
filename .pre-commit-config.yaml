@@ -18,3 +18,5 @@ repos:
           types: [file, python]
         - id: mixed-line-ending
           types: [file, python]
+        - id: check-merge-conflict
+          types: [file]

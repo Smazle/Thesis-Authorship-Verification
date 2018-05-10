@@ -98,7 +98,6 @@ class FeatureSearch:
 
             datacols = filter(lambda x: x != 'author', data.columns)
             self.data = data.as_matrix(columns=datacols)
-            print(self.data.shape)
 
         if self.authorLimit is not None:
             unique_authors = np.unique(self.authors)
@@ -118,7 +117,6 @@ class FeatureSearch:
 
         if self.normalize:
             scaler = StandardScaler()
-            print(self.data.shape)
             scaler.fit(self.data)
             pickle.dump(scaler, open('Scaler.p', 'wb'))
             self.data = scaler.transform(self.data)
