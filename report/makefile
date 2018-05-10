@@ -10,7 +10,7 @@ report.blg: literature.bib
 	pdflatex report.tex -halt-on-error -draftmode
 	bibtex report.aux
 
-report.pdf: report.blg makefile $(PICTURES) $(TEXFILES) $(JPGS)
+report.pdf: report.blg makefile $(TEXFILES) $(PNGS) $(JPGS)
 	pdflatex report.tex -halt-on-error -draftmode
 	pdflatex report.tex -halt-on-error
 
