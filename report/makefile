@@ -1,4 +1,5 @@
-PICTURES = $(find ./pictures -type f -name "*.png")
+PNGS = $(find ./pictures -type f -name "*.png")
+JPGS = $(find ./pictures -type f -name "*.jpg")
 TEXFILES = $(shell ls *.tex)
 
 .PHONY: clean
@@ -9,7 +10,7 @@ report.blg: literature.bib
 	pdflatex report.tex
 	bibtex report.aux
 
-report.pdf: report.blg makefile $(PICTURES) $(TEXFILES)
+report.pdf: report.blg makefile $(PICTURES) $(TEXFILES) $(JPGS)
 	pdflatex report.tex
 	pdflatex report.tex
 
