@@ -1,16 +1,15 @@
 # -*- coding: utf-8 -*-
 # !/usr/bin/python3
 
+from .channels import ChannelType, CharVocabulary, WordVocabulary, vocabulary_factory
 import itertools
 import numpy as np
-import random
-from collections import Counter
 import pickle
+import random
 import sys
 from ..util import utilities as util
 from datetime import datetime
 from keras.preprocessing import sequence
-from enum import Enum
 
 
 class LineReader:
@@ -69,31 +68,6 @@ class MacomReader(object):
     # replaced with the default character.
     vocabulary_frequency_cutoff = 0.0
 
-    # A set containing all the different characters used in the input file.
-    vocabulary = set()
-
-    # Mapping from a character to its encoding.
-    vocabulary_map = {}
-
-    # Mapping from a characters to the number of times it is used in the
-    # dataset given.
-    vocabulary_usage = Counter()
-
-    # Mapping from a character to its frequency.
-    vocabulary_frequencies = {}
-
-    # Set of characters that are above the cutoff given.
-    vocabulary_above_cutoff = {}
-
-    # Set of characters that are below the cutoff given (they are ignored).
-    vocabulary_below_cutoff = {}
-
-    # The encoding we use to represent padding of texts.
-    padding = None
-
-    # The encoding we use to represent garbage characters.
-    garbage = None
-
     # The path of the datafile.
     filepath = None
 
@@ -136,8 +110,8 @@ class MacomReader(object):
             raise ValueError('Only truncate and pad is currently supported.')
 
         for channel in channels:
-            if channel not in ['char']:
-                raise ValueError('Only char channel allowed')
+            if channel not in [ChannelType.CHAR, ChannelType.WORD]:
+                raise ValueError('Only char or word channels allowed')
 
         # Save parameters.
         self.filepath = filepath
@@ -160,7 +134,7 @@ class MacomReader(object):
         with LineReader(self.filepath) as linereader:
             self.generate_authors(linereader)
             self.generate_problems()
-            self.generate_vocabulary_map(linereader)
+            self.generate_vocabulary_maps(linereader)
 
     def generate_training(self):
         return self.generate(self.training_problems)
@@ -178,15 +152,8 @@ class MacomReader(object):
 
         self.channels = []
         for channeltype in self.channeltypes:
-            if channeltype == ChannelType.CHAR:
-                newchannel = CharVocabulary(
-                    self.vocabulary_frequency_cutoff,
-                    linegen()
-                )
-                self.channels.append(newchannel)
-            # TODO: Add words.
-            else:
-                raise Exception('Illegal state, unknown channel.')
+            self.channels.append(vocabulary_factory(channeltype,
+                                 self.vocabulary_frequency_cutoff, linegen()))
 
     def generate_authors(self, linereader):
         for i, line in enumerate(linereader.readlines(skipfirst=True)):
@@ -261,8 +228,8 @@ class MacomReader(object):
                 yield known_inputs + unknown_inputs, y
 
     def generate_batch(self, batch, linereader):
-        knowns = np.zeros((len(batch), len(self.channels)), dtype=np.object)
-        unknowns = np.zeros((len(batch), len(self.channels)), dtype=np.object)
+        knowns = []
+        unknowns = []
 
         if self.binary:
             y = np.zeros((self.batch_size, 1))
@@ -270,70 +237,68 @@ class MacomReader(object):
             y = np.zeros((self.batch_size, 2))
 
         for (i, (known, unknown, label)) in enumerate(batch):
-            knowns[i] = self.read_encoded_line(linereader, known)
-            unknowns[i] = self.read_encoded_line(linereader, unknown)
+            knowns.append(self.read_encoded_line(linereader, known))
+            unknowns.append(self.read_encoded_line(linereader, unknown))
 
             if label == 0:
                 y[i] = self.label_false
             else:
                 y[i] = self.label_true
 
-        known_inputs = []
-        unknown_inputs = []
-        for i in range(len(self.channels)):
-            if self.batch_normalization == 'truncate':
-                known_truncate_len = min(map(lambda x: x.shape[0], knowns[:, i]))
-                unknown_truncate_len = min(map(lambda x: x.shape[0], unknowns[:, i]))
+        X_knowns = []
+        X_unknowns = []
+        if self.batch_normalization == 'truncate':
+            for i in range(len(self.channels)):
+                known_channel = list(map(lambda x: x[i], knowns))
+                known_truncate_len = min(map(lambda x: x.shape[0], known_channel))
+                unknown_channel = list(map(lambda x: x[i], unknowns))
+                unknown_truncate_len = min(map(lambda x: x.shape[0], unknown_channel))
 
                 X_known = sequence.pad_sequences(
-                    knowns[:, i],
+                    known_channel,
                     value=self.padding,
                     maxlen=known_truncate_len,
                     truncating='post')
                 X_unknown = sequence.pad_sequences(
-                    unknowns[:, i],
+                    unknown_channel,
                     value=self.padding,
                     maxlen=unknown_truncate_len,
                     truncating='post')
 
-                known_inputs.append(X_known)
-                unknown_inputs.append(X_unknown)
-            elif self.batch_normalization == 'pad':
+                X_knowns.append(X_known)
+                X_unknowns.append(X_unknown)
+        elif self.batch_normalization == 'pad':
+            for i in range(len(self.channels)):
+                known_channel = list(map(lambda x: x[i], knowns))
+                unknown_channel = list(map(lambda x: x[i], unknowns))
                 X_known = sequence.pad_sequences(
-                    knowns[:, i], value=self.padding, padding='post')
+                    known_channel, value=0, padding='post')
                 X_unknown = sequence.pad_sequences(
-                    unknowns[:, i], value=self.padding, padding='post')
+                    unknown_channel, value=0, padding='post')
 
-                known_inputs.append(X_known)
-                unknown_inputs.append(X_unknown)
-            else:
-                raise Exception('should never happen')
+                X_knowns.append(X_known)
+                X_unknowns.append(X_unknown)
+        else:
+            raise Exception('should never happen')
 
-        return known_inputs, unknown_inputs, y
-
-    # TODO: Remove.
-    # def encode_char(self, chars):
-        # return np.array(map(lambda x: self.vocabulary_map[x]
-                        # if x in self.vocabulary_map else
-                        # self.garbage, chars))
-
-    # def encode_word(self, words):
-        # return np.array(map(lambda x: self.word_vocabulary_map[x]
-                        # if x in self.word_vocabulary_map else
-                        # self.word_garbage, words))
+        return X_knowns, X_unknowns, y
 
 
 if __name__ == '__main__':
-    reader1 = MacomReader(
+    reader = MacomReader(
         sys.argv[1],
         vocabulary_frequency_cutoff=1 / 100000,
         validation_split=0.95,
-        char=True,
-        batch_size=1,
-        pad=False
+        batch_size=2,
+        pad=False,
+        batch_normalization='pad',
+        channels=[ChannelType.CHAR, ChannelType.CHAR, ChannelType.WORD]
     )
 
-    print(reader1.authors)
-
-    reader2 = pickle.load(open(sys.argv[2], mode='rb'))
-    print(reader2.authors)
+    for _, (inputs, label) in zip(range(6), reader.generate_training()):
+        print(inputs)
+        print(label)
+        print(inputs[0].shape)
+        print(inputs[1].shape)
+        print(inputs[2].shape)
+        print(inputs[3].shape)

@@ -1,13 +1,18 @@
 # -*- coding: utf-8 -*-
 # !/usr/bin/python3
 
+from enum import Enum
+from collections import Counter
+import numpy as np
+from ..util import utilities as util
+
 
 class ChannelType(Enum):
     CHAR = 'char'
     WORD = 'word'
 
 
-class CharVocabulary:
+class Vocabulary:
 
     def __init__(self, vocabulary_frequency_cutoff, str_generator):
 
@@ -22,8 +27,8 @@ class CharVocabulary:
         for txt in str_generator:
             self.add_vocabulary(txt)
 
-        total_chars = sum(self.vocabulary_usage.values())
-        self.vocabulary_frequencies = {k: v / total_chars for k, v in
+        total = sum(self.vocabulary_usage.values())
+        self.vocabulary_frequencies = {k: v / total for k, v in
                                        self.vocabulary_usage.items()}
 
         self.vocabulary_above_cutoff =\
@@ -43,13 +48,40 @@ class CharVocabulary:
         self.garbage = encoding[1]
 
     def add_vocabulary(self, txt):
-        self.vocabulary = self.vocabulary.union(txt)
-        self.vocabulary_usage = self.vocabulary_usage + Counter(txt)
+        sequence = self.split_to_sequence(txt)
 
-        if len(txt) > self.max_len:
-            self.max_len = len(decoded)
+        self.vocabulary = self.vocabulary.union(sequence)
+        self.vocabulary_usage = self.vocabulary_usage + Counter(sequence)
 
-    def encode(self, chars):
-        return np.array(map(lambda x: self.vocabulary_map[x]
+        if len(sequence) > self.max_len:
+            self.max_len = len(sequence)
+
+    def encode(self, txt):
+        sequence = self.split_to_sequence(txt)
+        return np.array(list(map(lambda x: self.vocabulary_map[x]
                         if x in self.vocabulary_map else
-                        self.garbage, chars))
+                        self.garbage, sequence)))
+
+    def split_to_sequence(self, txt):
+        raise NotImplementedError('Subclasses should implement this.')
+
+
+class CharVocabulary(Vocabulary):
+
+    def split_to_sequence(self, txt):
+        return txt
+
+
+class WordVocabulary(Vocabulary):
+
+    def split_to_sequence(self, txt):
+        return util.wordProcess(txt)
+
+
+def vocabulary_factory(channeltype, vocabulary_frequency_cutoff, strgen):
+    if channeltype == ChannelType.CHAR:
+        return CharVocabulary(vocabulary_frequency_cutoff, strgen)
+    elif channeltype == ChannelType.WORD:
+        return WordVocabulary(vocabulary_frequency_cutoff, strgen)
+    else:
+        raise Exception('Illegal state, unknown channel.')
