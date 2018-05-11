@@ -227,6 +227,7 @@ class MacomReader(object):
                 known_inputs, unknown_inputs, y = self.generate_batch(batch, reader)
                 yield known_inputs + unknown_inputs, y
 
+    # TODO: Refactor the function. It looks like shit.
     def generate_batch(self, batch, linereader):
         knowns = []
         unknowns = []
