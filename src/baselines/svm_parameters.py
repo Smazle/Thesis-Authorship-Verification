@@ -5,13 +5,15 @@ import argparse
 import numpy as np
 import random
 from sklearn.svm import SVC
-from sklearn.model_selection import LeaveOneOut, GridSearchCV
+from sklearn.model_selection import StratifiedKFold, GridSearchCV
 from collections import Counter
 import pandas as pd
+import pickle
+import time
 
 # Set random state for reproducible results.
-#   np.random.seed(1337)
-#   random.seed(1337)
+np.random.seed(1337)
+random.seed(1337)
 
 parser = argparse.ArgumentParser(
     description='Use features in feature file specified by the boolean ' +
@@ -26,7 +28,9 @@ parser.add_argument(
 parser.add_argument(
     'features',
     type=str,
-    help='File contaning the product of the feature selection'
+    help='File contaning the product of the feature selection',
+    default=None,
+    nargs='?'
 )
 
 args = parser.parse_args()
@@ -51,23 +55,29 @@ np.random.shuffle(unique_authors)
 training_authors = unique_authors
 
 # Read which features we should train on.
-with open(args.features, 'r') as f:
-    data = pd.read_csv(f, header=None)
-    indices = data.as_matrix(columns=[data.columns[0]]).flatten()
-    accuracies = data.as_matrix(columns=[data.columns[1]]).flatten()
+if args.features is not None:
+    with open(args.features, 'r') as f:
+        data = pd.read_csv(f, header=None)
+        indices = data.as_matrix(columns=[data.columns[0]]).flatten()
+        accuracies = data.as_matrix(columns=[data.columns[1]]).flatten()
 
-    feature_n = np.argmax(accuracies)
-    feature_set = indices[0:feature_n]
+        feature_n = np.argmax(accuracies)
+        feature_set = indices[0:feature_n]
 
-    features_to_use = np.zeros((total_feature_number, ), dtype=np.bool)
-    features_to_use[feature_set] = 1
+        features_to_use = np.zeros((total_feature_number, ), dtype=np.bool)
+        features_to_use[feature_set] = 1
 
-X = X[:, features_to_use]
+    X = X[:, features_to_use]
 
 # Find the best hyperparameters using the training authors.
+C_range = [float(10**x) for x in range(-16, 0, 2)]
+gamma_range = [float(10**x) for x in range(-3, 9, 2)]
 best_params = Counter()
 res = {}
-for author in training_authors:
+pickle.dump(res, open('Pick.p', 'wb'))
+length = len(training_authors)
+for idx, author in enumerate(training_authors):
+    t = time.time()
     # Split texts into those written by same and different authors.
     same_author = X[authors == author]
     different_author = X[authors != author]
@@ -85,26 +95,39 @@ for author in training_authors:
     y_train = np.array([1] * same_author_n + [0] * same_author_n)
 
     # Leave one out cross validation over C and gamma range.
-    C_range = np.logspace(-2, 10, 7)
-    gamma_range = np.logspace(-3, 9, 7)
+    cv = StratifiedKFold(3)
     param_grid = dict(gamma=gamma_range, C=C_range)
-    cv = LeaveOneOut()
     grid = GridSearchCV(SVC(kernel='rbf'), param_grid=param_grid, cv=cv)
-    grid.fit(X_train, y_train)
+    try:
+        grid.fit(X_train, y_train)
+    except ValueError:
+        print('Skipped, length, ', same_author_n)
+        continue
 
     print('\t', 'best params', grid.best_params_)
     print('\t', 'best score', grid.best_score_)
+    print('\t', 'Time', time.time() - t)
+    print('\t', 'Author Index', '{}/{}'.format(idx, length))
 
     best_C_gamma = (grid.best_params_['C'], grid.best_params_['gamma'])
     best_params = best_params + Counter([best_C_gamma])
 
-    if best_C_gamma not in res:
-        res[best_C_gamma] = [grid.best_score_]
-    else:
-        res[best_C_gamma].append(grid.best_score_)
+    scores = grid.cv_results_['mean_test_score']
+    params = grid.cv_results_['params']
+    for s, p in zip(scores, params):
+        c_gamma = (p['C'], p['gamma'])
+
+        if c_gamma not in res:
+            res[c_gamma] = [s]
+        else:
+            res[c_gamma].append(s)
 
 ((C, gamma), count) = best_params.most_common()[0]
+print(best_params.most_common())
 
 print('final best parameters', 'C', C, 'gamma', gamma)
 print('Score', np.mean(res[(C, gamma)]))
-print([(key, np.mean(value)) for key, value in res.iteritem()])
+pickle.dump(res, open('Pick.p', 'wb'))
+
+output = [str((key, np.mean(value))) for key, value in res.items()]
+print('\n'.join(output))
