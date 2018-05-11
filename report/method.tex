@@ -120,10 +120,12 @@ to the total number of accusations made. This can be described as:
     \text{Accusation Error} = \frac{FN}{FN + TN}
 \end{equation}
 
-% TODO: Specify what threshold we are talking about here.
-Our goal is also to keep this value under a certain threshold specified by
-MaCom.
-
+The goal is also to keep this error under a certain threshold specified
+by MaCom, which in this case is $0.1$ or $10\%$. In other words, of the
+accusations we made, only $10\%$ of them are allowed to be false. In order
+to accommodate this constraint we can take certain actions, which depends on
+the model used. Details about these actions will be addressed in section
+\ref{sec:prediction}.
 
 \subsection{Baseline Methods}
 
@@ -238,13 +240,13 @@ A more intuitive model of such a neuron can be seen in figure \ref{fig:neuron}.
   \centering
   \begin{minipage}[b]{0.45\textwidth}
     \includegraphics[width=\textwidth]{./pictures/method/Neuron.png}
-    \caption{The inner workings of a single neuron with a bias \cite{Igel}}
   \end{minipage}
   \hfill
   \begin{minipage}[b]{0.45\textwidth}
     \includegraphics[width=\textwidth]{./pictures/method/NeuronBias.png}
-    \caption{That same neuron, but with an implicit bias of 1 \cite{Igel}}
   \end{minipage}
+    \caption{The inner workings of a neuron, with and without an implicit
+bias \cite{Igel}}
 \label{fig:neuron}
 \end{figure}
 
@@ -469,6 +471,19 @@ different layers.
             \end{pmatrix}.
         \end{equation}
 
+        A vizualization of this process can be seen in figure \ref{fig:ConvGen}.
+
+        \begin{figure}
+        \centering
+        \includegraphics[width=0.6\textwidth]{./pictures/method/ConvGeneral.png}
+        \caption{An example of 2D convolution, using a 2x2 kernel/sliding window
+            size. It also uses a step size of 1, and consideres window placements
+            confined to the dimensionality of the data it slides over.
+            \cite{Goodfellow-et-al-2016}}
+        \label{fig:ConvGen}
+        \end{figure}
+
+
         It can be seen that the output size is smaller than the input size.
         To prevent that the input can be padded with some value. A normal choice
         is zero padding. For the above input that would result in,
@@ -550,9 +565,6 @@ different layers.
             \label{fig:convolution_example}
         \end{figure}
 
-        % TODO: Show example from text.
-        % TODO: Maybe also explain different filters here.
-
     \item[\gls{RNN} Layer:] An RNN network is a normal feed forward neural
         network except that it allows circular connections
         \cite{DBLP:series/sci/2012-385}. The circular connections can be used
@@ -586,18 +598,18 @@ different layers.
 
         \begin{equation}
             a^{<t>}_h = \psi_h\left(
-                \sum_{i=1}^I w_{ih} x^{<t>}_i +
-                \sum_{h'=1}^H w_{h'h} a^{<t-1>}_{h'},
+                \sum_{j=1}^I w_{hj} x^{<t>}_i +
+                \sum_{h'=1}^H w_{hh'} a^{<t-1>}_{h'},
             \right)
         \end{equation}
 
         where $\psi_h$ is the activation function of the hidden unit, $I$ is the
         number of input units, $H$ is the number of hidden units and $w_{ij}$ is
-        the weight between neuron $i$ and neuron $j$. That is the activation of
-        the hidden units is an activation function applied to a weighted sum of
-        the current inputs and the activation of all hidden units in the
-        previous timestep \cite{DBLP:series/sci/2012-385}. The output of the
-        \gls{RNN} is then computed as,
+        the weight between neuron $i$ and $j$'th input for that neuron $i$. That
+        is the activation of the hidden units is an activation function applied
+        to a weighted sum of the current inputs and the activation of all hidden
+        units in the previous timestep \cite{DBLP:series/sci/2012-385}. The
+        output of the \gls{RNN} is then computed as,
 
         \begin{equation}
             a^{<t>}_k = \sum_{h=1}^H w_{hk} a_{h}^{<t>}.
@@ -1027,7 +1039,7 @@ Since the MaCom dataset consist of multiple known texts per author and this
 network architecture only compares two texts we define a separate system for
 making the final prediction.
 
-\subsection{Prediction System}
+\subsection{Prediction System}\label{sec:prediction}
 
 In the MaCom problem we are given a set of texts for each author so we can make
 use of multiple texts when making our predictions. We can also use metadata
