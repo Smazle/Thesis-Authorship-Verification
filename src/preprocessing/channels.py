@@ -5,11 +5,13 @@ from enum import Enum
 from collections import Counter
 import numpy as np
 from ..util import utilities as util
+import nltk
 
 
 class ChannelType(Enum):
     CHAR = 'char'
     WORD = 'word'
+    SENTENCE = 'sentence'
 
 
 class Vocabulary:
@@ -23,6 +25,7 @@ class Vocabulary:
         self.vocabulary = set()
         self.vocabulary_usage = Counter()
         self.max_len = 0
+        self.padding = 0
 
         for txt in str_generator:
             self.add_vocabulary(txt)
@@ -78,10 +81,35 @@ class WordVocabulary(Vocabulary):
         return util.wordProcess(txt)
 
 
+class SentenceVocabulary:
+
+    def __init__(self, str_generator, sentence_len):
+        self.word_vocab = WordVocabulary(0.0, str_generator)
+        self.sentence_len = sentence_len
+        self.padding = np.zeros((self.sentence_len, ))
+
+    def encode(self, txt):
+        sentences = nltk.sent_tokenize(txt)
+
+        encoded = np.zeros((len(sentences), self.sentence_len), dtype=np.int)
+        for i, sentence in enumerate(sentences):
+            words = self.word_vocab.encode(sentence)
+            sentence_len = min(len(words), self.sentence_len)
+            encoded[i, 0:sentence_len] = words[0:sentence_len]
+
+        return encoded
+
+
 def vocabulary_factory(channeltype, vocabulary_frequency_cutoff, strgen):
     if channeltype == ChannelType.CHAR:
         return CharVocabulary(vocabulary_frequency_cutoff, strgen)
     elif channeltype == ChannelType.WORD:
         return WordVocabulary(vocabulary_frequency_cutoff, strgen)
+    elif channeltype == ChannelType.SENTENCE:
+        if vocabulary_frequency_cutoff != 0:
+            raise Exception('Vocabulary cutoff not supported for sentences.')
+
+        # TODO: Don't hardcode sentence len.
+        return SentenceVocabulary(strgen, 25)
     else:
         raise Exception('Illegal state, unknown channel.')

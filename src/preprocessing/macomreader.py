@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # !/usr/bin/python3
 
-from .channels import ChannelType, CharVocabulary, WordVocabulary, vocabulary_factory
+from .channels import ChannelType, CharVocabulary, WordVocabulary, \
+        SentenceVocabulary, vocabulary_factory
 import itertools
 import numpy as np
 import pickle
@@ -110,8 +111,9 @@ class MacomReader(object):
             raise ValueError('Only truncate and pad is currently supported.')
 
         for channel in channels:
-            if channel not in [ChannelType.CHAR, ChannelType.WORD]:
-                raise ValueError('Only char or word channels allowed')
+            if channel not in [ChannelType.CHAR, ChannelType.WORD,
+                    ChannelType.SENTENCE]:
+                raise ValueError('Only char, word or sentence channels allowed')
 
         # Save parameters.
         self.filepath = filepath
@@ -269,13 +271,13 @@ class MacomReader(object):
                 X_knowns.append(X_known)
                 X_unknowns.append(X_unknown)
         elif self.batch_normalization == 'pad':
-            for i in range(len(self.channels)):
+            for i, channel in enumerate(self.channels):
                 known_channel = list(map(lambda x: x[i], knowns))
                 unknown_channel = list(map(lambda x: x[i], unknowns))
                 X_known = sequence.pad_sequences(
-                    known_channel, value=0, padding='post')
+                    known_channel, value=channel.padding, padding='post')
                 X_unknown = sequence.pad_sequences(
-                    unknown_channel, value=0, padding='post')
+                    unknown_channel, value=channel.padding, padding='post')
 
                 X_knowns.append(X_known)
                 X_unknowns.append(X_unknown)
