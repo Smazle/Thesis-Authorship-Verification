@@ -5,8 +5,9 @@ import argparse
 import numpy as np
 from collections import Counter
 import matplotlib.pyplot as plt
-import sys; sys.path.insert(0, '../src/util/')
+import sys; sys.path.append('../src/util/')
 import utilities as util
+from nltk.tokenize import sent_tokenize, word_tokenize
 
 
 def fix_space(x):
@@ -34,18 +35,22 @@ authors = {}
 charset = Counter()
 uniques = []
 words = []
+sentences = []
+sentence_count = []
 uniqueWords = []
 for line in f:
-    author, text = line.split(';')
+    author, time, text = line.split(';')
     text = util.clean(text)
 
     lengths.append(len(text))
     uniques.append(len(set(list(text))))
 
-    cleanText = list(
-        filter(lambda x: x != '', text.replace('\n', ' ').split(' ')))
-    cleanText = [''.join(list(filter(lambda x: x.isalnum(), q)))
-                 for q in cleanText]
+    tokens = sent_tokenize(text)
+    sentence_count += [len(tokens)]
+    sent_words = [len(util.wordProcess(x)) for x in tokens]
+    sentences += sent_words
+
+    cleanText = util.wordProcess(text)
     words.append(len(cleanText))
     uniqueWords.append(len(set(cleanText)))
 
@@ -66,7 +71,7 @@ print('Median character count', np.median(lengths))
 print('Max character count', np.max(lengths))
 print('Min character count', np.min(lengths))
 print('Texts Under Min characters', len(
-    list(filter(lambda x: x < 200, lengths))))
+    list(filter(lambda x: x < 400, lengths))))
 print('Texts Over Max characters', len(
     list(filter(lambda x: x > 30000, lengths))))
 
@@ -86,6 +91,25 @@ print('\nAverage Unique Characters', np.average(uniqueWords))
 print('Median Unique Characters', np.median(uniqueWords))
 print('Min Unique Characters', np.min(uniqueWords))
 print('Max Unique Characters', np.max(uniqueWords))
+
+print('\nAverage Sentence Length', np.average(sentences))
+print('Median Sentence Length', np.median(sentences))
+print('Min Sentence Length', np.min(sentences))
+print('Max Sentence Length', np.max(sentences))
+
+print('\nAverage Sentence Count', np.average(sentence_count))
+print('Median Sentence Count', np.median(sentence_count))
+print('Min Sentence Count', np.min(sentence_count))
+print('Max Sentence Count', np.max(sentence_count))
+print('Texts with over 1000 sentences', len(list(filter(lambda x: x > 1000, sentence_count))))
+
+#11805
+f.close()
+f = open(args.datafile, 'r', encoding='utf-8')
+f.readline()  # Skip first line.
+for idx, line in enumerate(f):
+    if idx == np.argmax(sentence_count):
+        print(line)
 
 author_number_texts = list(map(lambda x: len(x), authors.values()))
 print('\nAuthor number', len(authors))
