@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import numpy as np
 import argparse
+import numpy as np
 import pandas as pd
 
 
@@ -10,23 +10,17 @@ parser = argparse.ArgumentParser(
     description='Splits a given featurefile into\
                 training and validation'
 )
-
-
 parser.add_argument(
     'featurefile',
     type=str,
     help='Path to the featurefile'
 )
-
-
 parser.add_argument(
     'ratio',
     type=float,
     help='The ratio of the training set which should\
                 be used for training'
 )
-
-
 args = parser.parse_args()
 
 
