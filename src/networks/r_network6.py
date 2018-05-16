@@ -22,14 +22,6 @@ def model(reader):
     unknown_sentences_repr = L.Lambda(lambda x: K.sum(x, axis=2),
             output_shape=(None, 150))(unknown_emb)
 
-    # known_sentences_repr = L.GlobalAveragePooling2D()(known_emb)
-    # unknown_sentences_repr = L.GlobalAveragePooling2D()(unknown_emb)
-
-    # known_sentences_repr = L.AveragePooling2D(pool_size=(25, 1), strides=None,
-            # padding='valid', data_format=None)(known_emb)
-    # unknown_sentences_repr = L.AveragePooling2D(pool_size=(25, 1), strides=None,
-            # padding='valid', data_format=None)(unknown_emb)
-
     feature_extractor = L.Bidirectional(L.LSTM(50))
 
     features_known = feature_extractor(known_sentences_repr)
