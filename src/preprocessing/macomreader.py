@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 # !/usr/bin/python3
 
+from .channels import ChannelType, CharVocabulary, WordVocabulary, vocabulary_factory
 import itertools
 import numpy as np
-import random
-from collections import Counter
 import pickle
+import random
 import sys
 from ..util import utilities as util
 from datetime import datetime
@@ -68,31 +68,6 @@ class MacomReader(object):
     # replaced with the default character.
     vocabulary_frequency_cutoff = 0.0
 
-    # A set containing all the different characters used in the input file.
-    vocabulary = set()
-
-    # Mapping from a character to its encoding.
-    vocabulary_map = {}
-
-    # Mapping from a characters to the number of times it is used in the
-    # dataset given.
-    vocabulary_usage = Counter()
-
-    # Mapping from a character to its frequency.
-    vocabulary_frequencies = {}
-
-    # Set of characters that are above the cutoff given.
-    vocabulary_above_cutoff = {}
-
-    # Set of characters that are below the cutoff given (they are ignored).
-    vocabulary_below_cutoff = {}
-
-    # The encoding we use to represent padding of texts.
-    padding = None
-
-    # The encoding we use to represent garbage characters.
-    garbage = None
-
     # The path of the datafile.
     filepath = None
 
@@ -116,9 +91,6 @@ class MacomReader(object):
     # List of validation problems.
     validation_problems = None
 
-    # Whether or not to word encode or character.
-    char = None
-
     # Whether or not to pad the texts with a special value.
     pad = None
 
@@ -127,30 +99,29 @@ class MacomReader(object):
 
     # TODO: Take argument specifying whether or not to ignore first line in
     # file.
-    def __init__(self, filepath, batch_size=32, char=True,
-                 validation_split=0.8, vocabulary_frequency_cutoff=0.0,
-                 pad=True, binary=False, batch_normalization='truncate'):
+    def __init__(self, filepath, batch_size=32, validation_split=0.8,
+                 vocabulary_frequency_cutoff=0.0, pad=True, binary=False,
+                 batch_normalization='truncate', channels=[ChannelType.CHAR]):
 
         if validation_split > 1.0 or validation_split < 0.0:
             raise ValueError('validation_split between 0 and 1 required')
 
-        if vocabulary_frequency_cutoff > 1.0 or\
-                vocabulary_frequency_cutoff < 0.0:
-            raise ValueError('vocabulary_frequency_cutoff between 0 and 1 ' +
-                             'required')
-
         if batch_normalization not in ['truncate', 'pad']:
             raise ValueError('Only truncate and pad is currently supported.')
 
+        for channel in channels:
+            if channel not in [ChannelType.CHAR, ChannelType.WORD]:
+                raise ValueError('Only char or word channels allowed')
+
         # Save parameters.
-        self.char = char
         self.filepath = filepath
         self.batch_size = batch_size
         self.validation_split = validation_split
-        self.vocabulary_frequency_cutoff = vocabulary_frequency_cutoff
+        self.vocabulary_frequency_cutoff = vocabulary_frequency_cutoff # TODO: Should be list.
         self.binary = binary
         self.pad = pad
         self.batch_normalization = batch_normalization
+        self.channeltypes = channels
 
         if self.binary:
             self.label_true = np.array([1])
@@ -163,7 +134,7 @@ class MacomReader(object):
         with LineReader(self.filepath) as linereader:
             self.generate_authors(linereader)
             self.generate_problems()
-            self.generate_vocabulary_map(linereader)
+            self.generate_vocabulary_maps(linereader)
 
     def generate_training(self):
         return self.generate(self.training_problems)
@@ -171,41 +142,18 @@ class MacomReader(object):
     def generate_validation(self):
         return self.generate(self.validation_problems)
 
-    def generate_vocabulary_map(self, linereader):
-        for author in self.authors:
-            for line_n in self.authors[author]:
-                autor, date, text = linereader.readline(line_n).split(';')
-                decoded = util.clean(text)
-                if not self.char:
-                    decoded = util.wordProcess(decoded)
+    def generate_vocabulary_maps(self, linereader):
+        def linegen():
+            for author in self.authors:
+                for line_n in self.authors[author]:
+                    autor, date, text = linereader.readline(line_n).split(';')
+                    decoded = util.clean(text)
+                    yield decoded
 
-                self.vocabulary = self.vocabulary.union(decoded)
-                self.vocabulary_usage = self.vocabulary_usage + \
-                    Counter(decoded)
-
-                if len(decoded) > self.max_len:
-                    self.max_len = len(decoded)
-
-        total_chars = sum(self.vocabulary_usage.values())
-        self.vocabulary_frequencies = {k: v / total_chars for k, v in
-                                       self.vocabulary_usage.items()}
-
-        self.vocabulary_above_cutoff =\
-            {k for k, v in self.vocabulary_frequencies.items()
-             if v > self.vocabulary_frequency_cutoff}
-        self.vocabulary_below_cutoff =\
-            {k for k, v in self.vocabulary_frequencies.items()
-             if v < self.vocabulary_frequency_cutoff}
-
-        encoding = list(range(0, len(self.vocabulary_above_cutoff) + 2))
-
-        self.vocabulary_map = {}
-
-        for i, c in enumerate(self.vocabulary_above_cutoff):
-            self.vocabulary_map[c] = encoding[i+2]
-
-        self.padding = encoding[0]
-        self.garbage = encoding[1]
+        self.channels = []
+        for channeltype in self.channeltypes:
+            self.channels.append(vocabulary_factory(channeltype,
+                                 self.vocabulary_frequency_cutoff, linegen()))
 
     def generate_authors(self, linereader):
         for i, line in enumerate(linereader.readlines(skipfirst=True)):
@@ -246,31 +194,28 @@ class MacomReader(object):
         self.training_problems = self.problems[:split_point]
         self.validation_problems = self.problems[split_point:]
 
+    # Returns a list of numpy arrays containing integers where each array is an
+    # encoded sequence. The list ordering corresponds to the self.channels
+    # parameter.
     def read_encoded_line(self, linereader, line_n, with_date=False):
+        if self.pad:
+            raise Exception('read_encoded_line does not currently work with global padding')
+
         author, date, text = linereader.readline(line_n).split(';')
         unescaped = util.clean(text)
         unescaped = unescaped[200:]
 
-        if not self.char:
-            unescaped = util.wordProcess(text)
-
-        encoded = list(map(lambda x: self.vocabulary_map[x]
-                           if x in self.vocabulary_map else
-                           self.garbage, unescaped))
-
-        if self.pad:
-            len_diff = self.max_len - len(encoded)
-            padded = encoded + ([self.padding] * len_diff)
-        else:
-            padded = encoded
+        encoded_channels = []
+        for channel in self.channels:
+            encoded_channels.append(channel.encode(unescaped))
 
         if with_date:
             epoch = datetime.utcfromtimestamp(0)
             date = datetime.strptime(date, '%d-%m-%Y')
             time = (date - epoch).total_seconds()
-            return np.array(padded), time
+            return encoded_channels, time
         else:
-            return np.array(padded)
+            return encoded_channels
 
     # Generate batches of samples.
     def generate(self, problems):
@@ -278,10 +223,11 @@ class MacomReader(object):
             problems = itertools.cycle(problems)
 
             while True:
-                batch = itertools.islice(problems, self.batch_size)
-                X_known, X_unknown, y = self.generate_batch(batch, reader)
-                yield [X_known, X_unknown], y
+                batch = list(itertools.islice(problems, self.batch_size))
+                known_inputs, unknown_inputs, y = self.generate_batch(batch, reader)
+                yield known_inputs + unknown_inputs, y
 
+    # TODO: Refactor the function. It looks like shit.
     def generate_batch(self, batch, linereader):
         knowns = []
         unknowns = []
@@ -300,42 +246,60 @@ class MacomReader(object):
             else:
                 y[i] = self.label_true
 
+        X_knowns = []
+        X_unknowns = []
         if self.batch_normalization == 'truncate':
-            known_truncate_len = min(map(lambda x: x.shape[0], knowns))
-            unknown_truncate_len = min(map(lambda x: x.shape[0], unknowns))
+            for i in range(len(self.channels)):
+                known_channel = list(map(lambda x: x[i], knowns))
+                known_truncate_len = min(map(lambda x: x.shape[0], known_channel))
+                unknown_channel = list(map(lambda x: x[i], unknowns))
+                unknown_truncate_len = min(map(lambda x: x.shape[0], unknown_channel))
 
-            X_known = sequence.pad_sequences(
-                knowns,
-                value=self.padding,
-                maxlen=known_truncate_len,
-                truncating='post')
-            X_unknown = sequence.pad_sequences(
-                unknowns,
-                value=self.padding,
-                maxlen=unknown_truncate_len,
-                truncating='post')
+                X_known = sequence.pad_sequences(
+                    known_channel,
+                    value=self.padding,
+                    maxlen=known_truncate_len,
+                    truncating='post')
+                X_unknown = sequence.pad_sequences(
+                    unknown_channel,
+                    value=self.padding,
+                    maxlen=unknown_truncate_len,
+                    truncating='post')
+
+                X_knowns.append(X_known)
+                X_unknowns.append(X_unknown)
         elif self.batch_normalization == 'pad':
-            X_known = sequence.pad_sequences(
-                knowns, value=self.padding, padding='post')
-            X_unknown = sequence.pad_sequences(
-                unknowns, value=self.padding, padding='post')
+            for i in range(len(self.channels)):
+                known_channel = list(map(lambda x: x[i], knowns))
+                unknown_channel = list(map(lambda x: x[i], unknowns))
+                X_known = sequence.pad_sequences(
+                    known_channel, value=0, padding='post')
+                X_unknown = sequence.pad_sequences(
+                    unknown_channel, value=0, padding='post')
+
+                X_knowns.append(X_known)
+                X_unknowns.append(X_unknown)
         else:
             raise Exception('should never happen')
 
-        return X_known, X_unknown, y
+        return X_knowns, X_unknowns, y
 
 
 if __name__ == '__main__':
-    reader1 = MacomReader(
+    reader = MacomReader(
         sys.argv[1],
         vocabulary_frequency_cutoff=1 / 100000,
         validation_split=0.95,
-        char=True,
-        batch_size=1,
-        pad=False
+        batch_size=2,
+        pad=False,
+        batch_normalization='pad',
+        channels=[ChannelType.CHAR, ChannelType.CHAR, ChannelType.WORD]
     )
 
-    print(reader1.authors)
-
-    reader2 = pickle.load(open(sys.argv[2], mode='rb'))
-    print(reader2.authors)
+    for _, (inputs, label) in zip(range(6), reader.generate_training()):
+        print(inputs)
+        print(label)
+        print(inputs[0].shape)
+        print(inputs[1].shape)
+        print(inputs[2].shape)
+        print(inputs[3].shape)
