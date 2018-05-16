@@ -20,7 +20,7 @@ def model(reader):
     features_known = feature_extractor(known_emb)
     features_unknown = feature_extractor(unknown_emb)
 
-    avg = L.AveragePooling1D()
+    avg = L.GlobalAvgPool1D()
 
     features_known_avg = avg(features_known)
     features_unknown_avg = avg(features_unknown)
