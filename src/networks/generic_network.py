@@ -9,6 +9,7 @@ from keras.callbacks import ModelCheckpoint
 from ..preprocessing import MacomReader
 import jsonpickle
 import jsonpickle.ext.numpy as jsonpickle_numpy
+from ..preprocessing.channels import ChannelType
 
 
 # Make sure that jsonpickle works on numpy arrays.
@@ -145,7 +146,7 @@ else:
         batch_normalization=args.batch_normalization,
         pad=args.pad,
         binary=args.binary,
-        char=not args.word
+        channels= [ChannelType.WORD] if args.word else [ChannelType.CHAR]
     )
 
     print('Writing new MaCom reader to reader.p')

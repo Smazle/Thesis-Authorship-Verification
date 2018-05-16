@@ -31,7 +31,7 @@ parse.add_argument(
 args = parse.parse_args()
 
 data = pd.read_csv(args.datafile, delimiter=';')
-authors = data.as_matrix(columns=['ID']).flatten()
+authors = data.as_matrix(columns=['StudentId']).flatten()
 unique_authors = np.unique(authors)
 
 try:
@@ -48,4 +48,4 @@ output = data.iloc[idx]
 output.index = range(len(output))
 
 print(output.shape)
-output.to_csv(args.outfile, sep=';', encoding='utf-8')
+output.to_csv(args.outfile, sep=';', encoding='utf-8', index=False)
