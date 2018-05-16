@@ -114,12 +114,10 @@ create_reader.add_argument(
     action='store_true'
 )
 create_reader.add_argument(
-    '--word',
-    dest='word',
-    help='Whether to use characters or words as input to the networks. Both ' +
-         'will be changed to a sequence of ints.',
-    default=False,
-    action='store_true'
+    '--channels',
+    help='Which channels to use.',
+    nargs='+',
+    default=['char']
 )
 args = parser.parse_args()
 
@@ -129,14 +127,16 @@ if hasattr(args, 'reader') and args.reader is not None:
     with open(args.reader, mode='r') as reader_in:
         reader = jsonpickle.decode(reader_in.read())
 else:
+    channels = list(map(lambda x: ChannelType(x), args.channels))
+
     print(('Creating new MaCom reader with parameters, batch_size={}, ' +
            'vocabulary_frequency_cutoff={}, batch_normalization={}, ' +
-           'pad={}, binary={}, char={}'
+           'pad={}, binary={}, channels={}'
            ).format(args.batch_size,
                     args.vocabulary_frequency_cutoff,
                     args.batch_normalization,
                     args.pad, args.binary,
-                    not args.word))
+                    channels))
 
     reader = MacomReader(
         args.datafile,
@@ -146,7 +146,7 @@ else:
         batch_normalization=args.batch_normalization,
         pad=args.pad,
         binary=args.binary,
-        channels= [ChannelType.WORD] if args.word else [ChannelType.CHAR]
+        channels=channels
     )
 
     print('Writing new MaCom reader to reader.p')
