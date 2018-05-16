@@ -11,6 +11,7 @@ import sys
 from ..util import utilities as util
 from datetime import datetime
 from keras.preprocessing import sequence
+from nltk.tokenize import sent_tokenize
 
 
 class LineReader:
@@ -159,7 +160,6 @@ class MacomReader(object):
 
     def generate_authors(self, linereader):
         for i, line in enumerate(linereader.readlines(skipfirst=True)):
-            #print(i, line)
             author, date, text = line.split(';')
             text = util.clean(text)
 
@@ -169,6 +169,9 @@ class MacomReader(object):
             elif len(text) < 400:
                 print('WARNING: Skipping text shorter than 400 characters ' +
                       'on line {}'.format(i + 1))
+            elif len(sent_tokenize(text)) > 1000:
+                print("WARNING: Skipping text with more than 1000 sentences " +
+                    "on line {}".format(i+1))
             elif author in self.authors:
                 self.authors[author].append(i + 1)
             else:
