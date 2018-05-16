@@ -38,7 +38,7 @@ def model(reader):
     model = Model(inputs=[known_in, unknown_in], outputs=output)
 
     model.compile(optimizer='adam',
-                loss='categorical_crossentropy',
-                metrics=['accuracy'])
+                  loss='categorical_crossentropy',
+                  metrics=['accuracy'])
 
     return model
