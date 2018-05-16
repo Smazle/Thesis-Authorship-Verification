@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 # !/usr/bin/python3
 
-from .channels import ChannelType, CharVocabulary, WordVocabulary, \
-        SentenceVocabulary, vocabulary_factory
+from .channels import ChannelType, vocabulary_factory
 import itertools
 import numpy as np
-import pickle
 import random
 import sys
 from ..util import utilities as util
@@ -63,9 +61,6 @@ class LineReader:
 
 class MacomReader(object):
 
-    # The maximal length of any of the texts.
-    max_len = 0
-
     # Number between 0 and 1 (inclusive) cutoff point for when a character is
     # replaced with the default character.
     vocabulary_frequency_cutoff = 0.0
@@ -84,7 +79,7 @@ class MacomReader(object):
     # from different authors.
     problems = []
 
-    # If 0..8 80% is training data and 20% are validation data.
+    # If 0.8 80% is training data and 20% are validation data.
     validation_split = None
 
     # List of training problems.
@@ -170,8 +165,8 @@ class MacomReader(object):
                 print('WARNING: Skipping text shorter than 400 characters ' +
                       'on line {}'.format(i + 1))
             elif len(sent_tokenize(text)) > 1000:
-                print("WARNING: Skipping text with more than 1000 sentences " +
-                    "on line {}".format(i+1))
+                print('WARNING: Skipping text with more than 1000 sentences ' +
+                      'on line {}'.format(i + 1))
             elif author in self.authors:
                 self.authors[author].append(i + 1)
             else:
