@@ -3,65 +3,112 @@
 \subsection{Computer Specifications}
 \verbinput{./data/DxDiag.txt}
 
-\subsection{SVM Feature Selection}
-\begin{table}[]
+\subsection{Extended Delta Feature Selection}
+\begin{table}
 \centering
-\caption{The SVM feature that caused the best accuracy}
-\label{table:svm_feature}
-\begin{tabular}{lll}
-Feature Type & Frequency Rank & Feature \\
-char-2-gram&11&', '\\
-char-3-gram&1&' de'\\
-char-2-gram&206&'as'\\
-word-3-gram&264&('som', 'er', 'blevet')\\
-char-4-gram&11&' den'\\
-word-3-gram&304&('grunden', 'til', 'at')\\
-word-4-gram&132&('med', 'det', 'forml', 'at')\\
-word-4-gram&409&('er', 'ndvendige', 'for', 'at')\\
-char-10-gram&32&'opa-Parlam'\\
-word-2-gram&182&('indre', 'marked')\\
-char-6-gram&108&'lighed'\\
-char-8-gram&111&'ke Union'\\
-char-9-gram&215&' demokrat'\\
-word-4-gram&476&('for', 'det', 'frste', 'vil')\\
-char-8-gram&108&'ingen af'\\
-char-4-gram&210&'ære '\\
-word-gram&187&'se'\\
-word-3-gram&463&('i', 'den', 'flles')\\
-char-8-gram&6&'arlament'\\
-word-3-gram&400&('om', 'retlige', 'anliggender')\\
-word-3-gram&166&('om', 'at', 'der')\\
-word-gram&140&'store'\\
-word-3-gram&207&('jeg', 'gerne', 'sige')\\
-word-gram&26&'ogs'\\
-word-2-gram&270&('behov', 'for')\\
-word-4-gram&302&('og', 'frem', 'for', 'alt')\\
-char-9-gram&1&'Kommissio'\\
-char-5-gram&227&' hr. '\\
-word-3-gram&201&('ret', 'til', 'at')\\
-char-9-gram&274&'ering af '\\
-char-9-gram&23&'Hr. forma'\\
-char-6-gram&187&'en og '\\
-char-3-gram&273&'Kom'\\
-word-3-gram&487&('formanden', 'for', 'rdet')\\
-char-6-gram&37&' denne'\\
-word-gram&73&'bliver'\\
-word-2-gram&180&('af', 'disse')\\
-char-5-gram&86&'er er'\\
-char-10-gram&286&'repræsenta'\\
-char-10-gram&92&'ed hensyn '\\
-special-2-gram&37&'-/'\\
-pos-4-gram&34&("b'NOUN'", "b'ADP'", "b'PROPN'", "b'PUNCT'")\\
-char-5-gram&67&'. Jeg'\\
-char-3-gram&133&'vi '\\
-char-5-gram&267&'nings'\\
-char-6-gram&30&'rlamen'\\
-char-10-gram&106&'nstitution'\\
-char-2-gram&58&'m '\\
-word-3-gram&125&('for', 'at', 'de')\\
-word-2-gram&420&('og', 'sociale')
+\caption{The Extended Delta feature that gave the best accuracy}
+\begin{tabular}{ccc}
+Feature Type & Frequency Rank & Feature \\ \hline
+Char 4 Gram & 58 & ', og'\\
+Char 5 Gram & 3 & ', at '\\
+Char 5 Gram & 16 & ', der'\\
+Char 7 Gram & 42 & 'politik'\\
+Char 10 Gram & 269 & ' naturligv'\\
+Char 4 Gram & 256 & 'e er'\\
+Char 2 Gram & 34 & '. '\\
+Word 4 Gram & 266 & ('jeg', 'vil', 'gerne', 'have')\\
+Char 10 Gram & 275 & 'myndighede'\\
+Char 10 Gram & 29 & ' Europa-Pa'\\
 \end{tabular}
 \end{table}
+
+
+\subsection{SVM Feature Selection}
+\begin{table}
+\centering
+\caption{The SVM feature that gave the best accuracy}
+\begin{tabular}{ccc}
+Feature Type & Frequency Rank & Feature \\ \hline
+Char 5 Gram & 13 & ', som'\\
+Char 3 Gram & 136 & ', o'\\
+Char 3 Gram & 53 & ', a'\\
+Char 7 Gram & 199 & 'er sig '\\
+Char 6 Gram & 2 & ', der '\\
+Char 7 Gram & 191 & ' ændrin'\\
+Word 3 Gram & 397 & ('tager', 'hensyn', 'til')\\
+Char 4 Gram & 51 & ', so'\\
+Char 10 Gram & 187 & ' medlemmer'\\
+Word 2 Gram & 346 & ('princippet', 'om')\\
+Word 3 Gram & 352 & ('og', 'vi', 'vil')\\
+Word 3 Gram & 2 & ('med', 'hensyn', 'til')\\
+Char 6 Gram & 130 & ' alle '\\
+Char 8 Gram & 186 & ' for det'\\
+Char 7 Gram & 180 & 'ngen af'\\
+Char 5 Gram & 297 & 'er vi'\\
+Char 5 Gram & 143 & 'orsla'\\
+Word 4 Gram & 255 & ('som', 'jeg', 'gerne', 'vil')\\
+Char 9 Gram & 83 & ' hensyn t'\\
+Word 2 Gram & 358 & ('det', 'vi')\\
+Char 7 Gram & 39 & 'der er '\\
+Word 4 Gram & 329 & ('p', 'en', 'eller', 'anden')\\
+Char 4 Gram & 124 & ', hv'\\
+Char 8 Gram & 169 & 'amarbejd'\\
+Char 4 Gram & 38 & ' om '\\
+Word 4 Gram & 409 & ('er', 'ndvendige', 'for', 'at')\\
+Char 5 Gram & 178 & 'eres '\\
+Char 4 Gram & 121 & 'e af'\\
+Char 7 Gram & 258 & 'er den '\\
+Char 4 Gram & 49 & 'ring'\\
+Char 5 Gram & 97 & 'lamen'\\
+Word 4 Gram & 400 & ('forhandling', 'under', 't', 'om')\\
+Char 10 Gram & 289 & ' drejer si'\\
+Char 4 Gram & 168 & ' ogs'\\
+Char 8 Gram & 151 & 'ndelse m'\\
+Char 7 Gram & 189 & ' som de'\\
+Word Gram & 223 & 'naturligvis'\\
+Char 4 Gram & 185 & 'erin'\\
+Char 4 Gram & 241 & 'rer '\\
+Char 5 Gram & 107 & 'til a'\\
+Char 9 Gram & 104 & ' økonomis'\\
+Char 6 Gram & 183 & 'ndling'\\
+Char 9 Gram & 75 & 'gsforslag'\\
+Char 4 Gram & 234 & 'denn'\\
+Char 6 Gram & 78 & 'or at '\\
+Char 8 Gram & 4 & 'issionen'\\
+Char 5 Gram & 280 & ' arbe'\\
+Char 9 Gram & 23 & 'Hr. forma'\\
+Word Gram & 239 & 'medlemmer'\\
+Char 5 Gram & 204 & 'lande'\\
+Word 3 Gram & 290 & ('i', 'de', 'seneste')\\
+Word 3 Gram & 381 & ('i', 'dag', 'har')\\
+Char 9 Gram & 86 & 'ællesskab'\\
+Char 9 Gram & 9 & 'uropæiske'\\
+Char 10 Gram & 191 & ', hvilket '\\
+Char 3 Gram & 212 & 'igh'\\
+Char 10 Gram & 78 & 'ndringsfor'\\
+Char 8 Gram & 97 & ' kommiss'\\
+Char 9 Gram & 266 & 'sige, at '\\
+Char 9 Gram & 39 & '. Hr. for'\\
+Char 4 Gram & 266 & ' und'\\
+Char 9 Gram & 8 & 'issionen '\\
+Char 4 Gram & 171 & 'orma'\\
+Char 5 Gram & 101 & ' dett'\\
+Char 8 Gram & 157 & 'rhandlin'\\
+Word 4 Gram & 335 & ('konomisk', 'og', 'social', 'samhrighed')\\
+Char 6 Gram & 245 & 'beslut'\\
+Char 7 Gram & 269 & 'er skal'\\
+Word Gram & 369 & 'ligeledes'\\
+Word 4 Gram & 191 & ('nr', 'det', 'handler', 'om')\\
+Char 9 Gram & 296 & 'grund af '\\
+Char 4 Gram & 37 & ', de'\\
+Char 3 Gram & 278 & 'lde'\\
+Word 2 Gram & 486 & ('min', 'gruppe')\\
+Char 9 Gram & 192 & 'offentlig'\\
+\end{tabular}
+\end{table}
+
+
+
 
 \subsection{Convolution	Filters}
 \begin{table}
@@ -303,5 +350,4 @@ word-2-gram&420&('og', 'sociale')
         convolutional filter 100 of size 4. Sorted by the importance score.}
     \label{fig:features_convolution_4_100}
 \end{table}
-
 
