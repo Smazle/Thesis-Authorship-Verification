@@ -3,8 +3,8 @@
 
 from ..preprocessing.channels import ChannelType
 from keras.models import Model
-import keras.layers as L
 import keras.backend as K
+import keras.layers as L
 
 
 def model(reader):
