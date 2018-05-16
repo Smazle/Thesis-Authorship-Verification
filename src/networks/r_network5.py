@@ -9,7 +9,7 @@ def model(reader):
     known_in = L.Input(shape=(None, ), dtype='int32')
     unknown_in = L.Input(shape=(None, ), dtype='int32')
 
-    embedding = L.Embedding(len(reader.vocabulary_above_cutoff) + 2, 150)
+    embedding = L.Embedding(len(reader.channels[0].vocabulary_above_cutoff) + 2, 150)
 
     known_emb = embedding(known_in)
     unknown_emb = embedding(unknown_in)
