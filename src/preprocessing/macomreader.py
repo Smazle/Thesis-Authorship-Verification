@@ -159,6 +159,7 @@ class MacomReader(object):
 
     def generate_authors(self, linereader):
         for i, line in enumerate(linereader.readlines(skipfirst=True)):
+            #print(i, line)
             author, date, text = line.split(';')
             text = util.clean(text)
 
