@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+# -*- coding: utf-8 -*-
 
 from . import network1
 from . import network2
@@ -10,7 +11,9 @@ from . import r_network2
 from . import r_network3
 from . import r_network4
 from . import r_network5
+from . import r_network7
 from enum import Enum
+
 
 class Network(Enum):
     NETWORK1 = 'network1'
@@ -23,6 +26,8 @@ class Network(Enum):
     R_NETWORK3 = 'r_network3'
     R_NETWORK4 = 'r_network4'
     R_NETWORK5 = 'r_network5'
+    R_NETWORK7 = 'r_network7'
+
 
 def construct_network(network, reader):
     if network == Network.NETWORK1:
@@ -45,5 +50,7 @@ def construct_network(network, reader):
         return r_network4.model(reader)
     elif network == Network.R_NETWORK5:
         return r_network5.model(reader)
+    elif network == Network.R_NETWORK7:
+        return r_network7.model(reader)
     else:
-        raise Exception('Unknown network {}'.format(networkname))
+        raise Exception('Unknown network {}'.format(network))
