@@ -1,12 +1,15 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+from ..preprocessing.channels import ChannelType
 from keras.models import Model
 import keras.layers as L
 import keras.backend as K
 
 
 def model(reader):
+    assert reader.channeltypes == [ChannelType.SENTENCE]
+
     known_in = L.Input(shape=(None, 25), dtype='int32')
     unknown_in = L.Input(shape=(None, 25), dtype='int32')
 
