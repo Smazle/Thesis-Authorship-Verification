@@ -865,7 +865,7 @@ different layers.
 
 \end{description}
 
-\subsubsection{Back-Propagation}\label{sec:BP}
+\subsubsection{Back-Propagation, \{Under Reconstruction\}}\label{sec:BP}
 
 The neural network learns by updating the weights in the network. The weights
 are updated using \gls{BP}. The process can be split into three distinct steps
@@ -1014,45 +1014,24 @@ only for a single training sample though. Thus run-time becomes $O(N\cdot W)$,
 where $N$ is the number of training samples. Additionally, if one trains over
 several epochs, this run-time becomes even more inflated $O(\mathcal{E}\cdot
 N\cdot W)$ iteration having do be computed, where $\mathcal{E}$ is the number
-of epochs run during training. For that reason this run-time might not seem
-very disable at first, and is indeed the reason why neural networks need such
-a long training time. However an alternative described by \cite{Bishop}, which
-involves perturbing each weight instead, and approximating the derivatives.
-This method does however run in $O(W^2)$ time, making the run-time of $O(W)$
-back-propagation provides the desired choice. However, in order to improve on
-those that $O(W)$ time-complexity a method called batching is used. This method,
-shuffles and split the training dataset up into smaller batches. These batches
-are then run through the network one at a time, performing back-propagation
-after each run-through. This results in the gradient not being as accurate
-after each batch, but this introduced inaccuracy is negligible compared to the
+of epochs run during training. Each epoch describes a entire loop through N,
+thus it is after each epoch that we perform the updating of weights using
+\gls{BP}. For that reason this run-time might not seem very disable at first,
+and is indeed the reason why neural networks need such a long training time.
+However an alternative described by \cite{Bishop}, which involves perturbing
+each weight instead, and approximating the derivatives. This method does
+however run in $O(W^2)$ time, making the run-time of $O(W)$ back-propagation
+provides the desired choice. However, in order to improve on those that $O(W)$
+time-complexity a method called batching is used. This method, shuffles and
+split the training dataset up into smaller batches. These batches are then
+run through the network one at a time, performing back-propagation after
+each run-through. As such, we decrease the size of $N$, by having each of
+the samples represented by $N$ be a batch of training samples, rather than
+a singular sample. Updating the weights after each batch results in the
+gradient updates not being as accurate due to the diminished sample set it uses
+for \gls{BP}, but this introduced inaccuracy is negligible compared to the
 computational time won, by reducing the size of N in $O(\mathcal{E}\cdot N\cdot
 W)$.\cite{Bishop}
-
-\begin{figure}
-    \centering
-\begin{neuralnetwork}[height=3]
-  \newcommand{\nodetextx}[2]{\ifthenelse{\equal{#2}{0}}{$b_0$}{$x_{#2}$}}
-  \newcommand{\nodetextz}[2]{\ifthenelse{\equal{#2}{0}}{$b_1$}{$z_{#2}$}}
-  \newcommand{\nodetextzi}[2]{%
-      \pgfmathsetmacro\num{int(#2+2)}%
-      \ifthenelse{\equal{#2}{0}}{$b_2$}{$z_{\num}$}}
-  \newcommand{\nodetextzii}[2]{%
-      \pgfmathsetmacro\num{int(#2+4)}%
-      {$z_{\num}$}}
-  \inputlayer[count=1, title={Input}, text=\nodetextx]
-  \hiddenlayer[count=2, title={Hidden 1}, text=\nodetextz]
-  \linklayers
-  \hiddenlayer[count=2, title={Hidden  2}, text=\nodetextzi]
-  \linklayers
-  \outputlayer[count=1, title={Output}, text=\nodetextzii] 
-  \linklayers
-\end{neuralnetwork}
-    \caption{A simple single neuron per layer, neural network. Where $L$
-        describes the layer. The green node is the input layer, and the red is
-        the output}
-    \label{fig:simple_NN}
-\end{figure}
-
 
 \subsubsection{Siamese Networks}
 
