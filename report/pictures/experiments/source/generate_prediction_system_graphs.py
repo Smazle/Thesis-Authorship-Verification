@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+# -*- coding: utf-8 -*-
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -42,5 +43,6 @@ plt.show()
 valid = data[data[:, 3] < 0.1]
 best_index = np.argmax(valid[:, 2])
 best_conf = valid[best_index]
-print('The best legal configuration are theta={}, weight={}, accuracy={}, error={}'
+print('The best legal configuration are theta={}, weight={},\
+        accuracy={}, error={}'
       .format(best_conf[0], best_conf[1], best_conf[2], best_conf[3]))

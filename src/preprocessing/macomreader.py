@@ -5,7 +5,6 @@ from .channels import ChannelType, vocabulary_factory
 import itertools
 import numpy as np
 import random
-import sys
 from ..util import utilities as util
 from datetime import datetime
 from keras.preprocessing import sequence
@@ -284,23 +283,3 @@ class MacomReader(object):
             raise Exception('should never happen')
 
         return X_knowns, X_unknowns, y
-
-
-if __name__ == '__main__':
-    reader = MacomReader(
-        sys.argv[1],
-        vocabulary_frequency_cutoff=1 / 100000,
-        validation_split=0.95,
-        batch_size=2,
-        pad=False,
-        batch_normalization='pad',
-        channels=[ChannelType.CHAR, ChannelType.CHAR, ChannelType.WORD]
-    )
-
-    for _, (inputs, label) in zip(range(6), reader.generate_training()):
-        print(inputs)
-        print(label)
-        print(inputs[0].shape)
-        print(inputs[1].shape)
-        print(inputs[2].shape)
-        print(inputs[3].shape)
