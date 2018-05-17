@@ -38,7 +38,7 @@ parser.add_argument(
     '--weights',
     type=str,
     help='Use the weights given as start weights instead of randomly' +
-         ' initializing.'
+    ' initializing.'
 )
 parser.add_argument(
     '--epochs',
@@ -97,7 +97,7 @@ create_reader.add_argument(
     '--vocabulary-frequency-cutoff',
     type=float,
     help='Characters with a frequency below this threshold is ignored by the' +
-         'reader',
+    'reader',
     default=1 / 100000
 )
 create_reader.add_argument(
@@ -105,7 +105,7 @@ create_reader.add_argument(
     '--batch-normalization',
     type=str,
     help='Either "pad" or "truncate". Batches will be normalized using this' +
-         'method.',
+    'method.',
     default='pad'
 )
 create_reader.add_argument(
@@ -119,7 +119,7 @@ create_reader.add_argument(
     '--binary',
     dest='binary',
     help='Whether to run reader with binary crossentropy or categorical ' +
-         'crossentropy',
+    'crossentropy',
     default=False,
     action='store_true'
 )
@@ -201,7 +201,7 @@ if args.history is not None:
         )
     )
 
-# If we are asked to visualize model, do so.
+    # If we are asked to visualize model, do so.
 if args.graph is not None:
     plot_model(model, to_file=args.graph, show_shapes=True)
 
