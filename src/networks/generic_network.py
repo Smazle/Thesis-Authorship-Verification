@@ -206,16 +206,14 @@ while True:
             callbacks=callbacks
         )
     except tf.errors.ResourceExhaustedError:
-        model.save('memory_model.hdf5')
-        args.weights = 'memory_model.hdf5'
-        reader.batch_size = int(reader.batch_size / 2)
-
-        if reader.batch_size <= 1:
-            break
-        elif args.retry:
+        if args.retry and reader.batch_size >= 1:
+            args.weights = 'final_model.hdf5'
+            reader.batch_size = int(reader.batch_size / 2)
             print('MEMORY ERROR, RUNNING AGAIN WITH BATCH SIZE {}'
                   .format(reader.batch_size))
+            continue
     finally:
         # TODO: Load best weights.
         model.save('final_model.hdf5')
-        break
+
+    break
