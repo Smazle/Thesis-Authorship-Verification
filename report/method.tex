@@ -79,18 +79,30 @@ Given those definitions the \gls{TPR}, \gls{FPR}, \gls{TNR} and \gls{FNR}
 describes.
 
 \begin{description}
-    \item[\gls{TPR}: ] The fraction of positives that we reported \textit{True}
-        on i.e. the fraction of texts written by the same author that we say are
-        written by the same author.
-    \item[\gls{FPR}: ] The fraction of negatives that we reported \textit{True}
-        on i.e. the fraction of texts written by different authors that we say
-        are written by the same author.
-    \item[\gls{TNR}: ] The fraction of negatives that we reported \textit{False}
-        on i.e. the fraction of texts written by different authors that we say
-        are written by different authors.
-    \item[\gls{FNR}: ] The fraction of positives that we reported \textit{False}
-        on i.e. the fraction of texts written by the same author that we say are
-        written by different authors.
+    \item[\gls{TPR}: ]
+
+        The fraction of positives that we reported \textit{True} on i.e. the
+        fraction of texts written by the same author that we say are written by
+        the same author.
+
+    \item[\gls{FPR}: ]
+
+        The fraction of negatives that we reported \textit{True} on i.e. the
+        fraction of texts written by different authors that we say are written
+        by the same author.
+
+    \item[\gls{TNR}: ]
+
+        The fraction of negatives that we reported \textit{False} on i.e. the
+        fraction of texts written by different authors that we say are written
+        by different authors.
+
+    \item[\gls{FNR}: ]
+
+        The fraction of positives that we reported \textit{False} on i.e. the
+        fraction of texts written by the same author that we say are written by
+        different authors.
+
 \end{description}
 
 And they can be computed as,
@@ -360,25 +372,29 @@ There are different kinds of layers. Below is a non-exhaustive description of
 different layers.
 
 \begin{description}
-    \item[Dense Layer:] In a dense layer the input of each neuron in the
-        layer is connected to the output of every neuron in the previous layer.
-        Each neuron in the layer computes a weighted sum of the outputs of the
-        previous layers' neurons and applies an activation function. The weights
-        for each of the neurons in the layer are different allowing each neuron
-        to learn a different combination of the previous layer. An example
-        of this can be seen in figure \ref{fig:example_nn}, where the hidden
-        layers are Dense.
-    \item[Convolutional Layer:] A convolutional layer is mainly used to extract
-        position independent features from data. The convolution consist of a
-        sliding window that slides over some input data and gives an output for
-        each possible position in the input image. The sliding window uses the
-        same weights in all the input and will therefore extract the same
-        features from different locations if it is presented with the same
-        input. The convolution computes a single output for each window
-        position. The output is computed as the sum of the elementwise
-        multiplication of the sliding window and the current part of the input
-        it is looking at \cite{oshea2015}. Let us for example consider a two
-        dimensional input,
+
+    \item[Dense Layer:]
+
+        In a dense layer the input of each neuron in the layer is connected to
+        the output of every neuron in the previous layer. Each neuron in the
+        layer computes a weighted sum of the outputs of the previous layers'
+        neurons and applies an activation function. The weights for each of
+        the neurons in the layer are different allowing each neuron to learn a
+        different combination of the previous layer. An example of this can be
+        seen in figure \ref{fig:example_nn}, where the hidden layers are Dense.
+
+    \item[Convolutional Layer:]
+
+        A convolutional layer is mainly used to extract position independent
+        features from data. The convolution consist of a sliding window that
+        slides over some input data and gives an output for each possible
+        position in the input image. The sliding window uses the same weights
+        in all the input and will therefore extract the same features from
+        different locations if it is presented with the same input. The
+        convolution computes a single output for each window position. The
+        output is computed as the sum of the elementwise multiplication of
+        the sliding window and the current part of the input it is looking at
+        \cite{oshea2015}. Let us for example consider a two dimensional input,
 
         \begin{equation}
             I = \begin{pmatrix}
@@ -564,16 +580,17 @@ different layers.
             \label{fig:convolution_example}
         \end{figure}
 
-    \item[\gls{RNN} Layer:] An RNN network is a normal feed forward neural
-        network except that it allows circular connections
-        \cite{DBLP:series/sci/2012-385}. The circular connections can be used
-        to remember previous inputs and an \gls{RNN} therefore has a sense of
-        history of previous input and output. Classical feed forward neural
-        networks can be viewed as mappings from and to vectors while \gls{RNN}'s
-        can be viewed as mappings from and to sequences. An \gls{RNN} does not
-        view its input as a vector but as a sequence of inputs in different
-        timesteps. We have shown an example of an \gls{RNN} network in Figure
-        \ref{fig:rnn_illustration}.
+    \item[\gls{RNN} Layer:]
+
+        An RNN network is a normal feed forward neural network except that
+        it allows circular connections \cite{DBLP:series/sci/2012-385}. The
+        circular connections can be used to remember previous inputs and an
+        \gls{RNN} therefore has a sense of history of previous input and output.
+        Classical feed forward neural networks can be viewed as mappings from
+        and to vectors while \gls{RNN}'s can be viewed as mappings from and to
+        sequences. An \gls{RNN} does not view its input as a vector but as a
+        sequence of inputs in different timesteps. We have shown an example of
+        an \gls{RNN} network in Figure \ref{fig:rnn_illustration}.
 
         \begin{figure}
             \centering
@@ -631,20 +648,22 @@ different layers.
         output of each network at each time step can then depend both on the
         context before and after the input.
 
-    \item[\gls{LSTM} Layer:] As described the main benefit of \gls{RNN}'s are
-        their ability to use previous context to make predictions. Unfortunately
-        the \gls{RNN} architecture described above in practise does not allow
-        context from far away to influence current output. The problem is known
-        as the vanishing/exploding gradient problem. When backpropagating
-        through an \gls{RNN} network each timestep corresponds to a separate
-        layer in a normal feed forward neural network. So for sequences of
-        several thousand timesteps backpropagation has to go through several
-        thousand layers. The magnitude of the gradient will at each layer either
-        increase up or decrease and through the hundreds or thousands of layers
-        that leads to the gradient either blowing up exponentially or vanishing
-        to nothing. In practise the main problem is the vanishing gradient and
-        not the exploding gradient. The vanishing gradient means that weights
-        early in the network are not updated according to the final output since
+    \item[\gls{LSTM} Layer:]
+
+        As described the main benefit of \gls{RNN}'s are their ability to use
+        previous context to make predictions. Unfortunately the \gls{RNN}
+        architecture described above in practise does not allow context from
+        far away to influence current output. The problem is known as the
+        vanishing/exploding gradient problem. When backpropagating through an
+        \gls{RNN} network each timestep corresponds to a separate layer in a
+        normal feed forward neural network. So for sequences of several thousand
+        timesteps backpropagation has to go through several thousand layers.
+        The magnitude of the gradient will at each layer either increase up or
+        decrease and through the hundreds or thousands of layers that leads to
+        the gradient either blowing up exponentially or vanishing to nothing.
+        In practise the main problem is the vanishing gradient and not the
+        exploding gradient. The vanishing gradient means that weights early
+        in the network are not updated according to the final output since
         the gradient has disappeared while backpropagating back to the early
         weights. Therefore the network will not learn to use context over long
         periods of time but only to use the local context around a particular
@@ -658,17 +677,19 @@ different layers.
         %They have a cell
         %that functions as its memory, a 
 
-    \item[Embedding:] The Embedding layer is a layer that maps a value into a
-        continuous vector space. Given a sequence of integers it uses the
-        weights associated with the layer, to map that singular value to a
-        vector of predetermined size. This can be done on any sort of data, as
-        longs as it is encoded as a sequence of integers. In \gls{NLP}
-        circumstances, this can be applied to characters or words for example,
-        where each element in the sequence is first encoded as an integer value,
-        and then fed to the embedding layer, which maps it to the continuous
-        vector space. The hope with using a layer such as this, that characters
-        for example, get mapped to a point close to other similar characters. In
-        addition it also adds another trainable layer to optimize on.
+    \item[Embedding:]
+
+        The Embedding layer is a layer that maps a value into a continuous
+        vector space. Given a sequence of integers it uses the weights
+        associated with the layer, to map that singular value to a vector of
+        predetermined size. This can be done on any sort of data, as longs as it
+        is encoded as a sequence of integers. In \gls{NLP} circumstances, this
+        can be applied to characters or words for example, where each element in
+        the sequence is first encoded as an integer value, and then fed to the
+        embedding layer, which maps it to the continuous vector space. The hope
+        with using a layer such as this, that characters for example, get mapped
+        to a point close to other similar characters. In addition it also adds
+        another trainable layer to optimize on.
 
         \begin{figure}
             \centering
@@ -697,6 +718,7 @@ different layers.
         similar words.
 
     \item[Pooling Layer:]
+
         The purpose of a pooling layer, or down-sampling layer, is as the name
         suggest, to pool the data it receives. It does so with the goal of
         reducing the data down to a number a number of key features found within
@@ -758,36 +780,37 @@ different layers.
 
     \item[Dropout Layer:] 
 
-    This layer is used for the intent of regularizing and in turn, generalize
-    a network. Given enough training time, and a good optimizer a network will
-    slowly fit more and more on the training data it is provided. This might
-    seem like a bad thing at first, but if the validation error follows the
-    training error as the network get more and more fit on the training data,
-    then the network has successfully learning some general commonality that
-    can be used to describe both the data sets, which is the goal. It is when
-    these two error don't follow on another, that one has to be alarmed, as
-    network doesn't generalize properly. This is where the Dropout layer is
-    useful. By deactivating a certain amount of randomly selected neurons in a
-    particular layer, the network is forced to learn from a larger sparse set
-    of neurons, rather than focusing on a small amount of very informative one,
-    resulting in a potential better understanding of the data as a whole, rather
-    than small amount of key features. An example of this can be seen in Figure
-    \ref{fig:dropout}.
+        This layer is used for the intent of regularizing and in turn,
+        generalize a network. Given enough training time, and a good optimizer
+        a network will slowly fit more and more on the training data it is
+        provided. This might seem like a bad thing at first, but if the
+        validation error follows the training error as the network get more
+        and more fit on the training data, then the network has successfully
+        learning some general commonality that can be used to describe both the
+        data sets, which is the goal. It is when these two error don't follow
+        on another, that one has to be alarmed, as network doesn't generalize
+        properly. This is where the Dropout layer is useful. By deactivating a
+        certain amount of randomly selected neurons in a particular layer, the
+        network is forced to learn from a larger sparse set of neurons, rather
+        than focusing on a small amount of very informative one, resulting in
+        a potential better understanding of the data as a whole, rather than
+        small amount of key features. An example of this can be seen in Figure
+        \ref{fig:dropout}.
 
-    \begin{figure}
-    \centering
-    \includegraphics[width=0.5\textwidth]{./pictures/method/Dropout.png}
-    \caption{An example of the application of a dropouts being performed
-    on different layers}
-    \label{fig:dropout}
-    \end{figure}
+        \begin{figure}
+        \centering
+        \includegraphics[width=0.5\textwidth]{./pictures/method/Dropout.png}
+        \caption{An example of the application of a dropouts being performed
+            on different layers}
+        \label{fig:dropout}
+        \end{figure}
 
-    \cite{JMLR:v15:srivastava14a} investigated the use of dropout 
-    layers in different problem settings. They found that dropout layers reduced
-    overfitting in all problems they looked at. In particular they found that
-    document classification which is similar to what we are doing were also
-    improved. The main drawback of a dropout layer is that it increase the run time
-    of training the networks (\cite{JMLR:v15:srivastava14a}).
+        \cite{JMLR:v15:srivastava14a} investigated the use of dropout layers
+        in different problem settings. They found that dropout layers reduced
+        overfitting in all problems they looked at. In particular they found
+        that document classification which is similar to what we are doing were
+        also improved. The main drawback of a dropout layer is that it increase
+        the run time of training the networks (\cite{JMLR:v15:srivastava14a}).
 
 \end{description}
 
