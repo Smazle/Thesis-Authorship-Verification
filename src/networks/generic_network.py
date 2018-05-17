@@ -10,11 +10,9 @@ from ..preprocessing import MacomReader
 import jsonpickle
 import jsonpickle.ext.numpy as jsonpickle_numpy
 from ..preprocessing.channels import ChannelType
-
-
+import tensorflow as tf
 # Make sure that jsonpickle works on numpy arrays.
 jsonpickle_numpy.register_handlers()
-
 
 # Parse arguments.
 parser = argparse.ArgumentParser(
@@ -49,6 +47,15 @@ parser.add_argument(
     default=100
 )
 
+parser.add_argument(
+    '--retry',
+    type=bool,
+    help='Should the network keep trying using a reduced batch_size?',
+    default=False,
+    nargs='?'
+)
+
+
 # Parse either a filepath to a reader to load or arguments to create a new
 # reader.
 readerparser = parser.add_subparsers()
@@ -73,18 +80,21 @@ create_reader.add_argument(
     help='Path to data file.'
 )
 create_reader.add_argument(
+    '-val',
     '--validation-split',
     type=float,
     help='How much data to use as the validation set vs the training set.',
     default=0.95
 )
 create_reader.add_argument(
+    '-b',
     '--batch-size',
     type=int,
     help='Size of batches.',
     default=8
 )
 create_reader.add_argument(
+    '-vfc',
     '--vocabulary-frequency-cutoff',
     type=float,
     help='Characters with a frequency below this threshold is ignored by the' +
@@ -92,6 +102,7 @@ create_reader.add_argument(
     default=1 / 100000
 )
 create_reader.add_argument(
+    '-bn',
     '--batch-normalization',
     type=str,
     help='Either "pad" or "truncate". Batches will be normalized using this' +
@@ -181,19 +192,31 @@ if args.history is not None:
 if args.graph is not None:
     plot_model(model, to_file=args.graph, show_shapes=True)
 
-# If we are given weights, load them.
-if args.weights is not None:
-    model.load_weights(args.weights)
+while True:
+    # If we are given weights, load them.
+    if args.weights is not None:
+        model.load_weights(args.weights)
 
-try:
-    model.fit_generator(
-        generator=reader.generate_training(),
-        steps_per_epoch=steps_n,
-        epochs=args.epochs,
-        validation_data=reader.generate_validation(),
-        validation_steps=val_steps_n,
-        callbacks=callbacks
-    )
-finally:
-    # TODO: Load best weights.
-    model.save('final_model.hdf5')
+    try:
+        model.fit_generator(
+            generator=reader.generate_training(),
+            steps_per_epoch=steps_n,
+            epochs=args.epochs,
+            validation_data=reader.generate_validation(),
+            validation_steps=val_steps_n,
+            callbacks=callbacks
+        )
+    except tf.errors.ResourceExhaustedError:
+        model.save('memory_model.hdf5')
+        args.weights = 'memory_model.hdf5'
+        reader.batch_size = int(reader.batch_size / 2)
+
+        if reader.batch_size <= 1:
+            break
+        elif args.retry:
+            print('MEMORY ERROR, RUNNING AGAIN WITH BATCH SIZE {}'
+                  .format(reader.batch_size))
+    finally:
+        # TODO: Load best weights.
+        model.save('final_model.hdf5')
+        break

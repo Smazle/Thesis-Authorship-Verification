@@ -163,7 +163,7 @@ class MacomReader(object):
             elif len(text) < 400:
                 print('WARNING: Skipping text shorter than 400 characters ' +
                       'on line {}'.format(i + 1))
-            elif len(sent_tokenize(text)) > 1000:
+            elif len(sent_tokenize(text)) > 500:
                 print('WARNING: Skipping text with more than 1000 sentences ' +
                       'on line {}'.format(i + 1))
             elif author in self.authors:
