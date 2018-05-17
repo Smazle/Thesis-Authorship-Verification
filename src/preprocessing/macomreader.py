@@ -101,6 +101,7 @@ class MacomReader(object):
                  batch_normalization='truncate', channels=[ChannelType.CHAR],
                  sentence_len=None):
 
+        # Validate creation state given.
         if validation_split > 1.0 or validation_split < 0.0:
             raise ValueError('validation_split between 0 and 1 required')
 
@@ -113,8 +114,11 @@ class MacomReader(object):
                 raise ValueError(
                     'Only char, word or sentence channels allowed')
 
-                # Save parameters.
+        if len(self.vocabulary_frequency_cutoff) != len(self.channeltypes):
+            raise ValueError('Number of vocabulary frequency cutoffs have ' +
+                             'to match number of channels')
 
+        # Save parameters
         self.filepath = filepath
         self.batch_size = batch_size
         self.validation_split = validation_split
@@ -124,10 +128,6 @@ class MacomReader(object):
         self.batch_normalization = batch_normalization
         self.channeltypes = channels
         self.sentence_length = sentence_len
-
-        if len(self.vocabulary_frequency_cutoff) != len(self.channeltypes):
-            raise ValueError('Number of vocabulary frequency cutoffs have ' +
-                             'to match number of channels')
 
         if self.binary:
             self.label_true = np.array([1])
