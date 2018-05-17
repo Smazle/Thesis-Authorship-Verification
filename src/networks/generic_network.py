@@ -10,6 +10,7 @@ from ..preprocessing import MacomReader
 import jsonpickle
 import jsonpickle.ext.numpy as jsonpickle_numpy
 from ..preprocessing.channels import ChannelType
+import tensorflow as tf
 
 
 # Make sure that jsonpickle works on numpy arrays.
@@ -181,19 +182,31 @@ if args.history is not None:
 if args.graph is not None:
     plot_model(model, to_file=args.graph, show_shapes=True)
 
-# If we are given weights, load them.
-if args.weights is not None:
-    model.load_weights(args.weights)
+while True:
+    # If we are given weights, load them.
+    if args.weights is not None:
+        model.load_weights(args.weights)
 
-try:
-    model.fit_generator(
-        generator=reader.generate_training(),
-        steps_per_epoch=steps_n,
-        epochs=args.epochs,
-        validation_data=reader.generate_validation(),
-        validation_steps=val_steps_n,
-        callbacks=callbacks
-    )
-finally:
-    # TODO: Load best weights.
-    model.save('final_model.hdf5')
+    try:
+        model.fit_generator(
+            generator=reader.generate_training(),
+            steps_per_epoch=steps_n,
+            epochs=args.epochs,
+            validation_data=reader.generate_validation(),
+            validation_steps=val_steps_n,
+            callbacks=callbacks
+        )
+    except tf.errors.ResourceExhaustedError:
+        model.save('memory_model.hdf5')
+        args.weights = 'memory_model.hdf5'
+        reader.batch_size = int(reader.batch_size / 2)
+
+        if reader.batch_size <= 1:
+            break
+        else:
+            print('MEMORY ERROR, RUNNING AGAIN WITH BATCH SIZE {}'
+                  .format(reader.batch_size))
+    finally:
+        # TODO: Load best weights.
+        model.save('final_model.hdf5')
+        break
