@@ -5,6 +5,7 @@ import tempfile
 import unittest
 from src.preprocessing.macomreader import *
 
+
 class TestMacomReader(unittest.TestCase):
 
     def test_read_encoded_line(self):
@@ -21,7 +22,9 @@ class TestMacomReader(unittest.TestCase):
 
             with LineReader(f.name) as linereader:
                 encoded_line = reader.read_encoded_line(linereader, 1)
-                self.assertEqual(len(encoded_line[0]), len('This is the first text\n'))
+                self.assertEqual(len(encoded_line[0]),
+                                 len('This is the first text\n'))
+
 
 if __name__ == '__main__':
     unittest.main()
