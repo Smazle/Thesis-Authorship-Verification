@@ -1,5 +1,5 @@
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
-# !/usr/bin/python3
 
 from .channels import ChannelType, vocabulary_factory
 import itertools
@@ -96,12 +96,13 @@ class MacomReader(object):
     # Sentence length, in case of a sentence channel being used
     sentence_length = None
 
-    # TODO: Take argument specifying whether or not to ignore first line in
-    # file.
+    # Denotes if the first line in the data file should be skipped
+    skipfirst = False
+
     def __init__(self, filepath, batch_size=32, validation_split=0.8,
-                 vocabulary_frequency_cutoff=0.0, pad=True, binary=False,
+                 vocabulary_frequency_cutoff=[0.0], pad=True, binary=False,
                  batch_normalization='truncate', channels=[ChannelType.CHAR],
-                 sentence_len=None):
+                 sentence_len=None, skipfirst=True):
 
         if validation_split > 1.0 or validation_split < 0.0:
             raise ValueError('validation_split between 0 and 1 required')
@@ -116,16 +117,20 @@ class MacomReader(object):
                     'Only char, word or sentence channels allowed')
 
                 # Save parameters.
+
         self.filepath = filepath
         self.batch_size = batch_size
         self.validation_split = validation_split
-        # TODO: Should be list.
         self.vocabulary_frequency_cutoff = vocabulary_frequency_cutoff
         self.binary = binary
         self.pad = pad
         self.batch_normalization = batch_normalization
         self.channeltypes = channels
         self.sentence_length = sentence_len
+        self.skipfirst = skipfirst
+
+        if len(self.vocabulary_frequency_cutoff) != len(self.channeltypes):
+            self.vocabulary_frequency_cutoff = [0.0] * len(channels)
 
         if self.binary:
             self.label_true = np.array([1])
@@ -155,15 +160,16 @@ class MacomReader(object):
                     yield decoded
 
         self.channels = []
-        for channeltype in self.channeltypes:
+        for freq, channeltype in zip(self.vocabulary_frequency_cutoff,
+                                     self.channeltypes):
             self.channels.append(
                 vocabulary_factory(channeltype,
-                                   self.vocabulary_frequency_cutoff,
-                                   linegen(), self.sentence_length))
+                                   freq, linegen(), self.sentence_length))
 
     def generate_authors(self, linereader):
 
-        for i, line in enumerate(linereader.readlines(skipfirst=True)):
+        for i, line in enumerate(
+                linereader.readlines(skipfirst=self.skipfirst)):
             author, date, text = line.split(';')
             text = util.clean(text)
 
