@@ -46,7 +46,7 @@ def get_problems(macomreader, linereader, negative_chance=1.0):
 
 def predict(macomreader, linereader, author_texts, non_author_text, w, theta):
     unknown_text = macomreader.read_encoded_line(linereader, non_author_text)
-    unknown_text = unknown_text.reshape((1, unknown_text.shape[0]))
+    unknown_text = list(map(lambda x: add_dim_start(x), unknown_text))
     times = np.zeros((len(author_texts)), dtype=np.int)
     predictions = np.zeros((len(author_texts), ), dtype=np.float)
 
@@ -54,8 +54,8 @@ def predict(macomreader, linereader, author_texts, non_author_text, w, theta):
     for i, known in enumerate(author_texts):
         known_text, times[i] = macomreader.read_encoded_line(
             linereader, known, with_date=True)
-        known_text = known_text.reshape((1, known_text.shape[0]))
-        predictions[i] = model.predict([unknown_text, known_text])[0, 1]
+        known_text = list(map(lambda x: add_dim_start(x), known_text))
+        predictions[i] = model.predict(known_text + unknown_text)[0, 1]
 
     times = np.around((np.max(times) - times) / SECS_PER_MONTH)
     weights = exp_norm(times, w)
@@ -86,6 +86,10 @@ def evaluate(macomreader, linereader, problems, w, theta):
 def exp_norm(xs, l):
     xs = np.exp(-l * xs)
     return xs / np.sum(xs)
+
+
+def add_dim_start(array):
+    return np.reshape(array, [1] + list(array.shape))
 
 
 if __name__ == '__main__':
@@ -136,31 +140,17 @@ if __name__ == '__main__':
     with open(args.reader, mode='r') as reader_in:
         reader = jsonpickle.decode(reader_in.read())
 
-    assert reader.vocabulary_map is not None
-    assert reader.padding is not None
-    assert reader.char is not None
-    assert reader.garbage is not None
-    assert reader.max_len is not None
-    assert reader.pad is not None
-    assert reader.binary is not None
-    assert reader.batch_normalization is not None
-
-    validation_reader = MacomReader(
-        args.datafile,
-        char=reader.char,
-        validation_split=1.0,
-        batch_size=1,
-        pad=reader.pad,
-        binary=reader.binary,
-        batch_normalization=reader.batch_normalization
-    )
-    validation_reader.vocabulary_map = reader.vocabulary_map
-    validation_reader.padding = reader.padding
-    validation_reader.garbage = reader.garbage
-    validation_reader.max_len = reader.max_len
+    # Our reader should use the validation file we are given.
+    reader.filepath = args.datafile,
+    reader.validation_split = 1.0
+    reader.batch_size = 1
 
     with LineReader(args.datafile) as linereader:
-        problems = get_problems(validation_reader, linereader,
+        # We have to generate new authors since we are probably using a new
+        # dataset.
+        reader.generate_authors(linereader)
+
+        problems = get_problems(reader, linereader,
                                 negative_chance=args.negative_chance)
 
         positive_n = sum([1 for (_, _, label) in problems if label])
@@ -172,7 +162,7 @@ if __name__ == '__main__':
         print('Theta,Weights,TPS,TNS,FPS,FNS,ACC,ERR', end='\r\n')
         for (theta, weight) in itertools.product(theta, weights):
             tps, tns, fps, fns = evaluate(
-                validation_reader, linereader, problems, weight, theta)
+                reader, linereader, problems, weight, theta)
 
             accuracy = (tps + tns) / (tps + tns + fps + fns)
             if fns + tns == 0:
