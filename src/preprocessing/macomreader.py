@@ -126,7 +126,8 @@ class MacomReader(object):
         self.sentence_length = sentence_len
 
         if len(self.vocabulary_frequency_cutoff) != len(self.channeltypes):
-            self.vocabulary_frequency_cutoff = [0.0] * len(channels)
+            raise ValueError('Number of vocabulary frequency cutoffs have ' +
+                             'to match number of channels')
 
         if self.binary:
             self.label_true = np.array([1])
