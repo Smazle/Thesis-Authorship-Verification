@@ -18,18 +18,17 @@ In several of our experiments we limited the number of different characters
 we represented. We did that to simplify the amount of different characters
 our neural networks had to consider. In particular we cutoff any characters
 that occurred with a frequency less than $\frac{1}{100.000}$. We wanted to
-make sure that the cutoff only removed characters that were so infrequent
-that it would be hard for the neural networks to learn anything from them.
-Since the average amount of characters in a single text were 5851 characters
-most texts wont include any character that has a frequency below the above
-cutoff point. While we wanted to limit the number of different characters
-the network would have to consider we also wanted to make sure that a couple
-of Danish characters would be considered. In particular the characters \ae,
-\o, \aa, \AE, \O\ and \AA. Those characters occur with the frequencies
-$7.23\cdot10^{-3}$, $5.5\cdot10^{-3}$, $8.5\cdot10^{-3}$, $1.85\cdot10^{-5}$,
-$3.13\cdot10^{-5}$ and $2.08\cdot10^{-5}$ respectively and will therefore
-all be included. The overall frequency distribution can be seen in figure
-\ref{fig:character_frequencies}.
+make sure that the cutoff only removed characters that were so infrequent that
+it would be hard for the neural networks to learn anything from them. Since
+the average amount of characters in a single text were 5851 characters most
+texts wont include any character that has a frequency below the above cutoff
+point. While we wanted to limit the number of different characters the network
+would have to consider we also wanted to make sure that a couple of Danish
+characters would be considered. In particular the characters \ae, \o, \aa, \AE,
+\O\ and \AA. Those characters occur with the frequencies $7.23\cdot10^{-3}$,
+$5.5\cdot10^{-3}$, $8.5\cdot10^{-3}$, $1.85\cdot10^{-5}$, $3.13\cdot10^{-5}$ and
+$2.08\cdot10^{-5}$ respectively and will therefore all be included. The overall
+frequency distribution can be seen in figure \ref{fig:character_frequencies}.
 
 \begin{figure}[htb]
     \centering
@@ -68,8 +67,8 @@ included. In order to combat that, we looked at the average unique character
 count of each of the texts in the data set. They had an average of of 59 unique
 characters, and a median of 61 unique characters. Comparing this to the fact
 that the minimum unique character count is 2, and the max unique character count
-is 280, left us to deduce that there were some outliers in the set in terms of
-unique character count. After looking at the texts with the highest unique
+is 280, left us to deduce that there were some outliers in the set in terms
+of unique character count. After looking at the texts with the highest unique
 character count, a trend emerged. If a text had over around 100 characters,
 the text mostly contained garbage characters. A result from a erroneous data
 extraction. These texts also contained and abnormally large character count,
@@ -85,8 +84,8 @@ $\frac{1}{100.000}$ frequency threshold described earlier.
 % TODO: Describe how we constructed the different data-set, and the different
 % samples
 
-We split the dataset we are given into multiple datasets for different purposes.
-We have shown an illustration of the splits we have made in Figure
+We split the dataset we are given into multiple datasets for different
+purposes. We have shown an illustration of the splits we have made in Figure
 \ref{fig:data_split}. We define 7 different datasets with the names $A, B,
 \dots, J$. Each of the datasets has a different purpose.
 
