@@ -97,7 +97,7 @@ class MacomReader(object):
     sentence_length = None
 
     # Denotes if the first line in the data file should be skipped
-    skipfirst = False
+    skipfirst = True
 
     def __init__(self, filepath, batch_size=32, validation_split=0.8,
                  vocabulary_frequency_cutoff=[0.0], pad=True, binary=False,
