@@ -99,7 +99,9 @@ class MacomReader(object):
     def __init__(self, filepath, batch_size=32, validation_split=0.8,
                  vocabulary_frequency_cutoff=[0.0], pad=True, binary=False,
                  batch_normalization='truncate', channels=[ChannelType.CHAR],
-                 sentence_len=None):
+                 sentence_len=None, max_len_characters=30000,
+                 max_len_sentences=500, min_len_characters=400,
+                 ignore_n_characters=200):
 
         # Validate creation state given.
         if validation_split > 1.0 or validation_split < 0.0:
@@ -114,7 +116,7 @@ class MacomReader(object):
                 raise ValueError(
                     'Only char, word or sentence channels allowed')
 
-        if len(self.vocabulary_frequency_cutoff) != len(self.channeltypes):
+        if len(vocabulary_frequency_cutoff) != len(channels):
             raise ValueError('Number of vocabulary frequency cutoffs have ' +
                              'to match number of channels')
 
@@ -128,6 +130,10 @@ class MacomReader(object):
         self.batch_normalization = batch_normalization
         self.channeltypes = channels
         self.sentence_length = sentence_len
+        self.max_len_characters = max_len_characters
+        self.max_len_sentences = max_len_sentences
+        self.min_len_characters = min_len_characters
+        self.ignore_n_characters = ignore_n_characters
 
         if self.binary:
             self.label_true = np.array([1])
@@ -165,20 +171,19 @@ class MacomReader(object):
 
     def generate_authors(self, linereader):
 
-        for i, line in enumerate(
-                linereader.readlines(skipfirst=True)):
+        for i, line in enumerate(linereader.readlines(skipfirst=True)):
             author, date, text = line.split(';')
             text = util.clean(text)
 
-            if len(text) > 30000:
-                print('WARNING: Skipping text longer than 30,000 characters ' +
-                      'on line {}'.format(i + 1))
-            elif len(text) < 400:
-                print('WARNING: Skipping text shorter than 400 characters ' +
-                      'on line {}'.format(i + 1))
-            elif len(sent_tokenize(text)) > 500:
-                print('WARNING: Skipping text with more than 500 sentences ' +
-                      'on line {}'.format(i + 1))
+            if len(text) > self.max_len_characters:
+                print('WARNING: Skipping text longer than {} characters ' +
+                      'on line {}'.format(self.max_len_characters, i + 1))
+            elif len(text) < self.min_len_characters:
+                print('WARNING: Skipping text shorter than {} characters ' +
+                      'on line {}'.format(self.min_len_characters, i + 1))
+            elif len(sent_tokenize(text)) > self.max_len_sentences:
+                print('WARNING: Skipping text with more than {} sentences ' +
+                      'on line {}'.format(self.max_len_sentences, i + 1))
             elif author in self.authors:
                 self.authors[author].append(i + 1)
             else:
@@ -211,6 +216,7 @@ class MacomReader(object):
     # encoded sequence. The list ordering corresponds to the self.channels
     # parameter.
     def read_encoded_line(self, linereader, line_n, with_date=False):
+        assert line > 0
         if self.pad:
             raise Exception(
                 'read_encoded_line does not currently \
@@ -219,7 +225,7 @@ class MacomReader(object):
         author, date, text = linereader.readline(line_n).split(';')
 
         unescaped = util.clean(text)
-        unescaped = unescaped[200:]
+        unescaped = unescaped[self.ignore_n_characters:]
 
         encoded_channels = []
         for channel in self.channels:
