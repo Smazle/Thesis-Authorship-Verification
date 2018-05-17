@@ -798,36 +798,59 @@ That means that we lost about 5\% accuracy by removing the first 200 characters.
 
 Since the overall performance and runtime of our network described in iterations
 5 didn't perform very well, we chose a other route in terms of the \gls{RNN}'s.
-Using the approaches described in \cite{qian:2018}, with some minor changes. A
+Using the approaches described in \cite{qian:2018} with some minor changes. A
 keras generated model can be seen in Figure \ref{fig:r_network6}.
 
 \begin{figure}
-\centering
-\includegraphics[width=0.5\textwidth]{./pictures/experiments/network6.png}
-
-\caption{A keras generated model, showing the design of the \cite{qian:2018}
-    inspired network}
-
-\label{fig:r_network6}
+    \centering
+    \includegraphics[width=0.5\textwidth]{./pictures/experiments/network6.png}
+    \caption{A keras generated model, showing the design of the \cite{qian:2018}
+        inspired network.}
+    \label{fig:r_network6}
 \end{figure}
 
-Contrary to previous networks we've produced, this network works on
-a higher linguistic level, by using words and sentences rather than
-characters. It do so by initially taking representing each text as a
-sequence of sequences, where the our sequence is the sentence and 
-the inner one is the words of that sentence. We then proceed
-with representing each sentence as the sum of the embedded 
-words in it. Each words is a embedded to a vector of size 150,
-resulting in the summarized vector being the same size. Each of these
-summations are given to a bidirectional \gls{LSTM} layer, of 50 neurons.
-All this is done in a Siamese fashion, as such we have to branches
-of computation for each of the two texts given to the network,
-which are merged using the absolute difference. After
-this is done we simply feed this into out soft-max dense
-layer to get our predictions, as was done in the other networks
-as well.
+Contrary to previous networks we've produced, this network works on a higher
+linguistic level, by using words and sentences rather than characters. It does
+so by initially representing each text as a sequence of sequences. The outer
+sequence is a sentence and the inner sequence is the words of that sentence.
+We then proceed with representing each sentence as the sum of the embedded
+words in it. Each words is embedded to a vector of size 150, resulting in the
+summarized vector being the same size. Each of these summations are given to a
+bidirectional \gls{LSTM} layer, of 50 neurons. All this is done in a Siamese
+fashion so we have two branches of computation for each of the two texts given
+to the network, which are merged using the absolute difference. After this is
+done we simply feed this into a softmax dense layer to get the predictions.
 
-%TODO: Results
+All sentences are padded and truncated to have length 25 and all texts in each
+batch are padded with 0 vectors to have the same length in sentences as the
+longest text in the batch. We use a bidirectional \gls{LSTM} to allow the
+network to use context from both sides of the current timestep.
+
+We have shown the training accuracy and validation accuracy in Figure
+\ref{fig:network_7_accuracies} (clearly we need to train some more epochs which
+should be running at the moment). The highest validation accuracy was obtained
+in epoch two with accuracy 0.92075.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\textwidth]{./pictures/experiments/network_7_accuracies.png}
+    \caption{Shows the training and validation accuracies over the epochs of
+        training on the seventh iteration of our networks.}
+    \label{fig:network_7_accuracies}
+\end{figure}
+
+We also tried the network on the prediction system validation dataset with some
+surprising results. It seems like the network does not generalize very well to
+authors it has not seen before. So even though it had an accuracy of over 90
+percent on the validation dataset the prediction system results were not very
+good.
+
+For the 50/50 dataset the best legal configuration was $\theta = 0.0$ and a
+weight of 0.0 with an accuracy of 0.5 and an accusation error of 0.0.
+
+For the 4\% dataset the best legal configuration were $\theta = 0.0$ and a
+weight of 0.0 with an accuracy of 0.96 and an accusation error of 0.0.
+
 
 \subsection{Prediction System}
 
