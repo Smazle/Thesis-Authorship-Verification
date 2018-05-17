@@ -209,6 +209,10 @@ while True:
     except tf.errors.ResourceExhaustedError:
         reader.batch_size = int(reader.batch_size / 2)
         if args.retry and reader.batch_size >= 1:
+
+            steps_n = len(reader.training_problems) / reader.batch_size
+            val_steps_n = len(reader.validation_problems) / reader.batch_size
+
             args.weights = 'final_model.hdf5'
             print('MEMORY ERROR, RUNNING AGAIN WITH BATCH SIZE {}'
                   .format(reader.batch_size))
