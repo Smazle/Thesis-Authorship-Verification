@@ -615,8 +615,8 @@ different layers.
         \begin{equation}
             a^{<t>}_h = \psi_h\left(
                 \sum_{j=1}^I w_{hj} x^{<t>}_i +
-                \sum_{h'=1}^H w_{hh'} a^{<t-1>}_{h'},
-            \right)
+                \sum_{h'=1}^H w_{hh'} a^{<t-1>}_{h'}
+            \right),
         \end{equation}
 
         where $\psi_h$ is the activation function of the hidden unit, $I$ is the
@@ -690,10 +690,43 @@ different layers.
                 multiplication. Dotted lines show the movement of activations in
                 the previous timestep while full lines show movement of the
                 input in the current timestep.}
+            \label{fig:lstm}
         \end{figure}
 
-        %They have a cell
-        %that functions as its memory, a 
+        The input to the \gls{LSTM} is fed into 4 \gls{RNN} networks that also
+        receives the output from the previous timesteps. From bottom to top in
+        the Figure the networks are.
+
+        First a network combining the current input and the previous output into
+        an activation in the current timestep.
+
+        Second a network combining the current input and the previous output to
+        compute which part of the activation of the first network to keep. The
+        output of the second network is combined with the first network with an
+        elementwise multiplication. That means that if the second network output
+        a small value in a particular part of the output vector then that value
+        will disappear from the output of the first network. The \gls{LSTM}
+        therefore learns which part of the output to ignore.
+
+        Third a network combining the current input and the previous output to
+        decide what to forget. The output of the network is combined with the
+        current memory with an elementwise multiplication. So again if the
+        network outputs a small value it can choose to forget a certain item.
+        The network will learn when to throw things out of the current memory
+        and when to keep them. The output of the elementwise multiplication is
+        then combined with the current output via a elementwise addition. That
+        allows the current memory to influence the output of the network. The
+        added output and memory are transferred through an activation function
+        that makes sure that nothing blows up and we get numerical instability.
+
+        Fourth a network combining the current input and the previous output to
+        choose which values of the current output to select as the actual
+        output. The output of the fourth network will be combined with the
+        current model with an elementwise multiplication. So again the network
+        can select which values to keep by outputting large numbers and which
+        values to throw away by outputting small numbers. This network is the
+        last applied to the output and can therefore select which values should
+        be output.
 
     \item[Embedding:]
 
