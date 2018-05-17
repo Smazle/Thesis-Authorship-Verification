@@ -14,6 +14,9 @@ class ChannelType(Enum):
     SENTENCE = 'sentence'
 
 
+# TODO: Make creation of this class not use create random vocabulary mappings
+# but use the natural ordering of the vocabulary to create same mapping each
+# time. For example, map the character 'a' -> 1, 'b' -> 2, ...
 class Vocabulary:
 
     def __init__(self, vocabulary_frequency_cutoff, str_generator):
