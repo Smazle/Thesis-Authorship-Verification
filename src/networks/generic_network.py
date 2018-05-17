@@ -46,7 +46,6 @@ parser.add_argument(
     help='How many epochs to run.',
     default=100
 )
-
 parser.add_argument(
     '--retry',
     type=bool,
