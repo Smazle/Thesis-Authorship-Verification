@@ -44,7 +44,7 @@ def get_problems(macomreader, linereader, negative_chance=1.0):
     return problems
 
 
-def predict(macomreader, linereader, author_texts, non_author_text, w, theta):
+def predict(macomreader, linereader, author_texts, non_author_text):
     unknown_text = macomreader.read_encoded_line(linereader, non_author_text)
     unknown_text = list(map(lambda x: add_dim_start(x), unknown_text))
     times = np.zeros((len(author_texts)), dtype=np.int)
@@ -57,17 +57,26 @@ def predict(macomreader, linereader, author_texts, non_author_text, w, theta):
         known_text = list(map(lambda x: add_dim_start(x), known_text))
         predictions[i] = model.predict(known_text + unknown_text)[0, 1]
 
-    times = np.around((np.max(times) - times) / SECS_PER_MONTH)
-    weights = exp_norm(times, w)
-
-    return np.average(predictions, weights=weights) > theta
+    return predictions, times
 
 
-def evaluate(macomreader, linereader, problems, w, theta):
+def predict_all(macomreader, linereader, problems):
+    results = []
+
+    for unknown, knowns, label in problems:
+        predictions, times = predict(macomreader, linereader, knowns, unknown)
+        results.append((predictions, times))
+
+    return results
+
+
+def evaluate(labels, results, w, theta):
     tps, tns, fps, fns = 0, 0, 0, 0
-    for i, (unknown, knowns, label) in enumerate(problems):
-        prediction = predict(
-            macomreader, linereader, knowns, unknown, w, theta)
+    for label, (predictions, times) in zip(labels, results):
+        times = np.around((np.max(times) - times) / SECS_PER_MONTH)
+        weights = exp_norm(times, w)
+
+        prediction = np.average(predictions, weights=weights) > theta
 
         if prediction == label and label == True:
             tps = tps + 1
@@ -153,16 +162,18 @@ if __name__ == '__main__':
         problems = get_problems(reader, linereader,
                                 negative_chance=args.negative_chance)
 
-        positive_n = sum([1 for (_, _, label) in problems if label])
-        negative_n = sum([1 for (_, _, label) in problems if not label])
+        labels = [label for (_, _, label) in problems]
+        positive_n = len(list(filter(lambda x: x, labels)))
+        negative_n = len(list(filter(lambda x: not x, labels)))
 
         print('Generated {} positives and {} negatives'
               .format(positive_n, negative_n))
 
+        results = predict_all(macomreader, linereader, problems)
+
         print('Theta,Weights,TPS,TNS,FPS,FNS,ACC,ERR', end='\r\n')
         for (theta, weight) in itertools.product(theta, weights):
-            tps, tns, fps, fns = evaluate(
-                reader, linereader, problems, weight, theta)
+            tps, tns, fps, fns = evaluate(labels, results, weight, theta)
 
             accuracy = (tps + tns) / (tps + tns + fps + fns)
             if fns + tns == 0:
