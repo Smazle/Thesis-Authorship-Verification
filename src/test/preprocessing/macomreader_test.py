@@ -12,6 +12,7 @@ class TestMacomReader(unittest.TestCase):
             f.write(b'ID;Date;Text\n')
             f.write(b'author1;11-04-18;This is the first text\n')
             f.write(b'author1;11-04-17;This is the second text\n')
+            f.write(b'author2;12-05-44;This is a text from another mother\n')
             f.flush()
 
             reader = MacomReader(
@@ -20,7 +21,7 @@ class TestMacomReader(unittest.TestCase):
 
             with LineReader(f.name) as linereader:
                 encoded_line = reader.read_encoded_line(linereader, 1)
-                self.assertEqual(len(encoded_line), len('This is the first text'))
+                self.assertEqual(len(encoded_line[0]), len('This is the first text\n'))
 
 if __name__ == '__main__':
     unittest.main()
