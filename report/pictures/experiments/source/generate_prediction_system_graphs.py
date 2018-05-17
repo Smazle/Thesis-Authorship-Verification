@@ -1,11 +1,11 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
+import argparse
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import sys
-import argparse
 
 
 parse = argparse.ArgumentParser(
