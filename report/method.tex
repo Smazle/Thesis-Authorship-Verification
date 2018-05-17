@@ -671,8 +671,26 @@ different layers.
 
         There are several solutions to that problem and one of them are
         \gls{LSTM} networks. \gls{LSTM} networks are designed to be able to
-        remember things over long periouds of time, hence the name. They have
-        several \gls{RNN} constructs with specific purposes.
+        remember things over long periods of time, hence the name. They have
+        several \gls{RNN} constructs with specific purposes. They have an
+        \gls{RNN} responsible for computing the output given the current input
+        and the previous activation as described before. They have an \gls{RNN}
+        responsible for deciding what part of the input to ignore. They have
+        an \gls{RNN} responsible for deciding what to forget from the current
+        memory. And they have an \gls{RNN} responsible for deciding what part of
+        the output to select as the current output of the unit. We have showed
+        the structure of an \gls{LSTM} in Figure \ref{fig:lstm}.
+
+        \begin{figure}
+            \centering
+            \textbf{Structure of an \gls{LSTM}}\par\medskip
+            \includegraphics[scale=0.5]{./pictures/method/LSTM.png}
+            \caption{The structure of an \gls{LSTM} network. $\bigoplus$ means
+                an elementwise addition and $\bigotimes$ means an elementwise
+                multiplication. Dotted lines show the movement of activations in
+                the previous timestep while full lines show movement of the
+                input in the current timestep.}
+        \end{figure}
 
         %They have a cell
         %that functions as its memory, a 
