@@ -5,9 +5,22 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import sys
+import argparse
 
-# TODO: Use argparse instead of just using the first argument.
-data = pd.read_csv(sys.argv[1], skiprows=[0])
+
+parse = argparse.ArgumentParser(
+    'Produces a graph of the results of the prediction system'
+)
+
+parse.add_argument(
+    'data',
+    help='Path to the data needed presenting',
+    type=str
+)
+
+args = parse.parse_args()
+
+data = pd.read_csv(args.data, skiprows=[0])
 
 thetas = data.as_matrix(columns=['Theta'])
 weights = data.as_matrix(columns=['Weights'])
