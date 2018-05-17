@@ -8,11 +8,11 @@ from keras.models import Model
 def model(reader):
     inshape = (None, )
 
-    known_in = L.Input(shape=inshape, name='known_input')
-    unknown_in = L.Input(shape=inshape, name='unknown_input')
+    known_in = L.Input(shape=inshape, name='known_input', dtype='int32')
+    unknown_in = L.Input(shape=inshape, name='unknown_input', dtype='int32')
 
-    embedding = L.Embedding(len(reader.vocabulary_above_cutoff) + 2, 5,
-                            input_length=reader.max_len)
+    embedding = L.Embedding(len(reader.channels[0].vocabulary_above_cutoff) +
+                            2, 5)
 
     known_embed = embedding(known_in)
     unknown_embed = embedding(unknown_in)
@@ -42,7 +42,8 @@ def model(reader):
         conv16(unknown_embed))
 
     repr_known = L.Concatenate()([repr_known1, repr_known2, repr_known3])
-    repr_unknown = L.Concatenate()([repr_unknown1, repr_unknown2, repr_unknown3])
+    repr_unknown = L.Concatenate()([repr_unknown1,
+                                    repr_unknown2, repr_unknown3])
 
     abs_diff = L.merge(
         inputs=[repr_known, repr_unknown],

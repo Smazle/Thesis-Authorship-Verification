@@ -3,10 +3,8 @@
 \subsection{Computer Specifications}
 \verbinput{./data/DxDiag.txt}
 
-\subsection{Extended Delta Feature Selection}
-\begin{table}
-\centering
-\caption{The Extended Delta feature that gave the best accuracy}
+\subsection{Extended Delta Feature Selection}\label{sec:ed_feat}
+\begin{center}
 \begin{tabular}{ccc}
 Feature Type & Frequency Rank & Feature \\ \hline
 Char 4 Gram & 58 & ', og'\\
@@ -20,13 +18,10 @@ Word 4 Gram & 266 & ('jeg', 'vil', 'gerne', 'have')\\
 Char 10 Gram & 275 & 'myndighede'\\
 Char 10 Gram & 29 & ' Europa-Pa'\\
 \end{tabular}
-\end{table}
+\end{center}
 
-
-\subsection{SVM Feature Selection}
-\begin{table}
-\centering
-\caption{The SVM feature that gave the best accuracy}
+\subsection{SVM Feature Selection}\label{sec:svm_feat}
+\begin{center}
 \begin{tabular}{ccc}
 Feature Type & Frequency Rank & Feature \\ \hline
 Char 5 Gram & 13 & ', som'\\
@@ -105,10 +100,7 @@ Char 3 Gram & 278 & 'lde'\\
 Word 2 Gram & 486 & ('min', 'gruppe')\\
 Char 9 Gram & 192 & 'offentlig'\\
 \end{tabular}
-\end{table}
-
-
-
+\end{center}
 
 \subsection{Convolution	Filters}
 \begin{table}
