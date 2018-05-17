@@ -76,6 +76,8 @@ class CharVocabulary(Vocabulary):
         return txt
 
 
+# TODO: We may want to lower case the string here. I don't think the extra
+# words from different capitalizations does anything good for the models.
 class WordVocabulary(Vocabulary):
 
     def split_to_sequence(self, txt):
