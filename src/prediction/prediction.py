@@ -153,6 +153,7 @@ if __name__ == '__main__':
     reader.filepath = args.datafile,
     reader.validation_split = 1.0
     reader.batch_size = 1
+    reader.authors = {}
 
     with LineReader(args.datafile) as linereader:
         # We have to generate new authors since we are probably using a new
@@ -169,7 +170,7 @@ if __name__ == '__main__':
         print('Generated {} positives and {} negatives'
               .format(positive_n, negative_n))
 
-        results = predict_all(macomreader, linereader, problems)
+        results = predict_all(reader, linereader, problems)
 
         print('Theta,Weights,TPS,TNS,FPS,FNS,ACC,ERR', end='\r\n')
         for (theta, weight) in itertools.product(theta, weights):
