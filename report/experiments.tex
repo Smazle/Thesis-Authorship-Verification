@@ -6,8 +6,7 @@
 In this section we will go through the experiments performed in order to get
 our baseline results. While many different features can be used when performing
 \gls{NLP}, we chose the same features, as was used in \cite{US}, since they
-span several several of the different linguistic layers. The linguistic layers
-are different areas which all serve to describe a certain text. An example this
+span several several of the different linguistic layers. The linguistic layers are different areas which all serve to describe a certain text. An example this
 could be the character level layer, which as the name implies, focuses on the
 individual characters used in a specific text. Other examples of this, could
 be the sentence layer, that focuses on the sentences of the text, and the meta
@@ -394,15 +393,15 @@ experiments, we used a 0.5 threshold for classification.
             \end{minipage}                                                    \\
             \hline
 
-            GRU                                                                &
-            A gated recurrent unit is applied to the data according to the
-            description found in Section \ref{subsubsec:layers}.               &
-            \begin{minipage}[t]{\linewidth}
-            \begin{compactdesc}
-                \item[Unit] Number of neurons in the layer.
-            \end{compactdesc}
-            \end{minipage}                                                    \\
-            \hline
+            %GRU                                                                &
+            %A gated recurrent unit is applied to the data according to the
+            %description found in Section \ref{subsubsec:layers}.               &
+            %\begin{minipage}[t]{\linewidth}
+            %\begin{compactdesc}
+            %    \item[Unit] Number of neurons in the layer.
+            %\end{compactdesc}
+            %\end{minipage}                                                    \\
+            %\hline
 
             LSTM                                                               &
             A Long Short-Term Memory layer, which works according to the
@@ -477,8 +476,7 @@ known text be $K_i$ and the extracted features of the unknown text be $U_i$ then
 $K_0$ and $U_0$ correspond to the same feature extracted from the two texts. The
 concatenation merge function would then produce,
 
-\begin{equation}
-    merge(K, U) \rightarrow \left(
+\begin{equation} merge(K, U) \rightarrow \left(
         K_0, K_1, \dots, K_n, U_0, U_1, \dots, U_n
     \right)^T.
 \end{equation}
@@ -804,6 +802,40 @@ That means that we lost about 5\% accuracy by removing the first 200 characters.
 \end{figure}
 
 
+\subsubsection{Siamese Neural Network - Iteration 7}
+Since the overall performance and runtime of our network described in iterations
+5 didn't perform very well, we chose a other route in terms of the \gls{RNN}'s.
+Using the approaches described in \ref{qian:2018}, with some minor changes.
+A keras generated model can be seen in figure \ref{fig:r_network6}.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.5\textwidth]{./pictures/experiments/network6.png}
+
+\caption{A keras generated model, showing the design of the \ref{qian:2018}
+    inspired network}
+
+\label{fig:r_network6}
+\end{figure}
+
+Contrary to previous networks we've produced, this network works on
+a higher linguistic level, by using words and sentences rather than
+characters. It do so by initially taking representing each text as a
+sequence of sequences, where the our sequence is the sentence and 
+the inner one is the words of that sentence. We then proceed
+with representing each sentence as the sum of the embedded 
+words in it. Each words is a embedded to a vector of size 150,
+resulting in the summarized vector being the same size. Each of these
+summations are given to a bidirectional \gls{LSTM} layer, of 50 neurons.
+All this is done in a Siamese fashion, as such we have to branches
+of computation for each of the two texts given to the network,
+which are merged using the absolute difference. After
+this is done we simply feed this into out soft-max dense
+layer to get our predictions, as was done in the other networks
+as well.
+
+%TODO: Results
+
 \subsection{Prediction System}
 
 Our prediction system has several hyperparameters we have to choose to get
@@ -866,8 +898,7 @@ function. Then if the prediction system returns the correct result 0 we have,
     e = \left|
         P(f, w, T_\alpha \setminus \{t_u\}, t_u, \theta) -
         \mathbbm{1}_{T_\alpha}(t_u)
-    \right| = |0 - 0| = 0,
-\end{equation}
+    \right| = |0 - 0| = 0, \end{equation}
 
 and if the prediction system returns the incorrect result 1 we have,
 
@@ -990,7 +1021,13 @@ validation results in Figure \ref{fig:prediction_system_results_2}.
 TODO:
 \begin{itemize}
     \item Describe Optimizers
-    \item Describe RNN
-    \item Use squared distance as merge function to get larger differences
-        between close and far apart.
 \end{itemize}
+
+Questions:
+\begin{itemize}
+    \item Pre-trained embeddings?
+    \item Ways to directly compare Baselines with Neural Networks
+\end{itemize}  
+
+
+
