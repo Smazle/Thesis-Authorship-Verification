@@ -216,7 +216,7 @@ class MacomReader(object):
     # encoded sequence. The list ordering corresponds to the self.channels
     # parameter.
     def read_encoded_line(self, linereader, line_n, with_date=False):
-        assert line > 0
+        assert line_n > 0
         if self.pad:
             raise Exception(
                 'read_encoded_line does not currently \
