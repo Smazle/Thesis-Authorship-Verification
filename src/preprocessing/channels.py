@@ -19,7 +19,8 @@ class Vocabulary:
     def __init__(self, vocabulary_frequency_cutoff, str_generator):
 
         if vocabulary_frequency_cutoff < 0 or vocabulary_frequency_cutoff > 1:
-            raise Exception('vocabulary_frequency_cutoff should be between 0 and 1')
+            raise Exception(
+                'vocabulary_frequency_cutoff should be between 0 and 1')
 
         self.vocabulary_frequency_cutoff = vocabulary_frequency_cutoff
         self.vocabulary = set()
@@ -62,8 +63,8 @@ class Vocabulary:
     def encode(self, txt):
         sequence = self.split_to_sequence(txt)
         return np.array(list(map(lambda x: self.vocabulary_map[x]
-                        if x in self.vocabulary_map else
-                        self.garbage, sequence)))
+                                 if x in self.vocabulary_map else
+                                 self.garbage, sequence)))
 
     def split_to_sequence(self, txt):
         raise NotImplementedError('Subclasses should implement this.')
@@ -101,7 +102,8 @@ class SentenceVocabulary:
         return encoded
 
 
-def vocabulary_factory(channeltype, vocabulary_frequency_cutoff, strgen):
+def vocabulary_factory(channeltype, vocabulary_frequency_cutoff,
+                       strgen, sentence_len=None):
     if channeltype == ChannelType.CHAR:
         return CharVocabulary(vocabulary_frequency_cutoff, strgen)
     elif channeltype == ChannelType.WORD:
@@ -110,7 +112,10 @@ def vocabulary_factory(channeltype, vocabulary_frequency_cutoff, strgen):
         if vocabulary_frequency_cutoff != 0:
             raise Exception('Vocabulary cutoff not supported for sentences.')
 
-        # TODO: Don't hardcode sentence len.
-        return SentenceVocabulary(strgen, 25)
+        if sentence_len is None:
+            raise Exception('When using the SENTENCE channel, a sentence' +
+                            'length must be provided')
+
+        return SentenceVocabulary(strgen, sentence_len)
     else:
         raise Exception('Illegal state, unknown channel.')

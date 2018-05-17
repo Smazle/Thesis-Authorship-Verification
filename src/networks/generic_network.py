@@ -129,6 +129,17 @@ create_reader.add_argument(
     nargs='+',
     default=['char']
 )
+
+create_reader.add_argument(
+    '-sl',
+    '--sentence_length',
+    type=int,
+    help='If channel SENTENCE is used.\
+                This determines the length of each sentence',
+    default=None,
+    nargs='?'
+)
+
 args = parser.parse_args()
 
 # Either load reader from file or create a new one.
@@ -141,12 +152,14 @@ else:
 
     print(('Creating new MaCom reader with parameters, batch_size={}, ' +
            'vocabulary_frequency_cutoff={}, batch_normalization={}, ' +
-           'pad={}, binary={}, channels={}'
+           'pad={}, binary={}, channels={}, sentence_length={}'
            ).format(args.batch_size,
                     args.vocabulary_frequency_cutoff,
                     args.batch_normalization,
                     args.pad, args.binary,
-                    channels))
+                    channels,
+                    args.sentence_length
+                    ))
 
     reader = MacomReader(
         args.datafile,
@@ -156,7 +169,8 @@ else:
         batch_normalization=args.batch_normalization,
         pad=args.pad,
         binary=args.binary,
-        channels=channels
+        channels=channels,
+        sentence_len=args.sentence_length
     )
 
     print('Writing new MaCom reader to reader.p')

@@ -93,11 +93,15 @@ class MacomReader(object):
     # Whether to return y as binary or categorical crossentropy.
     binary = None
 
+    # Sentence length, in case of a sentence channel being used
+    sentence_length = None
+
     # TODO: Take argument specifying whether or not to ignore first line in
     # file.
     def __init__(self, filepath, batch_size=32, validation_split=0.8,
                  vocabulary_frequency_cutoff=0.0, pad=True, binary=False,
-                 batch_normalization='truncate', channels=[ChannelType.CHAR]):
+                 batch_normalization='truncate', channels=[ChannelType.CHAR],
+                 sentence_len=None):
 
         if validation_split > 1.0 or validation_split < 0.0:
             raise ValueError('validation_split between 0 and 1 required')
@@ -107,18 +111,21 @@ class MacomReader(object):
 
         for channel in channels:
             if channel not in [ChannelType.CHAR, ChannelType.WORD,
-                    ChannelType.SENTENCE]:
-                raise ValueError('Only char, word or sentence channels allowed')
+                               ChannelType.SENTENCE]:
+                raise ValueError(
+                    'Only char, word or sentence channels allowed')
 
-        # Save parameters.
+                # Save parameters.
         self.filepath = filepath
         self.batch_size = batch_size
         self.validation_split = validation_split
-        self.vocabulary_frequency_cutoff = vocabulary_frequency_cutoff # TODO: Should be list.
+        # TODO: Should be list.
+        self.vocabulary_frequency_cutoff = vocabulary_frequency_cutoff
         self.binary = binary
         self.pad = pad
         self.batch_normalization = batch_normalization
         self.channeltypes = channels
+        self.sentence_length = sentence_len
 
         if self.binary:
             self.label_true = np.array([1])
@@ -149,10 +156,13 @@ class MacomReader(object):
 
         self.channels = []
         for channeltype in self.channeltypes:
-            self.channels.append(vocabulary_factory(channeltype,
-                                 self.vocabulary_frequency_cutoff, linegen()))
+            self.channels.append(
+                vocabulary_factory(channeltype,
+                                   self.vocabulary_frequency_cutoff,
+                                   linegen(), self.sentence_length))
 
     def generate_authors(self, linereader):
+
         for i, line in enumerate(linereader.readlines(skipfirst=True)):
             author, date, text = line.split(';')
             text = util.clean(text)
@@ -199,9 +209,12 @@ class MacomReader(object):
     # parameter.
     def read_encoded_line(self, linereader, line_n, with_date=False):
         if self.pad:
-            raise Exception('read_encoded_line does not currently work with global padding')
+            raise Exception(
+                'read_encoded_line does not currently \
+                        work with global padding')
 
         author, date, text = linereader.readline(line_n).split(';')
+
         unescaped = util.clean(text)
         unescaped = unescaped[200:]
 
@@ -224,7 +237,8 @@ class MacomReader(object):
 
             while True:
                 batch = list(itertools.islice(problems, self.batch_size))
-                known_inputs, unknown_inputs, y = self.generate_batch(batch, reader)
+                known_inputs, unknown_inputs, y = self.generate_batch(
+                    batch, reader)
                 yield known_inputs + unknown_inputs, y
 
     # TODO: Refactor the function. It looks like shit.
@@ -251,9 +265,11 @@ class MacomReader(object):
         if self.batch_normalization == 'truncate':
             for i in range(len(self.channels)):
                 known_channel = list(map(lambda x: x[i], knowns))
-                known_truncate_len = min(map(lambda x: x.shape[0], known_channel))
+                known_truncate_len = min(
+                    map(lambda x: x.shape[0], known_channel))
                 unknown_channel = list(map(lambda x: x[i], unknowns))
-                unknown_truncate_len = min(map(lambda x: x.shape[0], unknown_channel))
+                unknown_truncate_len = min(
+                    map(lambda x: x.shape[0], unknown_channel))
 
                 X_known = sequence.pad_sequences(
                     known_channel,
