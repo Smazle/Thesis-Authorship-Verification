@@ -233,7 +233,6 @@ while True:
                   .format(reader.batch_size))
             continue
     finally:
-        # TODO: Load best weights.
         model.save('final_model.hdf5')
 
     break

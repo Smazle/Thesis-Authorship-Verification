@@ -247,61 +247,51 @@ class MacomReader(object):
                     batch, reader)
                 yield known_inputs + unknown_inputs, y
 
-    # TODO: Refactor the function. It looks like shit.
     def generate_batch(self, batch, linereader):
         knowns = []
         unknowns = []
 
-        if self.binary:
-            y = np.zeros((self.batch_size, 1))
-        else:
-            y = np.zeros((self.batch_size, 2))
+        y = np.zeros((self.batch_size, abs(int(self.binary) - 2)))
 
         for (i, (known, unknown, label)) in enumerate(batch):
             knowns.append(self.read_encoded_line(linereader, known))
             unknowns.append(self.read_encoded_line(linereader, unknown))
 
-            if label == 0:
-                y[i] = self.label_false
-            else:
-                y[i] = self.label_true
+            y[i] = self.label_true if label else self.label_false
 
         X_knowns = []
         X_unknowns = []
-        if self.batch_normalization == 'truncate':
-            for i in range(len(self.channels)):
-                known_channel = list(map(lambda x: x[i], knowns))
-                known_truncate_len = min(
-                    map(lambda x: x.shape[0], known_channel))
-                unknown_channel = list(map(lambda x: x[i], unknowns))
-                unknown_truncate_len = min(
-                    map(lambda x: x.shape[0], unknown_channel))
 
-                X_known = sequence.pad_sequences(
-                    known_channel,
-                    value=self.padding,
-                    maxlen=known_truncate_len,
-                    truncating='post')
-                X_unknown = sequence.pad_sequences(
-                    unknown_channel,
-                    value=self.padding,
-                    maxlen=unknown_truncate_len,
-                    truncating='post')
+        for i, channel in enumerate(self.channels):
+            known_channel = [x[i] for x in knowns]
+            unknown_channel = [x[i] for x in unknowns]
 
-                X_knowns.append(X_known)
-                X_unknowns.append(X_unknown)
-        elif self.batch_normalization == 'pad':
-            for i, channel in enumerate(self.channels):
-                known_channel = list(map(lambda x: x[i], knowns))
-                unknown_channel = list(map(lambda x: x[i], unknowns))
-                X_known = sequence.pad_sequences(
-                    known_channel, value=channel.padding, padding='post')
-                X_unknown = sequence.pad_sequences(
-                    unknown_channel, value=channel.padding, padding='post')
+            min_known = min_unknown = None
+            pad = channel.padding
 
-                X_knowns.append(X_known)
-                X_unknowns.append(X_unknown)
-        else:
-            raise Exception('should never happen')
+            if self.batch_normalization == 'truncate':
+                truncs = [(len(x), len(y)) for x, y in
+                          zip(known_channel, unknown_channel)]
+                pad = self.pad
+                min_known, min_unknown = (min(x) for x in zip(*truncs))
+
+            X_known = sequence.pad_sequences(
+                known_channel,
+                value=pad,
+                maxlen=min_known,
+                truncating='post',
+                padding='post'
+            )
+
+            X_unknown = sequence.pad_sequences(
+                unknown_channel,
+                value=pad,
+                maxlen=min_unknown,
+                truncating='post',
+                padding='post'
+            )
+
+            X_knowns.append(X_known)
+            X_unknowns.append(X_unknown)
 
         return X_knowns, X_unknowns, y

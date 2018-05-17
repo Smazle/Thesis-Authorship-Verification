@@ -9,6 +9,7 @@
 *.gz
 *.p
 *.npy
+*.pyc
 *.hdf5
 
 *__pycache__

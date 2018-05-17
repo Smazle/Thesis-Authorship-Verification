@@ -5,13 +5,14 @@ import argparse
 import numpy as np
 from collections import Counter
 import matplotlib.pyplot as plt
-import sys; sys.path.append('../src/util/')
+import sys
+sys.path.append('../src/util/')
 import utilities as util
 from nltk.tokenize import sent_tokenize, word_tokenize
 
 
 def fix_space(x):
-    return x.replace(' ', '{SPACE}')
+    return x.replace(' ', '\\s')
 
 
 parser = argparse.ArgumentParser(
@@ -101,9 +102,10 @@ print('\nAverage Sentence Count', np.average(sentence_count))
 print('Median Sentence Count', np.median(sentence_count))
 print('Min Sentence Count', np.min(sentence_count))
 print('Max Sentence Count', np.max(sentence_count))
-print('Texts with over 1000 sentences', len(list(filter(lambda x: x > 1000, sentence_count))))
+print('Texts with over 1000 sentences', len(
+    list(filter(lambda x: x > 1000, sentence_count))))
 
-#11805
+# 11805
 f.close()
 f = open(args.datafile, 'r', encoding='utf-8')
 f.readline()  # Skip first line.
