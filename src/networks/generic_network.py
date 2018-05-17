@@ -97,8 +97,10 @@ create_reader.add_argument(
     '--vocabulary-frequency-cutoff',
     type=float,
     help='Characters with a frequency below this threshold is ignored by the' +
-    'reader',
-    default=1 / 100000
+    'reader. Providing several applies a differnet theshold to the differnet' +
+    'channels',
+    default=[1 / 100000.0],
+    nargs='+'
 )
 create_reader.add_argument(
     '-bn',
