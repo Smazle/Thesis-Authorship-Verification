@@ -96,13 +96,10 @@ class MacomReader(object):
     # Sentence length, in case of a sentence channel being used
     sentence_length = None
 
-    # Denotes if the first line in the data file should be skipped
-    skipfirst = True
-
     def __init__(self, filepath, batch_size=32, validation_split=0.8,
                  vocabulary_frequency_cutoff=[0.0], pad=True, binary=False,
                  batch_normalization='truncate', channels=[ChannelType.CHAR],
-                 sentence_len=None, skipfirst=True):
+                 sentence_len=None):
 
         if validation_split > 1.0 or validation_split < 0.0:
             raise ValueError('validation_split between 0 and 1 required')
@@ -127,7 +124,6 @@ class MacomReader(object):
         self.batch_normalization = batch_normalization
         self.channeltypes = channels
         self.sentence_length = sentence_len
-        self.skipfirst = skipfirst
 
         if len(self.vocabulary_frequency_cutoff) != len(self.channeltypes):
             self.vocabulary_frequency_cutoff = [0.0] * len(channels)
@@ -169,7 +165,7 @@ class MacomReader(object):
     def generate_authors(self, linereader):
 
         for i, line in enumerate(
-                linereader.readlines(skipfirst=self.skipfirst)):
+                linereader.readlines(skipfirst=True)):
             author, date, text = line.split(';')
             text = util.clean(text)
 
