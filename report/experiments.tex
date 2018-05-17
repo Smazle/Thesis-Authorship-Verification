@@ -6,7 +6,8 @@
 In this section we will go through the experiments performed in order to get
 our baseline results. While many different features can be used when performing
 \gls{NLP}, we chose the same features, as was used in \cite{US}, since they
-span several several of the different linguistic layers. The linguistic layers are different areas which all serve to describe a certain text. An example this
+span several several of the different linguistic layers. The linguistic layers
+are different areas which all serve to describe a certain text. An example this
 could be the character level layer, which as the name implies, focuses on the
 individual characters used in a specific text. Other examples of this, could
 be the sentence layer, that focuses on the sentences of the text, and the meta
@@ -101,7 +102,7 @@ wouldn't contribute anything. \gls{POS}-tag-N-grams were a really big burden
 computationally, as such a reduction in possible N-values, had to be made.
 
 These features were extracted from the same data-set described earlier in
-section \ref{sec:data}. However it wasn't beholden to the same exact limits to
+Section \ref{sec:data}. However it wasn't beholden to the same exact limits to
 character and unique characters. In the case of the upper limit the lack of
 memory wasn't nearly as severe as in the case of our \gls{NN}s. As for the lower
 limit, and natural boundary would occur throughout the extraction process.
@@ -220,8 +221,9 @@ hyper parameters we average the performance of the method over all unique
 authors in the training set, in a manner very similar to the feature selection.
 We make use of the same 3-fold stratified cross validation, and arrange each
 authors with set of opposing set of text, amounting to the same number he has
-written himself. The accuracy of each parameter configuration can be seen in
-table \ref{sec:ed_feat} for \gls{KNN}, and \ref{sec:svm_feat} for \gls{SVM}.
+written himself. The accuracy of each parameter configuration can be seen
+in Table \ref{sec:ed_feat} for \gls{KNN}, and Table \ref{sec:svm_feat} for
+\gls{SVM}.
 
 \begin{table}[h]
 \centering
@@ -392,16 +394,6 @@ experiments, we used a 0.5 threshold for classification.
             \end{compactdesc}
             \end{minipage}                                                    \\
             \hline
-
-            %GRU                                                                &
-            %A gated recurrent unit is applied to the data according to the
-            %description found in Section \ref{subsubsec:layers}.               &
-            %\begin{minipage}[t]{\linewidth}
-            %\begin{compactdesc}
-            %    \item[Unit] Number of neurons in the layer.
-            %\end{compactdesc}
-            %\end{minipage}                                                    \\
-            %\hline
 
             LSTM                                                               &
             A Long Short-Term Memory layer, which works according to the
@@ -803,16 +795,17 @@ That means that we lost about 5\% accuracy by removing the first 200 characters.
 
 
 \subsubsection{Siamese Neural Network - Iteration 7}
+
 Since the overall performance and runtime of our network described in iterations
 5 didn't perform very well, we chose a other route in terms of the \gls{RNN}'s.
-Using the approaches described in \ref{qian:2018}, with some minor changes.
-A keras generated model can be seen in figure \ref{fig:r_network6}.
+Using the approaches described in \cite{qian:2018}, with some minor changes. A
+keras generated model can be seen in Figure \ref{fig:r_network6}.
 
 \begin{figure}
 \centering
 \includegraphics[width=0.5\textwidth]{./pictures/experiments/network6.png}
 
-\caption{A keras generated model, showing the design of the \ref{qian:2018}
+\caption{A keras generated model, showing the design of the \cite{qian:2018}
     inspired network}
 
 \label{fig:r_network6}
