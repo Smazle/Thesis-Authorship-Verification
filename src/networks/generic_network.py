@@ -207,9 +207,9 @@ while True:
             callbacks=callbacks
         )
     except tf.errors.ResourceExhaustedError:
+        reader.batch_size = int(reader.batch_size / 2)
         if args.retry and reader.batch_size >= 1:
             args.weights = 'final_model.hdf5'
-            reader.batch_size = int(reader.batch_size / 2)
             print('MEMORY ERROR, RUNNING AGAIN WITH BATCH SIZE {}'
                   .format(reader.batch_size))
             continue
