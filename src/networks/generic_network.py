@@ -11,6 +11,7 @@ import jsonpickle
 import jsonpickle.ext.numpy as jsonpickle_numpy
 from ..preprocessing.channels import ChannelType
 import tensorflow as tf
+
 # Make sure that jsonpickle works on numpy arrays.
 jsonpickle_numpy.register_handlers()
 
