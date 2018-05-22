@@ -67,6 +67,9 @@ class TestMacomReader(unittest.TestCase):
                 problem_1_len = max(f.text_lengths[1], f.text_lengths[2])
                 self.assertEqual(knowns[0].shape, (2, problem_1_len))
 
+                problem_2_len = max(f.text_lengths[2], f.text_lengths[3])
+                self.assertEqual(unknowns[0].shape, (2, problem_2_len))
+
 
 class FileOne:
 
