@@ -49,6 +49,31 @@ class TestMacomReader(unittest.TestCase):
                     encoded_line[0][5], reader.channels[0].vocabulary_map['\n']
                 )
 
+    # Reading with $NL$ should convert that to '\n'.
+    def test_read_encoded_line_4(self):
+        with FileOne() as f:
+            reader = MacomReader(
+                f.name, batch_size=1, pad=False, batch_normalization='pad',
+                min_len_characters=0, ignore_n_characters=0,
+                channels=[ChannelType.SENTENCE],
+                vocabulary_frequency_cutoff=[0.0],
+                sentence_len=10
+            )
+
+            mapping = reader.channels[0].word_vocab.vocabulary_map
+
+            with LineReader(f.name) as linereader:
+                encoded_line = reader.read_encoded_line(linereader, 5)[0]
+                self.assertEqual(encoded_line.shape, (3, 10))
+
+                line1 = np.array([mapping['Multiple']] + ([0] * 9))
+                line2 = np.array([mapping['Sentences']] + ([0] * 9))
+                line3 = np.array([mapping['Test']] + ([0] * 9))
+
+                self.assertTrue((encoded_line[0] == line1).all())
+                self.assertTrue((encoded_line[1] == line2).all())
+                self.assertTrue((encoded_line[2] == line3).all())
+
     def test_generate_batch_1(self):
         with FileOne() as f:
             reader = MacomReader(
@@ -102,6 +127,7 @@ class FileOne:
         b'author1;11-04-17;This is the second text\n',
         b'author2;12-05-44;This is a text from another mother\n',
         b'author2;11-11-94;This $NL$ text $NL$ contains $NAME$.\n',
+        b'author3;11-12-88;Multiple. Sentences. Test.\n'
     ]
 
     text_lengths = list(
