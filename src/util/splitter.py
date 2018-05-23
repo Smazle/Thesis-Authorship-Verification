@@ -7,23 +7,28 @@ import pandas as pd
 
 
 parser = argparse.ArgumentParser(
-    'Splits the provided data into chunks based on the \
-     given parameters'
+    'Splits the provided data into two pieces based on the \
+     given parameters.'
 )
 parser.add_argument(
     'datafile',
     type=str,
     help='Path to the data file from which to extract a certain amount \
-          of authors'
+          of authors.'
 )
 parser.add_argument(
     'outfile',
     type=str,
-    help='Path to miniturized output file'
+    help='Path to output file of given size.'
+)
+parser.add_argument(
+    'rest',
+    type=str,
+    help='Path to file where the rest of the authors are written.'
 )
 parser.add_argument(
     '--extract',
-    help='How many authors to extract, float for percentage, int for count',
+    help='How many authors to extract into outfile.',
     type=int
 )
 args = parser.parse_args()
@@ -33,12 +38,13 @@ authors = data.as_matrix(columns=['StudentId']).flatten()
 unique_authors = np.unique(authors)
 
 split = int(args.extract)
-unique_authors = np.random.choice(unique_authors, split, replace=False)
+chosen_authors = np.random.choice(unique_authors, split, replace=False)
 
-idx = np.isin(authors, unique_authors)
-idx = np.where(idx)[0]
-output = data.iloc[idx]
-output.index = range(len(output))
+outfile_content = data.iloc[np.where(np.isin(authors, chosen_authors))]
+rest = data.iloc[np.where(np.logical_not(np.isin(authors, chosen_authors)))]
 
-output.to_csv(args.outfile, sep=';', encoding='utf-8', index=False)
-print('File written to {}'.format(args.outfile))
+outfile_content.index = range(len(outfile_content))
+rest.index = range(len(rest))
+
+outfile_content.to_csv(args.outfile, sep=';', encoding='utf-8', index=False)
+rest.to_csv(args.rest, sep=';', encoding='utf-8', index=False)
