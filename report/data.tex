@@ -81,9 +81,6 @@ This caused a elevation of unique characters used. However the addition of these
 new character wont have an impact on the data integrity either, due to the
 $\frac{1}{100.000}$ frequency threshold described earlier.
 
-% TODO: Describe how we constructed the different data-set, and the different
-% samples
-
 We split the dataset we are given into multiple datasets for different
 purposes. We have shown an illustration of the splits we have made in Figure
 \ref{fig:data_split}. We define 7 different datasets with the names $A, B,
@@ -117,3 +114,15 @@ purposes. We have shown an illustration of the splits we have made in Figure
         on problem instances and not on authors.}
     \label{fig:data_split}
 \end{figure}
+
+All of the neural networks we train are Siamese Neural Networks. They all
+work by comparing two texts at a time. We therefore had to generate problem
+instances that contained two texts from either the same or different authors and
+a class that reflected that. For each author $\alpha$ in the training dataset
+$G$ we generate all possible combinations of two of the texts in $T_\alpha$
+as positive samples. We also generate the same number of negative samples by
+taking a random text in $T_\alpha$ and a random text in $\overline{T_\alpha}$.
+That means that in total the number of problems we generate for each author is
+$2\frac{\left|T_\alpha\right|!}{2!(\left|T_\alpha\right|-2)!}$. The neural
+networks are trained on these problem instances. We generate problems in the
+same way for the network training validation dataset $H$.
