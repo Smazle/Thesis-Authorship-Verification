@@ -3,13 +3,11 @@
 
 Examples of how to run networks.
 
-## python -m src.networks.generic\_network
+### python -m src.networks.generic\_network
 
-## usage: generic\_network.py 
-[-h] [--history HISTORY] [--graph GRAPH]
-                          [--weights WEIGHTS] [--epochs EPOCHS]
-                          [--retry [RETRY]]
-                          networkname {load-reader,create-reader} ...
+#### usage: generic\_network.py 
+[-h]  [--history HISTORY] [--graph GRAPH] [--weights WEIGHTS] [--epochs EPOCHS]
+[--retry [RETRY]] networkname {load-reader,create-reader} ...
 
 Simple NN for authorship verification
 
@@ -30,7 +28,7 @@ optional arguments:
                         batch_size?
 
 
-## usage: generic\_network.py networkname load-reader 
+#### usage: generic\_network.py networkname load-reader 
 [-h] reader
 
 positional arguments:
@@ -42,17 +40,15 @@ optional arguments:
 
 
 
-## usage: generic\_network.py networkname create-reader 
+#### usage: generic\_network.py networkname create-reader 
 
-[-h] [-b BATCH_SIZE]
-                                                    [-vfc VOCABULARY_FREQUENCY_CUTOFF [VOCABULARY_FREQUENCY_CUTOFF ...]]
-                                                    [-bn BATCH_NORMALIZATION]
-                                                    [--pad PAD]
-                                                    [--binary BINARY]
-                                                    [--channels CHANNELS [CHANNELS ...]]
-                                                    [-sl [SENTENCE_LENGTH]]
-                                                    [training_file]
-                                                    [validation_file]
+[-h] [-b BATCH_SIZE] 
+[-vfc VOCABULARY\_FREQUENCY\_CUTOFF [VOCABULARY\_FREQUENCY\_CUTOFF ...]]
+[-bn BATCH\_NORMALIZATION] [--pad PAD] [--binary BINARY]
+[--channels CHANNELS [CHANNELS ...]]
+[-sl [SENTENCE\_LENGTH]]
+[training\_file]
+[validation\_file]
 
 positional arguments:
   training\_file         Path to file containing training data.
@@ -81,7 +77,7 @@ optional arguments:
 
 
 
-## Network Names Available:
+#### Network Names Available:
 * CNN's
     * network2
     * network3
