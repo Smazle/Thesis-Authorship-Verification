@@ -2,34 +2,31 @@
 # -*- coding: utf-8 -*-
 
 import argparse
-import pandas as pd
 import numpy as np
+import pandas as pd
 
 
-parse = argparse.ArgumentParser(
+parser = argparse.ArgumentParser(
     'Splits the provided data into chunks based on the \
-                given parameters'
+     given parameters'
 )
-
-parse.add_argument(
+parser.add_argument(
     'datafile',
     type=str,
     help='Path to the data file from which to extract a certain amount \
-                of authors'
+          of authors'
 )
-parse.add_argument(
+parser.add_argument(
     'outfile',
     type=str,
     help='Path to miniturized output file'
 )
-
-parse.add_argument(
+parser.add_argument(
     '--extract',
     help='How many authors to extract, float for percentage, int for count',
     type=int
 )
-
-args = parse.parse_args()
+args = parser.parse_args()
 
 data = pd.read_csv(args.datafile, delimiter=';')
 authors = data.as_matrix(columns=['StudentId']).flatten()
