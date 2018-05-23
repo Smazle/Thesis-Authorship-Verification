@@ -162,14 +162,14 @@ class MacomReader(object):
             text = util.clean(text)
 
             if len(text) > self.max_len_characters:
-                print('WARNING: Skipping text longer than {} characters \
-                       on line {}'.format(self.max_len_characters, i + 1))
+                print('WARNING: Skipping text longer than {} characters ' \
+                      'on line {}'.format(self.max_len_characters, i + 1))
             elif len(text) < self.min_len_characters:
-                print('WARNING: Skipping text shorter than {} characters \
-                      on line {}'.format(self.min_len_characters, i + 1))
+                print('WARNING: Skipping text shorter than {} characters ' \
+                      'on line {}'.format(self.min_len_characters, i + 1))
             elif len(sent_tokenize(text)) > self.max_len_sentences:
-                print('WARNING: Skipping text with more than {} sentences \
-                      on line {}'.format(self.max_len_sentences, i + 1))
+                print('WARNING: Skipping text with more than {} sentences ' \
+                      'on line {}'.format(self.max_len_sentences, i + 1))
             elif author in authors:
                 authors[author].append(i + 1)
             else:
