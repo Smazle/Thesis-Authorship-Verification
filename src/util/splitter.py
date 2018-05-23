@@ -23,7 +23,8 @@ parser.add_argument(
 )
 parser.add_argument(
     '--extract',
-    help='How many authors to extract, float for percentage, int for count'
+    help='How many authors to extract, float for percentage, int for count',
+    type=int
 )
 args = parser.parse_args()
 
@@ -31,18 +32,13 @@ data = pd.read_csv(args.datafile, delimiter=';')
 authors = data.as_matrix(columns=['StudentId']).flatten()
 unique_authors = np.unique(authors)
 
-try:
-    split = int(args.extract)
-    unique_authors = np.random.choice(unique_authors, split, replace=False)
-except ValueError:
-    split = float(args.extract)
-    unique_authors = np.random.choice(
-        unique_authors, int(len(authors) * split), replace=False)
+split = int(args.extract)
+unique_authors = np.random.choice(unique_authors, split, replace=False)
 
 idx = np.isin(authors, unique_authors)
 idx = np.where(idx)[0]
 output = data.iloc[idx]
 output.index = range(len(output))
 
-print(output.shape)
 output.to_csv(args.outfile, sep=';', encoding='utf-8', index=False)
+print('File written to {}'.format(args.outfile))
