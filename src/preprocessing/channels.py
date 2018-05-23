@@ -12,6 +12,7 @@ class ChannelType(Enum):
     CHAR = 'char'
     WORD = 'word'
     SENTENCE = 'sentence'
+    WORD_LOWER = 'word-lower'
 
 
 # TODO: Make creation of this class not use create random vocabulary mappings
@@ -79,18 +80,22 @@ class CharVocabulary(Vocabulary):
         return txt
 
 
-# TODO: We may want to lower case the string here. I don't think the extra
-# words from different capitalizations does anything good for the models.
 class WordVocabulary(Vocabulary):
 
     def split_to_sequence(self, txt):
         return util.wordProcess(txt)
 
 
+class LowercaseWordVocabulary(Vocabulary):
+
+    def split_to_sequence(self, txt):
+        return util.wordProcess(txt.lower())
+
+
 class SentenceVocabulary:
 
     def __init__(self, str_generator, sentence_len):
-        self.word_vocab = WordVocabulary(0.0, str_generator)
+        self.word_vocab = LowercaseWordVocabulary(0.0, str_generator)
         self.sentence_len = sentence_len
         self.padding = np.zeros((self.sentence_len, ))
         self.vocabulary_above_cutoff = self.word_vocab.vocabulary_above_cutoff
@@ -123,5 +128,7 @@ def vocabulary_factory(channeltype, vocabulary_frequency_cutoff,
                             'length must be provided')
 
         return SentenceVocabulary(strgen, sentence_len)
+    elif channeltype == ChannelType.WORD_LOWER:
+        return LowercaseWordVocabulary(vocabulary_frequency_cutoff, strgen)
     else:
         raise Exception('Illegal state, unknown channel.')
