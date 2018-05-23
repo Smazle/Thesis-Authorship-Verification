@@ -60,7 +60,8 @@ for line in f:
     tokens = sent_tokenize(text)
     sentence_count += [len(tokens)]
     sent_words = [len(util.wordProcess(x)) for x in tokens]
-    sentences += sent_words
+
+    sentences += [sum(sent_words) / len(tokens)] if len(tokens) != 0 else [0]
 
     cleanText = util.wordProcess(text)
     words.append(len(cleanText))
@@ -85,6 +86,7 @@ stats['avg_char_count'] = np.average(lengths)
 stats['med_char_count'] = np.median(lengths)
 stats['max_char_count'] = np.max(lengths)
 stats['min_char_count'] = np.min(lengths)
+stats['std_char_count'] = np.std(lengths)
 stats['char_under_min'] = len(list(filter(lambda x: x < 400, lengths)))
 stats['char_over_max'] = len(list(filter(lambda x: x > 30000, lengths)))
 
@@ -92,25 +94,30 @@ stats['avg_char_unique'] = np.average(uniques)
 stats['med_char_unique'] = np.median(uniques)
 stats['max_char_unique'] = np.max(uniques)
 stats['min_char_unique'] = np.min(uniques)
+stats['std_char_unique'] = np.std(uniques)
 stats['unique_char_over_max'] = len(list(filter(lambda x: x >= 100, uniques)))
 
 stats['avg_word_count'] = np.average(words)
 stats['med_word_count'] = np.median(words)
 stats['max_word_count'] = np.max(words)
 stats['min_word_count'] = np.min(words)
+stats['std_word_count'] = np.std(words)
 
 stats['avg_word_unique'] = np.average(uniqueWords)
 stats['med_word_unique'] = np.median(uniqueWords)
 stats['max_word_unique'] = np.max(uniqueWords)
 stats['min_word_unique'] = np.min(uniqueWords)
+stats['std_word_unique'] = np.std(uniqueWords)
 
 stats['avg_sent_len'] = np.average(sentences)
 stats['max_sent_len'] = np.max(sentences)
 stats['min_sent_len'] = np.min(sentences)
+stats['std_sent_len'] = np.std(sentences)
 
 stats['avg_sent_count'] = np.average(sentence_count)
 stats['max_sent_count'] = np.max(sentence_count)
 stats['min_sent_count'] = np.min(sentence_count)
+stats['std_sent_count'] = np.std(sentence_count)
 stats['sent_count_over_max'] = len(
     list(filter(lambda x: x > 1000, sentence_count)))
 
@@ -120,6 +127,7 @@ stats['avg_auth_txt'] = np.average(author_number_texts)
 stats['med_auth_txt'] = np.median(author_number_texts)
 stats['max_auth_txt'] = np.max(author_number_texts)
 stats['min_auth_txt'] = np.min(author_number_texts)
+stats['std_auth_txt'] = np.std(author_number_texts)
 
 if args.json:
     with open('stats.json', 'w') as f:
@@ -131,6 +139,7 @@ print('\nAverage character count', stats['avg_char_count'])
 print('Median character count', stats['med_char_count'])
 print('Max character count', stats['max_char_count'])
 print('Min character count', stats['min_char_count'])
+print('Std character count', stats['std_char_count'])
 print('Texts Under Min characters', stats['char_under_min'])
 print('Texts Over Max characters', stats['char_over_max'])
 
@@ -138,25 +147,30 @@ print('\nAverage Unique Characters', stats['avg_char_unique'])
 print('Median Unique Characters', stats['med_char_unique'])
 print('Min Unique Characters', stats['min_char_unique'])
 print('Max Unique Characters', stats['max_char_unique'])
+print('Std Unique Characters', stats['std_char_unique'])
 print('Percieved Garbage Texts', stats['unique_char_over_max'])
 
 print('\nAverage word count', stats['avg_word_count'])
 print('Median word count', stats['med_word_count'])
 print('Max word count', stats['max_word_count'])
 print('Min word count', stats['min_word_count'])
+print('Std word count', stats['std_word_count'])
 
 print('\nAverage Unique Word', stats['avg_word_unique'])
 print('Median Unique Word', stats['med_word_unique'])
 print('Max Unique Word', stats['max_word_unique'])
 print('Min Unique Word', stats['min_word_unique'])
+print('Std Unique Word', stats['std_word_unique'])
 
 print('\nAverage Sentence Length', stats['avg_sent_len'])
 print('Max Sentence Length', stats['max_sent_len'])
 print('Min Sentence Length', stats['min_sent_len'])
+print('Std Sentence Length', stats['std_sent_len'])
 
 print('\nAverage Sentence Count', stats['avg_sent_count'])
 print('Max Sentence Count', stats['max_sent_count'])
 print('Min Sentence Count', stats['min_sent_count'])
+print('Std Sentence Count', stats['std_sent_count'])
 print('Texts with over 500 sentences', stats['sent_count_over_max'])
 
 print('\nAuthor number', stats['auth_num'])
@@ -164,6 +178,7 @@ print('Author average text number', stats['avg_auth_txt'])
 print('Author median text number', stats['med_auth_txt'])
 print('Author max text number', stats['max_auth_txt'])
 print('Author min text number', stats['min_auth_txt'])
+print('Author std text number', stats['std_auth_txt'])
 
 
 # æøå freq
