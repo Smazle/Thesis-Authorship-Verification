@@ -71,9 +71,9 @@ class TestMacomReader(unittest.TestCase):
                 encoded_line = reader.read_encoded_line(linereader, 5)[0]
                 self.assertEqual(encoded_line.shape, (3, 10))
 
-                line1 = np.array([mapping['Multiple']] + ([0] * 9))
-                line2 = np.array([mapping['Sentences']] + ([0] * 9))
-                line3 = np.array([mapping['Test']] + ([0] * 9))
+                line1 = np.array([mapping['multiple']] + ([0] * 9))
+                line2 = np.array([mapping['sentences']] + ([0] * 9))
+                line3 = np.array([mapping['test']] + ([0] * 9))
 
                 self.assertTrue((encoded_line[0] == line1).all())
                 self.assertTrue((encoded_line[1] == line2).all())

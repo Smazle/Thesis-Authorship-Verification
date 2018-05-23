@@ -15,9 +15,6 @@ class ChannelType(Enum):
     WORD_LOWER = 'word-lower'
 
 
-# TODO: Make creation of this class not use create random vocabulary mappings
-# but use the natural ordering of the vocabulary to create same mapping each
-# time. For example, map the character 'a' -> 1, 'b' -> 2, ...
 class Vocabulary:
 
     def __init__(self, vocabulary_frequency_cutoff, str_generator):
@@ -50,7 +47,7 @@ class Vocabulary:
 
         self.vocabulary_map = {}
 
-        for i, c in enumerate(self.vocabulary_above_cutoff):
+        for i, c in enumerate(sorted(self.vocabulary_above_cutoff)):
             self.vocabulary_map[c] = encoding[i + 2]
 
         self.garbage = encoding[1]
