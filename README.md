@@ -12,6 +12,7 @@ Examples of how to run networks.
 Simple NN for authorship verification
 
 positional arguments:
+
   networkname           Which network to train.
   {load-reader,create-reader}
     load-reader         Load a reader from a file.
