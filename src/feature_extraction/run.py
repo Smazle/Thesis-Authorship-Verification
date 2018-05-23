@@ -45,7 +45,8 @@ with open(args.datafile, 'r', encoding='utf-8') as csvfile:
 
     postag_grams = list(map(lambda x: (x, 50), [3, 4]))
     special_character_grams = list(map(lambda x: (x, 50), [2, 3, 4]))
-    character_grams = list(map(lambda x: (x, 300), [2, 3, 4, 5, 6, 7, 8, 9, 10]))
+    character_grams = list(
+        map(lambda x: (x, 300), [2, 3, 4, 5, 6, 7, 8, 9, 10]))
     word_grams = list(map(lambda x: (x, 500), [2, 3, 4]))
 
     feature_extractor = FeatureExtractor(
@@ -54,7 +55,8 @@ with open(args.datafile, 'r', encoding='utf-8') as csvfile:
         special_character_grams=special_character_grams,
         word_grams=word_grams,
         word_frequencies=500,
-        character_grams=character_grams,
+        character_grams=character_grams
+        #    corpus="/home/smazle/Desktop/K.csv"
     )
 
     feature_extractor.extract(args.outfile)

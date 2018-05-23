@@ -10,23 +10,31 @@ from nltk.corpus import europarl_raw
 import pickle
 from ..util.utilities import clean
 import time
+import pandas as pd
+from nltk.tokenize import sent_tokenize
 
 
 class FeatureExtractor:
 
     def __init__(self, authors, character_grams=[], special_character_grams=[],
-                 word_frequencies=0, postag_grams=[], word_grams=[]):
+                 word_frequencies=0, postag_grams=[],
+                 word_grams=[], corpus=None):
 
         self.authors = authors
 
         # Generate corpus from nltk danish text. In that way we have no bias
         # towards the training data.
-        self.corpus = gen_corpus()
+        if corpus is not None:
+            self.corpus = gen_own_corpus(corpus)
+        else:
+            self.corpus = gen_corpus()
 
         # Create feature extractors for the types of features requested.
         self.extractors = []
         self.feature_names = []
         self.actual_features = []
+
+        print('Fitting Corpus')
 
         # Handle character n-grams.
         for (n, size) in character_grams:
@@ -38,7 +46,7 @@ class FeatureExtractor:
                                             .format(n, i,
                                                     repr(extractor.grams[i])))
 
-            print('Char-%d-grams fitted, %d of total %d' %
+            print('... Char-%d-grams fitted, %d of total %d' %
                   (n, size, extractor.max))
 
             self.extractors.append(extractor)
@@ -53,7 +61,7 @@ class FeatureExtractor:
                                             .format(n, i,
                                                     repr(extractor.grams[i])))
 
-            print('Special-%d-grams fitted, %d of total %d' %
+            print('... Special-%d-grams fitted, %d of total %d' %
                   (n, size, extractor.max))
 
             self.extractors.append(extractor)
@@ -68,7 +76,7 @@ class FeatureExtractor:
                                             .format(i,
                                                     repr(extractor.words[i])))
 
-            print('Word Frequencies fitted, %d of total %d' %
+            print('... Word Frequencies fitted, %d of total %d' %
                   (word_frequencies, extractor.max))
 
             self.extractors.append(extractor)
@@ -83,7 +91,7 @@ class FeatureExtractor:
                                             .format(n, i,
                                                     repr(extractor.grams[i])))
 
-            print('POS-Tag-%d-grams fitted, %d of total %d' %
+            print('... POS-Tag-%d-grams fitted, %d of total %d' %
                   (n, size, extractor.max))
 
             self.extractors.append(extractor)
@@ -98,12 +106,12 @@ class FeatureExtractor:
                                             .format(n, i,
                                                     repr(extractor.grams[i])))
 
-            print('Word-%d-grams fitted, %d of total %d' %
+            print('... Word-%d-grams fitted, %d of total %d' %
                   (n, size, extractor.max))
 
             self.extractors.append(extractor)
 
-        open('Features.Names', 'w').write('\n'.join(self.actual_features))
+        # open('Features.Names', 'w').write('\n'.join(self.actual_features))
 
     def extract(self, outfile):
         with open(outfile, 'a') as f:
@@ -132,6 +140,33 @@ class FeatureExtractor:
             features = features + extractor.extract(text)
 
         return features
+
+
+def gen_own_corpus(corpus):
+    print('Generating Corpus')
+    print('... Loading File')
+    dataFrame = pd.read_csv(corpus, sep=';')
+    data = dataFrame.as_matrix(columns=['Text']).flatten()
+
+    # Align texts with macomreader
+    print('... Applying Filters')
+    data = list(map(lambda x: clean(x[200:]), filter(constraints, data)))
+
+    print('... Joining')
+    data = '\n'.join(data)
+
+    print('... Done')
+    return data
+
+
+def constraints(text):
+    if len(text) > 30000:
+        return False
+    elif len(text) < 400:
+        return False
+    elif len(sent_tokenize(text)) > 500:
+        return False
+    return True
 
 
 def gen_corpus():
@@ -186,4 +221,5 @@ def gen_corpus():
 
         txt += '\n'
 
+    print(txt)
     return txt
