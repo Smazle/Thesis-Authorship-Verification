@@ -94,6 +94,7 @@ class SentenceVocabulary:
         self.sentence_len = sentence_len
         self.padding = np.zeros((self.sentence_len, ))
         self.vocabulary_above_cutoff = self.word_vocab.vocabulary_above_cutoff
+        self.vocabulary_map = self.word_vocab.vocabulary_map
 
     def encode(self, txt):
         sentences = nltk.sent_tokenize(txt)
