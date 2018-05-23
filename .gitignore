@@ -11,6 +11,7 @@
 *.npy
 *.pyc
 *.hdf5
+*.vec
 
 *__pycache__
 *.csv
