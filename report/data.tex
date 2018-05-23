@@ -122,7 +122,7 @@ a class that reflected that. For each author $\alpha$ in the training dataset
 $G$ we generate all possible combinations of two of the texts in $T_\alpha$
 as positive samples. We also generate the same number of negative samples by
 taking a random text in $T_\alpha$ and a random text in $\overline{T_\alpha}$.
-That means that in total the number of problems we generate for each author is
-$2\frac{\left|T_\alpha\right|!}{2!(\left|T_\alpha\right|-2)!}$. The neural
+That means that in total the number of problems we generate for each author
+is $2\frac{\left|T_\alpha\right|!}{2!(\left|T_\alpha\right|-2)!}$. The neural
 networks are trained on these problem instances. We generate problems in the
 same way for the network training validation dataset $H$.
