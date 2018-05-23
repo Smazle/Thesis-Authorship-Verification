@@ -8,10 +8,10 @@
 "training_file":null,
 "validation_file":null,
 "batch_size":8,
-"vocabulary_frequency_cutoff":[0.00001],
+"vocabulary_frequency_cutoff":[0.0],
 "batch_normalization":"pad",
 "pad":false,
 "binary":false,
-"channels":["char"],
+"channels":["word"],
 "sentence_length":null
 }
