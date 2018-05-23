@@ -107,12 +107,11 @@ purposes. We have shown an illustration of the splits we have made in Figure
     \centering
     \textbf{Illustration of Datasets}\par\medskip
     \includegraphics[width=0.75\textwidth]{./pictures/data/Data.png}
-%TODO: Rewrite
-    \caption{Shows how we have split the dataset we are given. Most of the
-        splits are performed on authors such that all of an authors texts are
-        in the same dataset. The only split that is not performed on that basis
-        is the split of the $E$ dataset to $G$ and $H$. That split is performed
-        on problem instances and not on authors.}
+    \caption{Shows how we have split the dataset we are given. The splits are
+        performed on the number of authors in each set. That means that all of
+        an authors texts are contained in the same dataset. In particular that
+        means that the test dataset contains completely unseen authors that has
+        not been used in any training/hyperparameter selection.}
     \label{fig:data_split}
 \end{figure}
 
