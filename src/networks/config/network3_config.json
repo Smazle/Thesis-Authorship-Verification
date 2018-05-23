@@ -1,0 +1,17 @@
+{
+"history":null,
+"graph":null,
+"weights":null,
+"epochs":100,
+"retry":false,
+"reader":null,
+"datafile":null,
+"validation_split":0.95,
+"batch_size":8,
+"vocabulary_frequency_cutoff":[0.00001],
+"batch_normalization":"pad",
+"pad":false,
+"binary":false,
+"channels":["char"],
+"sentence_length":null
+}

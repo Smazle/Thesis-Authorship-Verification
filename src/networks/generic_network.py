@@ -11,6 +11,7 @@ import jsonpickle
 import jsonpickle.ext.numpy as jsonpickle_numpy
 from ..preprocessing.channels import ChannelType
 import tensorflow as tf
+import json
 
 # Make sure that jsonpickle works on numpy arrays.
 jsonpickle_numpy.register_handlers()
@@ -33,25 +34,28 @@ parser.add_argument(
 parser.add_argument(
     '--graph',
     type=str,
-    help='Path to file to visualize network in.'
+    help='Path to file to visualize network in.',
+    default=None
 )
 parser.add_argument(
     '--weights',
     type=str,
     help='Use the weights given as start weights instead of randomly' +
-    ' initializing.'
+    ' initializing.',
+    default=None
 )
 parser.add_argument(
     '--epochs',
     type=int,
     help='How many epochs to run.',
-    default=100
+    # default=100
+    default=None
 )
 parser.add_argument(
     '--retry',
     type=bool,
     help='Should the network keep trying using a reduced batch_size?',
-    default=False,
+    default=None,
     nargs='?'
 )
 
@@ -67,7 +71,8 @@ load_reader = readerparser.add_parser(
 load_reader.add_argument(
     'reader',
     type=str,
-    help='Use this pickled reader and not a new reader.'
+    help='Use this pickled reader and not a new reader.',
+    default=None
 )
 # Create reader part.
 create_reader = readerparser.add_parser(
@@ -77,21 +82,25 @@ create_reader = readerparser.add_parser(
 create_reader.add_argument(
     'datafile',
     type=str,
-    help='Path to data file.'
+    help='Path to data file.',
+    default=None,
+    nargs='?'
 )
 create_reader.add_argument(
     '-val',
     '--validation-split',
     type=float,
     help='How much data to use as the validation set vs the training set.',
-    default=0.95
+    # default=0.95
+    default=None
 )
 create_reader.add_argument(
     '-b',
     '--batch-size',
     type=int,
     help='Size of batches.',
-    default=8
+    # default=8
+    default=None
 )
 create_reader.add_argument(
     '-vfc',
@@ -100,7 +109,8 @@ create_reader.add_argument(
     help='Characters with a frequency below this threshold is ignored by the' +
     'reader. Providing several applies a differnet theshold to the differnet' +
     'channels',
-    default=[1 / 100000.0],
+    # default=[1 / 100000.0],
+    default=None,
     nargs='+'
 )
 create_reader.add_argument(
@@ -109,28 +119,27 @@ create_reader.add_argument(
     type=str,
     help='Either "pad" or "truncate". Batches will be normalized using this' +
     'method.',
-    default='pad'
+    default=None
 )
 create_reader.add_argument(
     '--pad',
-    dest='pad',
     help='Whether or not to pad all texts to length of longest text.',
-    default=False,
-    action='store_true'
+    default=None,
+    type=bool
 )
 create_reader.add_argument(
     '--binary',
-    dest='binary',
     help='Whether to run reader with binary crossentropy or categorical ' +
     'crossentropy',
-    default=False,
-    action='store_true'
+    type=bool,
+    default=None
 )
 create_reader.add_argument(
     '--channels',
     help='Which channels to use.',
     nargs='+',
-    default=['char']
+    # default=['char']
+    default=None
 )
 
 create_reader.add_argument(
@@ -144,6 +153,15 @@ create_reader.add_argument(
 )
 
 args = parser.parse_args()
+
+# TODO:Find smart way to do pathing
+config = json.load(
+    open('./src/networks/config/{}_config.json'.format(args.networkname), 'r'))
+
+var_args = vars(args)
+for key in var_args.keys():
+    if var_args[key] is None:
+        var_args[key] = config[key]
 
 # Either load reader from file or create a new one.
 if hasattr(args, 'reader') and args.reader is not None:
