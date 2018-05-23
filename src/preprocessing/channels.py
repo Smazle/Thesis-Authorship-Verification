@@ -115,6 +115,7 @@ class SentenceVocabulary:
 
 def vocabulary_factory(channeltype, vocabulary_frequency_cutoff,
                        strgen, sentence_len=None):
+
     if channeltype == ChannelType.CHAR:
         return CharVocabulary(vocabulary_frequency_cutoff, strgen)
     elif channeltype == ChannelType.WORD:
