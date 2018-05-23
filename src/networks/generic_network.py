@@ -75,16 +75,14 @@ create_reader = readerparser.add_parser(
     help='Create a new reader from arguments.'
 )
 create_reader.add_argument(
-    'datafile',
+    'training_file',
     type=str,
-    help='Path to data file.'
+    help='Path to file containing training data.'
 )
 create_reader.add_argument(
-    '-val',
-    '--validation-split',
-    type=float,
-    help='How much data to use as the validation set vs the training set.',
-    default=0.95
+    'validation_file',
+    type=str,
+    help='Path to file containing validation data.'
 )
 create_reader.add_argument(
     '-b',
@@ -135,7 +133,7 @@ create_reader.add_argument(
 
 create_reader.add_argument(
     '-sl',
-    '--sentence_length',
+    '--sentence-length',
     type=int,
     help='If channel SENTENCE is used.\
                 This determines the length of each sentence',
@@ -165,10 +163,10 @@ else:
                     ))
 
     reader = MacomReader(
-        args.datafile,
+        args.training_file,
+        args.validation_file,
         batch_size=args.batch_size,
         vocabulary_frequency_cutoff=args.vocabulary_frequency_cutoff,
-        validation_split=args.validation_split,
         batch_normalization=args.batch_normalization,
         pad=args.pad,
         binary=args.binary,

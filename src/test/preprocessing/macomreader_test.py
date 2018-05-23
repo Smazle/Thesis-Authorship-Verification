@@ -13,8 +13,10 @@ class TestMacomReader(unittest.TestCase):
     def test_read_encoded_line_1(self):
         with FileOne() as f:
             reader = MacomReader(
-                f.name, batch_size=1, pad=False, batch_normalization='pad',
-                min_len_characters=0, ignore_n_characters=0)
+                f.name, f.name, batch_size=1, pad=False,
+                batch_normalization='pad', min_len_characters=0,
+                ignore_n_characters=0
+            )
 
             with LineReader(f.name) as linereader:
                 encoded_line = reader.read_encoded_line(linereader, 1)
@@ -25,8 +27,10 @@ class TestMacomReader(unittest.TestCase):
     def test_read_encoded_line_2(self):
         with FileOne() as f:
             reader = MacomReader(
-                f.name, batch_size=1, pad=False, batch_normalization='pad',
-                min_len_characters=0, ignore_n_characters=0)
+                f.name, f.name, batch_size=1, pad=False,
+                batch_normalization='pad', min_len_characters=0,
+                ignore_n_characters=0
+            )
 
             with LineReader(f.name) as linereader:
                 encoded_line1 = reader.read_encoded_line(linereader, 2)
@@ -38,8 +42,9 @@ class TestMacomReader(unittest.TestCase):
     def test_read_encoded_line_3(self):
         with FileOne() as f:
             reader = MacomReader(
-                f.name, batch_size=1, pad=False, batch_normalization='pad',
-                min_len_characters=0, ignore_n_characters=0
+                f.name, f.name, batch_size=1, pad=False,
+                batch_normalization='pad', min_len_characters=0,
+                ignore_n_characters=0
             )
 
             with LineReader(f.name) as linereader:
@@ -53,9 +58,9 @@ class TestMacomReader(unittest.TestCase):
     def test_read_encoded_line_4(self):
         with FileOne() as f:
             reader = MacomReader(
-                f.name, batch_size=1, pad=False, batch_normalization='pad',
-                min_len_characters=0, ignore_n_characters=0,
-                channels=[ChannelType.SENTENCE],
+                f.name, f.name, batch_size=1, pad=False,
+                batch_normalization='pad', min_len_characters=0,
+                ignore_n_characters=0, channels=[ChannelType.SENTENCE],
                 vocabulary_frequency_cutoff=[0.0],
                 sentence_len=10
             )
@@ -77,8 +82,9 @@ class TestMacomReader(unittest.TestCase):
     def test_generate_batch_1(self):
         with FileOne() as f:
             reader = MacomReader(
-                f.name, batch_size=2, pad=False, batch_normalization='pad',
-                min_len_characters=0, ignore_n_characters=0
+                f.name, f.name, batch_size=2, pad=False,
+                batch_normalization='pad', min_len_characters=0,
+                ignore_n_characters=0
             )
 
             problems = [(1, 2, 1), (2, 3, 0)]
@@ -101,8 +107,9 @@ class TestMacomReader(unittest.TestCase):
     def test_generate_batch_2(self):
         with FileOne() as f:
             reader = MacomReader(
-                f.name, batch_size=2, pad=False, batch_normalization='pad',
-                min_len_characters=0, ignore_n_characters=0,
+                f.name, f.name, batch_size=2, pad=False,
+                batch_normalization='pad', min_len_characters=0,
+                ignore_n_characters=0,
                 channels=[ChannelType.CHAR, ChannelType.WORD],
                 vocabulary_frequency_cutoff=[0.0, 0.0]
             )

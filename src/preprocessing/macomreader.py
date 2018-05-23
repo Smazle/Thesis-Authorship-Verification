@@ -71,15 +71,13 @@ class MacomReader(object):
     batch_size = None
 
     # Map from author identifier to list of line numbers.
-    authors = {}
+    training_authors = {}
+    validaiton_authors = {}
 
     # List of problems which consist of two line indices to two texts and
     # either 1 or 0. If 1 the texts are from the same author and if 0 they are
     # from different authors.
     problems = []
-
-    # If 0.8 80% is training data and 20% are validation data.
-    validation_split = None
 
     # List of training problems.
     training_problems = None
@@ -96,16 +94,12 @@ class MacomReader(object):
     # Sentence length, in case of a sentence channel being used
     sentence_length = None
 
-    def __init__(self, filepath, batch_size=32, validation_split=0.8,
+    def __init__(self, training_file, validation_file, batch_size=32,
                  vocabulary_frequency_cutoff=[0.0], pad=True, binary=False,
                  batch_normalization='truncate', channels=[ChannelType.CHAR],
                  sentence_len=None, max_len_characters=30000,
                  max_len_sentences=500, min_len_characters=400,
                  ignore_n_characters=200):
-
-        # Validate creation state given.
-        if validation_split > 1.0 or validation_split < 0.0:
-            raise ValueError('validation_split between 0 and 1 required')
 
         if batch_normalization not in ['truncate', 'pad']:
             raise ValueError('Only truncate and pad is currently supported.')
@@ -121,9 +115,9 @@ class MacomReader(object):
                              'to match number of channels')
 
         # Save parameters
-        self.filepath = filepath
+        self.training_file = training_file
+        self.validation_file = validation_file
         self.batch_size = batch_size
-        self.validation_split = validation_split
         self.vocabulary_frequency_cutoff = vocabulary_frequency_cutoff
         self.binary = binary
         self.pad = pad
@@ -143,21 +137,70 @@ class MacomReader(object):
             self.label_false = np.array([1, 0]).reshape(1, 2)
 
         # Generate representation used to generate training data.
-        with LineReader(self.filepath) as linereader:
-            self.generate_authors(linereader)
-            self.generate_problems()
-            self.generate_vocabulary_maps(linereader)
+        with LineReader(self.training_file) as linereader:
+            self.training_authors = self.generate_authors(linereader)
+            self.training_problems = self.generate_problems(self.training_authors)
+            self.generate_vocabulary_maps(linereader, self.training_authors)
+
+        # Generate validation problems.
+        with LineReader(self.validation_file) as linereader:
+            self.validation_authors = self.generate_authors(linereader)
+            self.validation_problems = self.generate_problems(self.validation_authors)
 
     def generate_training(self):
-        return self.generate(self.training_problems)
+        return self.generate(self.training_file, self.training_problems)
 
     def generate_validation(self):
-        return self.generate(self.validation_problems)
+        return self.generate(self.validation_file, self.validation_problems)
 
-    def generate_vocabulary_maps(self, linereader):
+    def generate_authors(self, linereader):
+
+        authors = {}
+
+        for i, line in enumerate(linereader.readlines(skipfirst=True)):
+            author, date, text = line.split(';')
+            text = util.clean(text)
+
+            if len(text) > self.max_len_characters:
+                print('WARNING: Skipping text longer than {} characters \
+                       on line {}'.format(self.max_len_characters, i + 1))
+            elif len(text) < self.min_len_characters:
+                print('WARNING: Skipping text shorter than {} characters \
+                      on line {}'.format(self.min_len_characters, i + 1))
+            elif len(sent_tokenize(text)) > self.max_len_sentences:
+                print('WARNING: Skipping text with more than {} sentences \
+                      on line {}'.format(self.max_len_sentences, i + 1))
+            elif author in authors:
+                authors[author].append(i + 1)
+            else:
+                authors[author] = [i + 1]
+
+        return authors
+
+    def generate_problems(self, authors):
+
+        problems = []
+
+        for author in authors:
+            other = set(authors.keys())
+            other.remove(author)
+
+            # Generate all combinations of the authors texts.
+            for (l1, l2) in itertools.combinations(authors[author], r=2):
+                # Generate a sample with same author.
+                problems.append((l1, l2, 1))
+
+                # Generate a sample with different authors.
+                same = random.choice(authors[author])
+                different = random.choice(authors[random.choice(list(other))])
+                problems.append((same, different, 0))
+
+        return problems
+
+    def generate_vocabulary_maps(self, linereader, authors):
         def linegen():
-            for author in self.authors:
-                for line_n in self.authors[author]:
+            for author in authors:
+                for line_n in authors[author]:
                     autor, date, text = linereader.readline(line_n).split(';')
                     decoded = util.clean(text)
                     yield decoded
@@ -169,49 +212,6 @@ class MacomReader(object):
                 vocabulary_factory(channeltype,
                                    freq, linegen(), self.sentence_length))
 
-    def generate_authors(self, linereader):
-
-        for i, line in enumerate(linereader.readlines(skipfirst=True)):
-            author, date, text = line.split(';')
-            text = util.clean(text)
-
-            if len(text) > self.max_len_characters:
-                print('WARNING: Skipping text longer than {} characters ' +
-                      'on line {}'.format(self.max_len_characters, i + 1))
-            elif len(text) < self.min_len_characters:
-                print('WARNING: Skipping text shorter than {} characters ' +
-                      'on line {}'.format(self.min_len_characters, i + 1))
-            elif len(sent_tokenize(text)) > self.max_len_sentences:
-                print('WARNING: Skipping text with more than {} sentences ' +
-                      'on line {}'.format(self.max_len_sentences, i + 1))
-            elif author in self.authors:
-                self.authors[author].append(i + 1)
-            else:
-                self.authors[author] = [i + 1]
-
-    def generate_problems(self):
-
-        for author in self.authors:
-            other = set(self.authors.keys())
-            other.remove(author)
-
-            # Generate all combinations of the authors texts.
-            for (l1, l2) in itertools.combinations(self.authors[author], r=2):
-                # Generate a sample with same author.
-                self.problems.append((l1, l2, 1))
-
-                # Generate a sample with different authors.
-                same = random.choice(self.authors[author])
-                different = random.choice(self.authors
-                                          [random.choice(list(other))])
-                self.problems.append((same, different, 0))
-
-        random.shuffle(self.problems)
-
-        split_point = int(len(self.problems) * self.validation_split)
-        self.training_problems = self.problems[:split_point]
-        self.validation_problems = self.problems[split_point:]
-
     # Returns a list of numpy arrays containing integers where each array is an
     # encoded sequence. The list ordering corresponds to the self.channels
     # parameter.
@@ -219,8 +219,8 @@ class MacomReader(object):
         assert line_n > 0
         if self.pad:
             raise Exception(
-                'read_encoded_line does not currently \
-                        work with global padding')
+                'read_encoded_line does not currently work with global padding'
+            )
 
         author, date, text = linereader.readline(line_n).split(';')
 
@@ -240,8 +240,8 @@ class MacomReader(object):
             return encoded_channels
 
     # Generate batches of samples.
-    def generate(self, problems):
-        with LineReader(self.filepath, encoding='utf-8') as reader:
+    def generate(self, filename, problems):
+        with LineReader(filename, encoding='utf-8') as reader:
             problems = itertools.cycle(problems)
 
             while True:
