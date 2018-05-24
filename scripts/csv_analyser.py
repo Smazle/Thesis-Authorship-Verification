@@ -42,6 +42,11 @@ args = parser.parse_args()
 f = open(args.datafile, 'r', encoding='utf-8')
 f.readline()  # Skip first line.
 
+
+lower = 400
+upper = 30000
+sent = 500
+
 lengths = []
 authors = {}
 charset = Counter()
@@ -50,6 +55,9 @@ words = []
 sentences = []
 sentence_count = []
 uniqueWords = []
+
+totalRemoved = 0
+
 for line in f:
     author, time, text = line.split(';')
     text = util.clean(text)
@@ -72,6 +80,11 @@ for line in f:
     else:
         authors[author] = [len(text)]
 
+    if len(text) < lower or len(text) > upper:
+        totalRemoved += 1
+    elif sentence_count[-1] > sent:
+        totalRemoved += 1
+
     charset = charset + Counter(text)
 
 lengths = sorted(lengths)
@@ -87,8 +100,8 @@ stats['med_char_count'] = np.median(lengths)
 stats['max_char_count'] = np.max(lengths)
 stats['min_char_count'] = np.min(lengths)
 stats['std_char_count'] = np.std(lengths)
-stats['char_under_min'] = len(list(filter(lambda x: x < 400, lengths)))
-stats['char_over_max'] = len(list(filter(lambda x: x > 30000, lengths)))
+stats['char_under_min'] = len(list(filter(lambda x: x < lower, lengths)))
+stats['char_over_max'] = len(list(filter(lambda x: x > upper, lengths)))
 
 stats['avg_char_unique'] = np.average(uniques)
 stats['med_char_unique'] = np.median(uniques)
@@ -119,7 +132,7 @@ stats['max_sent_count'] = np.max(sentence_count)
 stats['min_sent_count'] = np.min(sentence_count)
 stats['std_sent_count'] = np.std(sentence_count)
 stats['sent_count_over_max'] = len(
-    list(filter(lambda x: x > 1000, sentence_count)))
+    list(filter(lambda x: x > sent, sentence_count)))
 
 author_number_texts = list(map(lambda x: len(x), authors.values()))
 stats['auth_num'] = len(authors)
@@ -140,8 +153,8 @@ print('Median character count', stats['med_char_count'])
 print('Max character count', stats['max_char_count'])
 print('Min character count', stats['min_char_count'])
 print('Std character count', stats['std_char_count'])
-print('Texts Under Min characters', stats['char_under_min'])
-print('Texts Over Max characters', stats['char_over_max'])
+print('Texts Under Min %s characters' % lower, stats['char_under_min'])
+print('Texts Over Max %s characters' % upper, stats['char_over_max'])
 
 print('\nAverage Unique Characters', stats['avg_char_unique'])
 print('Median Unique Characters', stats['med_char_unique'])
@@ -171,7 +184,7 @@ print('\nAverage Sentence Count', stats['avg_sent_count'])
 print('Max Sentence Count', stats['max_sent_count'])
 print('Min Sentence Count', stats['min_sent_count'])
 print('Std Sentence Count', stats['std_sent_count'])
-print('Texts with over 500 sentences', stats['sent_count_over_max'])
+print('Texts with over %s sentences' % sent, stats['sent_count_over_max'])
 
 print('\nAuthor number', stats['auth_num'])
 print('Author average text number', stats['avg_auth_txt'])
@@ -179,6 +192,8 @@ print('Author median text number', stats['med_auth_txt'])
 print('Author max text number', stats['max_auth_txt'])
 print('Author min text number', stats['min_auth_txt'])
 print('Author std text number', stats['std_auth_txt'])
+
+print('Total Removed ', totalRemoved)
 
 
 # æøå freq
