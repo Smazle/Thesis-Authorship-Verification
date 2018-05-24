@@ -1154,7 +1154,34 @@ extension \gls{AdaGrad}, \gls{RMSProp} and \gls{Adam}.
 
     \item[\gls{AdaGrad}:]
 
-        % TODO: Cite http://www.jmlr.org/papers/volume12/duchi11a/duchi11a.pdf
+        The algorithm was invented by \cite{Duchi:2011:ASM:1953048.2021068}.
+        The algorithm attempts to solve the problem of choosing a learning
+        rate and the problem of how to handle infrequent features. Infrequent
+        features are often the most important features for a classification task
+        but since they are infrequent they are hard to learn on. \gls{AdaGrad}
+        assigns a separate learning rate to each separate parameter. The
+        algorithm gives infrequently observed parameters a very high learning
+        rate and frequently observed parameters a very low learning rate. The
+        method incorporates knowledge of the data from previous iterations to
+        make choices in the current iteration. In \gls{AdaGrad} the weight
+        update function is,
+
+        \begin{equation}
+            \mathbf{w}^{(t+1)} =
+                \mathbf{w}^{(t)} -
+                \eta \text{diag}(G)^{-\frac{1}{2}} \circ
+                \Delta E|_{\mathbf{w}^{(t)}},
+        \end{equation}
+
+        where $G$ is a matrix containing the sum of the outer product of the
+        gradient in all previous timesteps. $G$ is defined as,
+
+        \begin{equation}
+            G = \sum_{\tau=1}^t \Delta E|_{\mathbf{w}^{(\tau)}}(\mathbf{w}^{(\tau)})
+                \left(
+                    \Delta E|_{\mathbf{w}^{(\tau)}}(\mathbf{w}^{(\tau)})
+                \right)^T.
+        \end{equation}
 
     \item[\gls{RMSProp}:]
 
