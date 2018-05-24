@@ -1,0 +1,51 @@
+
+Number of texts 46620
+
+Average character count 5722.245688545689
+Median character count 5338.5
+Max character count 685427
+Min character count 2
+Std character count 5261.136589961338
+Texts Under Min characters 1127
+Texts Over Max characters 72
+
+Average Unique Characters 58.92245817245817
+Median Unique Characters 60.0
+Min Unique Characters 2
+Max Unique Characters 219
+Std Unique Characters 9.940570604142307
+Percieved Garbage Texts 11
+
+Average word count 976.7078936078937
+Median word count 923.0
+Max word count 53350
+Min word count 0
+Std word count 714.8230598009188
+
+Average Unique Word 392.8318961818962
+Median Unique Word 388.0
+Max Unique Word 34499
+Min Unique Word 0
+Std Unique Word 262.33122054828675
+
+Average Sentence Length 20.359214691357916
+Max Sentence Length 6340.0
+Min Sentence Length 0.0
+Std Sentence Length 30.952136402084104
+
+Average Sentence Count 50.97752037752038
+Max Sentence Count 4404
+Min Sentence Count 0
+Std Sentence Count 41.27783889361291
+Texts with over 500 sentences 2
+
+Author number 3500
+Author average text number 13.32
+Author median text number 12.0
+Author max text number 42
+Author min text number 2
+Author std text number 4.21173869763342
+
+Frequencies, æ 0.007064644717467028, Æ 2.921231038622198e-05
+Frequencies, ø 0.00546020177133584, Ø 3.9741936958132355e-05
+Frequencies, å 0.008875170710961661, Å 3.412663592405555e-05
