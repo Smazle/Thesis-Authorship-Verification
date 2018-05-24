@@ -1,6 +1,6 @@
 \section{Method} \label{sec:method}
 
-In this section we will describe the method we have used to solve the Authorship
+In this Section we will describe the method we have used to solve the Authorship
 Verification problem presented. In general there are two methods of representing
 each author. There is the instance based approach and the profile based
 approach. In the instance based approach each author is represented by a set of
@@ -889,7 +889,7 @@ of a function. It can be used for describing the slope of a function at a
 certain value. Not only that, but its most desired property for our purposes is
 the fact that contrary to the derivative it a vector, and this vector points
 to the direction of greatest increase in value for the function at a specific
-point. As such, we can apply gradient decent to our network, which is simply
+point. As such, we can apply Gradient Descent to our network, which is simply
 the act of changing our loss function arguments, so we step in the negative
 direction of the gradient, which would be the direction of greatest decrease
 in value, that is, it point towards the local minimum of the error function. A
@@ -898,7 +898,7 @@ model illustrating this process can be seen in Figure \ref{fig:grad}
 \begin{figure}
     \centering
     \includegraphics[width=0.8\textwidth]{./pictures/method/GradientDesc.png}
-    \caption{An illustration of how gradient decent works. Each iteration steps
+    \caption{An illustration of how Gradient Descent works. Each iteration steps
         in the direction of the global minimum of the specific function used,
         which in this case is signified by a black ring. The Figure is generated
         using code from
@@ -917,9 +917,9 @@ E_n(W) &= \frac{1}{2}(\hat{y}_n - y_n)^2
 Where N is the number of training samples, $\hat{y}_n$ is the predicted results,
 and $y_n$ is the target, and W is a set of weights. The goal is minimize
 this function. In order to do so, we need to have a independent variable we
-can tweak using gradient decent as per the above description. In the case of
+can tweak using Gradient Descent as per the above description. In the case of
 neural networks we can view this variable as being the weights and the biases,
-which are defined used as described in section \ref{sec:neurons}. In other
+which are defined used as described in Section \ref{sec:neurons}. In other
 words we want to update each individual weight by doing the following operation
 repeatedly.
 
@@ -928,7 +928,7 @@ repeatedly.
 \end{equation}
 
 Where w is a singular weight value, and t refers to a specific step, in the 
-chain of steps performed by gradient decent.
+chain of steps performed by Gradient Descent.
 
 \begin{equation}
 \Delta w^t = -\eta \nabla E|_{\pmb{w}^t}
@@ -950,7 +950,7 @@ weights in our network.
 
 After performing step 1(Feed forward), which entails running a training sample
 through the network, we want to determine by how much we have to tweak each
-weights using gradient decent. Due to the hidden nature of the entire network,
+weights using Gradient Descent. Due to the hidden nature of the entire network,
 the natural starting point for this process is at the output node. If we for
 simplicity's sake focus on only a single training sample, we can compute the
 loss as follows
@@ -1079,23 +1079,72 @@ W)$.\cite{Bishop}
 
 \subsubsection{Optimizers}
 
-An optimizer for neural networks is a function that controls the rate at which
-the weights in the network are updated. As described in the previous Section the
-direction of a weight change is computed via backpropagation. Backpropagation
-also returns the magnitude of the gradient which describes how steep the curve
-of the error function $E_i$ is at the point. The job of an optimizer is to get
-to a valley in the error function as quickly as possible without overshooting
-the valley. Most optimizers maintains an internal state of the magnitude of
-previous weight updates and makes sure that large steps are not suddenly taken
-which might overshoot the target valley. One of the simplest optimizers are
-the Stochastic Gradient Descend algorithm. The algorithms simply updates the
-weights in the network in the direction and magnitude of the gradient times some
-learning rate $\eta$. The function for weight update in Stochastic Gradient
-Descent are,
+Optimizations of the Gradient Descent algorithm in the training of a neural
+network are referred to as an optimizer function. The optimizer functions
+responsibility is to minimize the error function $E$ as fast as possible without
+overstepping the "valleys" in the function. Recall that the updating of the
+weights via Gradient Descend was defined as,
 
 \begin{equation}
-    w = w - \eta\Delta_w E(w)
+    \mathbf{w}^{(t+1)} =
+        \mathbf{\mathbf{w}}^{(t)} -
+        \Delta E|_{\mathbf{w}^{(t)}}(\mathbf{w}^{(t)}).
 \end{equation}
+
+The easiest way to use gradient information for weight updating is to take a
+small step in the direction of the gradient since we might overstep the valley
+if we take to large a step. To take a small step we introduce a parameter
+$\eta > 0$ that scales the magnitude of the gradient \cite{Bishop},
+
+\begin{equation}
+    \mathbf{w}^{(t+1)} =
+        \mathbf{\mathbf{w}}^{(t)} -
+        \eta\Delta E|_{\mathbf{w}^{(t)}}(\mathbf{w}^{(t)}).
+\end{equation}
+
+In that algorithm a single updating of the weights require computing the
+gradient of the error function on each training sample. For large datasets
+that might not be feasible as backpropagation is expensive to compute for such
+datasets. Stochastic Gradient Descend is an attempt at estimating the gradient
+of all datapoints using only a single datapoint. That means that in Stochastic
+Gradient Descend weights are updated much more often and is updated on a
+noisy target \cite{Bishop}. The upside of Stochastic Gradient Descend is that
+convergence to a local minimum might be much quicker since the algorithm doesn't
+have to go through all training samples for each weight update. The weight
+updating for Stochastic Gradient Descend is computed as,
+
+\begin{equation}
+    \mathbf{w}^{(t+1)} =
+        \mathbf{\mathbf{w}}^{(t)} -
+        \eta\Delta E_n|_{\mathbf{w}^{(t)}}(\mathbf{w}^{(t)}).
+\end{equation}
+
+In practise each weight update in Stochastic Gradient Descend are computed
+not based on a single training sample but on some small number of training
+samples. That allows the computation to take advantage of highly optimized
+matrix libraries and making each update on a slightly less noisy target
+\footnote{\url{http://ufldl.stanford.edu/tutorial/supervised/OptimizationStochas
+ticGradientDescent/}}. The version of Stochastic Gradient Descend that use more
+than one sample per weight update is known as Stochastic Minibatch Gradient
+Descend.
+
+To see how Stochastic Gradient Descend might lead to faster convergence consider
+a dataset with some number of training samples. To create redundancy in the
+dataset we copy all training samples in the dataset to create a new dataset of
+twice the size. In classical Gradient Descend the only effect will be that the
+error increases by a magnitude of 2 but will take twice as long to compute.
+While Stochastic Gradient Descend will converge at the exact same speed as each
+minibatch will still represent an estimate of the true underlying function and
+each weight update still takes the same amount of time \cite{Bishop}.
+
+Another advantage of the Stochastic method is that the optimizer might escape
+from a non optimal local minima and reach a better local minima. To see why that
+might happen consider the fact that each minibatch consist of a different sample
+of training samples. Even though overall the training samples gradient point
+towards the non-optimal local minima the gradient of a single batch might point
+towards a better local minima. Therefore the optimizer has the possibility of
+following the gradient of single batches that leads to a final better local
+minima \cite{Bishop}.
 
 
 \subsubsection{Siamese Networks}
