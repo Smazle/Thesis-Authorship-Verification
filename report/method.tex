@@ -1137,11 +1137,11 @@ each weight update still takes the same amount of time \cite{Bishop}.
 Another advantage of the Stochastic method is that the optimizer might escape
 from a non optimal local minima and reach a better local minima. To see why that
 might happen consider the fact that each minibatch consist of a different sample
-of training samples. Even though overall the training samples gradient point
-towards the non-optimal local minima the gradient of a single batch might point
-towards a better local minima. Therefore the optimizer has the possibility of
-following the gradient of single batches that leads to a final better local
-minima \cite{Bishop}.
+of training samples. Even though when computed on all training samples the
+gradient points towards the non-optimal local minima the gradient of a single
+batch might point towards a better local minima. Therefore the optimizer has the
+possibility of following the gradient of single batches that leads to a final
+better local minima \cite{Bishop}.
 
 A problem in the Stochastic Gradient Descend algorithm is the need of choosing
 the learning rate $\eta$. If the learning rate is too high the algorithm will
