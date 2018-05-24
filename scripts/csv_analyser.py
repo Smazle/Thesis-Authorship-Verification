@@ -13,7 +13,7 @@ from nltk.tokenize import sent_tokenize, word_tokenize
 
 
 def fix_space(x):
-    return x.replace(' ', '\\s')
+    return x.replace(' ', '{SPACE}')
 
 
 parser = argparse.ArgumentParser(
