@@ -14,6 +14,7 @@ from . import r_network5
 from . import r_network6
 from . import r_network7
 from . import r_network8
+from . import r_network9
 from enum import Enum
 
 
@@ -31,6 +32,7 @@ class Network(Enum):
     R_NETWORK6 = 'r_network6'
     R_NETWORK7 = 'r_network7'
     R_NETWORK8 = 'r_network8'
+    R_NETWORK9 = 'r_network9'
 
 
 def construct_network(network, reader):
@@ -60,5 +62,7 @@ def construct_network(network, reader):
         return r_network7.model(reader)
     elif network == Network.R_NETWORK8:
         return r_network8.model(reader)
+    elif network == Network.R_NETWORK9:
+        return r_network9.model(reader)
     else:
         raise Exception('Unknown network {}'.format(network))
