@@ -26,7 +26,7 @@ purpose of the sets are the following:
 \begin{itemize}
 
 \item[- (A).] The entire set of extracted data. This consists of text written
-by, 10250 different danish high school students, spanning different schools
+by, 10.250 different danish high school students, spanning different schools
 throughout the country.
 
 % Split A
@@ -145,13 +145,13 @@ The last constraint regards the unique characters in each text. Look at the
 stats we can see that there is a text containing 219 unique characters, greatly
 exceeding the average of 59. A unique character count like this, implies that a
 non-danish alphabet might have been used, and for that reason texts like these
-don't add to the generalization we strive towards. This is combatted creating
-a list of characters based on the data used for training, each character in
-this list is mapped to a replacement character if ever encountered in either
-the training or the validation set. The characters are placed in this list if
-they occur with a frequency smaller than $10^-5$. This threshold was determined
+don't add to the generalization we strive towards. This is combatted creating a
+list of characters based on the data used for training, each character in this
+list is mapped to a replacement character if ever encountered in either the
+training or the validation set. The characters are placed in this list if they
+occur with a frequency smaller than $10^{-5}$. This threshold was determined
 by looking at the danish characters Æ,Ø and Å. In the set (B) they have
-a frequency just above $10^-5$. We want these included, as we hypothesize
+a frequency just above $10^{-5}$. We want these included, as we hypothesize
 that they generalize danish student well. Additionally we can see in figure
 \ref{fig:character_frequencies}, that after that threshold, the overall of
 frequency of the specific characters drops dramatically.
