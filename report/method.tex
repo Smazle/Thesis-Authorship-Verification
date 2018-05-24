@@ -1096,7 +1096,7 @@ the gradient. The algorithm for weight update becomes,
 \begin{equation}
     \mathbf{w}^{(t+1)} =
         \mathbf{\mathbf{w}}^{(t)} -
-        \eta\Delta E|_{\mathbf{w}^{(t)}}(\mathbf{w}^{(t)}).
+        \eta\Delta E|_{\mathbf{w}^{(t)}}\left(\mathbf{w}^{(t)}\right).
 \end{equation}
 
 In that algorithm a single updating of the weights require computing the
@@ -1113,7 +1113,7 @@ updating for Stochastic Gradient Descend is computed as,
 \begin{equation}
     \mathbf{w}^{(t+1)} =
         \mathbf{\mathbf{w}}^{(t)} -
-        \eta\Delta E_n|_{\mathbf{w}^{(t)}}(\mathbf{w}^{(t)}).
+        \eta\Delta E_n|_{\mathbf{w}^{(t)}}\left(\mathbf{w}^{(t)}\right).
 \end{equation}
 
 In practise each weight update in Stochastic Gradient Descend are computed
@@ -1170,18 +1170,42 @@ extension \gls{AdaGrad}, \gls{RMSProp} and \gls{Adam}.
             \mathbf{w}^{(t+1)} =
                 \mathbf{w}^{(t)} -
                 \eta \text{diag}(G)^{-\frac{1}{2}} \circ
-                \Delta E|_{\mathbf{w}^{(t)}},
+                \Delta E|_{\mathbf{w}^{(t)}}\left(\mathbf{w}^{(t)}\right)
         \end{equation}
 
         where $G$ is a matrix containing the sum of the outer product of the
         gradient in all previous timesteps. $G$ is defined as,
 
         \begin{equation}
-            G = \sum_{\tau=1}^t \Delta E|_{\mathbf{w}^{(\tau)}}(\mathbf{w}^{(\tau)})
+            G = \sum_{\tau=1}^t \Delta E|_{\mathbf{w}^{(\tau)}}\left(\mathbf{w}^{(\tau)}\right)
                 \left(
-                    \Delta E|_{\mathbf{w}^{(\tau)}}(\mathbf{w}^{(\tau)})
+                    \Delta E|_{\mathbf{w}^{(\tau)}}\left(\mathbf{w}^{(\tau)}\right)
                 \right)^T.
         \end{equation}
+
+        For the updating of a single weight $w_i$ the above becomes
+        \cite{Duchi:2011:ASM:1953048.2021068},
+
+        \begin{equation}
+            \label{eq:individual_adagrad}
+            \mathbf{w}_i^{(t+1)} =
+                \mathbf{w}_i^{(t)} -
+                \frac{\eta}{
+                    \sqrt{G_{i,i}}
+                } \Delta E|_{\mathbf{w}_i^{(t)}}.
+        \end{equation}
+
+        $G_{i,i}$ works as a scaling factor for weight
+        $\mathbf{w}_i$. Since $\sqrt{G_{i,i}} = \sqrt{\sum_{\tau=1}^t
+        E|_{\mathbf{w}^{(\tau)}_i}\left(\mathbf{w}^{(\tau)}\right)}$,
+        $G_{i,i}$ is the L2 norm of the gradient in the previous timesteps.
+        That means that if the gradient has generally been large for a
+        particular weight the norm will be large and the updating of the
+        weight will be scaled down (slower) which can be seen in Equation
+        \eqref{eq:individual_adagrad}. Similarly when the gradients of a weight
+        has been small or 0 the weight is scaled less down and the upgrade will
+        be larger. That has the effect of having infrequent parameters of the
+        model train faster \cite{Duchi:2011:ASM:1953048.2021068}.
 
     \item[\gls{RMSProp}:]
 
