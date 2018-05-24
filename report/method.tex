@@ -1,6 +1,6 @@
 \section{Method} \label{sec:method}
 
-In this section we will describe the method we have used to solve the Authorship
+In this Section we will describe the method we have used to solve the Authorship
 Verification problem presented. In general there are two methods of representing
 each author. There is the instance based approach and the profile based
 approach. In the instance based approach each author is represented by a set of
@@ -889,7 +889,7 @@ of a function. It can be used for describing the slope of a function at a
 certain value. Not only that, but its most desired property for our purposes is
 the fact that contrary to the derivative it a vector, and this vector points
 to the direction of greatest increase in value for the function at a specific
-point. As such, we can apply gradient decent to our network, which is simply
+point. As such, we can apply Gradient Descent to our network, which is simply
 the act of changing our loss function arguments, so we step in the negative
 direction of the gradient, which would be the direction of greatest decrease
 in value, that is, it point towards the local minimum of the error function. A
@@ -898,7 +898,7 @@ model illustrating this process can be seen in Figure \ref{fig:grad}
 \begin{figure}
     \centering
     \includegraphics[width=0.8\textwidth]{./pictures/method/GradientDesc.png}
-    \caption{An illustration of how gradient decent works. Each iteration steps
+    \caption{An illustration of how Gradient Descent works. Each iteration steps
         in the direction of the global minimum of the specific function used,
         which in this case is signified by a black ring. The Figure is generated
         using code from
@@ -917,9 +917,9 @@ E_n(W) &= \frac{1}{2}(\hat{y}_n - y_n)^2
 Where N is the number of training samples, $\hat{y}_n$ is the predicted results,
 and $y_n$ is the target, and W is a set of weights. The goal is minimize
 this function. In order to do so, we need to have a independent variable we
-can tweak using gradient decent as per the above description. In the case of
+can tweak using Gradient Descent as per the above description. In the case of
 neural networks we can view this variable as being the weights and the biases,
-which are defined used as described in section \ref{sec:neurons}. In other
+which are defined used as described in Section \ref{sec:neurons}. In other
 words we want to update each individual weight by doing the following operation
 repeatedly.
 
@@ -928,7 +928,7 @@ repeatedly.
 \end{equation}
 
 Where w is a singular weight value, and t refers to a specific step, in the 
-chain of steps performed by gradient decent.
+chain of steps performed by Gradient Descent.
 
 \begin{equation}
 \Delta w^t = -\eta \nabla E|_{\pmb{w}^t}
@@ -950,7 +950,7 @@ weights in our network.
 
 After performing step 1(Feed forward), which entails running a training sample
 through the network, we want to determine by how much we have to tweak each
-weights using gradient decent. Due to the hidden nature of the entire network,
+weights using Gradient Descent. Due to the hidden nature of the entire network,
 the natural starting point for this process is at the output node. If we for
 simplicity's sake focus on only a single training sample, we can compute the
 loss as follows
