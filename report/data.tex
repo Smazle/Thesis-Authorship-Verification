@@ -3,13 +3,12 @@
 
 As described earlier we use data from the Danish company MaCom. The dataset
 provided by MaCom is a file consisting of set of texts in Danish where each text
-is associated with an author ID. Throughout the development process we've
-been given several data extract. The final extract used for experiments
-consisted of a set of 10.250 authors, where a maximum of 100 authors were
-extracted from each school.
-Before running any kind of experiments, this data was split up into several
-parts, each part severing a different purpose in our experimentation. The
-splitting of the data can be seen in Figure \ref{fig:data_split}. The
+is associated with an author ID. Throughout the development process we've been
+given several data extract. The final extract used for experiments consisted
+of a set of 10.250 authors, where a maximum of 100 authors were extracted from
+each school. Before running any kind of experiments, this data was split up into
+several parts, each part severing a different purpose in our experimentation.
+The splitting of the data can be seen in Figure \ref{fig:data_split}. The
 purpose of the sets are the following:
 
 \begin{figure}
@@ -33,7 +32,7 @@ throughout the country.
 % Split A
 \begin{itemize}
 
-\item[- (B).] 
+\item[- (B).]
 A subset of the entire set (A). Consisting of the texts written by
 3.500 different authors, this set if used in the training process and parameter
 tuning of the produced \gls{NN}'s, Baseline Methods, and prediction system.
@@ -76,14 +75,14 @@ section \ref{subsec:baseline}.
 \end{itemize}
 
 
-\item[- (C).] 
+\item[- (C).]
 Being untouched throughout the training process, this set is used for unbiased
 validation, and selection of networks to be used on the test set (D). Contrary
 to the training set (B), this is only used for the final selection of our best 
 models. No parameter selection/training is done on this set.
 
 
-\item[- (D).] 
+\item[- (D).]
 The test set, which as the name implies, is used to test the
 performance of our final models.
 
@@ -97,8 +96,6 @@ The superfluous authors, which can be drawn upon in the case more data is needed
 in any of the other data sets.
 
 \end{itemize}
-
-
 
 \end{itemize}
 
@@ -116,26 +113,25 @@ constraints had to be applied to the data. The reason for this is ,in most
 cases, that the non-existence of the constraints would result in either some
 computational inefficiency accompanied by a minor increase in data-quality, or
 simply just a computational impossibility such as a single text consuming all
-memory causing our models to crash. Another purpose of these constraints 
-is to make the data-set generalize better by removing the outliers.
+memory causing our models to crash. Another purpose of these constraints is to
+make the data-set generalize better by removing the outliers.
 
 We initially removed the first 200 characters of each text, as the beginning
 of each text contains a lot of authorship identifying information, such as
-name, school, and specifics class. The removal of these characters also
-make sure that no garbage texts are included. As can be seen in the
-statistics in section \ref{sec:B_stats}, the text containing the 
-smallest text only contains 2 characters, and does obviously not contain
-any valuable information. After the removal of these 200 characters, we also
-remove texts that have below 200 characters left after the removal,
-as they don't provide enough information about that specific author.
-The application of these two constraints, resulted in 1127 of the 46620
-texts being removed. After which we applied a upper constraint, in
-terms of the total number of characters. The reason for this,
-was a mentioned earlier, that there are some texts eating up
-all the available memory, such as the largest text in (B), which consists
-of 685.427 characters. We found that limiting the number of characters to 30.000
-gave good results, by removing the crash-inducing texts, without affecting the
-overall data-quality too much, as this only removed 72 texts from (B).
+name, school, and specifics class. The removal of these characters also make
+sure that no garbage texts are included. As can be seen in the statistics in
+section \ref{sec:B_stats}, the text containing the smallest text only contains
+2 characters, and does obviously not contain any valuable information. After
+the removal of these 200 characters, we also remove texts that have below 200
+characters left after the removal, as they don't provide enough information
+about that specific author. The application of these two constraints, resulted
+in 1127 of the 46620 texts being removed. After which we applied a upper
+constraint, in terms of the total number of characters. The reason for this,
+was a mentioned earlier, that there are some texts eating up all the available
+memory, such as the largest text in (B), which consists of 685.427 characters.
+We found that limiting the number of characters to 30.000 gave good results, by
+removing the crash-inducing texts, without affecting the overall data-quality
+too much, as this only removed 72 texts from (B).
 
 Since we also perform some sentence level networks as well, we also chose to
 limit the max number of sentences, for the same reason as with the characters.
