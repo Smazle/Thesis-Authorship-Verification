@@ -9,7 +9,7 @@ def GetEmbeddingWeights(emb_path: str, reader):
     weights = []
     v_map = reader.channels[0].vocabulary_map
 
-    with open(emb_path, 'r') as f:
+    with open(emb_path, 'r', encoding='utf-8') as f:
         X, y = [int(x.strip()) for x in next(f).split(' ')]
 
         weights = np.zeros(
