@@ -934,9 +934,6 @@ chain of steps performed by Gradient Descent.
 \Delta w^{(t)} = -\nabla E|_{\pmb{w}^{(t)}}
 \end{equation}
 
-$\eta$ in this case, is what a predetermined value called either the learning
-rate or the step size. More details regarding the value of $\eta$
-will be explained in the Section \ref{sec:optimizers}.
 $\nabla E|_{\pmb{w}^{(t)}}$ refers to the gradient of the
 error function relative to that specific weight, or rewritten.
 
@@ -944,6 +941,9 @@ $$
 \nabla E|_{\pmb{w}^{(t)}} = \frac{\partial E}{\partial \pmb{w}^{(t)}}
 $$
 
+At a later point in Section \ref{sec:optimizers} something called the learning
+rate will be introduced to this equality, but for now for the specifics
+of Back-Propagation, we can omit it for now. 
 This is the function we attempting to solve, not for one weight, but for all
 of them. Not only that, we also want to do this for every training sample,
 averaging $\Delta \pmb{w}^{(t)}$ for over all of them. As such, the goal is
