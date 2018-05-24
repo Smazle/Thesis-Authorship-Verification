@@ -11,6 +11,7 @@ from ..util import generate_emb_weight as gew
 def model(reader):
     assert reader.channeltypes == [ChannelType.SENTENCE]
 
+    sent_len = reader.channels[0].sentence_len
     weights = gew.GetEmbeddingWeights(
         '/home/smazle/Git/MastersThesis/data/pre-trained/wiki.da.vec', reader)
 
@@ -18,8 +19,8 @@ def model(reader):
                             input_dim=weights.shape[0], trainable=False,
                             weights=[weights])
 
-    known_in = L.Input(shape=(None, 25), dtype='int32')
-    unknown_in = L.Input(shape=(None, 25), dtype='int32')
+    known_in = L.Input(shape=(None, sent_len), dtype='int32')
+    unknown_in = L.Input(shape=(None, sent_len), dtype='int32')
 
     # embedding = L.Embedding(
     #    len(reader.channels[0].vocabulary_above_cutoff) + 2, 150)
@@ -28,9 +29,11 @@ def model(reader):
     unknown_emb = embedding(unknown_in)
 
     known_sentences_repr = L.Lambda(
-        lambda x: K.sum(x, axis=2), output_shape=(None, 300))(known_emb)
+        lambda x: K.sum(x, axis=2) / sent_len,
+        output_shape=(None, 300))(known_emb)
     unknown_sentences_repr = L.Lambda(
-        lambda x: K.sum(x, axis=2), output_shape=(None, 300))(unknown_emb)
+        lambda x: K.sum(x, axis=2) / sent_len,
+        output_shape=(None, 300))(unknown_emb)
 
     feature_extractor = L.Bidirectional(L.LSTM(50))
 
