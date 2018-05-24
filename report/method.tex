@@ -1042,18 +1042,21 @@ As such, we can summarize the backpropagating like this.
 \begin{enumerate}
     \item
         Provide the network with some input data $x_n$, and compute the
-        activations of each hidden and output neuron using equation \eqref{eq:neuron}.
+        activations of each hidden and output neuron using Equation
+        \eqref{eq:neuron}.
+
     \item
-        Compute $\delta_n$ for each of the output neurons using \eqref{eq:output}
+        Compute $\delta_n$ for each of the output neurons using Equation
+        \eqref{eq:output}
     \item
-        Back-Propagateprop $\delta$ using \eqref{eq:bp}, to compute $\delta_i$
-        for each neuron
+        Back-Propagateprop $\delta$ using Equation \eqref{eq:bp}, to compute
+        $\delta_i$ for each neuron
     \item
-        Use \eqref{eq:deriv} to evaluate the required derivatives
+        Use Equation \eqref{eq:deriv} to evaluate the required derivatives
 \end{enumerate}
 
-At this point we can update each of the weights using point 4, and \eqref{eq:update}
-which is the Step 3.
+At this point we can update each of the weights using point 4, and
+Equation \eqref{eq:update} which is the Step 3.
 
 These three steps Feed-Forward, Back-Propagate and update weights are repeated
 throughout the training cycle of the neural networks, so as to optimize the
@@ -1077,24 +1080,18 @@ after each batch, but this introduced inaccuracy is negligible compared to the
 computational time won, by reducing the size of N in $O(\mathcal{E}\cdot N\cdot
 W)$.\cite{Bishop}
 
+
 \subsubsection{Optimizers}
 
 Optimizations of the Gradient Descent algorithm in the training of a neural
 network are referred to as an optimizer function. The optimizer functions
-responsibility is to minimize the error function $E$ as fast as possible without
-overstepping the "valleys" in the function. Recall that the updating of the
-weights via Gradient Descend was defined as,
-
-\begin{equation}
-    \mathbf{w}^{(t+1)} =
-        \mathbf{\mathbf{w}}^{(t)} -
-        \Delta E|_{\mathbf{w}^{(t)}}(\mathbf{w}^{(t)}).
-\end{equation}
-
-The easiest way to use gradient information for weight updating is to take a
-small step in the direction of the gradient since we might overstep the valley
-if we take to large a step. To take a small step we introduce a parameter
-$\eta > 0$ that scales the magnitude of the gradient \cite{Bishop},
+responsibility is to minimize the error function $E$ as fast as possible
+without overstepping the "valleys" in the function. The easiest way to use
+gradient information for weight updating is to take a small step in the opposite
+direction of the gradient since we might overstep the valley if we take to large
+a step. To take a small step we introduce a parameter $\eta > 0$ that scales the
+magnitude of the gradient \cite{Bishop}. The parameter is often referred to as
+the gradient. The algorithm for weight update becomes,
 
 \begin{equation}
     \mathbf{w}^{(t+1)} =
@@ -1107,8 +1104,8 @@ gradient of the error function on each training sample. For large datasets
 that might not be feasible as backpropagation is expensive to compute for such
 datasets. Stochastic Gradient Descend is an attempt at estimating the gradient
 of all datapoints using only a single datapoint. That means that in Stochastic
-Gradient Descend weights are updated much more often and is updated on a
-noisy target \cite{Bishop}. The upside of Stochastic Gradient Descend is that
+Gradient Descend weights are updated much more often and is updated on a noisy
+target \cite{Bishop}. The advantage of Stochastic Gradient Descend is that
 convergence to a local minimum might be much quicker since the algorithm doesn't
 have to go through all training samples for each weight update. The weight
 updating for Stochastic Gradient Descend is computed as,
@@ -1145,6 +1142,29 @@ towards the non-optimal local minima the gradient of a single batch might point
 towards a better local minima. Therefore the optimizer has the possibility of
 following the gradient of single batches that leads to a final better local
 minima \cite{Bishop}.
+
+A problem in the Stochastic Gradient Descend algorithm is the need of choosing
+the learning rate $\eta$. If the learning rate is too high the algorithm will
+diverge and if it is to low it will be very slow to converge. Therefore several
+extensions to basic Stochastic Gradient Descend has been developed that
+automatically tunes the learning rate $\eta$. We will discuss three different
+extension \gls{AdaGrad}, \gls{RMSProp} and \gls{Adam}.
+
+\begin{description}
+
+    \item[\gls{AdaGrad}:]
+
+        % TODO: Cite http://www.jmlr.org/papers/volume12/duchi11a/duchi11a.pdf
+
+    \item[\gls{RMSProp}:]
+
+        % TODO: Cite http://www.cs.toronto.edu/~tijmen/csc321/slides/lecture_slides_lec6.pdf
+
+    \item[\gls{Adam}:]
+
+        % TODO: Cite https://arxiv.org/pdf/1412.6980.pdf
+
+\end{description}
 
 
 \subsubsection{Siamese Networks}
