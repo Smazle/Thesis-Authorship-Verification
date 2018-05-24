@@ -74,11 +74,6 @@ class MacomReader(object):
     training_authors = {}
     validaiton_authors = {}
 
-    # List of problems which consist of two line indices to two texts and
-    # either 1 or 0. If 1 the texts are from the same author and if 0 they are
-    # from different authors.
-    problems = []
-
     # List of training problems.
     training_problems = None
 
@@ -194,6 +189,8 @@ class MacomReader(object):
                 same = random.choice(authors[author])
                 different = random.choice(authors[random.choice(list(other))])
                 problems.append((same, different, 0))
+
+        random.shuffle(problems)
 
         return problems
 
