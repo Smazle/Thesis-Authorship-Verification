@@ -1253,6 +1253,12 @@ extension \gls{AdaGrad}, \gls{RMSProp} and \gls{Adam}.
 
     \item[\gls{Adam}:]
 
+        \gls{Adam} is an upgrade of the \gls{RMSProp} algorithm invented by
+        \cite{DBLP:journals/corr/KingmaB14}. The difference from \gls{RMSProp}
+        is that \gls{Adam} use both the gradient and the squared gradient while
+        \gls{RMSProp} use only the squared gradient. Consequently \gls{Adam} has
+        two forgetting factors instead of the single one for \gls{RMSProp}.
+
         % TODO: Cite https://arxiv.org/pdf/1412.6980.pdf
 
 \end{description}
