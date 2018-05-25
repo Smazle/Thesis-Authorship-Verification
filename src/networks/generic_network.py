@@ -81,16 +81,12 @@ create_reader = readerparser.add_parser(
 create_reader.add_argument(
     'training_file',
     type=str,
-    help='Path to file containing training data.',
-    nargs='?',
-    default=None
+    help='Path to file containing training data.'
 )
 create_reader.add_argument(
     'validation_file',
     type=str,
-    help='Path to file containing validation data.',
-    nargs='?',
-    default=None
+    help='Path to file containing validation data.'
 )
 create_reader.add_argument(
     '-b',
@@ -153,7 +149,7 @@ config = json.load(
     open('./src/networks/config/{}_config.json'.format(args.networkname), 'r'))
 
 var_args = vars(args)
-for key in var_args.keys():
+for key in config.keys():
     if var_args[key] is None:
         var_args[key] = config[key]
 
