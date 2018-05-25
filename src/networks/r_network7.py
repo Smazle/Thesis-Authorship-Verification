@@ -7,15 +7,6 @@ import keras.layers as L
 
 def model(reader):
 
-    #   Example of using pretrained embeddings
-    #
-    #   from ..util import generate_emb_weight as gew
-    #   weights = gew.GetEmbeddingWeights("/home/smazle/Downloads/wiki.da.vec"
-    #            , reader)
-    #   embedding = L.Embedding(output_dim = weights.shape[1],
-    #           input_dim=weights.shape[0], trainable=False,
-    #           weights=[weights])
-
     known_in = L.Input(shape=(None, ), dtype='int32')
     unknown_in = L.Input(shape=(None, ), dtype='int32')
 

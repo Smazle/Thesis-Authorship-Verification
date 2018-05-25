@@ -12,9 +12,11 @@ from ..util import generate_emb_weight as gew
 def model(reader):
     assert reader.channeltypes == [ChannelType.SENTENCE]
 
+    word_mapping = reader.channels[0].vocabulary_map
+
     # TODO: Path should be command line argument or something.
-    weights = gew.GetEmbeddingWeights(
-        '/home/fluttershy/datalogi/masters_project/MastersThesis/data/pre-trained/wiki.da.vec', reader)
+    weights = gew.generate_embedding_weights(
+        '/home/fluttershy/datalogi/masters_project/MastersThesis/data/pre-trained/wiki.da.vec', word_mapping)
 
     sentence_len = reader.channels[0].sentence_len
     word_number = weights.shape[0]

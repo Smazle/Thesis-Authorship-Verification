@@ -11,9 +11,10 @@ from ..util import generate_emb_weight as gew
 def model(reader):
     assert reader.channeltypes == [ChannelType.SENTENCE]
 
+    word_mapping = reader.channels[0].vocabulary_map
     sent_len = reader.channels[0].sentence_len
-    weights = gew.GetEmbeddingWeights(
-        '/home/smazle/Git/MastersThesis/data/pre-trained/wiki.da.vec', reader)
+    weights = gew.generate_embedding_weights(
+        '/home/smazle/Git/MastersThesis/data/pre-trained/wiki.da.vec', word_mapping)
 
     embedding = L.Embedding(output_dim=weights.shape[1],
                             input_dim=weights.shape[0], trainable=False,
