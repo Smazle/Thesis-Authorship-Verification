@@ -48,8 +48,7 @@ parser.add_argument(
     '--epochs',
     type=int,
     help='How many epochs to run.',
-    # default=100
-    default=None
+    default=100
 )
 parser.add_argument(
     '--retry',

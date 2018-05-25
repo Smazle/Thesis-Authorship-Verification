@@ -1,7 +1,4 @@
 {
-"weights":null,
-"epochs":100,
-"retry":false,
 "batch_size":8,
 "vocabulary_frequency_cutoff":[0.00001],
 "batch_normalization":"pad",
