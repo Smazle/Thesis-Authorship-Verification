@@ -13,7 +13,7 @@ from nltk.tokenize import sent_tokenize, word_tokenize
 
 
 def fix_space(x):
-    return x.replace(' ', '{SPACE}')
+    return x.replace(' ', '\' \'')
 
 
 parser = argparse.ArgumentParser(
@@ -230,6 +230,34 @@ line2 = plt.plot(X, [1.0 / 100000.0] * len(X), color='red', label='Threshold')
 plt.legend(handles=[line1[0], line2[0]])
 
 plt.savefig('Frequencies.png')
+plt.clf()
 
 
-# print('Charset', charset)
+plt.title('Character Counts and Thresholds')
+plt.xlabel('Text Number')
+plt.ylabel('Character Count')
+
+X = range(len(lengths))
+line1 = plt.semilogy(X, sorted(lengths), color='blue', label='Count')
+line2 = plt.plot(X, [30000] * len(lengths),
+                 color='red', label='Upper Threshold')
+line3 = plt.plot(X, [400] * len(lengths),
+                 color='green', label='Lower Threshold')
+
+plt.legend(handles=[line1[0], line2[0], line3[0]])
+
+plt.savefig('CharacterCount.png')
+
+plt.clf()
+
+plt.title('Sentence Count and Thesholds')
+plt.ylabel('Sentence Count')
+plt.xlabel('Text Number')
+
+X = range(len(sentence_count))
+line1 = plt.semilogy(X, sorted(sentence_count), color='blue', label='Count')
+line2 = plt.plot(X, [500] * len(lengths), color='red', label='Threshold')
+
+plt.legend(handles=[line1[0], line2[0]])
+
+plt.savefig('SentenceCount.png')
