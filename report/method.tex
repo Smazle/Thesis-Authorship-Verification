@@ -1197,16 +1197,17 @@ extension \gls{AdaGrad}, \gls{RMSProp} and \gls{Adam}.
                 } \Delta E|_{\mathbf{w}_i^{(t)}}.
         \end{equation}
 
-        $G_{i,i}$ works as a scaling factor for weight $\mathbf{w}_i$. Since
-        $\sqrt{G_{i,i}} = \sqrt{\sum_{\tau=1}^t E|_{\mathbf{w}^{(\tau)}_i}}$,
-        $G_{i,i}$ is the L2 norm of the gradient in the previous timesteps.
-        That means that if the gradient has generally been large for a
-        particular weight the norm will be large and the updating of the
-        weight will be scaled down (slower) which can be seen in Equation
-        \eqref{eq:individual_adagrad}. Similarly when the gradients of a weight
-        has been small or 0 the weight is scaled less down and the upgrade will
-        be larger. That has the effect of having infrequent parameters of the
-        model train faster \cite{Duchi:2011:ASM:1953048.2021068}.
+        $G_{i,i}$ works as a scaling factor for weight $\mathbf{w}_i$.
+        Since $\sqrt{G_{i,i}} = \sqrt{\sum_{\tau=1}^t \left(\Delta
+        E|_{\mathbf{w}^{(\tau)}_i}\right)^2}$, $G_{i,i}$ is the L2 norm
+        of the gradient in the previous timesteps. That means that if the
+        gradient has generally been large for a particular weight the norm
+        will be large and the updating of the weight will be scaled down
+        (slower) which can be seen in Equation \eqref{eq:individual_adagrad}.
+        Similarly when the gradients of a weight has been small or 0 the
+        weight is scaled less down and the upgrade will be larger. That has
+        the effect of having infrequent parameters of the model train faster
+        \cite{Duchi:2011:ASM:1953048.2021068}.
 
         % TODO: Describe why AdaGrad is great for NLP.
 
