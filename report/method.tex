@@ -1213,7 +1213,43 @@ extension \gls{AdaGrad}, \gls{RMSProp} and \gls{Adam}.
 
     \item[\gls{RMSProp}:]
 
-        % TODO: Cite http://www.cs.toronto.edu/~tijmen/csc321/slides/lecture_slides_lec6.pdf
+        \gls{RMSProp} is an unpublished optimization algorithm.
+        It was introduced by Geoff Hinton in Lecture 6e of his
+        Coursera Class \cite{DBLP:journals/corr/Ruder16}. This section
+        is based primarily on his slides which can be found at
+        \url{http://www.cs.toronto.edu/~tijmen/csc321/slides/lecture_slides_lec6
+        .pdf}. The idea behind \gls{RMSProp} is similar to \gls{AdaGrad} each
+        weight is updated at an independent rate. Unlike \gls{AdaGrad} the rate
+        is chosen by a moving average instead of the L2 norm of all previous
+        steps. That allows the algorithm to adapt quickly to changes in the
+        gradient. When the gradient of a weight is large the algorithm tunes
+        down the learning rate and when the gradient is consistently small it
+        tunes up the learning rate. That functions well since a large gradient
+        is found in a steep volatile area while a consistently small gradient
+        is found in a flat non volatile area. In the steep areas we are likely
+        to overshoot the target if the learning rate is to high while in flat
+        areas we don't have that problem. The internal state of the algorithm is
+        a vector $\mathbf{v}$ of the running average of gradient magnitudes. It
+        is updated with the equation,
+
+        \begin{equation}
+            \mathbf{v}^{(t+1)} =
+                \gamma\mathbf{v}^{(t)} +
+                (1 - \gamma)\left(\Delta E|_{\mathbf{w}^{(t)}}\right)^2.
+        \end{equation}
+
+        The parameter $\gamma$ can be seen as a forgetting rate. If $\gamma$ is
+        high we keep much of the previous running average and if $\gamma$ is low
+        we update the average much quicker. The actual weight update is
+        performed by using the internal state $\mathbf{v}$ to scale the learning
+        rate $\eta$,
+
+        \begin{equation}
+            \mathbf{w}^{(t+1)} =
+                \mathbf{w}^{(t)} -
+                \frac{\eta}{\sqrt{\mathbf{v}^{(t)}}}
+                \Delta E|_{\mathbf{w}^{(t)}}.
+        \end{equation}
 
     \item[\gls{Adam}:]
 
