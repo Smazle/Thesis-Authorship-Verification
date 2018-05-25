@@ -4,16 +4,14 @@
 import numpy as np
 
 
-def GetEmbeddingWeights(emb_path: str, reader):
+def generate_embedding_weights(emb_path: str, vocabulary_map):
 
-    weights = []
-    v_map = reader.channels[0].vocabulary_map
+    word_n = len(vocabulary_map)
 
     with open(emb_path, 'r', encoding='utf-8') as f:
         X, y = [int(x.strip()) for x in next(f).split(' ')]
 
-        weights = np.zeros(
-            (len(reader.channels[0].vocabulary_above_cutoff) + 2, y))
+        weights = np.zeros((word_n + 2, y))
 
         for idx, line in enumerate(f):
             line = line.split(' ')
@@ -21,7 +19,7 @@ def GetEmbeddingWeights(emb_path: str, reader):
 
             w = [float(x) for x in line[1:-1]]
 
-            if word in v_map:
-                weights[v_map[word], :] = w
+            if word in vocabulary_map:
+                weights[vocabulary_map[word], :] = w
 
     return weights
