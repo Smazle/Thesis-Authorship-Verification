@@ -153,8 +153,9 @@ occur with a frequency smaller than $10^{-5}$. This threshold was determined
 by looking at the danish characters Æ,Ø and Å. In the set (B) they have
 a frequency just above $10^{-5}$. We want these included, as we hypothesize
 that they generalize danish student well. Additionally we can see in figure
-\ref{fig:character_frequencies}, that after that threshold, the overall of
-frequency of the specific characters drops dramatically.
+\ref{fig:character_frequencies}, along with the other thresholds, that after
+the character frequency threshold, the overall of frequency of the specific
+characters drops dramatically.
 
 After applying all of the constraints, and taking into account
 overlap between them, 1202 texts were removed from the total 46620 in (B),
@@ -163,14 +164,22 @@ advantages it includes.
 In the end this leaves set (B) with 45218 texts.
 
 \begin{figure}[htb]
-    \centering
-    \includegraphics[scale=.8]{./pictures/data/character_frequencies.png}
-    \caption{The frequency distribution of characters in the training dataset,
-        only a random subset of characters is shown on the x-axis, including the
-        most and least frequent. The most frequent character is a space
-        character which is why the place is empty.}
-    \label{fig:character_frequencies}
+\begin{minipage}{.5\linewidth}
+\centering
+\subfloat[]{\label{main:a}\includegraphics[scale=.5]{./pictures/data/Frequencies.png}}
+\end{minipage}%
+\begin{minipage}{.5\linewidth}
+\centering
+\subfloat[]{\label{main:b}\includegraphics[scale=.5]{./pictures/data/SentenceCount.png}}
+\end{minipage}\par\medskip
+\centering
+\subfloat[]{\label{main:c}\includegraphics[scale=.5]{./pictures/data/CharacterCount.png}}
+
+\caption{The different levels of thresholding applied to the data before used.}
+\label{fig:character_frequencies}
 \end{figure}
+
+
 
 All of the neural networks we train are Siamese Neural Networks. They all
 work by comparing two texts at a time. We therefore had to generate problem
