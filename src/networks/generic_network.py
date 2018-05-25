@@ -199,7 +199,8 @@ model = construct_network(Network(args.networkname), reader)
 
 tboard = TensorBoard('./%s_logs/' % args.networkname,
                      batch_size=args.batch_size,
-                     write_grads=True, write_images=True)
+                     write_grads=True, write_images=True
+                     )
 
 # Setup callbacks.
 callbacks = [
