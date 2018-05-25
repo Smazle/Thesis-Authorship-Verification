@@ -6,6 +6,7 @@ from . import network2
 from . import network3
 from . import network4
 from . import network5
+from . import network6
 from . import r_network1
 from . import r_network2
 from . import r_network3
@@ -24,6 +25,7 @@ class Network(Enum):
     NETWORK3 = 'network3'
     NETWORK4 = 'network4'
     NETWORK5 = 'network5'
+    NETWORK6 = 'network6'
     R_NETWORK1 = 'r_network1'
     R_NETWORK2 = 'r_network2'
     R_NETWORK3 = 'r_network3'
@@ -45,7 +47,9 @@ def construct_network(network, reader):
     elif network == Network.NETWORK4:
         return network4.model(reader)
     elif network == Network.NETWORK5:
-        return network4.model(reader)
+        return network5.model(reader)
+    elif network == Network.NETWORK6:
+        return network6.model(reader)
     elif network == Network.R_NETWORK1:
         return r_network1.model(reader)
     elif network == Network.R_NETWORK2:
