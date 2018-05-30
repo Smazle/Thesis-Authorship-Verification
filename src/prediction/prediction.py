@@ -197,19 +197,18 @@ if __name__ == '__main__':
                 limit_theta = theta
 
         print('Starting Fine tuned run')
-        print('Limit Theta: %s, Lower Theta: %s, Limit: %s, FNS: %s' %
-              limit_theta, lower_theta, limit, 'None')
+        print('Limit Theta: %s, Lower Theta: %s, Limit: %s' %
+              limit_theta, lower_theta, limit)
+        print('Lower Theta', 'Upper Theta', 'Applied Theta', 'FNS')
         for _ in range(30):
             new_theta = (limit_theta + lower_theta) / 2
             fns = max([evaluate(labels, results, weight, new_theta)[-1]
                        for weight in weights])
 
+            print('%s, %s, %s, %s' %
+                  lower_theta, limit_theta, new_theta, fns)
+
             if fns < limit:
                 lower_theta = new_theta
-                print('Lower theta was moved up to %s' % lower_theta)
             else:
                 limit_theta = new_theta
-                print('Limit theta was moved down to %s' % limit_theta)
-
-            print('Limit Theta: %s, Lower Theta: %s, Limit: %s, FNS: %s' %
-                  limit_theta, lower_theta, limit, fns)
