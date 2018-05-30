@@ -148,25 +148,14 @@ def gen_own_corpus(corpus):
     dataFrame = pd.read_csv(corpus, sep=';')
     data = dataFrame.as_matrix(columns=['Text']).flatten()
 
-    # Align texts with macomreader
     print('... Applying Filters')
-    data = list(map(lambda x: clean(x[200:]), filter(constraints, data)))
+    data = list(map(lambda x: clean(x), data))
 
     print('... Joining')
     data = '\n'.join(data)
 
     print('... Done')
     return data
-
-
-def constraints(text):
-    if len(text) > 30000:
-        return False
-    elif len(text) < 400:
-        return False
-    elif len(sent_tokenize(text)) > 500:
-        return False
-    return True
 
 
 def gen_corpus():
