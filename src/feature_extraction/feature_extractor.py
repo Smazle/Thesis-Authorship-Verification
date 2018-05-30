@@ -42,9 +42,8 @@ class FeatureExtractor:
             extractor.fit(self.corpus)
             self.feature_names += ['char-' + str(n)] * size
             for i in range(size):
-                self.actual_features.append('char-{}-{}\t{}'
-                                            .format(n, i,
-                                                    repr(extractor.grams[i])))
+                self.actual_features.append(
+                    'char-{}-{}\t{}'.format(n, i, repr(extractor.grams[i])))
 
             print('... Char-%d-grams fitted, %d of total %d' %
                   (n, size, extractor.max))
@@ -57,9 +56,8 @@ class FeatureExtractor:
             extractor.fit(self.corpus)
             self.feature_names += ['spec-' + str(n)] * size
             for i in range(size):
-                self.actual_features.append('special-{}-{}\t{}'
-                                            .format(n, i,
-                                                    repr(extractor.grams[i])))
+                self.actual_features.append(
+                    'special-{}-{}\t{}'.format(n, i, repr(extractor.grams[i])))
 
             print('... Special-%d-grams fitted, %d of total %d' %
                   (n, size, extractor.max))
@@ -72,9 +70,8 @@ class FeatureExtractor:
             extractor.fit(self.corpus)
             self.feature_names += ['freq'] * word_frequencies
             for i in range(word_frequencies):
-                self.actual_features.append('word-{}\t{}'
-                                            .format(i,
-                                                    repr(extractor.words[i])))
+                self.actual_features.append(
+                    'word-{}\t{}'.format(i, repr(extractor.words[i])))
 
             print('... Word Frequencies fitted, %d of total %d' %
                   (word_frequencies, extractor.max))
@@ -87,9 +84,8 @@ class FeatureExtractor:
             extractor.fit(self.corpus)
             self.feature_names += ['pos-' + str(n)] * size
             for i in range(size):
-                self.actual_features.append('pos-{}-{}\t{}'
-                                            .format(n, i,
-                                                    repr(extractor.grams[i])))
+                self.actual_features.append(
+                    'pos-{}-{}\t{}'.format(n, i, repr(extractor.grams[i])))
 
             print('... POS-Tag-%d-grams fitted, %d of total %d' %
                   (n, size, extractor.max))
@@ -102,9 +98,8 @@ class FeatureExtractor:
             extractor.fit(self.corpus)
             self.feature_names += ['word-' + str(n)] * size
             for i in range(size):
-                self.actual_features.append('word-{}-{}\t{}'
-                                            .format(n, i,
-                                                    repr(extractor.grams[i])))
+                self.actual_features.append(
+                    'word-{}-{}\t{}'.format(n, i, repr(extractor.grams[i])))
 
             print('... Word-%d-grams fitted, %d of total %d' %
                   (n, size, extractor.max))
