@@ -1,13 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-
 import numpy as np
 import pandas as pd
 import argparse
 import platform
 from nltk.tokenize import sent_tokenize
-
 from src.util import utilities as util
 
 
