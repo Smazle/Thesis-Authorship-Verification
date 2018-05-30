@@ -9,7 +9,8 @@ import matplotlib.pyplot as plt
 import sys
 sys.path.append('../src/util/')
 import utilities as util
-from nltk.tokenize import sent_tokenize, word_tokenize
+from nltk.tokenize import sent_tokenize
+import pandas as pd
 
 
 def fix_space(x):
@@ -19,8 +20,7 @@ def fix_space(x):
 parser = argparse.ArgumentParser(
     description=(
         'Return statistics about the CSV files we get from MaCom. ' +
-        'The statistics is supposed to be included as part of the report'
-    )
+        'The statistics is supposed to be included as part of the report')
 )
 parser.add_argument(
     'datafile',
@@ -39,11 +39,9 @@ parser.add_argument(
 
 args = parser.parse_args()
 
-f = open(args.datafile, 'r', encoding='utf-8')
-f.readline()  # Skip first line.
+f = pd.read_csv(args.datafile, sep=';', encoding='utf-8')
 
-
-lower = 400
+lower = 200
 upper = 30000
 sent = 500
 
@@ -58,9 +56,15 @@ uniqueWords = []
 
 totalRemoved = 0
 
-for line in f:
-    author, time, text = line.split(';')
+c = 0
+for idx, row in f.iterrows():
+    if idx % round(0.1 * len(f)) == 0:
+        print(str(10 * c) + '%')
+        c += 1
+
+    author, time, text = row['StudentId'], row['Date'], row['Text']
     text = util.clean(text)
+    text = text[200:]
 
     lengths.append(len(text))
     uniques.append(len(set(list(text))))
@@ -239,9 +243,9 @@ plt.ylabel('Character Count')
 
 X = range(len(lengths))
 line1 = plt.semilogy(X, sorted(lengths), color='blue', label='Count')
-line2 = plt.plot(X, [30000] * len(lengths),
+line2 = plt.plot(X, [upper] * len(lengths),
                  color='red', label='Upper Threshold')
-line3 = plt.plot(X, [400] * len(lengths),
+line3 = plt.plot(X, [lower] * len(lengths),
                  color='green', label='Lower Threshold')
 
 plt.legend(handles=[line1[0], line2[0], line3[0]])
@@ -256,7 +260,7 @@ plt.xlabel('Text Number')
 
 X = range(len(sentence_count))
 line1 = plt.semilogy(X, sorted(sentence_count), color='blue', label='Count')
-line2 = plt.plot(X, [500] * len(lengths), color='red', label='Threshold')
+line2 = plt.plot(X, [sent] * len(lengths), color='red', label='Threshold')
 
 plt.legend(handles=[line1[0], line2[0]])
 
