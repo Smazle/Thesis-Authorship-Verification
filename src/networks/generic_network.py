@@ -5,13 +5,15 @@ from .network_factory import construct_network, Network
 import argparse
 from ..util import CSVWriter
 from keras.utils import plot_model
-from keras.callbacks import ModelCheckpoint
+from keras.callbacks import ModelCheckpoint, TensorBoard
 from ..preprocessing import MacomReader
 import jsonpickle
 import jsonpickle.ext.numpy as jsonpickle_numpy
 from ..preprocessing.channels import ChannelType
 import tensorflow as tf
 import json
+import inspect
+
 
 # Make sure that jsonpickle works on numpy arrays.
 jsonpickle_numpy.register_handlers()
@@ -143,9 +145,12 @@ create_reader.add_argument(
 
 args = parser.parse_args()
 
-# TODO:Find smart way to do pathing
-config = json.load(
-    open('./src/networks/config/{}_config.json'.format(args.networkname), 'r'))
+callPath = inspect.stack()[0][1]
+callPath = callPath.split('/')
+callPath = '/'.join(callPath[:-1]) + \
+    '/config/{}_config.json'.format(args.networkname)
+
+config = json.load(open(callPath, 'r'))
 
 var_args = vars(args)
 for key in config.keys():
@@ -192,6 +197,11 @@ val_steps_n = len(reader.validation_problems) / reader.batch_size
 
 model = construct_network(Network(args.networkname), reader)
 
+tboard = TensorBoard('./%s_logs/' % args.networkname,
+                     batch_size=args.batch_size,
+                     write_grads=True, write_images=True
+                     )
+
 # Setup callbacks.
 callbacks = [
     ModelCheckpoint(
@@ -199,7 +209,8 @@ callbacks = [
         monitor='val_loss',
         save_best_only=False,
         save_weights_only=True
-    )
+    ),
+    tboard
 ]
 
 if args.history is not None:
