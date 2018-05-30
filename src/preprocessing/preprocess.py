@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3 # -*- coding: utf-8 -*-
 # -*- coding: utf-8 -*-
 
 import numpy as np
@@ -71,7 +71,9 @@ for idx, row in dataFile.iterrows():
     text = row['Text']
     text = util.clean(text)
     # Remove starting characters
-    text = text[args.remove_char:]
+    text = str(text[args.remove_char:])
+
+    dataFile['Text'][idx] = text
 
     sent = sent_tokenize(text)
     l_txt = len(text)
