@@ -72,7 +72,7 @@ out.insert(1, '_processed.')
 name[-1] = ''.join(out)
 
 with open(splitChar.join(name), 'w') as output:
-    output.write(header + '\n')
+    output.write(header)
 
     for idx, line in enumerate(f):
         author, date, text = line.split(';')
@@ -85,7 +85,6 @@ with open(splitChar.join(name), 'w') as output:
         text = util.clean(raw_text)
 
         # Remove starting characters
-
         sent = sent_tokenize(text)
         l_txt = len(text)
 
