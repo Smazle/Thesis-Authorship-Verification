@@ -99,14 +99,17 @@ in any of the other data sets.
 
 \end{itemize}
 
-
-The training set (B), consists of a total of 46620 texts written in the same
-class , split over the 3.500 authors, from different schools. Each authors has
-written in average 13 texts, with the standard deviation being 4.2. The texts
-vary a lot in both structure and length, spanning from poems to essays. It is
-for this reason that this sets character count has a standard deviation of 5261
-even though the average character count of 5722. The full statistics of the
-training set (B) can be seen in the appendix, section \ref{sec:B_stats}.
+The training set (B), consists of a total of 73.238 texts written in the same
+class , split over the 5.500 authors, from different schools. Each authors has
+written in average 13 texts, with the standard deviation being 4.2. We initially
+removed the first 200 characters of each text, as the beginning of each text
+contains a lot of authorship identifying information, such as name, school, and
+specifics class. The removal of these characters also make sure that no garbage
+texts are included. The texts vary a lot in both structure and length, spanning
+from poems to essays. It is for this reason that this sets character count has
+a standard deviation of 4904 even though the average character count of 5549.
+The full statistics of the training set (B) can be seen in the appendix, section
+\ref{sec:B_stats}.
 
 Due this to this disparity in terms of the contents of the data, some
 constraints had to be applied to the data. The reason for this is ,in most
@@ -116,34 +119,31 @@ simply just a computational impossibility such as a single text consuming all
 memory causing our models to crash. Another purpose of these constraints is to
 make the data-set generalize better by removing the outliers.
 
-We initially removed the first 200 characters of each text, as the beginning
-of each text contains a lot of authorship identifying information, such as
-name, school, and specifics class. The removal of these characters also make
-sure that no garbage texts are included. As can be seen in the statistics in
-section \ref{sec:B_stats}, the text containing the smallest text only contains
-2 characters, and does obviously not contain any valuable information. After
-the removal of these 200 characters, we also remove texts that have below 200
-characters left after the removal, as they don't provide enough information
-about that specific author. The application of these two constraints, resulted
-in 1127 of the 46620 texts being removed. After which we applied a upper
-constraint, in terms of the total number of characters. The reason for this,
-was a mentioned earlier, that there are some texts eating up all the available
-memory, such as the largest text in (B), which consists of 685.427 characters.
-We found that limiting the number of characters to 30.000 gave good results, by
-removing the crash-inducing texts, without affecting the overall data-quality
-too much, as this only removed 72 texts from (B).
+As can be seen in the statistics in section \ref{sec:B_stats}, the text
+containing the smallest text only contains 2 characters, and does obviously not
+contain any valuable information. After the removal of these 200 characters, we
+also remove texts that have below 200 characters left after the removal, as they
+don't provide enough information about that specific author. The application
+of these two constraints, resulted in 1.743 of the 73.238 texts being removed.
+After which we applied a upper constraint, in terms of the total number of
+characters. The reason for this, was a mentioned earlier, that there are some
+texts eating up all the available memory, such as the largest text in (B), which
+consists of 682.346 characters. We found that limiting the number of characters
+to 30.000 gave good results, by removing the crash-inducing texts, without
+affecting the overall data-quality too much, as this only removed 118 texts from
+(B).
 
 Since we also perform some sentence level networks as well, we also chose to
 limit the max number of sentences, for the same reason as with the characters.
-The text with the largest amount of sentences, contains 4404 sentences. With
-an average sentence count of 51 and a standard deviation of 41, this text is
+The text with the largest amount of sentences, contains 4401 sentences. With
+an average sentence count of 49 and a standard deviation of 40, this text is
 obviously an outlier, and doesn't generalize the data set very well. A such we
-impose a upper limit of 500 sentences per text, which removes another 14 texts
+impose a upper limit of 500 sentences per text, which removes another 25 texts
 from (B).
 
 The last constraint regards the unique characters in each text. Look at the
 stats we can see that there is a text containing 219 unique characters, greatly
-exceeding the average of 59. A unique character count like this, implies that a
+exceeding the average of 55. A unique character count like this, implies that a
 non-danish alphabet might have been used, and for that reason texts like these
 don't add to the generalization we strive towards. This is combatted creating a
 list of characters based on the data used for training, each character in this
@@ -158,10 +158,10 @@ the character frequency threshold, the overall of frequency of the specific
 characters drops dramatically.
 
 After applying all of the constraints, and taking into account
-overlap between them, 1202 texts were removed from the total 46620 in (B),
+overlap between them, 1.864 texts were removed from the total 73.238 in (B),
 which is a negligible amount compared to the computational and generalization
 advantages it includes.
-In the end this leaves set (B) with 45218 texts.
+In the end this leaves set (B) with 71374 texts.
 
 \begin{figure}[htb]
 \begin{minipage}{.5\linewidth}
@@ -178,7 +178,6 @@ In the end this leaves set (B) with 45218 texts.
 \caption{The different levels of thresholding applied to the data before used.}
 \label{fig:character_frequencies}
 \end{figure}
-
 
 
 All of the neural networks we train are Siamese Neural Networks. They all
