@@ -199,7 +199,7 @@ if __name__ == '__main__':
 
         print('Starting Fine tuned run')
         print('Limit Theta: %s, Lower Theta: %s, Limit: %s' %
-              limit_theta, lower_theta, limit)
+              (limit_theta, lower_theta, limit))
         print('Lower Theta', 'Upper Theta', 'Applied Theta', 'FNS')
         for _ in range(30):
             new_theta = (limit_theta + lower_theta) / 2
@@ -207,7 +207,7 @@ if __name__ == '__main__':
                        for weight in weights])
 
             print('%s, %s, %s, %s' %
-                  lower_theta, limit_theta, new_theta, fns)
+                  (lower_theta, limit_theta, new_theta, fns))
 
             if fns < limit:
                 lower_theta = new_theta
