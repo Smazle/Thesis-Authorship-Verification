@@ -14,10 +14,10 @@ illustrated in Figure \ref{fig:profile_based}.
     \textbf{Instance Based Authorship Verification or Authorship Attribution}\par\medskip
     \includegraphics[scale=0.5]{./pictures/method/InstanceBased.png} 
     \caption{Illustrate the typical instance based Authorship Verification or
-    Authorship Attribution solution setup. Inspired by \cite{stamatos2009} a
-    set of authors are given as input each with a set of texts. Some Machine
-    Learning model is trained on the input texts and the model is used to
-    predict an unknown text. }
+        Authorship Attribution solution setup. Inspired by \cite{stamatos2009} a
+        set of authors are given as input each with a set of texts. Some Machine
+        Learning model is trained on the input texts and the model is used to
+        predict an unknown text. }
 
     \label{fig:instance_based}
 \end{figure}
@@ -28,11 +28,11 @@ illustrated in Figure \ref{fig:profile_based}.
     \includegraphics[scale=0.5]{./pictures/method/ProfileBased.png}
 
     \caption{Illustrate the typical profile based Authorship Verification or
-    Authorship Attribution setup. Inspired by \cite{stamatos2009} the texts of
-    each author are combined using some combination function such as an average
-    or a concatenation. Those \textit{profiles} are then given to a Machine
-    Learning model to train. The output is a model which is used to predict
-    unknown texts. }
+        Authorship Attribution setup. Inspired by \cite{stamatos2009} the texts of
+        each author are combined using some combination function such as an average
+        or a concatenation. Those \textit{profiles} are then given to a Machine
+        Learning model to train. The output is a model which is used to predict
+        unknown texts. }
 
     \label{fig:profile_based}
 \end{figure}
@@ -115,29 +115,28 @@ And they can be computed as,
 \end{align}
 
 Using these definition we can also describe the accuracy measure we will be
-reporting on throughout our experiments.
+reporting on throughout our experiments,
 
 \begin{equation}
-    \text{Accuracy} = \frac{TP + TN}{TP + FP + TN + FN}
+    \text{Accuracy} = \frac{TP + TN}{TP + FP + TN + FN}.
 \end{equation}
 
 
-In the case of MaCom, we want to minimize the \gls{FNR} as much as possible, so
-as to not wrongfully accuse anyone of not having written their assignment.
-This however leaves out a equally important metric. While a low \gls{FNR}
-is the goal, MaCom also wants to minimize the number of \gls{FN}s compared
-to the total number of accusations made. This can be described as:
+In the case of MaCom, we want to minimize the \gls{FNR} as much as possible,
+so as to not wrongfully accuse anyone of not having written their assignment.
+This however leaves out a equally important metric. While a low \gls{FNR} is the
+goal, MaCom also wants to minimize the number of \gls{FN}s compared to the total
+number of accusations made. This can be described as:
 
 \begin{equation}
     \text{Accusation Error} = \frac{FN}{FN + TN}
 \end{equation}
 
-The goal is also to keep this error under a certain threshold specified
-by MaCom, which in this case is $0.1$ or $10\%$. In other words, of the
-accusations we made, only $10\%$ of them are allowed to be false. In order
-to accommodate this constraint we can take certain actions, which depends on
-the model used. Details about these actions will be addressed in Section
-\ref{sec:prediction}.
+The goal is also to keep this error under a certain threshold specified by
+MaCom, which in this case is $0.1$ or $10\%$. In other words, of the accusations
+we made, only $10\%$ of them are allowed to be false. In order to accommodate
+this constraint we can take certain actions, which depends on the model used.
+Details about these actions will be addressed in Section \ref{sec:prediction}.
 
 \subsection{Baseline Methods}
 
@@ -915,9 +914,9 @@ E_n(W) &= \frac{1}{2}(\hat{y}_n - y_n)^2
 \end{align}
 
 Where N is the number of training samples, $\hat{y}_n$ is the predicted results,
-and $y_n$ is the target, and W is a set of weights. The goal is minimize
-this function. In order to do so, we need to have a independent variable we
-can tweak using Gradient Descent as per the above description. In the case of
+and $y_n$ is the target, and W is a set of weights. The goal is minimize this
+function. In order to do so, we need to have a independent variable we can
+tweak using Gradient Descent as per the above description. In the case of
 neural networks we can view this variable as being the weights and the biases,
 which are defined used as described in Section \ref{sec:neurons}. In other
 words we want to update each individual weight by doing the following operation
@@ -927,7 +926,7 @@ repeatedly.
 \pmb{w}^{(t+1)} = \pmb{w}^{(t)} + \Delta \pmb{w}^{(t)}
 \end{equation}
 
-Where w is a singular weight value, and t refers to a specific step, in the 
+Where w is a singular weight value, and t refers to a specific step, in the
 chain of steps performed by Gradient Descent.
 
 \begin{equation}
@@ -942,13 +941,12 @@ $$
 $$
 
 At a later point in Section \ref{sec:optimizers} something called the learning
-rate will be introduced to this equality, but for now for the specifics
-of Back-Propagation, we can omit it for now. 
-This is the function we attempting to solve, not for one weight, but for all
-of them. Not only that, we also want to do this for every training sample,
-averaging $\Delta \pmb{w}^{(t)}$ for over all of them. As such, the goal is
-clear, we want to find the gradient of our error function with respect to all
-the weights in our network.
+rate will be introduced to this equality, but for now for the specifics of
+Back-Propagation, we can omit it for now. This is the function we attempting to
+solve, not for one weight, but for all of them. Not only that, we also want to
+do this for every training sample, averaging $\Delta \pmb{w}^{(t)}$ for over all
+of them. As such, the goal is clear, we want to find the gradient of our error
+function with respect to all the weights in our network.
 
 After performing step 1(Feed forward), which entails running a training sample
 through the network, we want to determine by how much we have to tweak each
@@ -976,22 +974,22 @@ before doing so, we need to establish the chain rule.
 
 \end{lemma}
 
-The reason behind the need of the chain rule is that the loss function
-is essentially a giant recursive function call, that spans the entire
-network. This fact becomes apparent attempt to evaluate our single sample
-error function $E$ with respect to a weight $w_{ij}$. If we keep in mind
-that the neurons in feed forward neural networks, computes weighted
-sum of its inputs as per $a_i$ in \eqref{eq:neuron}, then we known
-that $E$ only depends on $w_{ij}$ through the call of $a_i$, and it is
-for that reason what we can apply the chain rule to get the following:
+The reason behind the need of the chain rule is that the loss function is
+essentially a giant recursive function call, that spans the entire network. This
+fact becomes apparent attempt to evaluate our single sample error function $E$
+with respect to a weight $w_{ij}$. If we keep in mind that the neurons in feed
+forward neural networks, computes weighted sum of its inputs as per $a_i$ in
+\eqref{eq:neuron}, then we known that $E$ only depends on $w_{ij}$ through the
+call of $a_i$, and it is for that reason what we can apply the chain rule to get
+the following:
 
 \begin{equation}
 \frac{\partial E}{\partial \pmb{w}_{ij}} = \frac{\partial E}{\partial a_i}
 \frac{\partial a_i}{\partial \pmb{w}_{ij}}
 \end{equation}
 
-For future ease, we can introduce the following notation, often referred
-to as \textit{errors}
+For future ease, we can introduce the following notation, often referred to as
+\textit{errors}
 
 \begin{equation}
 \delta_i = \frac{\partial E}{\partial a_i}
@@ -1018,8 +1016,8 @@ Revealing the fact that the derivative of the cost function with respect to the
 weight $\pmb{w}_{ij}$ is simply the value of $\delta$ for the neuron at the
 output end of that specific end, and $x$ for the input end of the weight for
 that same neuron. This leaves us with calculating $\delta_i$ for the hidden
-units, and the output units of the network. 
-We already know that for output units, $\delta$ is computes as follows:
+units, and the output units of the network. We already know that for output
+units, $\delta$ is computes as follows:
 
 \begin{equation}
 \label{eq:output}
@@ -1036,29 +1034,37 @@ However, for the hidden units, the chain rule has to be used again.
 
 Where the sum runs over all \textit{n} units that unit \textit{i}, sends
 connections. This highlights the fact that changes in $a_i$ only influences
-the error-function, through variations of the variables $a_n$. The leaves us 
-with the fact that we can compute the $\delta$ for a particular hidden unit
-by backpropagating the $\delta$ value back from higher up in the network.
+the error-function, through variations of the variables $a_n$. The leaves us
+with the fact that we can compute the $\delta$ for a particular hidden unit by
+backpropagating the $\delta$ value back from higher up in the network.
 
-As such, we can summarize the backpropagating like this.
+As such, we can summarize the backpropagation algorithm like this.
+
 \begin{enumerate}
     \item
+
         Provide the network with some input data $x_n$, and compute the
         activations of each hidden and output neuron using Equation
         \eqref{eq:neuron}.
 
     \item
+
         Compute $\delta_n$ for each of the output neurons using Equation
         \eqref{eq:output}
+
     \item
+
         Back-Propagateprop $\delta$ using Equation \eqref{eq:bp}, to compute
         $\delta_i$ for each neuron
+
     \item
+
         Use Equation \eqref{eq:deriv} to evaluate the required derivatives
+
 \end{enumerate}
 
-At this point we can update each of the weights using point 4, and
-Equation \eqref{eq:update} which is the Step 3.
+At this point we can update each of the weights using point 4, and Equation
+\eqref{eq:update} which is the Step 3.
 
 These three steps Feed-Forward, Back-Propagate and update weights are repeated
 throughout the training cycle of the neural networks, so as to optimize the
@@ -1071,8 +1077,8 @@ N\cdot W)$ iteration having do be computed, where $\mathcal{E}$ is the number
 of epochs run during training. For that reason this run-time might not seem
 very disable at first, and is indeed the reason why neural networks need such
 a long training time. However an alternative described by \cite{Bishop}, which
-involves perturbing each weight instead, and approximating the derivatives. This
-method does however run in $O(W^2)$ time, making the run-time of $O(W)$ 
+involves perturbing each weight instead, and approximating the derivatives.
+This method does however run in $O(W^2)$ time, making the run-time of $O(W)$
 back-propagation provides the desired choice. However, in order to improve on
 those that $O(W)$ time-complexity a method called batching is used. This method,
 shuffles and split the training dataset up into smaller batches. These batches
@@ -1225,12 +1231,12 @@ extension \gls{AdaGrad}, \gls{RMSProp} and \gls{Adam}.
         gradient. When the gradient of a weight is large the algorithm tunes
         down the learning rate and when the gradient is consistently small it
         tunes up the learning rate. That functions well since a large gradient
-        is found in a steep volatile area while a consistently small gradient
-        is found in a flat non volatile area. In the steep areas we are likely
-        to overshoot the target if the learning rate is to high while in flat
-        areas we don't have that problem. The internal state of the algorithm is
-        a vector $\mathbf{v}$ of the running average of gradient magnitudes. It
-        is updated with the equation,
+        is found in a steep volatile area while a consistently small gradient is
+        found in a flat non volatile area. In the steep areas we are likely to
+        overshoot the target if the learning rate is to high while in flat areas
+        we don't have that problem. The internal state of the algorithm is a
+        vector $\mathbf{v}$ of the running average of gradient magnitudes. It is
+        updated with the equation,
 
         \begin{equation}
             \mathbf{v}^{(t+1)} =
@@ -1238,9 +1244,9 @@ extension \gls{AdaGrad}, \gls{RMSProp} and \gls{Adam}.
                 (1 - \gamma)\left(\Delta E|_{\mathbf{w}^{(t)}}\right)^2.
         \end{equation}
 
-        The parameter $\gamma$ can be seen as a forgetting rate. If $\gamma$ is
-        high we keep much of the previous running average and if $\gamma$ is low
-        we update the average much quicker. The actual weight update is
+        The parameter $\gamma$ can be seen as a forgetting rate. If $\gamma$
+        is high we keep much of the previous running average and if $\gamma$
+        is low we update the average much quicker. The actual weight update is
         performed by using the internal state $\mathbf{v}$ to scale the learning
         rate $\eta$,
 

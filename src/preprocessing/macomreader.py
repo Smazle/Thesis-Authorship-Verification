@@ -93,8 +93,7 @@ class MacomReader(object):
                  vocabulary_frequency_cutoff=[0.0], pad=True, binary=False,
                  batch_normalization='truncate', channels=[ChannelType.CHAR],
                  sentence_len=None, max_len_characters=30000,
-                 max_len_sentences=500, min_len_characters=400,
-                 ignore_n_characters=200):
+                 max_len_sentences=500, min_len_characters=400):
 
         if batch_normalization not in ['truncate', 'pad']:
             raise ValueError('Only truncate and pad is currently supported.')
@@ -122,7 +121,6 @@ class MacomReader(object):
         self.max_len_characters = max_len_characters
         self.max_len_sentences = max_len_sentences
         self.min_len_characters = min_len_characters
-        self.ignore_n_characters = ignore_n_characters
 
         if self.binary:
             self.label_true = np.array([1])
@@ -156,16 +154,11 @@ class MacomReader(object):
             author, date, text = line.split(';')
             text = util.clean(text)
 
-            if len(text) > self.max_len_characters:
-                print('WARNING: Skipping text longer than {} characters ' \
-                      'on line {}'.format(self.max_len_characters, i + 1))
-            elif len(text) < self.min_len_characters:
-                print('WARNING: Skipping text shorter than {} characters ' \
-                      'on line {}'.format(self.min_len_characters, i + 1))
-            elif len(sent_tokenize(text)) > self.max_len_sentences:
-                print('WARNING: Skipping text with more than {} sentences ' \
-                      'on line {}'.format(self.max_len_sentences, i + 1))
-            elif author in authors:
+            assert len(text) <= self.max_len_characters
+            assert len(text) >= self.min_len_characters
+            assert len(sent_tokenize(text)) <= self.max_len_sentences
+
+            if author in authors:
                 authors[author].append(i + 1)
             else:
                 authors[author] = [i + 1]
@@ -222,7 +215,6 @@ class MacomReader(object):
         author, date, text = linereader.readline(line_n).split(';')
 
         unescaped = util.clean(text)
-        unescaped = unescaped[self.ignore_n_characters:]
 
         encoded_channels = []
         for channel in self.channels:
