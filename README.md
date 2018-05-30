@@ -84,6 +84,7 @@ optional arguments:
     * network3
     * network4
     * network5
+    * network6
 * RNN's
     * r\_network1
     * r\_network2
@@ -93,4 +94,6 @@ optional arguments:
     * r\_network6
     * r\_network7
     * r\_network8
+    * r\_network9
+    * r\_network10
 

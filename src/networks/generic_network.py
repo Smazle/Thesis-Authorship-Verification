@@ -10,9 +10,9 @@ from ..preprocessing import MacomReader
 import jsonpickle
 import jsonpickle.ext.numpy as jsonpickle_numpy
 from ..preprocessing.channels import ChannelType
-import tensorflow as tf
-import json
 import inspect
+import json
+import tensorflow as tf
 
 
 # Make sure that jsonpickle works on numpy arrays.
@@ -154,7 +154,7 @@ config = json.load(open(callPath, 'r'))
 
 var_args = vars(args)
 for key in config.keys():
-    if var_args[key] is None:
+    if key in var_args and var_args[key] is None:
         var_args[key] = config[key]
 
 # Either load reader from file or create a new one.
@@ -198,7 +198,7 @@ val_steps_n = len(reader.validation_problems) / reader.batch_size
 model = construct_network(Network(args.networkname), reader)
 
 tboard = TensorBoard('./%s_logs/' % args.networkname,
-                     batch_size=args.batch_size,
+                     batch_size=reader.batch_size,
                      write_grads=True, write_images=True
                      )
 
