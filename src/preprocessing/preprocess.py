@@ -1,4 +1,4 @@
-#!/usr/bin/env python3 # -*- coding: utf-8 -*-
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 
@@ -26,8 +26,8 @@ parser.add_argument(
     '--remove-char',
     type=int,
     help='Removed the first characters in each text, \
-                the amount of which is specified by this argument. \
-                Keep in mind that this is done before anything else'
+        the amount of which is specified by this argument. \
+        Keep in mind that this is done before anything else'
 )
 
 parser.add_argument(
@@ -60,46 +60,47 @@ under = []
 over = []
 sents = []
 
-dataFile = pd.read_csv(args.filename, sep=';', encoding='utf-8')
-print(dataFile.columns)
+f = open(args.filename, 'r', encoding='utf-8')
+header = next(f)
 
 c = 0
-
-for idx, row in dataFile.iterrows():
-    if idx % round(0.1 * len(dataFile)) == 0:
-        print(str(10 * c) + '%')
-        c += 1
-
-    text = row['Text']
-    text = util.clean(text)
-    # Remove starting characters
-    text = str(text[args.remove_char:])
-
-    dataFile['Text'][idx] = text
-
-    sent = sent_tokenize(text)
-    l_txt = len(text)
-
-    if l_txt > args.upper_char_limit:
-        over.append(idx)
-    elif l_txt < args.lower_char_limit:
-        under.append(idx)
-    elif len(sent) > args.upper_sentence_limit:
-        sents.append(idx)
-
-
-print(len(under), len(over), len(sents), len(under) + len(over) + len(sents))
-dataFile = dataFile.drop(under + over + sents)
-
 
 splitChar = '/' if platform.system() == 'Linux' else '\\'
 
 name = args.filename.split('\\')
 
-f = name[-1].split('.')
-f.insert(1, '_processed.')
-name[-1] = ''.join(f)
+out = name[-1].split('.')
+out.insert(1, '_processed.')
+name[-1] = ''.join(out)
 
-dataFile.index = range(len(dataFile))
+with open(splitChar.join(name), 'w') as output:
+    output.write(header + '\n')
 
-dataFile.to_csv(splitChar.join(name), sep=';', index=False)
+    for idx, line in enumerate(f):
+        author, date, text = line.split(';')
+
+        if idx % 1000 == 0:
+            print(idx)
+
+        raw_text = text[args.remove_char:]
+
+        text = util.clean(raw_text)
+
+        # Remove starting characters
+
+        sent = sent_tokenize(text)
+        l_txt = len(text)
+
+        if l_txt > args.upper_char_limit:
+            over.append(idx)
+            continue
+        elif l_txt < args.lower_char_limit:
+            under.append(idx)
+            continue
+        elif len(sent) > args.upper_sentence_limit:
+            sents.append(idx)
+            continue
+
+        output.write(';'.join([author, date, raw_text]))
+
+print(len(under), len(over), len(sents), len(under) + len(over) + len(sents))
