@@ -158,7 +158,7 @@ if __name__ == '__main__':
     with LineReader(args.datafile) as linereader:
         # We have to generate new authors since we are probably using a new
         # dataset.
-        reader.generate_authors(linereader)
+        reader.authors = reader.generate_authors(linereader)
 
         problems = get_problems(reader, linereader,
                                 negative_chance=args.negative_chance)
