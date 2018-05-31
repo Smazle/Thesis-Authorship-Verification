@@ -1048,8 +1048,8 @@ This can be rewritten using the prior established equalities and the chain rule,
 &= \sum_k \delta_k \frac{\partial a_k}{\partial z_i} \frac{\partial z_i}{\partial a_i} 
 & \text{By \eqref{eq:neuron} and Lemma \ref{lemma:chainrule}} \\
 &= \sum_k \delta_k h'(a_i) \frac{\partial a_k}{\partial z_i} \\
-&= \sum_k \delta_k h'(a_i) \left( \frac{\partial}{\partial z_i}  \sum_{i=0} w_{ki} z{i}\right) \\
-&= \sum_k \delta_k h'(a_i) w_{ki} \\
+&= \sum_k \delta_k h'(a_i) \left( \frac{\partial}{\partial z_i}  \sum_{i=0} \mathbf{w}_{ki} z{i}\right) \\
+&= \sum_k \delta_k h'(a_i) \mathbf{w}_{ki} \\
 \end{align}
 
 This highlights the fact that changes in $a_i$ only influences
