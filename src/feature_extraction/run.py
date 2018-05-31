@@ -2,14 +2,15 @@
 # -*- coding: utf-8 -*-
 
 import random
-from .feature_extractor import FeatureExtractor
+from .feature_extractor import FeatureExtractor, gen_own_corpus
+from .character import CharacterNGramFeatureExtractor
 import argparse
 import csv
 import sys
 
 
 # Make sure we can hold all files in csv file memory.
-csv.field_size_limit(sys.maxsize)
+csv.field_size_limit(2147483647)
 
 # Set random state for reproducible results.
 random.seed = 7
@@ -55,8 +56,8 @@ with open(args.datafile, 'r', encoding='utf-8') as csvfile:
         special_character_grams=special_character_grams,
         word_grams=word_grams,
         word_frequencies=500,
-        character_grams=character_grams
-        #    corpus="/home/smazle/Desktop/K.csv"
+        character_grams=character_grams,
+        corpus="D:\DABAI\Data\MagnusOgAugust\\final_data\B.csv"
     )
 
     feature_extractor.extract(args.outfile)

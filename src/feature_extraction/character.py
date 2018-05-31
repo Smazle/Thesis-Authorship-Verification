@@ -200,7 +200,7 @@ def find_ngrams(f, n):
     except AttributeError:
         content = f
 
-    n_grams = [content[i:i + n][:] for i in range(len(content) - n)]
+    n_grams = (content[i:i + n][:] for i in range(len(content) - n))
 
     return Counter(n_grams)
 
