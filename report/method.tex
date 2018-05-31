@@ -924,28 +924,28 @@ words we want to update each weight vector by doing the following operation
 repeatedly.
 
 \begin{equation}\label{eq:update}
-\pmb{w}^{(t+1)} = \pmb{w}^{(t)} + \Delta \pmb{w}^{(t)}
+    \mathbf{w}^{(t+1)} = \mathbf{w}^{(t)} + \Delta \mathbf{w}^{(t)}
 \end{equation}
 
-Where w is a singular weight value, and t refers to a specific step, in the
-chain of steps performed by Gradient Descent.
+Where $\mathbf{w}$ is a singular weight value, and t refers to a specific step,
+in the chain of steps performed by Gradient Descent.
 
 \begin{equation}
-\Delta \pmb(w)^{(t)} = -\nabla E|_{\pmb{w}^{(t)}}
+    \Delta \mathbf(w)^{(t)} = -\nabla E|_{\mathbf{w}^{(t)}}
 \end{equation}
 
-$\nabla E|_{\pmb{w}^{(t)}}$ refers to the gradient of the
+$\nabla E|_{\mathbf{w}^{(t)}}$ refers to the gradient of the
 error function relative to that specific weight vector, or rewritten.
 
 $$
-\nabla E|_{\pmb{w}^{(t)}} = \frac{\partial E}{\partial \pmb{w}^{(t)}}
+\nabla E|_{\mathbf{w}^{(t)}} = \frac{\partial E}{\partial \mathbf{w}^{(t)}}
 $$
 
 At a later point in Section \ref{sec:optimizers} something called the learning
 rate will be introduced to this equality, but for now for the specifics of
 Back-Propagation, we can omit it for now. This is the function we attempting to
 solve, not for one weight, but for all of them. Not only that, we also want to
-do this for every training sample, averaging $\Delta \pmb{w}^{(t)}$ for over all
+do this for every training sample, averaging $\Delta \mathbf{w}^{(t)}$ for over all
 of them. As such, the goal is clear, we want to find the gradient of our error
 function with respect to all the weights in our network.
 
@@ -985,8 +985,8 @@ call of $a_i$, and it is for that reason what we can apply the chain rule to get
 the following:
 
 \begin{equation}
-\frac{\partial E}{\partial \pmb{w}_{ij}} = \frac{\partial E}{\partial a_i}
-\frac{\partial a_i}{\partial \pmb{w}_{ij}}
+\frac{\partial E}{\partial \mathbf{w}_{ij}} = \frac{\partial E}{\partial a_i}
+\frac{\partial a_i}{\partial \mathbf{w}_{ij}}
 \end{equation}
 
 We can add a little extra notation, which we will use hence forth, for the 
@@ -1000,9 +1000,9 @@ $\delta$ is often referred to as the \textit{error} of a specific neuron.
 From \eqref{eq:neuron} we get that 
 
 \begin{align}
-\frac{\partial a_i}{\partial \pmb{w}_{ij}} &= \frac{\partial}{\partial \pmb{w}_{ij}} 
-\sum_{j=1} \pmb{w}_{ij} x_j + \pmb{w}_{i0}\\
-&= \frac{\partial}{\partial \pmb{w}_{ij}} \sum_{j = 0} \pmb{w}_{ij} x_j\\
+\frac{\partial a_i}{\partial \mathbf{w}_{ij}} &= \frac{\partial}{\partial \mathbf{w}_{ij}} 
+\sum_{j=1} \mathbf{w}_{ij} x_j + \mathbf{w}_{i0}\\
+&= \frac{\partial}{\partial \mathbf{w}_{ij}} \sum_{j = 0} \mathbf{w}_{ij} x_j\\
 &= x_j 
 \end{align}
 
@@ -1010,11 +1010,11 @@ Which when combined gives us
 
 \begin{equation}
 \label{eq:deriv}
-\frac{\partial E}{\partial \pmb{w}_{ij}} = \delta_i x_j
+\frac{\partial E}{\partial \mathbf{w}_{ij}} = \delta_i x_j
 \end{equation}
 
 Revealing the fact that the derivative of the cost function with respect to the
-weight $\pmb{w}_{ij}$ is simply the value of $\delta$ for the neuron at the
+weight $\mathbf{w}_{ij}$ is simply the value of $\delta$ for the neuron at the
 output end of that specific end, and $x$ for the input end of the weight for
 that same neuron. This leaves us with calculating $\delta_i$ for the hidden
 units, and the output units of the network. We already know that for output
