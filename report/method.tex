@@ -241,9 +241,9 @@ The function each neuron computes is then,
 
 \begin{equation}\label{eq:neuron}
     z_i = h(a_i) = h\left(
-        \sum_{j = 1}^d w_{ij}x_j + w_{i0} =
-        \sum_{j = 0}^d w_{ij}x_j
-    \right).
+        \sum_{j = 1}^d w_{ij}x_j + w_{i0}
+ \right) = h\left(
+        \sum_{j = 0}^d w_{ij}x_j \right)
 \end{equation}
 
 A more intuitive model of such a neuron can be seen in Figure \ref{fig:neuron}.
@@ -992,7 +992,7 @@ the following:
 We can add a little extra notation, which we will use hence forth, for the 
 sake of easing understanding.
 
-\begin{equation}
+\begin{equation}\label{eq:delta}
 \delta_i = \frac{\partial E}{\partial a_i}
 \end{equation}
 
@@ -1002,7 +1002,7 @@ From \eqref{eq:neuron} we get that
 \begin{align}
 \frac{\partial a_i}{\partial \pmb{w}_{ij}} &= \frac{\partial}{\partial \pmb{w}_{ij}} 
 \sum_{j=1} \pmb{w}_{ij} x_j + \pmb{w}_{i0}\\
-&= \frac{\partial}{\partial \pmb{w}_{ij}} \sum_{j = 0} \pmb{w}_{ij} x_j
+&= \frac{\partial}{\partial \pmb{w}_{ij}} \sum_{j = 0} \pmb{w}_{ij} x_j\\
 &= x_j 
 \end{align}
 
@@ -1030,16 +1030,30 @@ However, for the hidden units, the chain rule has to be used again.
 
 \begin{equation}
 \label{eq:bp}
-\delta_i = \frac{\partial E}{\partial a_i} = \sum_k \frac{\partial E}{\partial a_k}
-\frac{\partial a_k}{\partial a_i}
+\delta_i = \frac{\partial E}{\partial a_i} = 
+\sum_k \frac{\partial E}{\partial a_k} \frac{\partial a_k}{\partial a_i}
 \end{equation}
 
 Where the sum runs over all \textit{k} units that unit \textit{i}, sends
 connections. 
 Where in this case, \textit{k} denotes the units that, unit \textit{i} sends
 its values.
+
+This can be rewritten using the prior established equalities and the chain rule,
+
+
+\begin{align}
+\sum_k \frac{\partial E}{\partial a_k} \frac{\partial a_k}{\partial a_i} &= 
+\sum_k \delta_k \frac{\partial a_k}{\partial a_i} & \text{By \eqref{eq:delta}}\\
+&= \sum_k \delta_k \frac{\partial a_k}{\partial z_i} \frac{\partial z_i}{\partial a_i} 
+& \text{By \eqref{eq:neuron} and Lemma \ref{lemma:chainrule}} \\
+&= \sum_k \delta_k h'(a_i) \frac{\partial a_k}{\partial z_i} \\
+&= \sum_k \delta_k h'(a_i) \left( \frac{\partial}{\partial z_i}  \sum_{i=0} w_{ki} z{i}\right) \\
+&= \sum_k \delta_k h'(a_i) w_{ki} \\
+\end{align}
+
 This highlights the fact that changes in $a_i$ only influences
-the error-function, through variations of the variables $a_n$. The leaves us
+the error-function, through variations of the variables $a_k$. The leaves us
 with the fact that we can compute the $\delta$ for a particular hidden unit by
 backpropagating the $\delta$ value back from higher up in the network.
 
@@ -1084,14 +1098,15 @@ very disable at first, and is indeed the reason why neural networks need such
 a long training time. However an alternative described by \cite{Bishop}, which
 involves perturbing each weight instead, and approximating the derivatives.
 This method does however run in $O(W^2)$ time, making the run-time of $O(W)$
-back-propagation provides the desired choice. However, in order to improve on
-those that $O(W)$ time-complexity a method called batching is used. This method,
-shuffles and split the training dataset up into smaller batches. These batches
-are then run through the network one at a time, performing back-propagation
-after each run-through. This results in the gradient not being as accurate
-after each batch, but this introduced inaccuracy is negligible compared to the
-computational time won, by reducing the size of N in $O(\mathcal{E}\cdot N\cdot
-W)$.\cite{Bishop}
+back-propagation provides the desired choice. However, in order to improve
+on those that $O(W)$ time-complexity a method called batching is used. This
+method, shuffles and split the training dataset up into smaller batches.
+These batches are then run through the network one at a time, performing
+back-propagation after each run-through. This results in the gradient not
+being as accurate after each batch, but this introduced inaccuracy is
+negligible compared to the computational time won, by reducing the amount of
+\mathcal{E} in $O(\mathcal{E}\cdot N\cdot W)$ needed for the same amount of
+convergence.\cite{Bishop}
 
 
 \subsubsection{Optimizers}\label{sec:optimizers}
