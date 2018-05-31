@@ -988,6 +988,14 @@ accusations by inverting the output of $P$ and divides that by 10. So the
 condition makes sure that only 10\% of the accusations we make are false
 accusations.
 
+In order to further improve in on the handling of this optimization problem, 
+we also perform a binary search within the interval of $\theta$ that placed
+our false negative above threshold and below the threshold in order
+to determine which theta-value places us nearest the 10\% limit. 
+This process is performed on the weights however. Each false negative
+computation, checks against all the weights, and uses the one giving the
+best results as the candidate weight for that iteration.
+
 We have chosen to run our prediction system on the network described in Section
 \ref{subsubsec:siamese_neuraon_network_iteration_6}. That is the convolutional
 neural network using max-over-time pooling after the convolutional layer.
