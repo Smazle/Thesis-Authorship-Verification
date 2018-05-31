@@ -185,6 +185,7 @@ if __name__ == '__main__':
             tps, tns, fps, fns = evaluate(labels, results, weight, theta)
 
             accuracy = (tps + tns) / (tps + tns + fps + fns)
+
             if fns + tns == 0:
                 errors = 0
             else:
@@ -199,17 +200,27 @@ if __name__ == '__main__':
 
         print('Starting Fine tuned run')
         print('Limit Theta: %s, Lower Theta: %s, Limit: %s' %
-              limit_theta, lower_theta, limit)
+              (limit_theta, lower_theta, limit))
         print('Lower Theta', 'Upper Theta', 'Applied Theta', 'FNS')
-        for _ in range(30):
+        for _ in range(100):
             new_theta = (limit_theta + lower_theta) / 2
-            fns = max([evaluate(labels, results, weight, new_theta)[-1]
-                       for weight in weights])
+            e = [evaluate(labels, results, weight, new_theta)
+                 for weight in weights]
+
+            acc = [((tns, fns), (tps + tns) / (tps + tns + fps + fns))
+                   for tps, tns, fps, fns in e]
+
+            (tns, fns) = max(acc, key=lambda x: x[1])[0]
+
+            if fns + tns == 0:
+                errors = 0
+            else:
+                errors = fns / (fns + tns)
 
             print('%s, %s, %s, %s' %
-                  lower_theta, limit_theta, new_theta, fns)
+                  (lower_theta, limit_theta, new_theta, errors))
 
-            if fns < limit:
+            if fns < 0.1:
                 lower_theta = new_theta
             else:
                 limit_theta = new_theta
