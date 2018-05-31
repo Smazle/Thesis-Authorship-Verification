@@ -17,7 +17,6 @@ def model(reader):
 
     word_mapping = reader.channels[1].vocabulary_map
 
-    # TODO: Path should be command line argument or something.
     word_weights = gew.generate_embedding_weights(
         '.\\data\\pre-trained\\wiki.da.vec', word_mapping)
 
