@@ -241,7 +241,8 @@ The function each neuron computes is then,
 
 \begin{equation}\label{eq:neuron}
     z_i = h(a_i) = h\left(
-        \sum_{j = 1}^d w_{ij}x_j + w_{i0}
+        \sum_{j = 1}^d w_{ij}x_j + w_{i0} =
+        \sum_{j = 0}^d w_{ij}x_j
     \right).
 \end{equation}
 
@@ -919,7 +920,7 @@ function. In order to do so, we need to have a independent variable we can
 tweak using Gradient Descent as per the above description. In the case of
 neural networks we can view this variable as being the weights and the biases,
 which are defined used as described in Section \ref{sec:neurons}. In other
-words we want to update each individual weight by doing the following operation
+words we want to update each weight vector by doing the following operation
 repeatedly.
 
 \begin{equation}\label{eq:update}
@@ -930,11 +931,11 @@ Where w is a singular weight value, and t refers to a specific step, in the
 chain of steps performed by Gradient Descent.
 
 \begin{equation}
-\Delta w^{(t)} = -\nabla E|_{\pmb{w}^{(t)}}
+\Delta \pmb(w)^{(t)} = -\nabla E|_{\pmb{w}^{(t)}}
 \end{equation}
 
 $\nabla E|_{\pmb{w}^{(t)}}$ refers to the gradient of the
-error function relative to that specific weight, or rewritten.
+error function relative to that specific weight vector, or rewritten.
 
 $$
 \nabla E|_{\pmb{w}^{(t)}} = \frac{\partial E}{\partial \pmb{w}^{(t)}}
@@ -975,7 +976,7 @@ before doing so, we need to establish the chain rule.
 \end{lemma}
 
 The reason behind the need of the chain rule is that the loss function is
-essentially a giant recursive function call, that spans the entire network. This
+essentially a giant chain of function call, that spans the entire network. This
 fact becomes apparent attempt to evaluate our single sample error function $E$
 with respect to a weight $w_{ij}$. If we keep in mind that the neurons in feed
 forward neural networks, computes weighted sum of its inputs as per $a_i$ in
@@ -988,20 +989,20 @@ the following:
 \frac{\partial a_i}{\partial \pmb{w}_{ij}}
 \end{equation}
 
-For future ease, we can introduce the following notation, often referred to as
-\textit{errors}
+We can add a little extra notation, which we will use hence forth, for the 
+sake of easing understanding.
 
 \begin{equation}
 \delta_i = \frac{\partial E}{\partial a_i}
 \end{equation}
 
+$\delta$ is often referred to as the \textit{error} of a specific neuron.
 From \eqref{eq:neuron} we get that 
 
 \begin{align}
 \frac{\partial a_i}{\partial \pmb{w}_{ij}} &= \frac{\partial}{\partial \pmb{w}_{ij}} 
-\sum_j \pmb{w}_{ij} x_j + \pmb{w}_{i0}\\
-&= \frac{\partial}{\partial \pmb{w}_{ij}} \sum_j \pmb{w}_{ij} x_j + 1 
-& \text{Let activation of bias be 1}\\
+\sum_{j=1} \pmb{w}_{ij} x_j + \pmb{w}_{i0}\\
+&= \frac{\partial}{\partial \pmb{w}_{ij}} \sum_{j = 0} \pmb{w}_{ij} x_j
 &= x_j 
 \end{align}
 
@@ -1021,19 +1022,23 @@ units, $\delta$ is computes as follows:
 
 \begin{equation}
 \label{eq:output}
-\delta_n = \hat{y}_n - y_n
+\delta_k = \hat{y}_k - y_k
 \end{equation}
 
+Where \textit{k}, refers to a specifc output neuron.
 However, for the hidden units, the chain rule has to be used again.
 
 \begin{equation}
 \label{eq:bp}
-\delta_i = \frac{\partial E}{\partial a_i} = \sum_n \frac{\partial E}{\partial a_n}
-\frac{\partial a_n}{\partial a_i}
+\delta_i = \frac{\partial E}{\partial a_i} = \sum_k \frac{\partial E}{\partial a_k}
+\frac{\partial a_k}{\partial a_i}
 \end{equation}
 
-Where the sum runs over all \textit{n} units that unit \textit{i}, sends
-connections. This highlights the fact that changes in $a_i$ only influences
+Where the sum runs over all \textit{k} units that unit \textit{i}, sends
+connections. 
+Where in this case, \textit{k} denotes the units that, unit \textit{i} sends
+its values.
+This highlights the fact that changes in $a_i$ only influences
 the error-function, through variations of the variables $a_n$. The leaves us
 with the fact that we can compute the $\delta$ for a particular hidden unit by
 backpropagating the $\delta$ value back from higher up in the network.
