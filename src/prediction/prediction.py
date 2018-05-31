@@ -64,7 +64,8 @@ def predict(macomreader, linereader, author_texts, non_author_text):
 def predict_all(macomreader, linereader, problems):
     results = []
 
-    for unknown, knowns, label in problems:
+    for idx, (unknown, knowns, label) in enumerate(problems):
+        print(idx, len(problems))
         predictions, times = predict(macomreader, linereader, knowns, unknown)
         results.append((predictions, times))
 
@@ -193,7 +194,7 @@ if __name__ == '__main__':
                 theta, weight, tps, tns, fps, fns, accuracy, errors),
                 end='\r\n')
 
-            if fns > limit and limit_theta = 'New':
+            if fns > limit and limit_theta == 'New':
                 limit_theta = theta
 
         print('Starting Fine tuned run')
