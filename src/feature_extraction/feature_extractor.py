@@ -111,7 +111,7 @@ class FeatureExtractor:
     def extract(self, outfile):
         with open(outfile, 'a') as f:
             # Write header.
-            f.write('author' + ','.join(self.feature_names) + '\r\n')
+            f.write('author,' + ','.join(self.feature_names) + '\r\n')
 
             for i, [author, date, text] in enumerate(self.authors):
                 start = time.time()

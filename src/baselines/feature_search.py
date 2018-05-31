@@ -94,9 +94,10 @@ class FeatureSearch:
     def __generateData__(self, filePath):
         with open(filePath, 'r') as f:
             data = pd.read_csv(f)
-            self.authors = data.as_matrix(columns=['StudentId']).flatten()
+            print(data.columns.values)
+            self.authors = data.as_matrix(columns=['author']).flatten()
 
-            datacols = filter(lambda x: x != 'StudentId', data.columns)
+            datacols = filter(lambda x: x != 'author', data.columns)
             self.data = data.as_matrix(columns=datacols)
 
         if self.authorLimit is not None:
