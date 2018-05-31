@@ -19,7 +19,7 @@ def model(reader):
 
     # TODO: Path should be command line argument or something.
     word_weights = gew.generate_embedding_weights(
-        '/home/fluttershy/datalogi/masters_project/MastersThesis/data/pre-trained/wiki.da.vec', word_mapping)
+        '.\\data\\pre-trained\\wiki.da.vec', word_mapping)
 
     word_number = word_weights.shape[0]
     word_embedding_size = word_weights.shape[1]
