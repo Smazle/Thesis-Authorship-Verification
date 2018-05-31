@@ -250,7 +250,7 @@ def find_word_n_grams(text, n):
 
     """
     words = find_words(text.lower())
-    grams = [tuple(words[i:i + n][:]) for i in range(len(words) - n + 1)]
+    grams = (tuple(words[i:i + n][:]) for i in range(len(words) - n + 1))
     return Counter(grams)
 
 

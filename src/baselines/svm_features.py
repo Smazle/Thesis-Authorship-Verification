@@ -31,16 +31,9 @@ parser.add_argument(
     default=50
 )
 
-parser.add_argument(
-    '--authors',
-    type=float,
-    help='Number of unique authors to use',
-    default=.5
-)
-
 args = parser.parse_args()
 
 svm = SVC()
-search = FeatureSearch(svm, args.features, args.authors, normalize=False,
+search = FeatureSearch(svm, args.features, authorLimit=None, normalize=False,
                        validator=StratifiedKFold(3))
 search.fit(args.datafile, args.outfile)

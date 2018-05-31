@@ -39,7 +39,9 @@ plt.xlabel('Threshold (Theta)')
 plt.ylabel('Accuracy')
 plt.grid(True)
 plt.legend()
+plt.savefig('Accuracy.png')
 plt.show()
+plt.clf()
 
 for weight in np.unique(weights):
     label = 'Weight {}'.format(weight)
@@ -51,7 +53,9 @@ plt.xlabel('Threshold (Theta)')
 plt.ylabel('Accusation Error')
 plt.grid(True)
 plt.legend()
+plt.savefig('Accusation_Error.png')
 plt.show()
+plt.clf()
 
 valid = data[data[:, 3] < 0.1]
 best_index = np.argmax(valid[:, 2])

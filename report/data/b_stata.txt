@@ -1,51 +1,51 @@
+Number of texts 73311
 
-Number of texts 46620
+Average character count 5516.714995021211
+Median character count 5139.0
+Max character count 338315
+Min character count 0
+Std character count 4133.762015893903
+Texts Under Min 200 characters 1823
+Texts Over Max 30000 characters 119
 
-Average character count 5722.245688545689
-Median character count 5338.5
-Max character count 685427
-Min character count 2
-Std character count 5261.136589961338
-Texts Under Min characters 1127
-Texts Over Max characters 72
-
-Average Unique Characters 58.92245817245817
-Median Unique Characters 60.0
-Min Unique Characters 2
+Average Unique Characters 55.17067015863922
+Median Unique Characters 57.0
+Min Unique Characters 0
 Max Unique Characters 219
-Std Unique Characters 9.940570604142307
-Percieved Garbage Texts 11
+Std Unique Characters 12.430634191671688
+Percieved Garbage Texts 18
 
-Average word count 976.7078936078937
-Median word count 923.0
-Max word count 53350
+Average word count 947.0234207690524
+Median word count 892.0
+Max word count 53319
 Min word count 0
-Std word count 714.8230598009188
+Std word count 683.7593468562915
 
-Average Unique Word 392.8318961818962
-Median Unique Word 388.0
-Max Unique Word 34499
+Average Unique Word 378.7815880290816
+Median Unique Word 375.0
+Max Unique Word 13950
 Min Unique Word 0
-Std Unique Word 262.33122054828675
+Std Unique Word 207.86608421883125
 
-Average Sentence Length 20.359214691357916
-Max Sentence Length 6340.0
+Average Sentence Length 19.8131893391834
+Max Sentence Length 6327.0
 Min Sentence Length 0.0
-Std Sentence Length 30.952136402084104
+Std Sentence Length 25.53160483063513
 
-Average Sentence Count 50.97752037752038
-Max Sentence Count 4404
+Average Sentence Count 49.78538009302833
+Max Sentence Count 4401
 Min Sentence Count 0
-Std Sentence Count 41.27783889361291
-Texts with over 500 sentences 2
+Std Sentence Count 39.81221508227576
+Texts with over 500 sentences 26
 
-Author number 3500
-Author average text number 13.32
+Author number 5500
+Author average text number 13.329272727272727
 Author median text number 12.0
 Author max text number 42
 Author min text number 2
-Author std text number 4.21173869763342
+Author std text number 4.227199526247932
+Total Removed  1944
 
-Frequencies, æ 0.007064644717467028, Æ 2.921231038622198e-05
-Frequencies, ø 0.00546020177133584, Ø 3.9741936958132355e-05
-Frequencies, å 0.008875170710961661, Å 3.412663592405555e-05
+Frequencies, æ 0.0071496300156524435, Æ 1.8220440192235857e-05
+Frequencies, ø 0.005486023961775321, Ø 2.724041112740703e-05
+Frequencies, å 0.009029725262292681, Å 2.160787445242898e-05

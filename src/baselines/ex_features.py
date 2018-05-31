@@ -31,16 +31,9 @@ parser.add_argument(
     default=50
 )
 
-parser.add_argument(
-    '--authors',
-    type=float,
-    help='Number of unique authors to use',
-    default=.5
-)
-
 args = parser.parse_args()
 
 knn = KNeighborsClassifier(3)
-search = FeatureSearch(knn, args.features, args.authors, normalize=True,
+search = FeatureSearch(knn, args.features, authorLimit=None, normalize=True,
                        validator=StratifiedKFold(3))
 search.fit(args.datafile, args.outfile)
