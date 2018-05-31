@@ -1217,10 +1217,8 @@ extension \gls{AdaGrad}, \gls{RMSProp} and \gls{Adam}.
         \begin{equation}
             \label{eq:individual_adagrad}
             \mathbf{w}_i^{(t+1)} =
-                \mathbf{w}_i^{(t)} -
-                \frac{\eta}{
-                    \sqrt{G_{i,i}}
-                } \Delta E|_{\mathbf{w}_i^{(t)}}.
+                \mathbf{w}_i^{(t)} - \frac{\eta}{\sqrt{G_{i,i}}} \circ
+                \Delta E|_{\mathbf{w}_i^{(t)}}.
         \end{equation}
 
         $G_{i,i}$ works as a scaling factor for weight $\mathbf{w}_i$.
@@ -1259,9 +1257,13 @@ extension \gls{AdaGrad}, \gls{RMSProp} and \gls{Adam}.
         updated with the equation,
 
         \begin{equation}
+            \label{eq:rms_prop_state}
             \mathbf{v}^{(t+1)} =
                 \gamma\mathbf{v}^{(t)} +
-                (1 - \gamma)\left(\Delta E|_{\mathbf{w}^{(t)}}\right)^2.
+                (1 - \gamma)\left(
+                    \Delta E|_{\mathbf{w}^{(t)}} \circ
+                    \Delta E|_{\mathbf{w}^{(t)}}
+                \right).
         \end{equation}
 
         The parameter $\gamma$ can be seen as a forgetting rate. If $\gamma$
@@ -1273,7 +1275,7 @@ extension \gls{AdaGrad}, \gls{RMSProp} and \gls{Adam}.
         \begin{equation}
             \mathbf{w}^{(t+1)} =
                 \mathbf{w}^{(t)} -
-                \frac{\eta}{\sqrt{\mathbf{v}^{(t)}}}
+                \frac{\eta}{\sqrt{\mathbf{v}^{(t)}}} \circ
                 \Delta E|_{\mathbf{w}^{(t)}}.
         \end{equation}
 
@@ -1283,9 +1285,54 @@ extension \gls{AdaGrad}, \gls{RMSProp} and \gls{Adam}.
         \cite{DBLP:journals/corr/KingmaB14}. The difference from \gls{RMSProp}
         is that \gls{Adam} use both the gradient and the squared gradient while
         \gls{RMSProp} use only the squared gradient. Consequently \gls{Adam} has
-        two forgetting factors instead of the single one for \gls{RMSProp}.
+        two forgetting factors instead of the single one for \gls{RMSProp}. The
+        internal state of \gls{Adam} is updated via,
 
-        % TODO: Cite https://arxiv.org/pdf/1412.6980.pdf
+        \begin{align}
+            \mathbf{m}^{(t+1)} &=
+                \gamma_1\mathbf{m}^{(t)} +
+                (1 - \gamma_1) \Delta E|_{\mathbf{w}^{(t)}}, \\
+            \mathbf{v}^{(t+1)} &=
+                \gamma_2\mathbf{v}^{(t)} +
+                (1 - \gamma_2) \Delta \left(
+                    E|_{\mathbf{w}^{(t)}} \circ E|_{\mathbf{w}^{(t)}}
+                \right), \\
+            \mathbf{\hat{m}}^{(t+1)} &=
+                \frac{\mathbf{m}^{(t+1)}}{1 - \gamma_1^t}, \\
+            \mathbf{\hat{v}}^{(t+1)} &=
+                \frac{\mathbf{v}^{(t+1)}}{1 - \gamma_2^t}.
+        \end{align}
+
+        The first two equations are very similar to Equation
+        \eqref{eq:rms_prop_state} for \gls{RMSProp}. In those equations
+        $\gamma_1$ and $\gamma_2$ are the decay rates of the gradient and the
+        squared gradient. They keep a running average of the gradient and the
+        size of the gradient. By using the running average of the gradient
+        \gls{Adam} is able to move more smoothly in a direction since the
+        direction chosen is no longer just the current gradient but previous
+        gradients influence the choice of direction. That means that a single
+        weird gradient will not drastically change the direction \gls{Adam}
+        moves \cite{DBLP:journals/corr/KingmaB14}. Similarly to \gls{RMSProp}
+        \gls{Adam} use the running average of the squared gradient to scale how
+        large steps are taken. The two bottom equations are scaling the internal
+        state based on the time step $t$. As $t$ increases the denominators
+        increase meaning that the value of the whole fraction decreases. That
+        means that in the beginning the step size is adjusted upwards and as $t$
+        increases smaller and smaller steps are taken. The actual weight update
+        in the \gls{Adam} algorithm are performed as,
+
+        \begin{equation}
+            \mathbf{w}^{(t + 1)} = \mathbf{w}^{(t)} -
+                \eta\frac
+                    {\mathbf{\hat{m}}^{(t)}}
+                    {\sqrt{\mathbf{\hat{v}}^{(t)}} + \epsilon}.
+        \end{equation}
+
+        \gls{Adam} prevents division by 0 via the $\epsilon$ parameter which is
+        just some small number. It can be seen in the above equation that the
+        direction of change is chosen by $\mathbf{\hat{m}}^{(t)}$ while the size
+        of the step taken is chosen by a combination of the learning rate $\eta$
+        and $\mathbf{\hat{v}}^{(t)}$.
 
 \end{description}
 

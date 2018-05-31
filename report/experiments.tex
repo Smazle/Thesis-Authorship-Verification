@@ -839,17 +839,37 @@ in epoch two with accuracy 0.92075.
     \label{fig:network_7_accuracies}
 \end{figure}
 
-We also tried the network on the prediction system validation dataset with some
-surprising results. It seems like the network does not generalize very well to
-authors it has not seen before. So even though it had an accuracy of over 90
-percent on the validation dataset the prediction system results were not very
-good.
 
-For the 50/50 dataset the best legal configuration was $\theta = 0.0$ and a
-weight of 0.0 with an accuracy of 0.5 and an accusation error of 0.0.
+\subsubsection{Siamese Neural Network - Iteration 8}
 
-For the 4\% dataset the best legal configuration were $\theta = 0.0$ and a
-weight of 0.0 with an accuracy of 0.96 and an accusation error of 0.0.
+In this iteration we tried an extended version of the previous network. We used
+two bidirectional \gls{LSTM} layers on top of the word embeddings from before.
+Both of them returned sequences and we computed the final "features" by taking
+the average of the returned sequences giving us 50 numbers which indicated the
+author. We had huge problems with overfitting of the network on the training
+data authors. We have shown a graph of the training and validation accuracies
+in Figure \ref{fig:network_8_accuracies}.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\textwidth]{./pictures/experiments/network_8_accuracies.png}
+    \caption{Shows the training and validation accuracies over the epochs of
+        training on the eighth iteration of our networks.}
+    \label{fig:network_8_accuracies}
+\end{figure}
+
+
+\subsubsection{Siamese Neural Network - Iteration 9}
+
+In this iteration we went back to using convolutional neural networks. Now we
+tried using both embedded words and embedded characters. We had a two
+convolutional layers for the characters, one looking at 8 characters and one
+looking at 4. For the words we had a convolutional layer looking at 8 words at a
+time. After the convolutional layer we had a max over time pooling layer for
+each of the filters and we combined the output for 2 texts with the absolute
+difference. We then had a densely connected network on top of that which learned
+from the features extracted. The dense network had 2 layers with 500 neurons in
+each. After that we had 30\% dropout and a softmax layer as usual.
 
 
 \subsection{Prediction System}
@@ -927,9 +947,9 @@ and if the prediction system returns the incorrect result 1 we have,
 
 That is the expression we minimize is 0 whenever there is no error and 1
 whenever there is an error. So we minimize the number of errors we make. The
-subject to expression makes sure that the fraction of false accusations we
-make is less than $10\%$ of the accusations we make. The expression should be
-read as, 
+subject to expression makes sure that the fraction of false accusations we make
+is less than $10\%$ of the accusations we make. The expression should be read
+as,
 
 $$ \frac{\textit{false accusations}}{\textit{total accusations}} <
 \frac{1}{10} $$
@@ -1012,8 +1032,8 @@ therefore also wanted to find $\theta$ and $w$ for a validation set with only
 samples as before and then for each sample we added a negative sample with a
 4\% chance. We ended up with a validation set with 411 positive samples and 16
 negative samples. The $\theta$ and $w$ that gave the best accuracy while still
-fulfilling the constraint were $\theta = 0.1$ and $w = 0.0$ with an accuracy of
-0.97189 and an accusation error of 0.0. With that configuration we caught
+fulfilling the constraint were $\theta = 0.1$ and $w = 0.0$ with an accuracy
+of 0.97189 and an accusation error of 0.0. With that configuration we caught
 $\frac{4}{16}$ of the cheaters with 0 false accusations. We have shown the cross
 validation results in Figure \ref{fig:prediction_system_results_2}.
 
@@ -1032,15 +1052,3 @@ validation results in Figure \ref{fig:prediction_system_results_2}.
         accusation error rises.}
     \label{fig:prediction_system_results_2}
 \end{figure}
-
-
-TODO:
-\begin{itemize}
-    \item Describe Optimizers
-\end{itemize}
-
-Questions:
-\begin{itemize}
-    \item Pre-trained embeddings?
-    \item Ways to directly compare Baselines with Neural Networks
-\end{itemize}  
