@@ -145,10 +145,7 @@ create_reader.add_argument(
 
 args = parser.parse_args()
 
-callPath = inspect.stack()[0][1]
-callPath = callPath.split('/')
-callPath = '/'.join(callPath[:-1]) + \
-    '/config/{}_config.json'.format(args.networkname)
+callPath = 'src/networks/config/{}_config.json'.format(args.networkname)
 
 config = json.load(open(callPath, 'r'))
 

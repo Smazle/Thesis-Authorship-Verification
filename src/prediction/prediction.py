@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 
 import numpy as np
 from keras.models import load_model
@@ -21,7 +22,7 @@ def get_problems(macomreader, linereader, negative_chance=1.0):
         author_texts = macomreader.authors[author]
 
         if len(author_texts) <= 1:
-            print("WARNING NOT ENOUGH TEXTS FOUND")
+            print('WARNING NOT ENOUGH TEXTS FOUND')
             continue
 
         # We want to predict the newest text.
@@ -63,7 +64,8 @@ def predict(macomreader, linereader, author_texts, non_author_text):
 def predict_all(macomreader, linereader, problems):
     results = []
 
-    for unknown, knowns, label in problems:
+    for idx, (unknown, knowns, label) in enumerate(problems):
+        print(idx, len(problems))
         predictions, times = predict(macomreader, linereader, knowns, unknown)
         results.append((predictions, times))
 
@@ -124,14 +126,16 @@ if __name__ == '__main__':
         '--theta',
         nargs='+',
         help='Thresholds to use.',
-        default=["0.0", "0.1", "0.2", "0.3", "0.4", "0.5", "0.6", "0.7", "0.8", "0.9", "1.0"]
+        default=['0.0', '0.1', '0.2', '0.3', '0.4',
+                 '0.5', '0.6', '0.7', '0.8', '0.9', '1.0']
     )
     parser.add_argument(
         '--weights',
         nargs='+',
         help='The argument given to the exponential dropoff weight ' +
              'function. If 0.0 is given it is equivalent to uniform weights.',
-        default=["0.0", "0.1", "0.2", "0.3", "0.4", "0.5", "0.6", "0.7", "0.8", "0.9", "1.0"]
+        default=['0.0', '0.1', '0.2', '0.3', '0.4',
+                 '0.5', '0.6', '0.7', '0.8', '0.9', '1.0']
     )
     parser.add_argument(
         '--negative-chance',
@@ -171,12 +175,17 @@ if __name__ == '__main__':
               .format(positive_n, negative_n))
 
         results = predict_all(reader, linereader, problems)
+        limit = int(0.1 * negative_n)
+
+        limit_theta = 'New'
+        lower_theta = 0
 
         print('Theta,Weights,TPS,TNS,FPS,FNS,ACC,ERR', end='\r\n')
         for (theta, weight) in itertools.product(theta, weights):
             tps, tns, fps, fns = evaluate(labels, results, weight, theta)
 
             accuracy = (tps + tns) / (tps + tns + fps + fns)
+
             if fns + tns == 0:
                 errors = 0
             else:
@@ -185,3 +194,33 @@ if __name__ == '__main__':
             print('{},{},{},{},{},{},{},{}'.format(
                 theta, weight, tps, tns, fps, fns, accuracy, errors),
                 end='\r\n')
+
+            if fns > limit and limit_theta == 'New':
+                limit_theta = theta
+
+        print('Starting Fine tuned run')
+        print('Limit Theta: %s, Lower Theta: %s, Limit: %s' %
+              (limit_theta, lower_theta, limit))
+        print('Lower Theta', 'Upper Theta', 'Applied Theta', 'FNS')
+        for _ in range(100):
+            new_theta = (limit_theta + lower_theta) / 2
+            e = [evaluate(labels, results, weight, new_theta)
+                 for weight in weights]
+
+            acc = [((tns, fns), (tps + tns) / (tps + tns + fps + fns))
+                   for tps, tns, fps, fns in e]
+
+            (tns, fns) = max(acc, key=lambda x: x[1])[0]
+
+            if fns + tns == 0:
+                errors = 0
+            else:
+                errors = fns / (fns + tns)
+
+            print('%s, %s, %s, %s' %
+                  (lower_theta, limit_theta, new_theta, errors))
+
+            if fns < 0.1:
+                lower_theta = new_theta
+            else:
+                limit_theta = new_theta
