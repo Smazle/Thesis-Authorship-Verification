@@ -37,6 +37,10 @@ parser.add_argument(
 )
 args = parser.parse_args()
 
+#extractor = CharacterNGramFeatureExtractor(8, 300)
+#corpus = gen_own_corpus("D:\DABAI\Data\MagnusOgAugust\\final_data\B.csv")
+#extractor.fit(corpus)
+
 with open(args.datafile, 'r', encoding='utf-8') as csvfile:
     authors = csv.reader(csvfile, delimiter=';')
 

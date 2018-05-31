@@ -99,9 +99,9 @@ def nGramCount(text, n):
     else:
         posTagging = np.loadtxt('postags', delimiter=',', dtype=str)
 
-    posTagging = [tuple(posTagging[i:i + n][:])
-                  for i in range(len(posTagging) - n + 1)]
-    return Counter(posTagging)
+    new_posTagging = (tuple(posTagging[i:i + n][:])
+                  for i in range(len(posTagging) - n + 1))
+    return Counter(new_posTagging)
 
 
 def frequency(text, n, ngrams):
