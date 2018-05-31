@@ -75,6 +75,7 @@ with open(splitChar.join(name), 'w') as output:
     output.write(header)
 
     for idx, line in enumerate(f):
+        line = line.strip()
         author, date, text = line.split(';')
 
         if idx % 1000 == 0:

@@ -64,7 +64,7 @@ for idx, row in f.iterrows():
 
     author, time, text = row['StudentId'], row['Date'], row['Text']
 
-    text = text[200:]
+    # text = text[200:]
     text = util.clean(text)
 
     lengths.append(len(text))
@@ -85,7 +85,11 @@ for idx, row in f.iterrows():
     else:
         authors[author] = [len(text)]
 
+    if len(sent_words) == 0:
+        print(row)
+
     if len(text) < lower or len(text) > upper:
+        print('Char', row, len(text))
         totalRemoved += 1
     elif sentence_count[-1] > sent:
         totalRemoved += 1
