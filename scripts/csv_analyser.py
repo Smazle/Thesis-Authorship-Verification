@@ -64,7 +64,7 @@ for idx, row in f.iterrows():
 
     author, time, text = row['StudentId'], row['Date'], row['Text']
 
-    # text = text[200:]
+    text = text[200:]
     text = util.clean(text)
 
     lengths.append(len(text))
