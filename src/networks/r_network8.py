@@ -6,10 +6,6 @@ from keras.models import Model
 import keras.backend as K
 import keras.layers as L
 from ..util import generate_emb_weight as gew
-import os
-
-
-WORD_VEC_PATH = os.path.join('.', 'data', 'pre-trained', 'wiki.da.vec')
 
 
 def model(reader):
@@ -17,7 +13,7 @@ def model(reader):
 
     word_mapping = reader.channels[0].vocabulary_map
     sent_len = reader.channels[0].sentence_len
-    weights = gew.generate_embedding_weights(WORD_VEC_PATH, word_mapping)
+    weights = gew.generate_embedding_weights(gew.WORD_VEC_PATH, word_mapping)
 
     embedding = L.Embedding(output_dim=weights.shape[1],
                             input_dim=weights.shape[0], trainable=False,
