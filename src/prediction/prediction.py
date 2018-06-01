@@ -1,5 +1,6 @@
 #!/usr/bin/env python3 # -*- coding: utf-8 -*-
 # -*- coding: utf-8 -*-
+
 import numpy as np
 from keras.models import load_model
 from ..preprocessing import LineReader, MacomReader
@@ -7,7 +8,7 @@ import argparse
 import itertools
 import jsonpickle
 import random
-import os
+import sys
 
 
 SECS_PER_MONTH = 60 * 60 * 24 * 30
@@ -22,7 +23,7 @@ def get_problems(macomreader, linereader, negative_chance=1.0):
         author_texts = macomreader.authors[author]
 
         if len(author_texts) <= 1:
-            print('WARNING NOT ENOUGH TEXTS FOUND')
+            print('WARNING NOT ENOUGH TEXTS FOUND', file=sys.stderr)
             continue
 
         # We want to predict the newest text.
@@ -65,7 +66,7 @@ def predict_all(macomreader, linereader, problems):
     results = []
 
     for idx, (unknown, knowns, label) in enumerate(problems):
-        print(idx, len(problems), unknown, knowns)
+        print(idx, len(problems), unknown, knowns, file=sys.stderr)
         predictions, times = predict(macomreader, linereader, knowns, unknown)
         results.append((predictions, times))
 
@@ -125,7 +126,7 @@ def apply_system(weights, thetas, labels, results):
 def binary_theta_search(weights, labels, result):
     limit_theta = 1
     lower_theta = 0
-    print('\nStarting Fine tuned run')
+    print('\nStarting Fine tuned run', file=sys.stderr)
     print('{:^10}{:^10}{:^10}{:^10}{:^10}{:^10}{:^10}{:^10}{:^10}{:^10}'
           .format(
               'L-Theta', 'U-Theta', 'A-Theta', 'Err', 'Acc', 'TNS',
@@ -233,7 +234,7 @@ if __name__ == '__main__':
         negative_n = len(list(filter(lambda x: not x, labels)))
 
         print('Generated {} positives and {} negatives'
-              .format(positive_n, negative_n))
+              .format(positive_n, negative_n), file=sys.stderr)
 
         results = predict_all(reader, linereader, problems)
 

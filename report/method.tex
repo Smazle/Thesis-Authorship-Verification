@@ -12,7 +12,7 @@ illustrated in Figure \ref{fig:profile_based}.
 \begin{figure}[htb]
     \centering
     \textbf{Instance Based Authorship Verification or Authorship Attribution}\par\medskip
-    \includegraphics[scale=0.5]{./pictures/method/InstanceBased.png} 
+    \includegraphics[scale=0.5]{./pictures/method/InstanceBased.png}
     \caption{Illustrate the typical instance based Authorship Verification or
         Authorship Attribution solution setup. Inspired by \cite{stamatos2009} a
         set of authors are given as input each with a set of texts. Some Machine
@@ -805,9 +805,9 @@ different layers.
     \begin{equation}
         \begin{tabular}{|llll|}
         \hline
-        1 & 8 & 7 & 2 \\ 
-        9 & 7 & 9 & 8 \\ 
-        3 & 6 & 2 & 4 \\ 
+        1 & 8 & 7 & 2 \\
+        9 & 7 & 9 & 8 \\
+        3 & 6 & 2 & 4 \\
         5 & 7 & 9 & 9 \\\hline
         \end{tabular}
             \Longrightarrow
@@ -833,7 +833,7 @@ different layers.
     \end{figure}
 
 
-    \item[Dropout Layer:] 
+    \item[Dropout Layer:]
 
         This layer is used for the intent of regularizing and in turn,
         generalize a network. Given enough training time, and a good optimizer
@@ -988,7 +988,7 @@ the following:
 \frac{\partial a_i}{\partial \mathbf{w}_{ij}}
 \end{equation}
 
-We can add a little extra notation, which we will use hence forth, for the 
+We can add a little extra notation, which we will use hence forth, for the
 sake of easing understanding.
 
 \begin{equation}\label{eq:delta}
@@ -996,13 +996,13 @@ sake of easing understanding.
 \end{equation}
 
 $\delta$ is often referred to as the \textit{error} of a specific neuron.
-From \eqref{eq:neuron} we get that 
+From \eqref{eq:neuron} we get that
 
 \begin{align}
-\frac{\partial a_i}{\partial \mathbf{w}_{ij}} &= \frac{\partial}{\partial \mathbf{w}_{ij}} 
+\frac{\partial a_i}{\partial \mathbf{w}_{ij}} &= \frac{\partial}{\partial \mathbf{w}_{ij}}
 \sum_{j=1} \mathbf{w}_{ij} x_j + \mathbf{w}_{i0}\\
 &= \frac{\partial}{\partial \mathbf{w}_{ij}} \sum_{j = 0} \mathbf{w}_{ij} x_j\\
-&= x_j 
+&= x_j
 \end{align}
 
 Which when combined gives us
@@ -1029,12 +1029,12 @@ However, for the hidden units, the chain rule has to be used again.
 
 \begin{equation}
 \label{eq:bp}
-\delta_i = \frac{\partial E}{\partial a_i} = 
+\delta_i = \frac{\partial E}{\partial a_i} =
 \sum_k \frac{\partial E}{\partial a_k} \frac{\partial a_k}{\partial a_i}
 \end{equation}
 
 Where the sum runs over all \textit{k} units that unit \textit{i}, sends
-connections. 
+connections.
 Where in this case, \textit{k} denotes the units that, unit \textit{i} sends
 its values.
 
@@ -1042,9 +1042,9 @@ This can be rewritten using the prior established equalities and the chain rule,
 
 
 \begin{align}
-\sum_k \frac{\partial E}{\partial a_k} \frac{\partial a_k}{\partial a_i} &= 
+\sum_k \frac{\partial E}{\partial a_k} \frac{\partial a_k}{\partial a_i} &=
 \sum_k \delta_k \frac{\partial a_k}{\partial a_i} & \text{By \eqref{eq:delta}}\\
-&= \sum_k \delta_k \frac{\partial a_k}{\partial z_i} \frac{\partial z_i}{\partial a_i} 
+&= \sum_k \delta_k \frac{\partial a_k}{\partial z_i} \frac{\partial z_i}{\partial a_i}
 & \text{By \eqref{eq:neuron} and Lemma \ref{lemma:chainrule}} \\
 &= \sum_k \delta_k h'(a_i) \frac{\partial a_k}{\partial z_i} \\
 &= \sum_k \delta_k h'(a_i) \left( \frac{\partial}{\partial z_i}  \sum_{i=0} \mathbf{w}_{ki} z{i}\right) \\
