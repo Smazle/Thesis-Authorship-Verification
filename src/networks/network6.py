@@ -5,6 +5,7 @@ from src.preprocessing.channels import ChannelType
 import keras.layers as L
 from keras.models import Model
 from src.util import generate_emb_weight as gew
+import platform
 
 
 def model(reader):
@@ -17,8 +18,12 @@ def model(reader):
 
     word_mapping = reader.channels[1].vocabulary_map
 
-    word_weights = gew.generate_embedding_weights(
-        '.\\data\\pre-trained\\wiki.da.vec', word_mapping)
+    if platform.system() == 'Linux':
+        path = './data/pre-trained/wiki.da.vec'
+    else:
+        path = '.\\data\\pre-trained\\wiki.da.vec'
+
+    word_weights = gew.generate_embedding_weights(path, word_mapping)
 
     word_number = word_weights.shape[0]
     word_embedding_size = word_weights.shape[1]
