@@ -5,6 +5,7 @@ from src.preprocessing.channels import ChannelType
 import keras.layers as L
 from keras.models import Model
 from src.util import generate_emb_weight as gew
+import platform
 
 
 def model(reader):
