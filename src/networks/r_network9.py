@@ -7,6 +7,10 @@ import keras.backend as K
 import keras.layers as L
 import keras.optimizers as O
 from ..util import generate_emb_weight as gew
+import os
+
+
+WORD_VEC_PATH = os.path.join('.', 'data', 'pre-trained', 'wiki.da.vec')
 
 
 def model(reader):
@@ -14,9 +18,7 @@ def model(reader):
 
     word_mapping = reader.channels[0].vocabulary_map
 
-    # TODO: Path should be command line argument or something.
-    weights = gew.generate_embedding_weights(
-        '/home/fluttershy/datalogi/masters_project/MastersThesis/data/pre-trained/wiki.da.vec', word_mapping)
+    weights = gew.generate_embedding_weights(WORD_VEC_PATH, word_mapping)
 
     sentence_len = reader.channels[0].sentence_len
     word_number = weights.shape[0]
