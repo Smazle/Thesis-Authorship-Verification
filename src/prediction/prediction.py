@@ -80,13 +80,13 @@ def evaluate(labels, results, w, theta):
 
         prediction = np.average(predictions, weights=weights) > theta
 
-        if prediction == label and label == True:
+        if prediction == label and label == True:  # noqa
             tps = tps + 1
-        elif prediction == label and label == False:
+        elif prediction == label and label == False:  # noqa
             tns = tns + 1
-        elif prediction != label and label == True:
+        elif prediction != label and label == True:  # noqa
             fns = fns + 1
-        elif prediction != label and label == False:
+        elif prediction != label and label == False:  # noqa
             fps = fps + 1
         else:
             raise Exception('This case should be impossible')

@@ -14,9 +14,7 @@ def model(reader):
 
     word_mapping = reader.channels[0].vocabulary_map
 
-    # TODO: Path should be command line argument or something.
-    weights = gew.generate_embedding_weights(
-        '/home/fluttershy/datalogi/masters_project/MastersThesis/data/pre-trained/wiki.da.vec', word_mapping)
+    weights = gew.generate_embedding_weights(word_mapping)
 
     sentence_len = reader.channels[0].sentence_len
     word_number = weights.shape[0]
