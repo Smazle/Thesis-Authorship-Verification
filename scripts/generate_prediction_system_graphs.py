@@ -20,7 +20,8 @@ parse.add_argument(
 
 args = parse.parse_args()
 
-data = pd.read_csv(args.data, skiprows=[0])
+data = pd.read_csv(args.data, sep=r'\s+')
+print(data)
 
 thetas = data.as_matrix(columns=['Theta'])
 weights = data.as_matrix(columns=['Weights'])
