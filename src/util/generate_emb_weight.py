@@ -8,7 +8,7 @@ import os
 WORD_VEC_PATH = os.path.join('.', 'data', 'pre-trained', 'wiki.da.vec')
 
 
-def generate_embedding_weights(emb_path: str, vocabulary_map):
+def generate_embedding_weights(vocabulary_map, emb_path=WORD_VEC_PATH):
 
     word_n = len(vocabulary_map)
 

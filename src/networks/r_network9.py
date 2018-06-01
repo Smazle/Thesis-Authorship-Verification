@@ -14,7 +14,7 @@ def model(reader):
 
     word_mapping = reader.channels[0].vocabulary_map
 
-    weights = gew.generate_embedding_weights(gew.WORD_VEC_PATH, word_mapping)
+    weights = gew.generate_embedding_weights(word_mapping)
 
     sentence_len = reader.channels[0].sentence_len
     word_number = weights.shape[0]

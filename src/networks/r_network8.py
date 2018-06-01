@@ -13,7 +13,7 @@ def model(reader):
 
     word_mapping = reader.channels[0].vocabulary_map
     sent_len = reader.channels[0].sentence_len
-    weights = gew.generate_embedding_weights(gew.WORD_VEC_PATH, word_mapping)
+    weights = gew.generate_embedding_weights(word_mapping)
 
     embedding = L.Embedding(output_dim=weights.shape[1],
                             input_dim=weights.shape[0], trainable=False,
