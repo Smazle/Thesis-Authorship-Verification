@@ -25,51 +25,69 @@ purpose in our experimentation. The splitting of the data can be seen in Figure
 
 \begin{itemize}
 
-\item[- (A).] The entire set of extracted data. This consists of text written
-by, 10.058 different danish high school students, spanning different schools
-throughout the country.
+    \item[- (A).]
 
-\item[- (B).] Consisting of the texts written by 5.500 different authors, this
-set if used in the training process for the \gls{NN}s where it is used for
-training/validation and the prediction system. It is also used for the baseline
-methods, where this entire set is used as the corpus, and subsections of it is
-used feature selection and hyper parameter search.
+        The entire set of extracted data. This consists of text written by,
+        10.058 different danish high school students, spanning different schools
+        throughout the country.
 
-\item[- (C).]
-Being untouched throughout the training process, this set is used for unbiased
-validation, and selection of networks to be used on the test set (D). Contrary
-to the training set (B), this is only used for the final selection of our best 
-models during the training process.
+    \item[- (B).]
 
-\item[- (D).]
-The test set, which as the name implies, is used to test the
-performance of our final models.
+        Consisting of the texts written by 5.500 different authors, this set
+        if used in the training process for the \gls{NN}s where it is used for
+        training/validation and the prediction system. It is also used for the
+        baseline methods, where this entire set is used as the corpus, and
+        subsections of it is used feature selection and hyper parameter search.
 
-\item[- (E).] As mentioned (B) is used for training both the baselines and the 
-\gls{NN}s. In both circumstances, and different split of (B) is performed.
-(E) is the data used for the actual training of the \gls{NN}s.
+    \item[- (C).]
 
-\item[- (F).] This set is used as the basis of the prediction system described
-in the earlier sections of this paper.
+        Being untouched throughout the training process, this set is used for
+        unbiased validation, and selection of networks to be used on the test
+        set (D). Contrary to the training set (B), this is only used for the
+        final selection of our best models during the training process.
 
-\item[- (G).] The training data which is given to our \gls{NN}s.
+    \item[- (D).]
 
-\item[- (H).] A separate validation set, where no authors overlap with (H),
-which is used to determine the accuracy of our the model on an independent set
-of authors during training. This allows us to stop the training when we reach
-the desired generalization and accuracy.
+        The test set, which as the name implies, is used to test the performance
+        of our final models.
 
-\item[- (I).] This is an alternate split of (B), used on the baseline methods
-together with set (J). This set is used perform the feature selection needed for
-both the SVM and the Extended Delta methods. The specifics of this process will
-be described in section \ref{subsec:baseline}.
+    \item[- (E).]
 
-\item[- (J).] This set is used to tune the baseline methods. (J) is used to
-determine the best hyper parameters for the base line methods. This would be K
-and p in the case of the Extended Delta Method, and C and Gamma for the SVM.
-Like with (I), the specifics of this parameter selection will be covered in
-section \ref{subsec:baseline}.
+        As mentioned (B) is used for training both the baselines and the
+        \gls{NN}s. In both circumstances, and different split of (B) is
+        performed. (E) is the data used for the actual training of the
+        \gls{NN}s.
 
+    \item[- (F).]
+
+        This set is used as the basis of the prediction system described in the
+        earlier sections of this paper.
+
+    \item[- (G).]
+
+        The training data which is given to our \gls{NN}s.
+
+    \item[- (H).]
+
+        A separate validation set, where no authors overlap with (H), which is
+        used to determine the accuracy of our the model on an independent set
+        of authors during training. This allows us to stop the training when we
+        reach the desired generalization and accuracy.
+
+    \item[- (I).]
+
+        This is an alternate split of (B), used on the baseline methods together
+        with set (J). This set is used perform the feature selection needed
+        for both the SVM and the Extended Delta methods. The specifics of this
+        process will be described in section \ref{subsec:baseline}.
+
+    \item[- (J).]
+
+        This set is used to tune the baseline methods. (J) is used to determine
+        the best hyper parameters for the base line methods. This would be K and
+        p in the case of the Extended Delta Method, and C and Gamma for the SVM.
+        Like with (I), the specifics of this parameter selection will be covered
+        in section \ref{subsec:baseline}.
 
 \end{itemize}
 
