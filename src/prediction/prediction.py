@@ -126,18 +126,22 @@ def binary_theta_search(weights, labels, result):
     limit_theta = 1
     lower_theta = 0
     print('\nStarting Fine tuned run')
-    print('{:^10}{:^10}{:^10}{:^10}{:^10}'.format(
-        'L-Theta', 'U-Theta', 'A-Theta', 'FNS', 'Acc'))
+    print('{:^10}{:^10}{:^10}{:^10}{:^10}{:^10}{:^10}{:^10}{:^10}{:^10}'
+          .format(
+              'L-Theta', 'U-Theta', 'A-Theta', 'Err', 'Acc', 'TNS',
+              'FNS', 'TPS', 'FPS', 'Weight'))
 
     for _ in range(100):
         new_theta = (limit_theta + lower_theta) / 2
         e = [evaluate(labels, results, weight, new_theta)
              for weight in weights]
 
-        acc = [((tns, fns), (tps + tns) / (tps + tns + fps + fns))
-               for tps, tns, fps, fns in e]
+        accuracies = [((tns, fns, fps, tps),
+                       (tps + tns) / (tps + tns + fps + fns))
+                      for tps, tns, fps, fns in e]
 
-        ((tns, fns), acc) = max(acc, key=lambda x: x[1])
+        ((tns, fns, fps, tps), acc) = max(accuracies, key=lambda x: x[1])
+        w = weights[accuracies.index(((tns, fns, fps, tps), acc))]
 
         if fns + tns == 0:
             errors = 0
@@ -145,13 +149,17 @@ def binary_theta_search(weights, labels, result):
             errors = fns / (fns + tns)
 
         if errors < 0.1:
-            print('\033[92m{:^10.6f}{:^10.6f}{:^10.6f}\
-                    {:^10.6f}{:^10.6f}\033[0m'
-                  .format(lower_theta, limit_theta, new_theta, errors, acc))
+            print(('\033[92m' +
+                   '{:^10.6f}{:^10.6f}{:^10.6f}{:^10.6f}{:^10.6f}' +
+                   '{:^10}{:^10}{:^10}{:^10}{:^10}\033[0m')
+                  .format(lower_theta, limit_theta, new_theta, errors, acc,
+                          tns, fns, tps, fps, w))
             lower_theta = new_theta
         else:
-            print('{:^10.6f}{:^10.6f}{:^10.6f}{:^10.6f}{:^10.6f}'
-                  .format(lower_theta, limit_theta, new_theta, errors, acc))
+            print(('{:^10.6f}{:^10.6f}{:^10.6f}{:^10.6f}{:^10.6f}' +
+                   '{:^10}{:^10}{:^10}{:^10}{:^10}')
+                  .format(lower_theta, limit_theta, new_theta, errors, acc,
+                          tns, fns, tps, fps, w))
             limit_theta = new_theta
 
 
