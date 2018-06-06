@@ -1,5 +1,6 @@
 #!/usr/bin/python3
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
+
 
 def is_garbage(text):
     length = len(text)
@@ -8,5 +9,6 @@ def is_garbage(text):
 
     return ratio < 0.05 or ratio > 0.95
 
+
 if __name__ == '__main__':
-    print(is_garbage("Hej med dig jeg hedder mor og jeg bor i et hus."))
+    print(is_garbage('Hej med dig jeg hedder mor og jeg bor i et hus.'))

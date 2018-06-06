@@ -4,7 +4,6 @@
 import numpy as np
 import os
 
-
 WORD_VEC_PATH = os.path.join('.', 'data', 'pre-trained', 'wiki.da.vec')
 
 
