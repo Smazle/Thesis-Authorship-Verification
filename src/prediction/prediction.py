@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3 # -*- coding: utf-8 -*-
 # -*- coding: utf-8 -*-
 
 import numpy as np
@@ -8,6 +8,7 @@ import argparse
 import itertools
 import jsonpickle
 import random
+import sys
 
 
 SECS_PER_MONTH = 60 * 60 * 24 * 30
@@ -22,7 +23,7 @@ def get_problems(macomreader, linereader, negative_chance=1.0):
         author_texts = macomreader.authors[author]
 
         if len(author_texts) <= 1:
-            print('WARNING NOT ENOUGH TEXTS FOUND')
+            print('WARNING NOT ENOUGH TEXTS FOUND', file=sys.stderr)
             continue
 
         # We want to predict the newest text.
@@ -65,7 +66,7 @@ def predict_all(macomreader, linereader, problems):
     results = []
 
     for idx, (unknown, knowns, label) in enumerate(problems):
-        print(idx, len(problems))
+        print(idx, len(problems), unknown, knowns, file=sys.stderr)
         predictions, times = predict(macomreader, linereader, knowns, unknown)
         results.append((predictions, times))
 
@@ -80,13 +81,13 @@ def evaluate(labels, results, w, theta):
 
         prediction = np.average(predictions, weights=weights) > theta
 
-        if prediction == label and label == True:
+        if prediction == label and label == True:  # noqa
             tps = tps + 1
-        elif prediction == label and label == False:
+        elif prediction == label and label == False:  # noqa
             tns = tns + 1
-        elif prediction != label and label == True:
+        elif prediction != label and label == True:  # noqa
             fns = fns + 1
-        elif prediction != label and label == False:
+        elif prediction != label and label == False:  # noqa
             fps = fps + 1
         else:
             raise Exception('This case should be impossible')
@@ -101,6 +102,66 @@ def exp_norm(xs, l):
 
 def add_dim_start(array):
     return np.reshape(array, [1] + list(array.shape))
+
+
+def apply_system(weights, thetas, labels, results):
+    print('{:^8}{:^8}{:^8}{:^8}{:^8}{:^8}{:^10}{:^10}'
+          .format('Theta', 'Weights', 'TPS',
+                  'TNS', 'FPS', 'FNS', 'ACC', 'ERR', end='\r\n'))
+
+    for (theta, weight) in itertools.product(thetas, weights):
+        tps, tns, fps, fns = evaluate(labels, results, weight, theta)
+
+        accuracy = (tps + tns) / (tps + tns + fps + fns)
+
+        if fns + tns == 0:
+            errors = 0
+        else:
+            errors = fns / (fns + tns)
+
+        print('{:^8}{:^8}{:^8}{:^8}{:^8}{:^8}{:^10.6f}{:^10.6f}'.format(
+            theta, weight, tps, tns, fps, fns, accuracy, errors), end='\r\n')
+
+
+def binary_theta_search(weights, labels, result):
+    limit_theta = 1
+    lower_theta = 0
+    print('\nStarting Fine tuned run', file=sys.stderr)
+    print('{:^10}{:^10}{:^10}{:^10}{:^10}{:^10}{:^10}{:^10}{:^10}{:^10}'
+          .format(
+              'L-Theta', 'U-Theta', 'A-Theta', 'Err', 'Acc', 'TNS',
+              'FNS', 'TPS', 'FPS', 'Weight'))
+
+    for _ in range(100):
+        new_theta = (limit_theta + lower_theta) / 2
+        e = [evaluate(labels, results, weight, new_theta)
+             for weight in weights]
+
+        accuracies = [((tns, fns, fps, tps),
+                       (tps + tns) / (tps + tns + fps + fns))
+                      for tps, tns, fps, fns in e]
+
+        ((tns, fns, fps, tps), acc) = max(accuracies, key=lambda x: x[1])
+        w = weights[accuracies.index(((tns, fns, fps, tps), acc))]
+
+        if fns + tns == 0:
+            errors = 0
+        else:
+            errors = fns / (fns + tns)
+
+        if errors < 0.1:
+            print(('\033[92m' +
+                   '{:^10.6f}{:^10.6f}{:^10.6f}{:^10.6f}{:^10.6f}' +
+                   '{:^10}{:^10}{:^10}{:^10}{:^10}\033[0m')
+                  .format(lower_theta, limit_theta, new_theta, errors, acc,
+                          tns, fns, tps, fps, w))
+            lower_theta = new_theta
+        else:
+            print(('{:^10.6f}{:^10.6f}{:^10.6f}{:^10.6f}{:^10.6f}' +
+                   '{:^10}{:^10}{:^10}{:^10}{:^10}')
+                  .format(lower_theta, limit_theta, new_theta, errors, acc,
+                          tns, fns, tps, fps, w))
+            limit_theta = new_theta
 
 
 if __name__ == '__main__':
@@ -143,6 +204,7 @@ if __name__ == '__main__':
         default=1.0,
         type=float
     )
+
     args = parser.parse_args()
 
     theta = list(map(lambda x: float(x), args.theta))
@@ -172,55 +234,10 @@ if __name__ == '__main__':
         negative_n = len(list(filter(lambda x: not x, labels)))
 
         print('Generated {} positives and {} negatives'
-              .format(positive_n, negative_n))
+              .format(positive_n, negative_n), file=sys.stderr)
 
         results = predict_all(reader, linereader, problems)
-        limit = int(0.1 * negative_n)
 
-        limit_theta = 'New'
-        lower_theta = 0
+        apply_system(weights, theta, labels, results)
 
-        print('Theta,Weights,TPS,TNS,FPS,FNS,ACC,ERR', end='\r\n')
-        for (theta, weight) in itertools.product(theta, weights):
-            tps, tns, fps, fns = evaluate(labels, results, weight, theta)
-
-            accuracy = (tps + tns) / (tps + tns + fps + fns)
-
-            if fns + tns == 0:
-                errors = 0
-            else:
-                errors = fns / (fns + tns)
-
-            print('{},{},{},{},{},{},{},{}'.format(
-                theta, weight, tps, tns, fps, fns, accuracy, errors),
-                end='\r\n')
-
-            if fns > limit and limit_theta == 'New':
-                limit_theta = theta
-
-        print('Starting Fine tuned run')
-        print('Limit Theta: %s, Lower Theta: %s, Limit: %s' %
-              (limit_theta, lower_theta, limit))
-        print('Lower Theta', 'Upper Theta', 'Applied Theta', 'FNS')
-        for _ in range(100):
-            new_theta = (limit_theta + lower_theta) / 2
-            e = [evaluate(labels, results, weight, new_theta)
-                 for weight in weights]
-
-            acc = [((tns, fns), (tps + tns) / (tps + tns + fps + fns))
-                   for tps, tns, fps, fns in e]
-
-            (tns, fns) = max(acc, key=lambda x: x[1])[0]
-
-            if fns + tns == 0:
-                errors = 0
-            else:
-                errors = fns / (fns + tns)
-
-            print('%s, %s, %s, %s' %
-                  (lower_theta, limit_theta, new_theta, errors))
-
-            if fns < 0.1:
-                lower_theta = new_theta
-            else:
-                limit_theta = new_theta
+        binary_theta_search(weights, labels, results)

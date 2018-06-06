@@ -20,7 +20,8 @@ parse.add_argument(
 
 args = parse.parse_args()
 
-data = pd.read_csv(args.data, skiprows=[0])
+data = pd.read_csv(args.data, sep=r'\s+')
+print(data)
 
 thetas = data.as_matrix(columns=['Theta'])
 weights = data.as_matrix(columns=['Weights'])
@@ -39,7 +40,9 @@ plt.xlabel('Threshold (Theta)')
 plt.ylabel('Accuracy')
 plt.grid(True)
 plt.legend()
+plt.savefig('Accuracy.png')
 plt.show()
+plt.clf()
 
 for weight in np.unique(weights):
     label = 'Weight {}'.format(weight)
@@ -51,7 +54,9 @@ plt.xlabel('Threshold (Theta)')
 plt.ylabel('Accusation Error')
 plt.grid(True)
 plt.legend()
+plt.savefig('Accusation_Error.png')
 plt.show()
+plt.clf()
 
 valid = data[data[:, 3] < 0.1]
 best_index = np.argmax(valid[:, 2])

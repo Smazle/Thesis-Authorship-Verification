@@ -58,7 +58,7 @@ would most likely benefit from us selecting the features for them.
 
 Contrary to our previous work made in \cite{US}, this process wont
 consist of trying out some random selection of features, but rather
-a more systematic approach was used. 
+a more systematic approach was used.
 
 However, before starting to do that, a feature set was to be created
 first. In order for us to find the very best set of features, we wanted
@@ -120,7 +120,7 @@ of 5000 features, simply wasn't feasible. It was for that reason we opted for a
 greedy algorithm instead.
 
 Before starting any kind of feature selection or hyper-parameter tuning,
-we split the training data up into training and validation, with a 
+we split the training data up into training and validation, with a
 80/20 respective split. All the work described from this point on,
 was done on the 80\% training data set.
 
@@ -158,7 +158,7 @@ chance that a fold contains two value of the same class, which means that if $K
 = 3$ in our case, both of those wont ever be able to classified correctly as
 there is only 1 of that class in the training set. As such, stratified K fold
 cross validation is used instead, as it uphold the class distribution in its'
-folds. While this problem wouldn't plague the SVM classifier, we also opted 
+folds. While this problem wouldn't plague the SVM classifier, we also opted
 the stratified K fold cross, so we would more directly compare the feature selection
 of the two models.
 
@@ -186,8 +186,8 @@ accuracy of 0.675 and 0.666 respectively.
 \subsubsection{Hyper Parameter Selection}
 
 As mentioned in the previous section, due to computational time, we were unable
-to do the hyper parameter selection parallel with the feature selection. 
-For that reason we chose to split it up, selecting our features first, and the 
+to do the hyper parameter selection parallel with the feature selection.
+For that reason we chose to split it up, selecting our features first, and the
 fine tuning our parameters based on those selected features.
 
 This means that our implementation very closely mimics the one used in the
@@ -263,7 +263,7 @@ $10^{-2}$  & 0.587     & 0.629     & 0.629    & 0.631    & 0.678          & 0.56
 \end{tabular}
 \end{table}
 
-It is at this point we grab the 20\% of we set aside at the start of our 
+It is at this point we grab the 20\% of we set aside at the start of our
 experimentation. While applying these finely tuned methods to a validation set
 wont change anything in terms of the parameters we have selected, it will give
 us the ability to gauge the accuracy of our methods when applied to a new, never
@@ -458,9 +458,9 @@ quickly overfits the training data and no longer learns anything general.
 
 In our last network we observed that the network after a few number of epochs
 overfitted on the training dataset. The validation accuracy quickly began
-stalling as the training accuracy went to 100\%. We therefore focused our
-second network architecture on limiting overfitting. We added a dropout layer
-before the output layer. 
+stalling as the training accuracy went to 100\%. We therefore focused our second
+network architecture on limiting overfitting. We added a dropout layer before
+the output layer.
 
 In iteration 1 the function we used to merge features from the known and unknown
 text together were a concatenation. If we let the extracted features of the
@@ -839,17 +839,37 @@ in epoch two with accuracy 0.92075.
     \label{fig:network_7_accuracies}
 \end{figure}
 
-We also tried the network on the prediction system validation dataset with some
-surprising results. It seems like the network does not generalize very well to
-authors it has not seen before. So even though it had an accuracy of over 90
-percent on the validation dataset the prediction system results were not very
-good.
 
-For the 50/50 dataset the best legal configuration was $\theta = 0.0$ and a
-weight of 0.0 with an accuracy of 0.5 and an accusation error of 0.0.
+\subsubsection{Siamese Neural Network - Iteration 8}
 
-For the 4\% dataset the best legal configuration were $\theta = 0.0$ and a
-weight of 0.0 with an accuracy of 0.96 and an accusation error of 0.0.
+In this iteration we tried an extended version of the previous network. We used
+two bidirectional \gls{LSTM} layers on top of the word embeddings from before.
+Both of them returned sequences and we computed the final "features" by taking
+the average of the returned sequences giving us 50 numbers which indicated the
+author. We had huge problems with overfitting of the network on the training
+data authors. We have shown a graph of the training and validation accuracies
+in Figure \ref{fig:network_8_accuracies}.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\textwidth]{./pictures/experiments/network_8_accuracies.png}
+    \caption{Shows the training and validation accuracies over the epochs of
+        training on the eighth iteration of our networks.}
+    \label{fig:network_8_accuracies}
+\end{figure}
+
+
+\subsubsection{Siamese Neural Network - Iteration 9}
+
+In this iteration we went back to using convolutional neural networks. Now we
+tried using both embedded words and embedded characters. We had a two
+convolutional layers for the characters, one looking at 8 characters and one
+looking at 4. For the words we had a convolutional layer looking at 8 words at a
+time. After the convolutional layer we had a max over time pooling layer for
+each of the filters and we combined the output for 2 texts with the absolute
+difference. We then had a densely connected network on top of that which learned
+from the features extracted. The dense network had 2 layers with 500 neurons in
+each. After that we had 30\% dropout and a softmax layer as usual.
 
 
 \subsection{Prediction System}
@@ -880,7 +900,7 @@ subject to the bounded accusation error. That optimization problem is,
         & & \frac{\sum_{(\alpha, t_u) \in V} \mathbbm{1}_{T_\alpha}(t_u) \cdot
             \left(1 - P(f, w, T_\alpha \setminus \{t_u\}, t_u, \theta)\right)}
 {\sum_{(\alpha, t_u) \in V} (1 - P(f, w, T_\alpha \setminus \{t_u\}, t_u, \theta)} <
-            \frac{1}{10} 
+            \frac{1}{10}
     \end{aligned}
 \end{equation}
 
@@ -927,12 +947,13 @@ and if the prediction system returns the incorrect result 1 we have,
 
 That is the expression we minimize is 0 whenever there is no error and 1
 whenever there is an error. So we minimize the number of errors we make. The
-subject to expression makes sure that the fraction of false accusations we
-make is less than $10\%$ of the accusations we make. The expression should be
-read as, 
+subject to expression makes sure that the fraction of false accusations we make
+is less than $10\%$ of the accusations we make. The expression should be read
+as,
 
-$$ \frac{\textit{false accusations}}{\textit{total accusations}} <
-\frac{1}{10} $$
+\begin{equation}
+    \frac{\textit{false accusations}}{\textit{total accusations}} < \frac{1}{10}
+\end{equation}
 
 Consider the numerator of the fraction on the left hand side,
 
@@ -967,6 +988,14 @@ otherwise. The right hand side of the inequality simply counts the number of
 accusations by inverting the output of $P$ and divides that by 10. So the
 condition makes sure that only 10\% of the accusations we make are false
 accusations.
+
+In order to further improve in on the handling of this optimization problem, we
+also perform a binary search within the interval of $\theta$ that placed our
+false negative above threshold and below the threshold in order to determine
+which theta-value places us nearest the 10\% limit. This process is performed
+on the weights however. Each false negative computation, checks against all the
+weights, and uses the one giving the best results as the candidate weight for
+that iteration.
 
 We have chosen to run our prediction system on the network described in Section
 \ref{subsubsec:siamese_neuraon_network_iteration_6}. That is the convolutional
@@ -1012,8 +1041,8 @@ therefore also wanted to find $\theta$ and $w$ for a validation set with only
 samples as before and then for each sample we added a negative sample with a
 4\% chance. We ended up with a validation set with 411 positive samples and 16
 negative samples. The $\theta$ and $w$ that gave the best accuracy while still
-fulfilling the constraint were $\theta = 0.1$ and $w = 0.0$ with an accuracy of
-0.97189 and an accusation error of 0.0. With that configuration we caught
+fulfilling the constraint were $\theta = 0.1$ and $w = 0.0$ with an accuracy
+of 0.97189 and an accusation error of 0.0. With that configuration we caught
 $\frac{4}{16}$ of the cheaters with 0 false accusations. We have shown the cross
 validation results in Figure \ref{fig:prediction_system_results_2}.
 
@@ -1032,15 +1061,3 @@ validation results in Figure \ref{fig:prediction_system_results_2}.
         accusation error rises.}
     \label{fig:prediction_system_results_2}
 \end{figure}
-
-
-TODO:
-\begin{itemize}
-    \item Describe Optimizers
-\end{itemize}
-
-Questions:
-\begin{itemize}
-    \item Pre-trained embeddings?
-    \item Ways to directly compare Baselines with Neural Networks
-\end{itemize}  

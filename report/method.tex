@@ -12,7 +12,7 @@ illustrated in Figure \ref{fig:profile_based}.
 \begin{figure}[htb]
     \centering
     \textbf{Instance Based Authorship Verification or Authorship Attribution}\par\medskip
-    \includegraphics[scale=0.5]{./pictures/method/InstanceBased.png} 
+    \includegraphics[scale=0.5]{./pictures/method/InstanceBased.png}
     \caption{Illustrate the typical instance based Authorship Verification or
         Authorship Attribution solution setup. Inspired by \cite{stamatos2009} a
         set of authors are given as input each with a set of texts. Some Machine
@@ -28,11 +28,11 @@ illustrated in Figure \ref{fig:profile_based}.
     \includegraphics[scale=0.5]{./pictures/method/ProfileBased.png}
 
     \caption{Illustrate the typical profile based Authorship Verification or
-        Authorship Attribution setup. Inspired by \cite{stamatos2009} the texts of
-        each author are combined using some combination function such as an average
-        or a concatenation. Those \textit{profiles} are then given to a Machine
-        Learning model to train. The output is a model which is used to predict
-        unknown texts. }
+        Authorship Attribution setup. Inspired by \cite{stamatos2009} the texts
+        of each author are combined using some combination function such as an
+        average or a concatenation. Those \textit{profiles} are then given to a
+        Machine Learning model to train. The output is a model which is used to
+        predict unknown texts. }
 
     \label{fig:profile_based}
 \end{figure}
@@ -242,7 +242,8 @@ The function each neuron computes is then,
 \begin{equation}\label{eq:neuron}
     z_i = h(a_i) = h\left(
         \sum_{j = 1}^d w_{ij}x_j + w_{i0}
-    \right).
+ \right) = h\left(
+        \sum_{j = 0}^d w_{ij}x_j \right)
 \end{equation}
 
 A more intuitive model of such a neuron can be seen in Figure \ref{fig:neuron}.
@@ -804,9 +805,9 @@ different layers.
     \begin{equation}
         \begin{tabular}{|llll|}
         \hline
-        1 & 8 & 7 & 2 \\ 
-        9 & 7 & 9 & 8 \\ 
-        3 & 6 & 2 & 4 \\ 
+        1 & 8 & 7 & 2 \\
+        9 & 7 & 9 & 8 \\
+        3 & 6 & 2 & 4 \\
         5 & 7 & 9 & 9 \\\hline
         \end{tabular}
             \Longrightarrow
@@ -832,7 +833,7 @@ different layers.
     \end{figure}
 
 
-    \item[Dropout Layer:] 
+    \item[Dropout Layer:]
 
         This layer is used for the intent of regularizing and in turn,
         generalize a network. Given enough training time, and a good optimizer
@@ -919,32 +920,32 @@ function. In order to do so, we need to have a independent variable we can
 tweak using Gradient Descent as per the above description. In the case of
 neural networks we can view this variable as being the weights and the biases,
 which are defined used as described in Section \ref{sec:neurons}. In other
-words we want to update each individual weight by doing the following operation
+words we want to update each weight vector by doing the following operation
 repeatedly.
 
 \begin{equation}\label{eq:update}
-\pmb{w}^{(t+1)} = \pmb{w}^{(t)} + \Delta \pmb{w}^{(t)}
+    \mathbf{w}^{(t+1)} = \mathbf{w}^{(t)} + \Delta \mathbf{w}^{(t)}
 \end{equation}
 
-Where w is a singular weight value, and t refers to a specific step, in the
-chain of steps performed by Gradient Descent.
+Where $\mathbf{w}$ is a singular weight value, and t refers to a specific step,
+in the chain of steps performed by Gradient Descent.
 
 \begin{equation}
-\Delta w^{(t)} = -\nabla E|_{\pmb{w}^{(t)}}
+    \Delta \mathbf{w}^{(t)} = -\nabla E|_{\mathbf{w}^{(t)}}
 \end{equation}
 
-$\nabla E|_{\pmb{w}^{(t)}}$ refers to the gradient of the
-error function relative to that specific weight, or rewritten.
+$\nabla E|_{\mathbf{w}^{(t)}}$ refers to the gradient of the
+error function relative to that specific weight vector, or rewritten.
 
 $$
-\nabla E|_{\pmb{w}^{(t)}} = \frac{\partial E}{\partial \pmb{w}^{(t)}}
+\nabla E|_{\mathbf{w}^{(t)}} = \frac{\partial E}{\partial \mathbf{w}^{(t)}}
 $$
 
 At a later point in Section \ref{sec:optimizers} something called the learning
 rate will be introduced to this equality, but for now for the specifics of
 Back-Propagation, we can omit it for now. This is the function we attempting to
 solve, not for one weight, but for all of them. Not only that, we also want to
-do this for every training sample, averaging $\Delta \pmb{w}^{(t)}$ for over all
+do this for every training sample, averaging $\Delta \mathbf{w}^{(t)}$ for over all
 of them. As such, the goal is clear, we want to find the gradient of our error
 function with respect to all the weights in our network.
 
@@ -968,14 +969,13 @@ before doing so, we need to establish the chain rule.
 \begin{lemma}[Chain Rule]
 \label{lemma:chainrule}
 
-    If functions \textbf{f} and \textbf{g} er both differentiable and
-    \textbf{F} is the composite function defined by $F(x) = f(g(x))$,
-    then $F' = f'(g(x)) \cdot g'(x)$,
+    If functions $f$ and $g$ er both differentiable and $F$ is the composite
+    function defined by $F(x) = f(g(x))$, then $F' = f'(g(x)) \cdot g'(x)$,
 
 \end{lemma}
 
 The reason behind the need of the chain rule is that the loss function is
-essentially a giant recursive function call, that spans the entire network. This
+essentially a giant chain of function call, that spans the entire network. This
 fact becomes apparent attempt to evaluate our single sample error function $E$
 with respect to a weight $w_{ij}$. If we keep in mind that the neurons in feed
 forward neural networks, computes weighted sum of its inputs as per $a_i$ in
@@ -984,36 +984,36 @@ call of $a_i$, and it is for that reason what we can apply the chain rule to get
 the following:
 
 \begin{equation}
-\frac{\partial E}{\partial \pmb{w}_{ij}} = \frac{\partial E}{\partial a_i}
-\frac{\partial a_i}{\partial \pmb{w}_{ij}}
+\frac{\partial E}{\partial \mathbf{w}_{ij}} = \frac{\partial E}{\partial a_i}
+\frac{\partial a_i}{\partial \mathbf{w}_{ij}}
 \end{equation}
 
-For future ease, we can introduce the following notation, often referred to as
-\textit{errors}
+We can add a little extra notation, which we will use hence forth, for the
+sake of easing understanding.
 
-\begin{equation}
+\begin{equation}\label{eq:delta}
 \delta_i = \frac{\partial E}{\partial a_i}
 \end{equation}
 
-From \eqref{eq:neuron} we get that 
+$\delta$ is often referred to as the \textit{error} of a specific neuron.
+From \eqref{eq:neuron} we get that
 
 \begin{align}
-\frac{\partial a_i}{\partial \pmb{w}_{ij}} &= \frac{\partial}{\partial \pmb{w}_{ij}} 
-\sum_j \pmb{w}_{ij} x_j + \pmb{w}_{i0}\\
-&= \frac{\partial}{\partial \pmb{w}_{ij}} \sum_j \pmb{w}_{ij} x_j + 1 
-& \text{Let activation of bias be 1}\\
-&= x_j 
+\frac{\partial a_i}{\partial \mathbf{w}_{ij}} &= \frac{\partial}{\partial \mathbf{w}_{ij}}
+\sum_{j=1} \mathbf{w}_{ij} x_j + \mathbf{w}_{i0}\\
+&= \frac{\partial}{\partial \mathbf{w}_{ij}} \sum_{j = 0} \mathbf{w}_{ij} x_j\\
+&= x_j
 \end{align}
 
 Which when combined gives us
 
 \begin{equation}
 \label{eq:deriv}
-\frac{\partial E}{\partial \pmb{w}_{ij}} = \delta_i x_j
+\frac{\partial E}{\partial \mathbf{w}_{ij}} = \delta_i x_j
 \end{equation}
 
 Revealing the fact that the derivative of the cost function with respect to the
-weight $\pmb{w}_{ij}$ is simply the value of $\delta$ for the neuron at the
+weight $\mathbf{w}_{ij}$ is simply the value of $\delta$ for the neuron at the
 output end of that specific end, and $x$ for the input end of the weight for
 that same neuron. This leaves us with calculating $\delta_i$ for the hidden
 units, and the output units of the network. We already know that for output
@@ -1021,20 +1021,38 @@ units, $\delta$ is computes as follows:
 
 \begin{equation}
 \label{eq:output}
-\delta_n = \hat{y}_n - y_n
+\delta_k = \hat{y}_k - y_k
 \end{equation}
 
+Where \textit{k}, refers to a specifc output neuron.
 However, for the hidden units, the chain rule has to be used again.
 
 \begin{equation}
 \label{eq:bp}
-\delta_i = \frac{\partial E}{\partial a_i} = \sum_n \frac{\partial E}{\partial a_n}
-\frac{\partial a_n}{\partial a_i}
+\delta_i = \frac{\partial E}{\partial a_i} =
+\sum_k \frac{\partial E}{\partial a_k} \frac{\partial a_k}{\partial a_i}
 \end{equation}
 
-Where the sum runs over all \textit{n} units that unit \textit{i}, sends
-connections. This highlights the fact that changes in $a_i$ only influences
-the error-function, through variations of the variables $a_n$. The leaves us
+Where the sum runs over all \textit{k} units that unit \textit{i}, sends
+connections.
+Where in this case, \textit{k} denotes the units that, unit \textit{i} sends
+its values.
+
+This can be rewritten using the prior established equalities and the chain rule,
+
+
+\begin{align}
+\sum_k \frac{\partial E}{\partial a_k} \frac{\partial a_k}{\partial a_i} &=
+\sum_k \delta_k \frac{\partial a_k}{\partial a_i} & \text{By \eqref{eq:delta}}\\
+&= \sum_k \delta_k \frac{\partial a_k}{\partial z_i} \frac{\partial z_i}{\partial a_i}
+& \text{By \eqref{eq:neuron} and Lemma \ref{lemma:chainrule}} \\
+&= \sum_k \delta_k h'(a_i) \frac{\partial a_k}{\partial z_i} \\
+&= \sum_k \delta_k h'(a_i) \left( \frac{\partial}{\partial z_i}  \sum_{i=0} \mathbf{w}_{ki} z{i}\right) \\
+&= \sum_k \delta_k h'(a_i) \mathbf{w}_{ki} \\
+\end{align}
+
+This highlights the fact that changes in $a_i$ only influences
+the error-function, through variations of the variables $a_k$. The leaves us
 with the fact that we can compute the $\delta$ for a particular hidden unit by
 backpropagating the $\delta$ value back from higher up in the network.
 
@@ -1079,14 +1097,15 @@ very disable at first, and is indeed the reason why neural networks need such
 a long training time. However an alternative described by \cite{Bishop}, which
 involves perturbing each weight instead, and approximating the derivatives.
 This method does however run in $O(W^2)$ time, making the run-time of $O(W)$
-back-propagation provides the desired choice. However, in order to improve on
-those that $O(W)$ time-complexity a method called batching is used. This method,
-shuffles and split the training dataset up into smaller batches. These batches
-are then run through the network one at a time, performing back-propagation
-after each run-through. This results in the gradient not being as accurate
-after each batch, but this introduced inaccuracy is negligible compared to the
-computational time won, by reducing the size of N in $O(\mathcal{E}\cdot N\cdot
-W)$.\cite{Bishop}
+back-propagation provides the desired choice. However, in order to improve
+on those that $O(W)$ time-complexity a method called batching is used. This
+method, shuffles and split the training dataset up into smaller batches.
+These batches are then run through the network one at a time, performing
+back-propagation after each run-through. This results in the gradient not
+being as accurate after each batch, but this introduced inaccuracy is
+negligible compared to the computational time won, by reducing the amount of
+$\mathcal{E}$ in $O(\mathcal{E}\cdot N\cdot W)$ needed for the same amount of
+convergence.\cite{Bishop}
 
 
 \subsubsection{Optimizers}\label{sec:optimizers}
@@ -1197,10 +1216,8 @@ extension \gls{AdaGrad}, \gls{RMSProp} and \gls{Adam}.
         \begin{equation}
             \label{eq:individual_adagrad}
             \mathbf{w}_i^{(t+1)} =
-                \mathbf{w}_i^{(t)} -
-                \frac{\eta}{
-                    \sqrt{G_{i,i}}
-                } \Delta E|_{\mathbf{w}_i^{(t)}}.
+                \mathbf{w}_i^{(t)} - \frac{\eta}{\sqrt{G_{i,i}}} \circ
+                \Delta E|_{\mathbf{w}_i^{(t)}}.
         \end{equation}
 
         $G_{i,i}$ works as a scaling factor for weight $\mathbf{w}_i$.
@@ -1239,9 +1256,13 @@ extension \gls{AdaGrad}, \gls{RMSProp} and \gls{Adam}.
         updated with the equation,
 
         \begin{equation}
+            \label{eq:rms_prop_state}
             \mathbf{v}^{(t+1)} =
                 \gamma\mathbf{v}^{(t)} +
-                (1 - \gamma)\left(\Delta E|_{\mathbf{w}^{(t)}}\right)^2.
+                (1 - \gamma)\left(
+                    \Delta E|_{\mathbf{w}^{(t)}} \circ
+                    \Delta E|_{\mathbf{w}^{(t)}}
+                \right).
         \end{equation}
 
         The parameter $\gamma$ can be seen as a forgetting rate. If $\gamma$
@@ -1253,7 +1274,7 @@ extension \gls{AdaGrad}, \gls{RMSProp} and \gls{Adam}.
         \begin{equation}
             \mathbf{w}^{(t+1)} =
                 \mathbf{w}^{(t)} -
-                \frac{\eta}{\sqrt{\mathbf{v}^{(t)}}}
+                \frac{\eta}{\sqrt{\mathbf{v}^{(t)}}} \circ
                 \Delta E|_{\mathbf{w}^{(t)}}.
         \end{equation}
 
@@ -1263,9 +1284,54 @@ extension \gls{AdaGrad}, \gls{RMSProp} and \gls{Adam}.
         \cite{DBLP:journals/corr/KingmaB14}. The difference from \gls{RMSProp}
         is that \gls{Adam} use both the gradient and the squared gradient while
         \gls{RMSProp} use only the squared gradient. Consequently \gls{Adam} has
-        two forgetting factors instead of the single one for \gls{RMSProp}.
+        two forgetting factors instead of the single one for \gls{RMSProp}. The
+        internal state of \gls{Adam} is updated via,
 
-        % TODO: Cite https://arxiv.org/pdf/1412.6980.pdf
+        \begin{align}
+            \mathbf{m}^{(t+1)} &=
+                \gamma_1\mathbf{m}^{(t)} +
+                (1 - \gamma_1) \Delta E|_{\mathbf{w}^{(t)}}, \\
+            \mathbf{v}^{(t+1)} &=
+                \gamma_2\mathbf{v}^{(t)} +
+                (1 - \gamma_2) \Delta \left(
+                    E|_{\mathbf{w}^{(t)}} \circ E|_{\mathbf{w}^{(t)}}
+                \right), \\
+            \mathbf{\hat{m}}^{(t+1)} &=
+                \frac{\mathbf{m}^{(t+1)}}{1 - \gamma_1^t}, \\
+            \mathbf{\hat{v}}^{(t+1)} &=
+                \frac{\mathbf{v}^{(t+1)}}{1 - \gamma_2^t}.
+        \end{align}
+
+        The first two equations are very similar to Equation
+        \eqref{eq:rms_prop_state} for \gls{RMSProp}. In those equations
+        $\gamma_1$ and $\gamma_2$ are the decay rates of the gradient and the
+        squared gradient. They keep a running average of the gradient and the
+        size of the gradient. By using the running average of the gradient
+        \gls{Adam} is able to move more smoothly in a direction since the
+        direction chosen is no longer just the current gradient but previous
+        gradients influence the choice of direction. That means that a single
+        weird gradient will not drastically change the direction \gls{Adam}
+        moves \cite{DBLP:journals/corr/KingmaB14}. Similarly to \gls{RMSProp}
+        \gls{Adam} use the running average of the squared gradient to scale how
+        large steps are taken. The two bottom equations are scaling the internal
+        state based on the time step $t$. As $t$ increases the denominators
+        increase meaning that the value of the whole fraction decreases. That
+        means that in the beginning the step size is adjusted upwards and as $t$
+        increases smaller and smaller steps are taken. The actual weight update
+        in the \gls{Adam} algorithm are performed as,
+
+        \begin{equation}
+            \mathbf{w}^{(t + 1)} = \mathbf{w}^{(t)} -
+                \eta\frac
+                    {\mathbf{\hat{m}}^{(t)}}
+                    {\sqrt{\mathbf{\hat{v}}^{(t)}} + \epsilon}.
+        \end{equation}
+
+        \gls{Adam} prevents division by 0 via the $\epsilon$ parameter which is
+        just some small number. It can be seen in the above equation that the
+        direction of change is chosen by $\mathbf{\hat{m}}^{(t)}$ while the size
+        of the step taken is chosen by a combination of the learning rate $\eta$
+        and $\mathbf{\hat{v}}^{(t)}$.
 
 \end{description}
 

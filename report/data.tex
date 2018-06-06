@@ -4,17 +4,17 @@
 As described earlier we use data from the Danish company MaCom. The dataset
 provided by MaCom is a file consisting of set of texts in Danish where each text
 is associated with an author ID. Throughout the development process we've been
-given several data extract. The final extract used for experiments consisted
-of a set of 10.250 authors, where a maximum of 100 authors were extracted from
-each school. Before running any kind of experiments, this data was split up into
-several parts, each part severing a different purpose in our experimentation.
-The splitting of the data can be seen in Figure \ref{fig:data_split}. The
-purpose of the sets are the following:
+given several data extract. The final extract used for experiments consisted of
+a set of 10.250 authors, where a maximum of 100 authors were extracted from each
+school. In total, this is 133749 texts. Before running any kind of experiments,
+this data was split up into several parts, each part severing a different
+purpose in our experimentation. The splitting of the data can be seen in Figure
+\ref{fig:data_split}. The purpose of the sets are the following:
 
 \begin{figure}
     \centering
     \textbf{Illustration of Datasets}\par\medskip
-    \includegraphics[width=0.75\textwidth]{./pictures/data/Data.png}
+    \includegraphics[width=.8\textwidth]{./pictures/data/Data.png}
     \caption{Shows how we have split the dataset we are given. The splits are
         performed on the number of authors in each set. That means that all of
         an authors texts are contained in the same dataset. In particular that
@@ -25,89 +25,81 @@ purpose of the sets are the following:
 
 \begin{itemize}
 
-\item[- (A).] The entire set of extracted data. This consists of text written
-by, 10.250 different danish high school students, spanning different schools
-throughout the country.
+    \item[- (A).]
 
-% Split A
-\begin{itemize}
+        The entire set of extracted data. This consists of text written by,
+        10.058 different danish high school students, spanning different schools
+        throughout the country.
 
-\item[- (B).]
-A subset of the entire set (A). Consisting of the texts written by
-3.500 different authors, this set if used in the training process and parameter
-tuning of the produced \gls{NN}'s, Baseline Methods, and prediction system.
+    \item[- (B).]
 
-% Split B
-\begin{itemize}
+        Consisting of the texts written by 5.500 different authors, this set
+        if used in the training process for the \gls{NN}s where it is used for
+        training/validation and the prediction system. It is also used for the
+        baseline methods, where this entire set is used as the corpus, and
+        subsections of it is used feature selection and hyper parameter search.
 
-\item[- (E).] As mentioned (B) is used for training both the baselines and the 
-\gls{NN}'s. In both circumstances, and different split of (B) is performed.
-(E) is the data used for the actual training of the \gls{NN}'s.
+    \item[- (C).]
 
+        Being untouched throughout the training process, this set is used for
+        unbiased validation, and selection of networks to be used on the test
+        set (D). Contrary to the training set (B), this is only used for the
+        final selection of our best models during the training process.
 
-% Split E
-\begin{itemize}
-\item[- (H).] The training data which is given to our \gls{NN}'s.
+    \item[- (D).]
 
-\item[- (G).] A separate validation set, where not authors overlap with (H), which
-is used to determine the accuracy of our the model on an independent set of
-authors during training. This allows us to stop the training when we reach
-the desired generalization and accuracy.
+        The test set, which as the name implies, is used to test the performance
+        of our final models.
 
-\end{itemize}
+    \item[- (E).]
 
+        As mentioned (B) is used for training both the baselines and the
+        \gls{NN}s. In both circumstances, and different split of (B) is
+        performed. (E) is the data used for the actual training of the
+        \gls{NN}s.
 
-\item[- (F).] If is the other split (B) intended for \gls{NN} use. This set is
-used as the basis of the prediction system described in the earlier 
-sections of this paper.
+    \item[- (F).]
 
-\item[- (I).] This is other split of (B), used on the baseline methods together
-with set (J). This set is used perform the feature selection needed for both
-the SVM and the Extended Delta methods. The specifics of this process will be
-described in section \ref{subsec:baseline}.
+        This set is used as the basis of the prediction system described in the
+        earlier sections of this paper.
 
-\item[- (J).] Like with (I), this set is used to tune the baseline methods. (J) is
-used to determine the best parameters for the base line methods. This would be K
-and p in the case of the Extended Delta Method, and C and Gamma for the SVM.
-Like with (I), the specifics of this parameter selection will be covered in
-section \ref{subsec:baseline}.
+    \item[- (G).]
 
-\end{itemize}
+        The training data which is given to our \gls{NN}s.
 
+    \item[- (H).]
 
-\item[- (C).]
-Being untouched throughout the training process, this set is used for unbiased
-validation, and selection of networks to be used on the test set (D). Contrary
-to the training set (B), this is only used for the final selection of our best 
-models. No parameter selection/training is done on this set.
+        A separate validation set, where no authors overlap with (H), which is
+        used to determine the accuracy of our the model on an independent set
+        of authors during training. This allows us to stop the training when we
+        reach the desired generalization and accuracy.
 
+    \item[- (I).]
 
-\item[- (D).]
-The test set, which as the name implies, is used to test the
-performance of our final models.
+        This is an alternate split of (B), used on the baseline methods together
+        with set (J). This set is used perform the feature selection needed
+        for both the SVM and the Extended Delta methods. The specifics of this
+        process will be described in section \ref{subsec:baseline}.
 
-\item[- (K).]
-A subset of texts from set (A),  which is used to as a corpus for the baselines.
-The corpus is used as the basis of feature extraction for our baseline methods,
-by basing the options for features on the features available in the corpus.
+    \item[- (J).]
 
-\item[- (L).]
-The superfluous authors, which can be drawn upon in the case more data is needed
-in any of the other data sets.
+        This set is used to tune the baseline methods. (J) is used to determine
+        the best hyper parameters for the base line methods. This would be K and
+        p in the case of the Extended Delta Method, and C and Gamma for the SVM.
+        Like with (I), the specifics of this parameter selection will be covered
+        in section \ref{subsec:baseline}.
 
 \end{itemize}
 
-\end{itemize}
-
-The training set (B), consists of a total of 73.238 texts written in the same
-class , split over the 5.500 authors, from different schools. Each authors has
+The training set (B), consists of a total of 73311 texts written in the same
+class, split over the 5.500 authors, from different schools. Each authors has
 written in average 13 texts, with the standard deviation being 4.2. We initially
 removed the first 200 characters of each text, as the beginning of each text
 contains a lot of authorship identifying information, such as name, school, and
 specifics class. The removal of these characters also make sure that no garbage
 texts are included. The texts vary a lot in both structure and length, spanning
 from poems to essays. It is for this reason that this sets character count has
-a standard deviation of 4904 even though the average character count of 5549.
+a standard deviation of 4133 even though the average character count of 5516.
 The full statistics of the training set (B) can be seen in the appendix, section
 \ref{sec:B_stats}.
 
@@ -120,30 +112,31 @@ memory causing our models to crash. Another purpose of these constraints is to
 make the data-set generalize better by removing the outliers.
 
 As can be seen in the statistics in section \ref{sec:B_stats}, the text
-containing the smallest text only contains 2 characters, and does obviously not
-contain any valuable information. After the removal of these 200 characters, we
-also remove texts that have below 200 characters left after the removal, as they
-don't provide enough information about that specific author. The application
-of these two constraints, resulted in 1.743 of the 73.238 texts being removed.
-After which we applied a upper constraint, in terms of the total number of
-characters. The reason for this, was a mentioned earlier, that there are some
-texts eating up all the available memory, such as the largest text in (B), which
-consists of 682.346 characters. We found that limiting the number of characters
-to 30.000 gave good results, by removing the crash-inducing texts, without
-affecting the overall data-quality too much, as this only removed 118 texts from
-(B).
+containing the smallest consists of 0 characters, and does obviously not
+contain any valuable information. In addition to the 200 characters we removed
+initially, we also removed texts that have below 200 characters left after the
+removal, as they don't provide enough information about that specific author,
+and would work properly with our baseline methods due to the size.
+The application of this constraint, resulted in 1.823 of the 73.311 texts
+being removed. After which we applied a upper constraint, in terms of the total
+number of characters. The reason for this, was a mentioned earlier, that there
+are some texts eating up all the available memory, such as the largest text in
+(B), which consists of 338.315 characters. We found that limiting the number of
+characters to 30.000 gave good results, by removing the crash-inducing texts,
+without affecting the overall data-quality too much, as this only removed 119
+texts from (B).
 
 Since we also perform some sentence level networks as well, we also chose to
 limit the max number of sentences, for the same reason as with the characters.
 The text with the largest amount of sentences, contains 4401 sentences. With
-an average sentence count of 49 and a standard deviation of 40, this text is
+an average sentence count of 49 and a standard deviation of 39, this text is
 obviously an outlier, and doesn't generalize the data set very well. A such we
-impose a upper limit of 500 sentences per text, which removes another 25 texts
+impose a upper limit of 500 sentences per text, which removes another 26 texts
 from (B).
 
 The last constraint regards the unique characters in each text. Look at the
 stats we can see that there is a text containing 219 unique characters, greatly
-exceeding the average of 55. A unique character count like this, implies that a
+exceeding the average of 57. A unique character count like this, implies that a
 non-danish alphabet might have been used, and for that reason texts like these
 don't add to the generalization we strive towards. This is combatted creating a
 list of characters based on the data used for training, each character in this
@@ -158,10 +151,21 @@ the character frequency threshold, the overall of frequency of the specific
 characters drops dramatically.
 
 After applying all of the constraints, and taking into account
-overlap between them, 1.864 texts were removed from the total 73.238 in (B),
+overlap between them, 1.944 texts were removed from the total 73.311 in (B),
 which is a negligible amount compared to the computational and generalization
 advantages it includes.
-In the end this leaves set (B) with 71374 texts.
+In the end this leaves set (B) with 71.367 texts.
+
+The aforementioned constraints were not all applied to entirety (A) in the same
+manner. Both (C) and (D) are used in a testing context, for that reason removing
+the first 200 characters wont make sense as we only did that to prevent the
+training process in latching on to author specific meta-data in the text. We
+still apply the lower constraint of 200, as this system was intended for usage
+of the large SRP assignment the students make at the end of their last year,
+this this constraints scrubs away potential garbage texts. The upper limit
+is removed, as this was only a step to prevent our methods from crashing. By
+applying the methods on a students assignment in a singular fashion rather than
+a batch one, we won't have the same problem.
 
 \begin{figure}[htb]
 \begin{minipage}{.5\linewidth}

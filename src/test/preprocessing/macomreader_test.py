@@ -14,8 +14,7 @@ class TestMacomReader(unittest.TestCase):
         with FileOne() as f:
             reader = MacomReader(
                 f.name, f.name, batch_size=1, pad=False,
-                batch_normalization='pad', min_len_characters=0,
-                ignore_n_characters=0
+                batch_normalization='pad', min_len_characters=0
             )
 
             with LineReader(f.name) as linereader:
@@ -28,8 +27,7 @@ class TestMacomReader(unittest.TestCase):
         with FileOne() as f:
             reader = MacomReader(
                 f.name, f.name, batch_size=1, pad=False,
-                batch_normalization='pad', min_len_characters=0,
-                ignore_n_characters=0
+                batch_normalization='pad', min_len_characters=0
             )
 
             with LineReader(f.name) as linereader:
@@ -43,8 +41,7 @@ class TestMacomReader(unittest.TestCase):
         with FileOne() as f:
             reader = MacomReader(
                 f.name, f.name, batch_size=1, pad=False,
-                batch_normalization='pad', min_len_characters=0,
-                ignore_n_characters=0
+                batch_normalization='pad', min_len_characters=0
             )
 
             with LineReader(f.name) as linereader:
@@ -60,7 +57,7 @@ class TestMacomReader(unittest.TestCase):
             reader = MacomReader(
                 f.name, f.name, batch_size=1, pad=False,
                 batch_normalization='pad', min_len_characters=0,
-                ignore_n_characters=0, channels=[ChannelType.SENTENCE],
+                channels=[ChannelType.SENTENCE],
                 vocabulary_frequency_cutoff=[0.0],
                 sentence_len=10
             )
@@ -83,8 +80,7 @@ class TestMacomReader(unittest.TestCase):
         with FileOne() as f:
             reader = MacomReader(
                 f.name, f.name, batch_size=2, pad=False,
-                batch_normalization='pad', min_len_characters=0,
-                ignore_n_characters=0
+                batch_normalization='pad', min_len_characters=0
             )
 
             problems = [(1, 2, 1), (2, 3, 0)]
@@ -109,7 +105,6 @@ class TestMacomReader(unittest.TestCase):
             reader = MacomReader(
                 f.name, f.name, batch_size=2, pad=False,
                 batch_normalization='pad', min_len_characters=0,
-                ignore_n_characters=0,
                 channels=[ChannelType.CHAR, ChannelType.WORD],
                 vocabulary_frequency_cutoff=[0.0, 0.0]
             )
