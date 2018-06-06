@@ -6,7 +6,6 @@ import keras.layers as L
 import keras.backend as K
 from keras.models import Model
 from src.util import generate_emb_weight as gew
-import platform
 
 
 def model(reader):
@@ -18,11 +17,11 @@ def model(reader):
 
     text_1_char = L.Input(shape=(None, ), dtype='int32')
     text_1_word = L.Input(shape=(None, ), dtype='int32')
-    text_1_sent = L.Input(shape=(None, sent_len), dtype="int32")
+    text_1_sent = L.Input(shape=(None, sent_len), dtype='int32')
 
     text_2_char = L.Input(shape=(None, ), dtype='int32')
     text_2_word = L.Input(shape=(None, ), dtype='int32')
-    text_2_sent = L.Input(shape=(None, sent_len), dtype="int32")
+    text_2_sent = L.Input(shape=(None, sent_len), dtype='int32')
 
     word_mapping = reader.channels[1].vocabulary_map
 

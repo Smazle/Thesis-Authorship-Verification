@@ -5,7 +5,6 @@ from src.preprocessing.channels import ChannelType
 import keras.layers as L
 from keras.models import Model
 from src.util import generate_emb_weight as gew
-import platform
 
 
 def model(reader):
@@ -24,15 +23,13 @@ def model(reader):
     word_embedding_size = word_weights.shape[1]
 
     char_embedding = L.Embedding(
-        len(reader.channels[0].vocabulary_above_cutoff) + 2, 5
-    )
+        len(reader.channels[0].vocabulary_above_cutoff) + 2, 5)
 
     word_embedding = L.Embedding(
         output_dim=word_embedding_size,
         input_dim=word_number,
         trainable=False,
-        weights=[word_weights]
-    )
+        weights=[word_weights])
 
     # Embed all inputs.
     text_1_char_emb = char_embedding(text_1_char)
@@ -68,8 +65,7 @@ def model(reader):
         inputs=[text_1_repr, text_2_repr],
         mode=lambda x: abs(x[0] - x[1]),
         output_shape=lambda x: x[0],
-        name='absolute_difference'
-    )
+        name='absolute_difference')
 
     dense1 = L.Dense(500, activation='relu')(abs_diff)
     dense2 = L.Dense(500, activation='relu')(dense1)
@@ -80,11 +76,11 @@ def model(reader):
 
     model = Model(
         inputs=[text_1_char, text_1_word, text_2_char, text_2_word],
-        outputs=output
-    )
+        outputs=output)
 
-    model.compile(optimizer='adam',
-                  loss='categorical_crossentropy',
-                  metrics=['accuracy'])
+    model.compile(
+        optimizer='adam',
+        loss='categorical_crossentropy',
+        metrics=['accuracy'])
 
     return model

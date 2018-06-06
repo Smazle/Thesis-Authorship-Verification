@@ -10,92 +10,63 @@ from ..preprocessing import MacomReader
 import jsonpickle
 import jsonpickle.ext.numpy as jsonpickle_numpy
 from ..preprocessing.channels import ChannelType
-import inspect
 import json
 import tensorflow as tf
-
 
 # Make sure that jsonpickle works on numpy arrays.
 jsonpickle_numpy.register_handlers()
 
 # Parse arguments.
 parser = argparse.ArgumentParser(
-    description='Simple NN for authorship verification'
-)
-parser.add_argument(
-    'networkname',
-    type=str,
-    help='Which network to train.'
-)
+    description='Simple NN for authorship verification')
+parser.add_argument('networkname', type=str, help='Which network to train.')
 parser.add_argument(
     '--history',
     type=str,
     help='Path to file to write history to.',
-    default=None
-)
+    default=None)
 parser.add_argument(
     '--graph',
     type=str,
     help='Path to file to visualize network in.',
-    default=None
-)
+    default=None)
 parser.add_argument(
     '--weights',
     type=str,
     help='Use the weights given as start weights instead of randomly' +
     ' initializing.',
-    default=None
-)
+    default=None)
 parser.add_argument(
-    '--epochs',
-    type=int,
-    help='How many epochs to run.',
-    default=100
-)
+    '--epochs', type=int, help='How many epochs to run.', default=100)
 parser.add_argument(
     '--retry',
     type=bool,
     help='Should the network keep trying using a reduced batch_size?',
     default=None,
-    nargs='?'
-)
+    nargs='?')
 
 # Parse either a filepath to a reader to load or arguments to create a new
 # reader.
 readerparser = parser.add_subparsers()
 # Load reader part.
 load_reader = readerparser.add_parser(
-    'load-reader',
-    help='Load a reader from a file.'
-)
+    'load-reader', help='Load a reader from a file.')
 load_reader.add_argument(
     'reader',
     type=str,
     help='Use this pickled reader and not a new reader.',
-    default=None
-)
+    default=None)
 # Create reader part.
 create_reader = readerparser.add_parser(
-    'create-reader',
-    help='Create a new reader from arguments.'
-)
+    'create-reader', help='Create a new reader from arguments.')
 create_reader.add_argument(
-    'training_file',
-    type=str,
-    help='Path to file containing training data.'
-)
+    'training_file', type=str, help='Path to file containing training data.')
 create_reader.add_argument(
     'validation_file',
     type=str,
-    help='Path to file containing validation data.'
-)
+    help='Path to file containing validation data.')
 create_reader.add_argument(
-    '-b',
-    '--batch-size',
-    type=int,
-    help='Size of batches.',
-    default=None
-)
+    '-b', '--batch-size', type=int, help='Size of batches.', default=None)
 create_reader.add_argument(
     '-vfc',
     '--vocabulary-frequency-cutoff',
@@ -104,35 +75,27 @@ create_reader.add_argument(
     'reader. Providing several applies a differnet theshold to the differnet' +
     'channels',
     default=None,
-    nargs='+'
-)
+    nargs='+')
 create_reader.add_argument(
     '-bn',
     '--batch-normalization',
     type=str,
     help='Either "pad" or "truncate". Batches will be normalized using this' +
     'method.',
-    default=None
-)
+    default=None)
 create_reader.add_argument(
     '--pad',
     help='Whether or not to pad all texts to length of longest text.',
     default=None,
-    type=bool
-)
+    type=bool)
 create_reader.add_argument(
     '--binary',
     help='Whether to run reader with binary crossentropy or categorical ' +
     'crossentropy',
     type=bool,
-    default=None
-)
+    default=None)
 create_reader.add_argument(
-    '--channels',
-    help='Which channels to use.',
-    nargs='+',
-    default=None
-)
+    '--channels', help='Which channels to use.', nargs='+', default=None)
 create_reader.add_argument(
     '-sl',
     '--sentence-length',
@@ -140,8 +103,7 @@ create_reader.add_argument(
     help='If channel SENTENCE is used.\
           This determines the length of each sentence',
     default=None,
-    nargs='?'
-)
+    nargs='?')
 
 args = parser.parse_args()
 
@@ -164,14 +126,10 @@ else:
 
     print(('Creating new MaCom reader with parameters, batch_size={}, ' +
            'vocabulary_frequency_cutoff={}, batch_normalization={}, ' +
-           'pad={}, binary={}, channels={}, sentence_length={}'
-           ).format(args.batch_size,
-                    args.vocabulary_frequency_cutoff,
-                    args.batch_normalization,
-                    args.pad, args.binary,
-                    channels,
-                    args.sentence_length
-                    ))
+           'pad={}, binary={}, channels={}, sentence_length={}').format(
+               args.batch_size, args.vocabulary_frequency_cutoff,
+               args.batch_normalization, args.pad, args.binary, channels,
+               args.sentence_length))
 
     reader = MacomReader(
         args.training_file,
@@ -182,8 +140,7 @@ else:
         pad=args.pad,
         binary=args.binary,
         channels=channels,
-        sentence_len=args.sentence_length
-    )
+        sentence_len=args.sentence_length)
 
     print('Writing new MaCom reader to reader.p')
     with open('reader.p', mode='w') as reader_out:
@@ -194,10 +151,11 @@ val_steps_n = len(reader.validation_problems) / reader.batch_size
 
 model = construct_network(Network(args.networkname), reader)
 
-tboard = TensorBoard('./%s_logs/' % args.networkname,
-                     batch_size=reader.batch_size,
-                     write_grads=True, write_images=True
-                     )
+tboard = TensorBoard(
+    './%s_logs/' % args.networkname,
+    batch_size=reader.batch_size,
+    write_grads=True,
+    write_images=True)
 
 # Setup callbacks.
 callbacks = [
@@ -205,19 +163,14 @@ callbacks = [
         'weights.{epoch:02d}-{val_loss:.2f}.hdf5',
         monitor='val_loss',
         save_best_only=False,
-        save_weights_only=True
-    ),
-    tboard
+        save_weights_only=True), tboard
 ]
 
 if args.history is not None:
     callbacks.append(
-        CSVWriter(
-            reader.generate_validation(), val_steps_n,
-            reader.generate_training(), steps_n, args.history,
-            args.weights is not None
-        )
-    )
+        CSVWriter(reader.generate_validation(), val_steps_n,
+                  reader.generate_training(), steps_n, args.history,
+                  args.weights is not None))
 
 # If we are asked to visualize model, do so.
 if args.graph is not None:
@@ -235,8 +188,7 @@ while True:
             epochs=args.epochs,
             validation_data=reader.generate_validation(),
             validation_steps=val_steps_n,
-            callbacks=callbacks
-        )
+            callbacks=callbacks)
     except tf.errors.ResourceExhaustedError:
         reader.batch_size = int(reader.batch_size / 2)
         if args.retry and reader.batch_size >= 1:

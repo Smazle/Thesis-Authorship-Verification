@@ -25,12 +25,11 @@ def model(reader):
     gru_unknown = gru(unknown_emb)
 
     cos_distance = L.merge([gru_known, gru_unknown], mode='cos', dot_axes=1)
-    cos_distance = L.Reshape((1,))(cos_distance)
+    cos_distance = L.Reshape((1, ))(cos_distance)
     cos_similarity = L.Lambda(lambda x: 1 - x)(cos_distance)
 
     model = Model(inputs=[known_in, unknown_in], outputs=cos_similarity)
-    model.compile(optimizer='adam',
-                  loss='binary_crossentropy',
-                  metrics=['accuracy'])
+    model.compile(
+        optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
 
     return model
