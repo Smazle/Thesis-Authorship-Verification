@@ -4,12 +4,9 @@ repos:
       hooks:
         - id: trailing-whitespace
           types: [file, python]
-        - id: flake8
-          types: [python]
-          args: ["--ignore=E712 E702 F401 E999 E402"]
         - id: autopep8-wrapper
           types: [python]
-          args: ['-i', '--ignore=E712 E702 E999 E402']
+          args: ['-i']
         - id: fix-encoding-pragma
           types: [python]
         - id: double-quote-string-fixer 
@@ -20,6 +17,8 @@ repos:
           types: [file, python]
         - id: check-merge-conflict
           types: [file]
+        - id: flake8
+          types: [python]
     - repo: git://github.com/pre-commit/mirrors-yapf
       sha: origin
       hooks:
