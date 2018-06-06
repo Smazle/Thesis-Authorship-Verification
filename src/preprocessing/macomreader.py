@@ -216,7 +216,7 @@ class MacomReader(object):
     # Returns a list of numpy arrays containing integers where each array is an
     # encoded sequence. The list ordering corresponds to the self.channels
     # parameter.
-    def read_encoded_line(self, linereader, line_n, with_date=False):
+    def read_encoded_line(self, linereader, line_n, with_meta=False):
         assert line_n > 0
         if self.pad:
             raise Exception(
@@ -224,6 +224,7 @@ class MacomReader(object):
             )
 
         author, date, text = linereader.readline(line_n).split(';')
+        text_length = len(text)
 
         unescaped = util.clean(text)
 
@@ -231,11 +232,11 @@ class MacomReader(object):
         for channel in self.channels:
             encoded_channels.append(channel.encode(unescaped))
 
-        if with_date:
+        if with_meta:
             epoch = datetime.utcfromtimestamp(0)
             date = datetime.strptime(date, '%d-%m-%Y')
             time = (date - epoch).total_seconds()
-            return encoded_channels, time
+            return encoded_channels, time, text_length
         else:
             return encoded_channels
 
