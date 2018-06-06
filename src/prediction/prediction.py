@@ -179,7 +179,7 @@ def binary_theta_search(weights, labels, results):
             limit_theta = new_theta
 
 
-if __name__ == '__main__':
+def main():
     parser = argparse.ArgumentParser(
         description='Use neural network to predict authorship of assignments.')
     parser.add_argument(
@@ -195,8 +195,7 @@ if __name__ == '__main__':
     parser.add_argument(
         '--weights',
         nargs='+',
-        help='The argument given to the exponential dropoff weight ' +
-        'function. If 0.0 is given it is equivalent to uniform weights.',
+        help='Which weights to use.',
         default=['exp-norm', 'maximum', 'minimum'])
     parser.add_argument(
         '--negative-chance',
@@ -215,7 +214,6 @@ if __name__ == '__main__':
 
     # Our reader should use the validation file we are given.
     reader.filepath = args.datafile,
-    reader.validation_split = 1.0
     reader.batch_size = 1
     reader.authors = {}
 
@@ -240,3 +238,7 @@ if __name__ == '__main__':
 
         generate_graphs(weights, labels, results)
         binary_theta_search(weights, labels, results)
+
+
+if __name__ == '__main__':
+    main()
