@@ -9,9 +9,8 @@ import itertools
 import jsonpickle
 import random
 import sys
-
-
-SECS_PER_MONTH = 60 * 60 * 24 * 30
+from src.prediction.weight_functions import weight_factory
+import matplotlib.pyplot as plt
 
 
 def get_problems(macomreader, linereader, negative_chance=1.0):
@@ -66,7 +65,7 @@ def predict_all(macomreader, linereader, problems):
     results = []
 
     for idx, (unknown, knowns, label) in enumerate(problems):
-        print(idx, len(problems), unknown, knowns, file=sys.stderr)
+        print(idx, len(problems), file=sys.stderr)
         predictions, times = predict(macomreader, linereader, knowns, unknown)
         results.append((predictions, times))
 
@@ -76,9 +75,7 @@ def predict_all(macomreader, linereader, problems):
 def evaluate(labels, results, w, theta):
     tps, tns, fps, fns = 0, 0, 0, 0
     for label, (predictions, times) in zip(labels, results):
-        times = np.around((np.max(times) - times) / SECS_PER_MONTH)
-        weights = exp_norm(times, w)
-
+        weights = w.get_weights(times, predictions)
         prediction = np.average(predictions, weights=weights) > theta
 
         if prediction == label and label == True:  # noqa
@@ -95,32 +92,50 @@ def evaluate(labels, results, w, theta):
     return tps, tns, fps, fns
 
 
-def exp_norm(xs, l):
-    xs = np.exp(-l * xs)
-    return xs / np.sum(xs)
-
-
 def add_dim_start(array):
     return np.reshape(array, [1] + list(array.shape))
 
 
-def apply_system(weights, thetas, labels, results):
-    print('{:^8}{:^8}{:^8}{:^8}{:^8}{:^8}{:^10}{:^10}'
-          .format('Theta', 'Weights', 'TPS',
-                  'TNS', 'FPS', 'FNS', 'ACC', 'ERR', end='\r\n'))
+def generate_graphs(weights, labels, results):
+    thetas = np.linspace(0, 1, num=1000)
 
-    for (theta, weight) in itertools.product(thetas, weights):
-        tps, tns, fps, fns = evaluate(labels, results, weight, theta)
+    accuracy_plot = plt.figure(1)
+    error_plot = plt.figure(2)
 
-        accuracy = (tps + tns) / (tps + tns + fps + fns)
+    for weight in weights:
+        accuracies = []
+        errors = []
+        for theta in thetas:
+            # Compute results.
+            tps, tns, fps, fns = evaluate(labels, results, weight, theta)
 
-        if fns + tns == 0:
-            errors = 0
-        else:
-            errors = fns / (fns + tns)
+            accuracy = (tps + tns) / (tps + tns + fps + fns)
 
-        print('{:^8}{:^8}{:^8}{:^8}{:^8}{:^8}{:^10.6f}{:^10.6f}'.format(
-            theta, weight, tps, tns, fps, fns, accuracy, errors), end='\r\n')
+            if fns + tns == 0:
+                errors = 0
+            else:
+                errors = fns / (fns + tns)
+
+            accuracies.append(accuracy)
+            errors.append(error)
+
+
+        label = 'Weight {}'.format(weight)
+        accuracy_plot.plot(thetas, accuracies, label=label)
+        error_plot(thetas, errors, label=label)
+
+    accuracy_plot.xlabel('Threshold (Theta)')
+    accuracy_plot.ylabel('Accuracy')
+    accuracy_plot.grid(True)
+    accuracy_plot.legend()
+
+    error_plot.xlabel('Threshold (Theta)')
+    error_plot.ylabel('Accusation Error')
+    error_plot.grid(True)
+    error_plot.legend()
+
+    accuracy_plot.show()
+    error_plot.show()
 
 
 def binary_theta_search(weights, labels, result):
@@ -184,19 +199,11 @@ if __name__ == '__main__':
         help='Path to file containing the texts we work with.'
     )
     parser.add_argument(
-        '--theta',
-        nargs='+',
-        help='Thresholds to use.',
-        default=['0.0', '0.1', '0.2', '0.3', '0.4',
-                 '0.5', '0.6', '0.7', '0.8', '0.9', '1.0']
-    )
-    parser.add_argument(
         '--weights',
         nargs='+',
         help='The argument given to the exponential dropoff weight ' +
              'function. If 0.0 is given it is equivalent to uniform weights.',
-        default=['0.0', '0.1', '0.2', '0.3', '0.4',
-                 '0.5', '0.6', '0.7', '0.8', '0.9', '1.0']
+        default=['exp-norm', 'maximum', 'minimum']
     )
     parser.add_argument(
         '--negative-chance',
@@ -207,8 +214,7 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    theta = list(map(lambda x: float(x), args.theta))
-    weights = list(map(lambda x: float(x), args.weights))
+    weights = sum([weight_factory(w) for w in args.weights], [])
 
     # Load the keras model and the data reader.
     model = load_model(args.network)
@@ -238,6 +244,5 @@ if __name__ == '__main__':
 
         results = predict_all(reader, linereader, problems)
 
-        apply_system(weights, theta, labels, results)
-
+        generate_graphs(weights, labels, results)
         binary_theta_search(weights, labels, results)
