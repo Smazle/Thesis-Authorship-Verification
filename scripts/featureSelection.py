@@ -15,12 +15,10 @@ data2 = data2[:m]
 
 X = range(len(data1))
 
-print([int(x[0]) for x in sorted(data1, key=lambda x:x[-1])[:50]])
+print([int(x[0]) for x in sorted(data1, key=lambda x: x[-1])[:50]])
 
 m = [np.argmax(data1[:, -1]), np.argmax(data2[:, -1])]
 y = [data1[:, -1][m[0]], data2[:, -1][m[1]]]
-
-print m, y
 
 accuracy1, = plt.plot(X, data1[:, -1], label='SVM Accuracy', c='blue')
 accuracy2, = plt.plot(

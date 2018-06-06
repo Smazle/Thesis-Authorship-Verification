@@ -19,7 +19,7 @@ repos:
           types: [file]
         - id: flake8
           types: [python]
-          args: ["--ignore=E741"]
+          args: ["--ignore=E741, E402"]
     - repo: git://github.com/pre-commit/mirrors-yapf
       sha: v0.22.0
       hooks:

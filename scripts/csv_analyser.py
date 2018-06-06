@@ -20,13 +20,8 @@ def fix_space(x):
 parser = argparse.ArgumentParser(
     description=(
         'Return statistics about the CSV files we get from MaCom. ' +
-        'The statistics is supposed to be included as part of the report')
-)
-parser.add_argument(
-    'datafile',
-    type=str,
-    help='Path to CSV file'
-)
+        'The statistics is supposed to be included as part of the report'))
+parser.add_argument('datafile', type=str, help='Path to CSV file')
 
 parser.add_argument(
     '-j',
@@ -34,8 +29,7 @@ parser.add_argument(
     help='Write stats to json file',
     type=bool,
     default=False,
-    nargs='?'
-)
+    nargs='?')
 
 args = parser.parse_args()
 
@@ -203,7 +197,6 @@ print('Author std text number', stats['std_auth_txt'])
 
 print('Total Removed ', totalRemoved)
 
-
 # æøå freq
 d_char = ['æ', 'ø', 'å']
 d_freq = [(charset[x] / charcount, charset[x.upper()] / charcount)
@@ -211,9 +204,8 @@ d_freq = [(charset[x] / charcount, charset[x.upper()] / charcount)
 
 print()
 for i, char in enumerate(d_freq):
-    print('Frequencies, %s %s, %s %s' %
-          (d_char[i], char[0], d_char[i].upper(), char[1]))
-
+    print('Frequencies, %s %s, %s %s' % (d_char[i], char[0], d_char[i].upper(),
+                                         char[1]))
 
 # Character Destribution
 charset = sorted(charset.items(), key=lambda x: x[1], reverse=True)
@@ -222,16 +214,15 @@ characters = list(map(lambda x: fix_space(x[0]), charset))
 frequencies = list(map(lambda x: x[1] / charcount, charset))
 X = range(len(characters))
 
-
 plt.title('Character Frequencies and Threshold')
 plt.xlabel('Character')
 plt.ylabel('Frequency')
 
-ticks = [int(0 + (len(X) * 0.05) * x)
-         for x in range(int(len(X) / (len(X) * 0.05)))] + [len(X) - 1]
+ticks = [
+    int(0 + (len(X) * 0.05) * x) for x in range(int(len(X) / (len(X) * 0.05)))
+] + [len(X) - 1]
 characters = np.array(characters)
 plt.xticks(ticks, characters[ticks])
-
 
 line1 = plt.semilogy(X, frequencies, color='blue', label='Frequency')
 line2 = plt.plot(X, [1.0 / 100000.0] * len(X), color='red', label='Threshold')
@@ -240,17 +231,16 @@ plt.legend(handles=[line1[0], line2[0]])
 plt.savefig('Frequencies.png')
 plt.clf()
 
-
 plt.title('Character Counts and Thresholds')
 plt.xlabel('Text Number')
 plt.ylabel('Character Count')
 
 X = range(len(lengths))
 line1 = plt.semilogy(X, sorted(lengths), color='blue', label='Count')
-line2 = plt.plot(X, [upper] * len(lengths),
-                 color='red', label='Upper Threshold')
-line3 = plt.plot(X, [lower] * len(lengths),
-                 color='green', label='Lower Threshold')
+line2 = plt.plot(
+    X, [upper] * len(lengths), color='red', label='Upper Threshold')
+line3 = plt.plot(
+    X, [lower] * len(lengths), color='green', label='Lower Threshold')
 
 plt.legend(handles=[line1[0], line2[0], line3[0]])
 
