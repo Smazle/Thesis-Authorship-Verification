@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from collections import Counter
 import string
 
@@ -54,8 +55,8 @@ class CharacterNGramFeatureExtractor:
         self.max = len(most_common)
 
         if self.max < self.size:
-            raise RuntimeError(
-                'Could not find ' + str(self.size) + ' different grams.')
+            raise RuntimeError('Could not find ' + str(self.size) +
+                               ' different grams.')
 
         most_common = [key for (key, val) in most_common[0:self.size]]
         self.grams = most_common
@@ -138,8 +139,8 @@ class SpecialCharacterNGramFeatureExtractor:
         self.max = len(most_common)
 
         if self.max < self.size:
-            raise RuntimeError(
-                'Could not find ' + str(self.size) + ' different grams.')
+            raise RuntimeError('Could not find ' + str(self.size) +
+                               ' different grams.')
 
         most_common = [key for (key, val) in most_common[0:self.size]]
         self.grams = most_common
@@ -227,8 +228,10 @@ def find_frequencies(f, n_grams, n):
 
     gram_n = n_gram_number(len(content), n)
 
-    frequencies = [c / float(gram_n) for c in
-                   (content.count(n_gram) for n_gram in n_grams)]
+    frequencies = [
+        c / float(gram_n)
+        for c in (content.count(n_gram) for n_gram in n_grams)
+    ]
 
     return frequencies
 
@@ -253,10 +256,10 @@ def special_character_n_grams(f, n):
         content = f
 
     # Remove all non special characters.
-    content = ''.join(
-        [c if c not in string.ascii_letters
-            and not c.isspace()
-            and c not in string.digits else '' for c in content])
+    content = ''.join([
+        c if c not in string.ascii_letters and not c.isspace()
+        and c not in string.digits else '' for c in content
+    ])
 
     return find_ngrams(content, n)
 
@@ -282,9 +285,9 @@ def special_character_n_gram_frequencies(f, n_grams, n):
         content = f
 
     # Remove all non special characters.
-    content = ''.join(
-        [c if c not in string.ascii_letters
-            and not c.isspace()
-            and c not in string.digits else '' for c in content])
+    content = ''.join([
+        c if c not in string.ascii_letters and not c.isspace()
+        and c not in string.digits else '' for c in content
+    ])
 
     return find_frequencies(content, n_grams, n)

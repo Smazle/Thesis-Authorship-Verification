@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from collections import Counter
 from polyglot.text import Text
 import os
@@ -47,8 +48,8 @@ class PosTagNGramsExtractor:
         self.max = len(most_common)
 
         if self.max < self.size:
-            raise RuntimeError(
-                'Could not find ' + str(self.size) + ' different grams.')
+            raise RuntimeError('Could not find ' + str(self.size) +
+                               ' different grams.')
 
         most_common = [key for (key, value) in most_common[0:self.size]]
         self.grams = most_common
@@ -93,14 +94,14 @@ def nGramCount(text, n):
 
     if 'postags' not in os.listdir('.'):
         posTagging = Text(text, hint_language_code='da')
-        posTagging = np.array([x[-1].encode('utf-8')
-                               for x in posTagging.pos_tags])
+        posTagging = np.array(
+            [x[-1].encode('utf-8') for x in posTagging.pos_tags])
         np.savetxt('postags', posTagging, delimiter=',', fmt='%s')
     else:
         posTagging = np.loadtxt('postags', delimiter=',', dtype=str)
 
     new_posTagging = (tuple(posTagging[i:i + n][:])
-                  for i in range(len(posTagging) - n + 1))
+                      for i in range(len(posTagging) - n + 1))
     return Counter(new_posTagging)
 
 
@@ -126,5 +127,4 @@ def frequency(text, n, ngrams):
 
     tags = nGramCount(text, n)
     total = float(len(tags))
-    return [tags[key] / total if key in tags else 0
-            for key in ngrams]
+    return [tags[key] / total if key in tags else 0 for key in ngrams]
