@@ -3,7 +3,6 @@
 
 import argparse
 import numpy as np
-import random
 from sklearn.svm import SVC
 from sklearn.model_selection import StratifiedKFold, GridSearchCV
 from collections import Counter
@@ -11,27 +10,18 @@ import pandas as pd
 import pickle
 import time
 
-# Set random state for reproducible results.
-np.random.seed(1337)
-random.seed(1337)
-
 parser = argparse.ArgumentParser(
     description='Use features in feature file specified by the boolean ' +
-                'vector given to find best svm parameters and test the svm ' +
-                'on part of the data.'
-)
+    'vector given to find best svm parameters and test the svm ' +
+    'on part of the data.')
 parser.add_argument(
-    'featurefile',
-    type=str,
-    help='Path to file containing features'
-)
+    'featurefile', type=str, help='Path to file containing features')
 parser.add_argument(
     'features',
     type=str,
     help='File contaning the product of the feature selection',
     default=None,
-    nargs='?'
-)
+    nargs='?')
 
 args = parser.parse_args()
 
@@ -86,8 +76,8 @@ for idx, author in enumerate(training_authors):
     print('handling author', author, 'with', same_author_n, 'texts')
 
     # Draw opposition of same size as the number of texts the author has.
-    indices = np.random.choice(different_author.shape[0], same_author_n,
-                               replace=False)
+    indices = np.random.choice(
+        different_author.shape[0], same_author_n, replace=False)
     random_author = different_author[indices, :]
 
     # Define dataset we are training on.

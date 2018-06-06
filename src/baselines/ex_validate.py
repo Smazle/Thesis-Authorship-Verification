@@ -7,42 +7,26 @@ from .feature_search import FeatureSearch
 from sklearn.neighbors import KNeighborsClassifier
 import pickle
 
-
 parser = argparse.ArgumentParser(
     description='Uses the selected features and parameters, \
-                to compute the validation error of the training'
-)
+                to compute the validation error of the training')
 
 parser.add_argument(
-    'validationFile',
-    type=str,
-    help='Path to file containing raw features'
-)
+    'validationFile', type=str, help='Path to file containing raw features')
 
 parser.add_argument(
     'features',
     type=str,
-    help='File containing the product of the feature selection'
-)
+    help='File containing the product of the feature selection')
 
-parser.add_argument(
-    '--K',
-    type=int,
-    help='The parameter selected value of K'
-)
+parser.add_argument('--K', type=int, help='The parameter selected value of K')
 
-parser.add_argument(
-    '--p',
-    type=int,
-    help='The parameter selected value of p'
-)
-
+parser.add_argument('--p', type=int, help='The parameter selected value of p')
 
 parser.add_argument(
     '--scaler',
     type=str,
-    help='Path to standard scaler fitted to the training data'
-)
+    help='Path to standard scaler fitted to the training data')
 
 args = parser.parse_args()
 

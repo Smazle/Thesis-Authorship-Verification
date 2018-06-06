@@ -3,7 +3,6 @@ from sklearn.model_selection import cross_val_score
 from sklearn.preprocessing import StandardScaler
 import numpy as np
 import pandas as pd
-import time
 import pickle
 
 
@@ -29,8 +28,12 @@ class FeatureSearch:
 
     authors = None
 
-    def __init__(self, classifier, minFeatureCount, authorLimit=None,
-                 normalize=True, validator=3):
+    def __init__(self,
+                 classifier,
+                 minFeatureCount,
+                 authorLimit=None,
+                 normalize=True,
+                 validator=3):
 
         self.classifier = classifier
         self.minFeatureCount = minFeatureCount
@@ -63,8 +66,8 @@ class FeatureSearch:
             for feature_idx in missingFeatures:
                 currentFeatures = selectedFeatures + [feature_idx]
 
-                score = self.__evaluate_classifier__(
-                    self.classifier, currentFeatures)
+                score = self.__evaluate_classifier__(self.classifier,
+                                                     currentFeatures)
 
                 print(feature_idx, score)
 
@@ -103,18 +106,18 @@ class FeatureSearch:
         if self.authorLimit is not None:
             unique_authors = np.unique(self.authors)
 
-            unique_authors = np.array([x for x in unique_authors if
-                                       len(
-                                           self.data[self.authors == x]
-                                       ) > 3])
+            unique_authors = np.array([
+                x for x in unique_authors
+                if len(self.data[self.authors == x]) > 3
+            ])
 
             np.random.shuffle(unique_authors)
             unique_authors = \
                 unique_authors[:int(len(unique_authors) * self.authorLimit)]
-            self.data = self.data[np.isin(
-                self.authors, unique_authors)].astype(np.float)
-            self.authors = self.authors[np.isin(
-                self.authors, unique_authors)].astype(np.int)
+            self.data = self.data[np.isin(self.authors,
+                                          unique_authors)].astype(np.float)
+            self.authors = self.authors[np.isin(self.authors,
+                                                unique_authors)].astype(np.int)
 
         if self.normalize:
             scaler = StandardScaler()
