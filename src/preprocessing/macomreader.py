@@ -93,7 +93,7 @@ class MacomReader(object):
                  vocabulary_frequency_cutoff=[0.0], pad=True, binary=False,
                  batch_normalization='truncate', channels=[ChannelType.CHAR],
                  sentence_len=None, max_len_characters=30000,
-                 max_len_sentences=500, min_len_characters=400):
+                 max_len_sentences=500, min_len_characters=200):
 
         if batch_normalization not in ['truncate', 'pad']:
             raise ValueError('Only truncate and pad is currently supported.')
