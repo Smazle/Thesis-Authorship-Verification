@@ -5,18 +5,11 @@ import argparse
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import sys
-
 
 parse = argparse.ArgumentParser(
-    'Produces a graph of the results of the prediction system'
-)
+    'Produces a graph of the results of the prediction system')
 
-parse.add_argument(
-    'data',
-    help='Path to the data needed presenting',
-    type=str
-)
+parse.add_argument('data', help='Path to the data needed presenting', type=str)
 
 args = parse.parse_args()
 
@@ -62,5 +55,5 @@ valid = data[data[:, 3] < 0.1]
 best_index = np.argmax(valid[:, 2])
 best_conf = valid[best_index]
 print('The best legal configuration are theta={}, weight={},\
-        accuracy={}, error={}'
-      .format(best_conf[0], best_conf[1], best_conf[2], best_conf[3]))
+        accuracy={}, error={}'.format(best_conf[0], best_conf[1], best_conf[2],
+                                      best_conf[3]))

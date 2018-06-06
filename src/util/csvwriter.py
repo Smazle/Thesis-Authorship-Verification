@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 
 import math
 import numpy as np
@@ -5,9 +6,12 @@ from keras.callbacks import Callback
 
 
 class CSVWriter(Callback):
-
-    def __init__(self, validation_generator, validation_steps,
-                 training_generator, training_steps, outfile,
+    def __init__(self,
+                 validation_generator,
+                 validation_steps,
+                 training_generator,
+                 training_steps,
+                 outfile,
                  continue_train=False):
 
         self.continue_train = continue_train
@@ -28,28 +32,20 @@ class CSVWriter(Callback):
             self.outfile = open(outfile, 'w')
             self.prev_epochs = 1
 
-            self.outfile.write(
-                'epoch,' +
-                'accuracy,' +
-                'validation_accuracy,' +
-                'true_positives,' +
-                'true_negatives,' +
-                'false_positives,' +
-                'false_negatives\r\n')
+            self.outfile.write('epoch,' + 'accuracy,' +
+                               'validation_accuracy,' + 'true_positives,' +
+                               'true_negatives,' + 'false_positives,' +
+                               'false_negatives\r\n')
 
             self.outfile.flush()
 
     def on_train_begin(self, logs={}):
         if not self.continue_train:
             val_acc, val_tps, val_tns, val_fps, val_fns = self.compute_metrics(
-                self.validation_generator,
-                self.validation_steps
-            )
+                self.validation_generator, self.validation_steps)
 
-            acc, _, _, _, _ = self.compute_metrics(
-                self.training_generator,
-                self.training_steps
-            )
+            acc, _, _, _, _ = self.compute_metrics(self.training_generator,
+                                                   self.training_steps)
 
             self.outfile.write('{},{},{},{},{},{},{}\r\n'.format(
                 0, acc, val_acc, val_tps, val_tns, val_fps, val_fns))
@@ -66,10 +62,8 @@ class CSVWriter(Callback):
         return
 
     def on_epoch_end(self, epoch, logs={}):
-        _, tps, tns, fps, fns = self.compute_metrics(
-            self.validation_generator,
-            self.validation_steps
-        )
+        _, tps, tns, fps, fns = self.compute_metrics(self.validation_generator,
+                                                     self.validation_steps)
 
         self.outfile.write('{},{},{},{},{},{},{}\r\n'.format(
             epoch + self.prev_epochs, logs['acc'], logs['val_acc'], tps, tns,

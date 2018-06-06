@@ -16,7 +16,6 @@ class ChannelType(Enum):
 
 
 class Vocabulary:
-
     def __init__(self, vocabulary_frequency_cutoff, str_generator):
 
         if vocabulary_frequency_cutoff < 0 or vocabulary_frequency_cutoff > 1:
@@ -33,8 +32,10 @@ class Vocabulary:
             self.add_vocabulary(txt)
 
         total = sum(self.vocabulary_usage.values())
-        self.vocabulary_frequencies = {k: v / total for k, v in
-                                       self.vocabulary_usage.items()}
+        self.vocabulary_frequencies = {
+            k: v / total
+            for k, v in self.vocabulary_usage.items()
+        }
 
         self.vocabulary_above_cutoff =\
             {k for k, v in self.vocabulary_frequencies.items()
@@ -63,34 +64,32 @@ class Vocabulary:
 
     def encode(self, txt):
         sequence = self.split_to_sequence(txt)
-        return np.array(list(map(lambda x: self.vocabulary_map[x]
-                                 if x in self.vocabulary_map else
-                                 self.garbage, sequence)))
+        return np.array(
+            list(
+                map(
+                    lambda x: self.vocabulary_map[x] if x in self.vocabulary_map else self.garbage,
+                    sequence)))
 
     def split_to_sequence(self, txt):
         raise NotImplementedError('Subclasses should implement this.')
 
 
 class CharVocabulary(Vocabulary):
-
     def split_to_sequence(self, txt):
         return txt
 
 
 class WordVocabulary(Vocabulary):
-
     def split_to_sequence(self, txt):
         return util.wordProcess(txt)
 
 
 class LowercaseWordVocabulary(Vocabulary):
-
     def split_to_sequence(self, txt):
         return util.wordProcess(txt.lower())
 
 
 class SentenceVocabulary:
-
     def __init__(self, str_generator, sentence_len):
         self.word_vocab = LowercaseWordVocabulary(0.0, str_generator)
         self.sentence_len = sentence_len
@@ -110,8 +109,10 @@ class SentenceVocabulary:
         return encoded
 
 
-def vocabulary_factory(channeltype, vocabulary_frequency_cutoff,
-                       strgen, sentence_len=None):
+def vocabulary_factory(channeltype,
+                       vocabulary_frequency_cutoff,
+                       strgen,
+                       sentence_len=None):
 
     if channeltype == ChannelType.CHAR:
         return CharVocabulary(vocabulary_frequency_cutoff, strgen)

@@ -9,50 +9,32 @@ import jsonpickle
 from ..preprocessing import LineReader
 from ..util import utilities as util
 
-
 # Parse arguments.
 parser = argparse.ArgumentParser(
-    description='Output what the filters react to in each text.'
-)
-parser.add_argument(
-    'datafile',
-    type=str,
-    help='Path to data file.'
-)
+    description='Output what the filters react to in each text.')
+parser.add_argument('datafile', type=str, help='Path to data file.')
 parser.add_argument(
     'reader',
     type=str,
-    help='Path to reader that can read and encode the lines.'
-)
-parser.add_argument(
-    'model',
-    type=str,
-    help='Path to model that can predict.'
-)
+    help='Path to reader that can read and encode the lines.')
+parser.add_argument('model', type=str, help='Path to model that can predict.')
 parser.add_argument(
     '--convolution-size',
     type=int,
     help='Size of the convolutional layer we are looking at.',
-    default=8
-)
+    default=8)
 parser.add_argument(
     '--layer-name',
     type=str,
     help='Which layer to get the output from.',
-    default='convolutional_8'
-)
+    default='convolutional_8')
 parser.add_argument(
-    '--filter',
-    type=int,
-    help='Which filter number to look at.',
-    default=0
-)
+    '--filter', type=int, help='Which filter number to look at.', default=0)
 parser.add_argument(
     '--outfile',
     type=str,
     help='Write the output as a CSV file in this location.',
-    default=None
-)
+    default=None)
 args = parser.parse_args()
 
 model = load_model(args.model)
@@ -60,9 +42,8 @@ model = load_model(args.model)
 get_output = K.function([
     model.get_layer('known_input').input,
     model.get_layer('unknown_input').input,
-    K.learning_phase()], [
-    model.get_layer(args.layer_name).get_output_at(0)]
-)
+    K.learning_phase()
+], [model.get_layer(args.layer_name).get_output_at(0)])
 
 with open(args.reader, 'r') as macomreader_in:
     reader = jsonpickle.decode(macomreader_in.read())

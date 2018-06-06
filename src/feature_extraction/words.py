@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from collections import Counter
 import nltk
 import string
@@ -45,10 +46,10 @@ class WordFrequencyExtractor:
             text (str): Text corpus to find most common words in.
         """
 
-        text = ''.join(
-            [c if c in string.ascii_letters
-                or c.isspace()
-                or c in string.digits else '' for c in text])
+        text = ''.join([
+            c if c in string.ascii_letters or c.isspace() or c in string.digits
+            else '' for c in text
+        ])
 
         words = find_word_count(text)
         most_common = words.most_common()
@@ -56,8 +57,8 @@ class WordFrequencyExtractor:
         self.max = len(most_common)
 
         if self.max < self.size:
-            raise RuntimeError(
-                'Could not find ' + str(self.size) + ' different grams.')
+            raise RuntimeError('Could not find ' + str(self.size) +
+                               ' different grams.')
 
         most_common = [key for (key, value) in most_common[0:self.size]]
         self.words = most_common
@@ -77,10 +78,10 @@ class WordFrequencyExtractor:
             list: List of frequencies in the order they appear in `self.words`.
         """
 
-        text = ''.join(
-            [c if c in string.ascii_letters
-                or c.isspace()
-                or c in string.digits else '' for c in text])
+        text = ''.join([
+            c if c in string.ascii_letters or c.isspace() or c in string.digits
+            else '' for c in text
+        ])
 
         return find_word_frequencies(text, self.words)
 
@@ -136,10 +137,10 @@ class WordNGramsFeatureExtractor:
         Args:
             text (str): Text corpus to find most common word n-grams in.
         """
-        text = ''.join(
-            [c if c in string.ascii_letters
-                or c.isspace()
-                or c in string.digits else '' for c in text])
+        text = ''.join([
+            c if c in string.ascii_letters or c.isspace() or c in string.digits
+            else '' for c in text
+        ])
 
         grams = find_word_n_grams(text, self.n)
         most_common = grams.most_common()
@@ -147,8 +148,8 @@ class WordNGramsFeatureExtractor:
         self.max = len(most_common)
 
         if self.max < self.size:
-            raise RuntimeError(
-                'Could not find ' + str(self.size) + ' different grams.')
+            raise RuntimeError('Could not find ' + str(self.size) +
+                               ' different grams.')
 
         most_common = [key for (key, value) in most_common[0:self.size]]
         self.grams = most_common
@@ -168,10 +169,10 @@ class WordNGramsFeatureExtractor:
         Returns:
             list: List of frequencies in the order they appear in `self.grams`.
         """
-        text = ''.join(
-            [c if c in string.ascii_letters
-                or c.isspace()
-                or c in string.digits else '' for c in text])
+        text = ''.join([
+            c if c in string.ascii_letters or c.isspace() or c in string.digits
+            else '' for c in text
+        ])
 
         return find_word_n_gram_frequencies(text, self.n, self.grams)
 
@@ -233,8 +234,10 @@ def find_word_frequencies(text, words):
     total = float(len(find_words(text)))
     word_counts = find_word_count(text)
 
-    return [word_counts[key] / total if key in word_counts else 0.0
-            for key in words]
+    return [
+        word_counts[key] / total if key in word_counts else 0.0
+        for key in words
+    ]
 
 
 def find_word_n_grams(text, n):
@@ -272,5 +275,7 @@ def find_word_n_gram_frequencies(text, n, n_grams):
     n_gram_counts = find_word_n_grams(text, n)
     total = float(len(n_gram_counts))
 
-    return [n_gram_counts[key] / total if key in n_gram_counts
-            else 0 for key in n_grams]
+    return [
+        n_gram_counts[key] / total if key in n_gram_counts else 0
+        for key in n_grams
+    ]

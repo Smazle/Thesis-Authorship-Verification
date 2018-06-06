@@ -16,8 +16,12 @@ def model(reader):
     known_emb = embedding(known_in)
     unknown_emb = embedding(unknown_in)
 
-    conv8 = L.Convolution1D(filters=500, kernel_size=8, strides=1,
-                            activation='relu', padding='same')
+    conv8 = L.Convolution1D(
+        filters=500,
+        kernel_size=8,
+        strides=1,
+        activation='relu',
+        padding='same')
     pool = L.MaxPooling1D(pool_size=8)
 
     if 'device:GPU' in str('str(device_lib.list_local_devices())'):
@@ -32,11 +36,9 @@ def model(reader):
         inputs=[features_known, features_unknown],
         mode=lambda x: abs(x[0] - x[1]),
         output_shape=lambda x: x[0],
-        name='absolute_difference'
-    )
+        name='absolute_difference')
 
     dense1 = L.Dense(500, activation='relu')(abs_diff)
-    dense2 = L.Dense(500, activation='relu')(dense1)
 
     pruned = L.Dropout(0.3)(dense1)
 
@@ -44,8 +46,9 @@ def model(reader):
 
     model = Model(inputs=[known_in, unknown_in], outputs=output)
 
-    model.compile(optimizer='adam',
-                  loss='categorical_crossentropy',
-                  metrics=['accuracy'])
+    model.compile(
+        optimizer='adam',
+        loss='categorical_crossentropy',
+        metrics=['accuracy'])
 
     return model

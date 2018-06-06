@@ -8,7 +8,6 @@ import keras.layers as L
 from ..util import generate_emb_weight as gew
 import os
 
-
 WORD_VEC_PATH = os.path.join('.', 'data', 'pre-trained', 'wiki.da.vec')
 
 
@@ -18,9 +17,11 @@ def model(reader):
     sent_len = reader.channels[0].sentence_len
     weights = gew.GetEmbeddingWeights(WORD_VEC_PATH, reader)
 
-    embedding = L.Embedding(output_dim=weights.shape[1],
-                            input_dim=weights.shape[0], trainable=False,
-                            weights=[weights])
+    embedding = L.Embedding(
+        output_dim=weights.shape[1],
+        input_dim=weights.shape[0],
+        trainable=False,
+        weights=[weights])
 
     known_in = L.Input(shape=(None, sent_len), dtype='int32')
     unknown_in = L.Input(shape=(None, sent_len), dtype='int32')
@@ -29,11 +30,11 @@ def model(reader):
     unknown_emb = embedding(unknown_in)
 
     known_sentences_repr = L.Lambda(
-        lambda x: K.sum(x, axis=2) / sent_len,
-        output_shape=(None, 300))(known_emb)
+        lambda x: K.sum(x, axis=2) / sent_len, output_shape=(None,
+                                                             300))(known_emb)
     unknown_sentences_repr = L.Lambda(
-        lambda x: K.sum(x, axis=2) / sent_len,
-        output_shape=(None, 300))(unknown_emb)
+        lambda x: K.sum(x, axis=2) / sent_len, output_shape=(None,
+                                                             300))(unknown_emb)
 
     feature_extractor = L.Bidirectional(L.GRU(10))
 
@@ -44,15 +45,15 @@ def model(reader):
         inputs=[features_known, features_unknown],
         mode=lambda x: abs(x[0] - x[1]),
         output_shape=lambda x: x[0],
-        name='absolute_difference'
-    )
+        name='absolute_difference')
 
     output = L.Dense(2, activation='softmax', name='output')(abs_diff)
 
     model = Model(inputs=[known_in, unknown_in], outputs=output)
 
-    model.compile(optimizer='adam',
-                  loss='categorical_crossentropy',
-                  metrics=['accuracy'])
+    model.compile(
+        optimizer='adam',
+        loss='categorical_crossentropy',
+        metrics=['accuracy'])
 
     return model

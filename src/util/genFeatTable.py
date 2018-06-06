@@ -4,34 +4,27 @@
 import numpy as np
 import argparse
 
-
 parse = argparse.ArgumentParser(
     'Takes a list of feature names, and greedyly selected\
-                features, and prints out a table'
-)
-
+                features, and prints out a table')
 
 parse.add_argument(
-    'names',
-    type=str,
-    help='Path to file containing feature names'
-)
+    'names', type=str, help='Path to file containing feature names')
 
 parse.add_argument(
     'features',
     type=str,
-    help='Path to file containing feature selected features'
-)
+    help='Path to file containing feature selected features')
 
 parse.add_argument(
     '--limit',
     type=int,
-    help='Imposes a limit on how many features to look at'
-)
+    help='Imposes a limit on how many features to look at')
 
-
-base = ['\\begin{table}', '\\centering', '\\begin{tabular}{ccc}',
-        'Feature Type & Frequency Rank & Feature \\\\ \hline']
+base = [
+    '\\begin{table}', '\\centering', '\\begin{tabular}{ccc}',
+    'Feature Type & Frequency Rank & Feature \\\\ \hline'
+]
 
 args = parse.parse_args()
 

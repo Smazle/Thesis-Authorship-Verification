@@ -89,18 +89,27 @@ class MacomReader(object):
     # Sentence length, in case of a sentence channel being used
     sentence_length = None
 
-    def __init__(self, training_file, validation_file, batch_size=32,
-                 vocabulary_frequency_cutoff=[0.0], pad=True, binary=False,
-                 batch_normalization='truncate', channels=[ChannelType.CHAR],
-                 sentence_len=None, max_len_characters=30000,
-                 max_len_sentences=500, min_len_characters=200):
+    def __init__(self,
+                 training_file,
+                 validation_file,
+                 batch_size=32,
+                 vocabulary_frequency_cutoff=[0.0],
+                 pad=True,
+                 binary=False,
+                 batch_normalization='truncate',
+                 channels=[ChannelType.CHAR],
+                 sentence_len=None,
+                 max_len_characters=30000,
+                 max_len_sentences=500,
+                 min_len_characters=200):
 
         if batch_normalization not in ['truncate', 'pad']:
             raise ValueError('Only truncate and pad is currently supported.')
 
         for channel in channels:
-            if channel not in [ChannelType.CHAR, ChannelType.WORD,
-                               ChannelType.SENTENCE]:
+            if channel not in [
+                    ChannelType.CHAR, ChannelType.WORD, ChannelType.SENTENCE
+            ]:
                 raise ValueError(
                     'Only char, word or sentence channels allowed')
 
@@ -132,13 +141,15 @@ class MacomReader(object):
         # Generate representation used to generate training data.
         with LineReader(self.training_file) as linereader:
             self.training_authors = self.generate_authors(linereader)
-            self.training_problems = self.generate_problems(self.training_authors)
+            self.training_problems = self.generate_problems(
+                self.training_authors)
             self.generate_vocabulary_maps(linereader, self.training_authors)
 
         # Generate validation problems.
         with LineReader(self.validation_file) as linereader:
             self.validation_authors = self.generate_authors(linereader)
-            self.validation_problems = self.generate_problems(self.validation_authors)
+            self.validation_problems = self.generate_problems(
+                self.validation_authors)
 
     def generate_training(self):
         return self.generate(self.training_file, self.training_problems)
@@ -199,13 +210,13 @@ class MacomReader(object):
         for freq, channeltype in zip(self.vocabulary_frequency_cutoff,
                                      self.channeltypes):
             self.channels.append(
-                vocabulary_factory(channeltype,
-                                   freq, linegen(), self.sentence_length))
+                vocabulary_factory(channeltype, freq, linegen(),
+                                   self.sentence_length))
 
     # Returns a list of numpy arrays containing integers where each array is an
     # encoded sequence. The list ordering corresponds to the self.channels
     # parameter.
-    def read_encoded_line(self, linereader, line_n, with_meta=False):
+    def read_encoded_line(self, linereader, line_n, with_date=False):
         assert line_n > 0
         if self.pad:
             raise Exception(
@@ -213,7 +224,6 @@ class MacomReader(object):
             )
 
         author, date, text = linereader.readline(line_n).split(';')
-        text_length = len(text)
 
         unescaped = util.clean(text)
 
@@ -221,11 +231,11 @@ class MacomReader(object):
         for channel in self.channels:
             encoded_channels.append(channel.encode(unescaped))
 
-        if with_meat:
+        if with_date:
             epoch = datetime.utcfromtimestamp(0)
             date = datetime.strptime(date, '%d-%m-%Y')
             time = (date - epoch).total_seconds()
-            return encoded_channels, time, text_length
+            return encoded_channels, time
         else:
             return encoded_channels
 
@@ -263,8 +273,8 @@ class MacomReader(object):
             pad = channel.padding
 
             if self.batch_normalization == 'truncate':
-                truncs = [(len(x), len(y)) for x, y in
-                          zip(known_channel, unknown_channel)]
+                truncs = [(len(x), len(y))
+                          for x, y in zip(known_channel, unknown_channel)]
                 pad = self.pad
                 min_known, min_unknown = (min(x) for x in zip(*truncs))
 
@@ -273,16 +283,14 @@ class MacomReader(object):
                 value=pad,
                 maxlen=min_known,
                 truncating='post',
-                padding='post'
-            )
+                padding='post')
 
             X_unknown = sequence.pad_sequences(
                 unknown_channel,
                 value=pad,
                 maxlen=min_unknown,
                 truncating='post',
-                padding='post'
-            )
+                padding='post')
 
             X_knowns.append(X_known)
             X_unknowns.append(X_unknown)

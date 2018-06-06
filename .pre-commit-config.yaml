@@ -1,6 +1,6 @@
 repos:
     - repo: git://github.com/pre-commit/pre-commit-hooks
-      sha: origin
+      sha: fa7a3b5466bfb37fb6c76a20701d58a6b9caa3c5
       hooks:
         - id: trailing-whitespace
           types: [file, python]
@@ -19,8 +19,9 @@ repos:
           types: [file]
         - id: flake8
           types: [python]
+          args: ["--ignore=E741, E402"]
     - repo: git://github.com/pre-commit/mirrors-yapf
-      sha: origin
+      sha: v0.22.0
       hooks:
           - id: yapf
             types: [python]

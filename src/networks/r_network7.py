@@ -10,8 +10,8 @@ def model(reader):
     known_in = L.Input(shape=(None, ), dtype='int32')
     unknown_in = L.Input(shape=(None, ), dtype='int32')
 
-    embedding = L.Embedding(len(reader.channels[0].vocabulary_above_cutoff) +
-                            2, 150)
+    embedding = L.Embedding(
+        len(reader.channels[0].vocabulary_above_cutoff) + 2, 150)
 
     known_emb = embedding(known_in)
     unknown_emb = embedding(unknown_in)
@@ -30,15 +30,15 @@ def model(reader):
         inputs=[features_known_avg, features_unknown_avg],
         mode=lambda x: abs(x[0] - x[1]),
         output_shape=lambda x: x[0],
-        name='absolute_difference'
-    )
+        name='absolute_difference')
 
     output = L.Dense(2, activation='softmax', name='output')(abs_diff)
 
     model = Model(inputs=[known_in, unknown_in], outputs=output)
 
-    model.compile(optimizer='adam',
-                  loss='categorical_crossentropy',
-                  metrics=['accuracy'])
+    model.compile(
+        optimizer='adam',
+        loss='categorical_crossentropy',
+        metrics=['accuracy'])
 
     return model

@@ -4,30 +4,20 @@
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import cross_val_score, StratifiedKFold
 import argparse
-import random
 import numpy as np
-import pandas as pd
 from .feature_search import FeatureSearch
-
-np.random.seed(1337)
-random.seed(1337)
 
 parser = argparse.ArgumentParser(
     description='Run to determine the best hyperparmeters for\
-                 knn classifier'
-)
+                 knn classifier')
 
 parser.add_argument(
-    'featurefile',
-    type=str,
-    help='Path to file containing raw features'
-)
+    'featurefile', type=str, help='Path to file containing raw features')
 
 parser.add_argument(
     'features',
     type=str,
-    help='Path to the file containing the selected features'
-)
+    help='Path to the file containing the selected features')
 
 parser.add_argument(
     '--K',
@@ -35,8 +25,7 @@ parser.add_argument(
     nargs='+',
     help='Which K in KNN to to determine accuracy of, from and\
         to',
-    default=[1, 15]
-)
+    default=[1, 15])
 
 args = parser.parse_args()
 
@@ -66,7 +55,7 @@ for p in range(1, 6):
             except ValueError:
                 continue
 
-        if(len(scores) == 0):
+        if (len(scores) == 0):
             print('No texts can handle K size of {}'.format(K))
             break
         else:

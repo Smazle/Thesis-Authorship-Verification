@@ -17,7 +17,6 @@ with open(file) as f:
         else:
             a[author] = 1
 
-
 minAuthorCount = min(a.values())
 minAuthorCount = 6
 print(len(list(filter(lambda x: x >= minAuthorCount, a.values()))))
@@ -38,7 +37,6 @@ with open(file) as f, open(output, 'w') as out:
                 continue
             else:
                 out.write(line)
-
 
 a = {}
 

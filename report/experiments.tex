@@ -1006,7 +1006,7 @@ problems each meaning that we end up with 822 different problems. For each
 of the authors we generate a positive sample by taking the newest text as
 the unknown text and a negative sample by choosing a random text from some
 other author in the set. That is we have a 0.5 split between positive and
-negative samples. To find the $\theta$ and $w$ that minimizes equation
+negative samples. To find the $\theta$ and $w$ that minimizes Equation
 \ref{eq:prediction_system_minimization} we cross validate with $\theta \in
 0, 0.1, \dots, 1.0$ and $w \in 0, 0.1, \dots, 1.0$ (when $w = 0$ the weights
 are uniform). The results of that cross validation are shown in Figure

@@ -27,16 +27,14 @@ def model(reader):
         output_dim=word_embedding_size,
         input_dim=word_number,
         trainable=False,
-        weights=[weights]
-    )
+        weights=[weights])
 
     known_emb = embedding(known_in)
     unknown_emb = embedding(unknown_in)
 
     average_sentences = L.Lambda(
         lambda x: K.sum(x, axis=2) / sentence_len,
-        output_shape=(None, word_embedding_size)
-    )
+        output_shape=(None, word_embedding_size))
 
     known_sentences_repr = average_sentences(known_emb)
     unknown_sentences_repr = average_sentences(unknown_emb)
@@ -55,8 +53,7 @@ def model(reader):
         inputs=[features_known, features_unknown],
         mode=lambda x: abs(x[0] - x[1]),
         output_shape=lambda x: x[0],
-        name='absolute_difference'
-    )
+        name='absolute_difference')
 
     # Dense network.
     dense1 = L.Dense(100)(abs_diff)
@@ -67,8 +64,9 @@ def model(reader):
 
     optimizer = O.Adam(lr=0.0005)
 
-    model.compile(optimizer=optimizer,
-                  loss='categorical_crossentropy',
-                  metrics=['accuracy'])
+    model.compile(
+        optimizer=optimizer,
+        loss='categorical_crossentropy',
+        metrics=['accuracy'])
 
     return model
