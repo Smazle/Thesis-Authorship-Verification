@@ -20,3 +20,10 @@ repos:
           types: [file, python]
         - id: check-merge-conflict
           types: [file]
+    - repo: git://github.com/pre-commit/mirrors-yapf
+      sha: origin
+      hooks:
+          - id: yapf
+            types: [python]
+            args: ['-i']
+
