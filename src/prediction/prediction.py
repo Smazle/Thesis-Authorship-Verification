@@ -27,10 +27,10 @@ def get_problems(macomreader, linereader, negative_chance=1.0):
 
         # We want to predict the newest text.
         lines = [
-            macomreader.read_encoded_line(linereader, line, with_date=True)
+            macomreader.read_encoded_line(linereader, line, with_meta=True)
             for line in author_texts
         ]
-        times = [time for _, time in lines]
+        times = [time for _, time, _ in lines]
         chosen_text_author = author_texts[np.argmax(times)]
         chosen_text_other = random.choice(
             macomreader.authors[random.choice(other)])
@@ -50,15 +50,16 @@ def predict(macomreader, linereader, author_texts, non_author_text):
     unknown_text = list(map(lambda x: add_dim_start(x), unknown_text))
     times = np.zeros((len(author_texts)), dtype=np.int)
     predictions = np.zeros((len(author_texts), ), dtype=np.float)
+    text_lengths = np.zeros((len(author_texts), ), dtype=np.int)
 
     # Read texts.
     for i, known in enumerate(author_texts):
-        known_text, times[i] = macomreader.read_encoded_line(
-            linereader, known, with_date=True)
+        known_text, times[i], text_lengths[i] = macomreader.read_encoded_line(
+            linereader, known, with_meta=True)
         known_text = list(map(lambda x: add_dim_start(x), known_text))
         predictions[i] = model.predict(known_text + unknown_text)[0, 1]
 
-    return predictions, times
+    return predictions, times, text_lengths
 
 
 def predict_all(macomreader, linereader, problems):
@@ -66,16 +67,16 @@ def predict_all(macomreader, linereader, problems):
 
     for idx, (unknown, knowns, label) in enumerate(problems):
         print(idx, len(problems), file=sys.stderr)
-        predictions, times = predict(macomreader, linereader, knowns, unknown)
-        results.append((predictions, times))
+        predictions, times, lengths = predict(macomreader, linereader, knowns, unknown)
+        results.append((predictions, times, lengths))
 
     return results
 
 
 def evaluate(labels, results, w, theta):
     tps, tns, fps, fns = 0, 0, 0, 0
-    for label, (predictions, times) in zip(labels, results):
-        weights = w.get_weights(times, predictions)
+    for label, (predictions, times, text_lengths) in zip(labels, results):
+        weights = w.get_weights(times, predictions, text_lengths)
         prediction = np.average(predictions, weights=weights) > theta
 
         if prediction == label and label == True:  # noqa
@@ -99,9 +100,6 @@ def add_dim_start(array):
 def generate_graphs(weights, labels, results):
     thetas = np.linspace(0, 1, num=1000)
 
-    accuracy_plot = plt.figure(1)
-    error_plot = plt.figure(2)
-
     for weight in weights:
         accuracies = []
         errors = []
@@ -112,33 +110,36 @@ def generate_graphs(weights, labels, results):
             accuracy = (tps + tns) / (tps + tns + fps + fns)
 
             if fns + tns == 0:
-                errors = 0
+                error = 0
             else:
-                errors = fns / (fns + tns)
+                error = fns / (fns + tns)
 
             accuracies.append(accuracy)
             errors.append(error)
 
 
         label = 'Weight {}'.format(weight)
-        accuracy_plot.plot(thetas, accuracies, label=label)
-        error_plot(thetas, errors, label=label)
+        plt.figure(1)
+        plt.plot(thetas, accuracies, label=label)
+        plt.figure(2)
+        plt.plot(thetas, errors, label=label)
 
-    accuracy_plot.xlabel('Threshold (Theta)')
-    accuracy_plot.ylabel('Accuracy')
-    accuracy_plot.grid(True)
-    accuracy_plot.legend()
+    plt.figure(1)
+    plt.xlabel('Threshold (Theta)')
+    plt.ylabel('Accuracy')
+    plt.grid(True)
+    plt.legend()
 
-    error_plot.xlabel('Threshold (Theta)')
-    error_plot.ylabel('Accusation Error')
-    error_plot.grid(True)
-    error_plot.legend()
+    plt.figure(2)
+    plt.xlabel('Threshold (Theta)')
+    plt.ylabel('Accusation Error')
+    plt.grid(True)
+    plt.legend()
 
-    accuracy_plot.show()
-    error_plot.show()
+    plt.show()
 
 
-def binary_theta_search(weights, labels, result):
+def binary_theta_search(weights, labels, results):
     limit_theta = 1
     lower_theta = 0
     print('\nStarting Fine tuned run', file=sys.stderr)
