@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import keras.layers as L
+import keras.optimizers as O
 from keras.models import Model
 
 
@@ -63,7 +64,9 @@ def model(reader):
 
     model = Model(inputs=[known_in, unknown_in], outputs=output)
 
-    model.compile(optimizer='adam',
+    optimizer = O.Adam(lr=0.0005)
+
+    model.compile(optimizer=optimizer,
                   loss='categorical_crossentropy',
                   metrics=['accuracy'])
 
