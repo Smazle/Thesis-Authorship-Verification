@@ -7,7 +7,7 @@ from . import network3
 from . import network4
 from . import network5
 from . import network6
-#from . import network7
+from . import network7
 from . import network8
 from . import r_network1
 from . import r_network2
