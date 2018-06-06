@@ -158,8 +158,9 @@ def binary_theta_search(weights, labels, result):
             errors = fns / (fns + tns)
 
         if errors < 0.1:
-            print(('\033[92m' + '{:^10.6f}{:^10.6f}{:^10.6f}{:^10.6f}{:^10.6f}'
-                   + '{:^10}{:^10}{:^10}{:^10}{:^10}\033[0m').format(
+            print(('\033[92m' + '{:^10.6f}{:^10.6f}{:^10.6f}' +
+                   '{:^10.6f}{:^10.6f}' +
+                   '{:^10}{:^10}{:^10}{:^10}{:^10}\033[0m').format(
                        lower_theta, limit_theta, new_theta, errors, acc, tns,
                        fns, tps, fps, w))
             lower_theta = new_theta
