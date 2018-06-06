@@ -1,0 +1,9 @@
+{
+"batch_size":32,
+"vocabulary_frequency_cutoff":[0.00001, 0.0, 0.0],
+"batch_normalization":"pad",
+"pad":false,
+"binary":false,
+"channels":["char", "word", "sentence"],
+"sentence_length":25
+}
