@@ -1177,6 +1177,13 @@ several extensions to basic Stochastic Gradient Descend has been developed that
 automatically tunes the learning rate $\eta$. We will discuss three different
 extension \gls{AdaGrad}, \gls{RMSProp} and \gls{Adam}.
 
+In the description of those three algorithms we will slightly abuse vector
+notation. We will keep using $\mathbf{a} \circ \mathbf{b}$ to mean an
+elementwise multiplication but besides that we use
+$\frac{\mathbf{a}}{\mathbf{b}}$ to mean an elementwise division,
+$\sqrt{\mathbf{a}}$ to mean an elementwise square root and $\mathbf{a}^n$ to
+mean an elementwise power.
+
 \begin{description}
 
     \item[\gls{AdaGrad}:]
@@ -1196,15 +1203,16 @@ extension \gls{AdaGrad}, \gls{RMSProp} and \gls{Adam}.
         \begin{equation}
             \mathbf{w}^{(t+1)} =
                 \mathbf{w}^{(t)} -
-                \eta \text{diag}(G)^{-\frac{1}{2}} \circ
+                \eta \text{diag}\left(G^{(t)}\right)^{-\frac{1}{2}} \circ
                 \Delta E|_{\mathbf{w}^{(t)}},
         \end{equation}
 
-        where $G$ is a matrix containing the sum of the outer product of the
-        gradient in all previous timesteps. $G$ is defined as,
+        where $G^{(t)}$ is a matrix containing the sum of the outer product
+        of the gradient in all previous timesteps $1, \dots, t$. $G^{(t)}$ is
+        defined as,
 
         \begin{equation}
-            G = \sum_{\tau=1}^t \Delta E|_{\mathbf{w}^{(\tau)}}
+            G^{(t)} = \sum_{\tau=1}^t \Delta E|_{\mathbf{w}^{(\tau)}}
                 \left(
                     \Delta E|_{\mathbf{w}^{(\tau)}}
                 \right)^T.
@@ -1216,7 +1224,7 @@ extension \gls{AdaGrad}, \gls{RMSProp} and \gls{Adam}.
         \begin{equation}
             \label{eq:individual_adagrad}
             \mathbf{w}_i^{(t+1)} =
-                \mathbf{w}_i^{(t)} - \frac{\eta}{\sqrt{G_{i,i}}} \circ
+                \mathbf{w}_i^{(t)} - \frac{\eta}{\sqrt{G^{(t)}_{i,i}}} \circ
                 \Delta E|_{\mathbf{w}_i^{(t)}}.
         \end{equation}
 
@@ -1237,23 +1245,23 @@ extension \gls{AdaGrad}, \gls{RMSProp} and \gls{Adam}.
     \item[\gls{RMSProp}:]
 
         \gls{RMSProp} is an unpublished optimization algorithm.
-        It was introduced by Geoff Hinton in Lecture 6e of his
-        Coursera Class \cite{DBLP:journals/corr/Ruder16}. This section
-        is based primarily on his slides which can be found at
-        \url{http://www.cs.toronto.edu/~tijmen/csc321/slides/lecture_slides_lec6
-        .pdf}. The idea behind \gls{RMSProp} is similar to \gls{AdaGrad} each
-        weight is updated at an independent rate. Unlike \gls{AdaGrad} the rate
-        is chosen by a moving average instead of the L2 norm of all previous
-        steps. That allows the algorithm to adapt quickly to changes in the
-        gradient. When the gradient of a weight is large the algorithm tunes
-        down the learning rate and when the gradient is consistently small it
-        tunes up the learning rate. That functions well since a large gradient
-        is found in a steep volatile area while a consistently small gradient is
-        found in a flat non volatile area. In the steep areas we are likely to
-        overshoot the target if the learning rate is to high while in flat areas
-        we don't have that problem. The internal state of the algorithm is a
-        vector $\mathbf{v}$ of the running average of gradient magnitudes. It is
-        updated with the equation,
+        It was introduced by Geoff Hinton in Lecture 6e of
+        his Coursera Class \cite{DBLP:journals/corr/Ruder16}.
+        This section is based primarily on his slides
+        \footnote{\url{http://www.cs.toronto.edu/~tijmen/csc321/slides/lecture_s
+        lides_lec6 .pdf}}. The idea behind \gls{RMSProp} is similar to
+        \gls{AdaGrad} each weight is updated at an independent rate. Unlike
+        \gls{AdaGrad} the rate is chosen by a moving average instead of the
+        L2 norm of all previous steps. That allows the algorithm to adapt
+        quickly to changes in the gradient. When the gradient of a weight is
+        large the algorithm tunes down the learning rate and when the gradient
+        is consistently small it tunes up the learning rate. That functions
+        well since a large gradient is found in a steep volatile area while a
+        consistently small gradient is found in a flat non volatile area. In the
+        steep areas we are likely to overshoot the target if the learning rate
+        is to high while in flat areas we don't have that problem. The internal
+        state of the algorithm is a vector $\mathbf{v}$ of the running average
+        of gradient magnitudes. It is updated with the equation,
 
         \begin{equation}
             \label{eq:rms_prop_state}
@@ -1265,7 +1273,7 @@ extension \gls{AdaGrad}, \gls{RMSProp} and \gls{Adam}.
                 \right).
         \end{equation}
 
-        The parameter $\gamma$ can be seen as a forgetting rate. If $\gamma$
+        The parameter $\gamma$ can be seen as a remembering rate. If $\gamma$
         is high we keep much of the previous running average and if $\gamma$
         is low we update the average much quicker. The actual weight update is
         performed by using the internal state $\mathbf{v}$ to scale the learning
@@ -1284,7 +1292,7 @@ extension \gls{AdaGrad}, \gls{RMSProp} and \gls{Adam}.
         \cite{DBLP:journals/corr/KingmaB14}. The difference from \gls{RMSProp}
         is that \gls{Adam} use both the gradient and the squared gradient while
         \gls{RMSProp} use only the squared gradient. Consequently \gls{Adam} has
-        two forgetting factors instead of the single one for \gls{RMSProp}. The
+        two remembering factors instead of the single one for \gls{RMSProp}. The
         internal state of \gls{Adam} is updated via,
 
         \begin{align}
