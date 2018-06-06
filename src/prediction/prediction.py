@@ -3,13 +3,12 @@
 
 import numpy as np
 from keras.models import load_model
-from ..preprocessing import LineReader, MacomReader
+from ..preprocessing import LineReader
 import argparse
 import itertools
 import jsonpickle
 import random
 import sys
-
 
 SECS_PER_MONTH = 60 * 60 * 24 * 30
 
@@ -105,9 +104,16 @@ def add_dim_start(array):
 
 
 def apply_system(weights, thetas, labels, results):
-    print('{:^8}{:^8}{:^8}{:^8}{:^8}{:^8}{:^10}{:^10}'
-          .format('Theta', 'Weights', 'TPS',
-                  'TNS', 'FPS', 'FNS', 'ACC', 'ERR', end='\r\n'))
+    print('{:^8}{:^8}{:^8}{:^8}{:^8}{:^8}{:^10}{:^10}'.format(
+        'Theta',
+        'Weights',
+        'TPS',
+        'TNS',
+        'FPS',
+        'FNS',
+        'ACC',
+        'ERR',
+        end='\r\n'))
 
     for (theta, weight) in itertools.product(thetas, weights):
         tps, tns, fps, fns = evaluate(labels, results, weight, theta)
@@ -119,8 +125,10 @@ def apply_system(weights, thetas, labels, results):
         else:
             errors = fns / (fns + tns)
 
-        print('{:^8}{:^8}{:^8}{:^8}{:^8}{:^8}{:^10.6f}{:^10.6f}'.format(
-            theta, weight, tps, tns, fps, fns, accuracy, errors), end='\r\n')
+        print(
+            '{:^8}{:^8}{:^8}{:^8}{:^8}{:^8}{:^10.6f}{:^10.6f}'.format(
+                theta, weight, tps, tns, fps, fns, accuracy, errors),
+            end='\r\n')
 
 
 def binary_theta_search(weights, labels, result):
@@ -128,14 +136,14 @@ def binary_theta_search(weights, labels, result):
     lower_theta = 0
     print('\nStarting Fine tuned run', file=sys.stderr)
     print('{:^10}{:^10}{:^10}{:^10}{:^10}{:^10}{:^10}{:^10}{:^10}{:^10}'
-          .format(
-              'L-Theta', 'U-Theta', 'A-Theta', 'Err', 'Acc', 'TNS',
-              'FNS', 'TPS', 'FPS', 'Weight'))
+          .format('L-Theta', 'U-Theta', 'A-Theta', 'Err', 'Acc', 'TNS', 'FNS',
+                  'TPS', 'FPS', 'Weight'))
 
     for _ in range(100):
         new_theta = (limit_theta + lower_theta) / 2
-        e = [evaluate(labels, results, weight, new_theta)
-             for weight in weights]
+        e = [
+            evaluate(labels, results, weight, new_theta) for weight in weights
+        ]
 
         accuracies = [((tns, fns, fps, tps),
                        (tps + tns) / (tps + tns + fps + fns))
@@ -150,60 +158,54 @@ def binary_theta_search(weights, labels, result):
             errors = fns / (fns + tns)
 
         if errors < 0.1:
-            print(('\033[92m' +
-                   '{:^10.6f}{:^10.6f}{:^10.6f}{:^10.6f}{:^10.6f}' +
-                   '{:^10}{:^10}{:^10}{:^10}{:^10}\033[0m')
-                  .format(lower_theta, limit_theta, new_theta, errors, acc,
-                          tns, fns, tps, fps, w))
+            print(('\033[92m' + '{:^10.6f}{:^10.6f}{:^10.6f}{:^10.6f}{:^10.6f}'
+                   + '{:^10}{:^10}{:^10}{:^10}{:^10}\033[0m').format(
+                       lower_theta, limit_theta, new_theta, errors, acc, tns,
+                       fns, tps, fps, w))
             lower_theta = new_theta
         else:
             print(('{:^10.6f}{:^10.6f}{:^10.6f}{:^10.6f}{:^10.6f}' +
-                   '{:^10}{:^10}{:^10}{:^10}{:^10}')
-                  .format(lower_theta, limit_theta, new_theta, errors, acc,
-                          tns, fns, tps, fps, w))
+                   '{:^10}{:^10}{:^10}{:^10}{:^10}').format(
+                       lower_theta, limit_theta, new_theta, errors, acc, tns,
+                       fns, tps, fps, w))
             limit_theta = new_theta
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
-        description='Use neural network to predict authorship of assignments.'
-    )
+        description='Use neural network to predict authorship of assignments.')
     parser.add_argument(
         'network',
         type=str,
-        help='Path to file containing network we should use to predict.'
-    )
+        help='Path to file containing network we should use to predict.')
     parser.add_argument(
-        'reader',
-        type=str,
-        help='Path to file containing a macomreader.'
-    )
+        'reader', type=str, help='Path to file containing a macomreader.')
     parser.add_argument(
         'datafile',
         type=str,
-        help='Path to file containing the texts we work with.'
-    )
+        help='Path to file containing the texts we work with.')
     parser.add_argument(
         '--theta',
         nargs='+',
         help='Thresholds to use.',
-        default=['0.0', '0.1', '0.2', '0.3', '0.4',
-                 '0.5', '0.6', '0.7', '0.8', '0.9', '1.0']
-    )
+        default=[
+            '0.0', '0.1', '0.2', '0.3', '0.4', '0.5', '0.6', '0.7', '0.8',
+            '0.9', '1.0'
+        ])
     parser.add_argument(
         '--weights',
         nargs='+',
         help='The argument given to the exponential dropoff weight ' +
-             'function. If 0.0 is given it is equivalent to uniform weights.',
-        default=['0.0', '0.1', '0.2', '0.3', '0.4',
-                 '0.5', '0.6', '0.7', '0.8', '0.9', '1.0']
-    )
+        'function. If 0.0 is given it is equivalent to uniform weights.',
+        default=[
+            '0.0', '0.1', '0.2', '0.3', '0.4', '0.5', '0.6', '0.7', '0.8',
+            '0.9', '1.0'
+        ])
     parser.add_argument(
         '--negative-chance',
         help='The fraction of negative problems wanted.',
         default=1.0,
-        type=float
-    )
+        type=float)
 
     args = parser.parse_args()
 
@@ -226,15 +228,17 @@ if __name__ == '__main__':
         # dataset.
         reader.authors = reader.generate_authors(linereader)
 
-        problems = get_problems(reader, linereader,
-                                negative_chance=args.negative_chance)
+        problems = get_problems(
+            reader, linereader, negative_chance=args.negative_chance)
 
         labels = [label for (_, _, label) in problems]
         positive_n = len(list(filter(lambda x: x, labels)))
         negative_n = len(list(filter(lambda x: not x, labels)))
 
-        print('Generated {} positives and {} negatives'
-              .format(positive_n, negative_n), file=sys.stderr)
+        print(
+            'Generated {} positives and {} negatives'.format(
+                positive_n, negative_n),
+            file=sys.stderr)
 
         results = predict_all(reader, linereader, problems)
 
