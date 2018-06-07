@@ -151,26 +151,27 @@ val_steps_n = len(reader.validation_problems) / reader.batch_size
 
 model = construct_network(Network(args.networkname), reader)
 
-tboard = TensorBoard(
-    './%s_logs/' % args.networkname,
-    batch_size=reader.batch_size,
-    write_grads=True,
-    write_images=True)
+if args.epochs != 0:
+    tboard = TensorBoard(
+        './%s_logs/' % args.networkname,
+        batch_size=reader.batch_size,
+        write_grads=True,
+        write_images=True)
 
-# Setup callbacks.
-callbacks = [
-    ModelCheckpoint(
-        'weights.{epoch:02d}-{val_loss:.2f}.hdf5',
-        monitor='val_loss',
-        save_best_only=False,
-        save_weights_only=True), tboard
-]
+    # Setup callbacks.
+    callbacks = [
+        ModelCheckpoint(
+            'weights.{epoch:02d}-{val_loss:.2f}.hdf5',
+            monitor='val_loss',
+            save_best_only=False,
+            save_weights_only=True), tboard
+    ]
 
-if args.history is not None:
-    callbacks.append(
-        CSVWriter(reader.generate_validation(), val_steps_n,
-                  reader.generate_training(), steps_n, args.history,
-                  args.weights is not None))
+    if args.history is not None:
+        callbacks.append(
+            CSVWriter(reader.generate_validation(), val_steps_n,
+                    reader.generate_training(), steps_n, args.history,
+                    args.weights is not None))
 
 # If we are asked to visualize model, do so.
 if args.graph is not None:
