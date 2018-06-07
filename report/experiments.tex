@@ -431,14 +431,38 @@ therefore overfitting on the specific authors and we could not see that in the
 validation datasets accuracy. All accuracy graphs shown in this Section are
 based on a validation dataset with 500 completely unseen authors.
 
-The general structure of our networks will be that they take two texts as
-input. The texts are first embedded into a format that can be used by the
-network. Then the texts are transformed to two sets of features via a weight
-sharing convolutional network. Then the text representation (the sets of
-features) will be combined in some way and a dense network will take the
-combined representations and decide whether or not the texts are written by the
-same author. We call the different parts of the network \textit{Embedding},
-\textit{Feature Extraction}, \textit{Combining} and \textit{Comparing}.
+The general structure of our networks will be that they take two texts as input.
+The texts are first embedded into a format that can be used by the network. Then
+the texts are transformed into two sets of features representing the text via
+a weight sharing convolutional network. Then the text representation will be
+combined in some way and a dense network will take the combined representations
+and decide whether or not the texts are written by the same author. We call the
+different parts of the network \textit{Embedding}, \textit{Feature Extraction},
+\textit{Combining} and \textit{Decision}.
+
+The first convolutional neural networks we created extracted features from
+the character level of the texts. That means that the convolutions looked at
+some number of characters at a time and gave a single output for that sequence
+of characters. Let us for example assume that we have a convolutional filter
+that looks for the character sequence "ould ". Let's also assume that the
+filter is followed by a max pool. Then we expect the filter to produce a high
+value when it is in a location where many of the characters match and a low
+value otherwise. We have shown an example of such a convolution in Figure
+\ref{fig:convolution_text_example}.
+
+\begin{figure}
+    \centering
+    \textbf{Convolutions for Text Feature Extraction}\par\medskip
+    \includegraphics[width=\textwidth]{./pictures/experiments/convolution_example.png}
+    \caption{Illustration of character level convolutions using a filter that
+        looks for the character sequence "ould ". Notice that high values are
+        produced when the characters the filter looks at match the characters it
+        is looking for and low values are produced otherwise. We have
+        illustrated 3 different filter locations but the filter is similarly
+        placed in all possible locations. We have padded the text with zeros to
+        get the same size output as input.}
+    \label{fig:convolution_text_example}
+\end{figure}
 
 
 \subsubsection{Siamese Neural Network - Iteration 1}
