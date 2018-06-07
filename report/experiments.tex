@@ -464,6 +464,47 @@ value otherwise. We have shown an example of such a convolution in Figure
     \label{fig:convolution_text_example}
 \end{figure}
 
+As described our first network took as input two sequences of characters. Each
+character was then one-hot encoded and as described in Section \ref{sec:data} we
+ignored character with a frequency of less than $10^{-5}$. In the
+\textit{Embedding} part of the network we embedded the characters into a 5
+dimensional space. The embeddings are learnable and the hope is that similar
+characters will end up in similar places in the output space.
+
+In the \textit{Feature Extraction} part of the network we applied 1000
+convolutional filters of size 10 to each of the texts. We used stride 1
+such that each filter was placed in all possible positions. We did not
+use padding in the convolutional layer so the output will be slightly
+smaller than the input. As the activation function in the convolutional
+layer we used the \gls{ReLu} function for the reasons described in Section
+\ref{subsubsec:activation_functions}. After the convolutional layer we applied a
+global max pooling layer. The global max pooling layer will output the maximum
+activation for each filter in the convolutional layer. We do so for both of the
+texts so afterwards we will have two vectors containing 1000 numbers each. The
+first vector represent the maximum activation of the 1000 filters on the first
+text and the second vector represents the maximum activation of the 1000 filters
+on the second text. These 1000 numbers are seen as the extracted features of the
+texts and they will represent the text in the following layers.
+
+In the \textit{Combining} part of the network we concatenate the representations
+of the two texts to obtain a single vector of size 2000.
+
+Lastly the \textit{Decision} network takes the combined vectors and applies a
+fully connected network to it. The fully connected network consist of a layer
+with 500 neurons using the \gls{ReLu} activation function and a layer of two
+neurons using the softmax activation function. The idea is that the hidden dense
+layer will compare the vector representations and that the output layer will
+output a probability distribution. The probability distribution represents the
+probability that the texts are written by the same author.
+
+As the optimization function we use the \gls{Adam} optimizer. We used the
+default parameters of $\eta = 0.001$, $\gamma_1 = 0.9$ and $\gamma_2=0.999$.
+As the loss function we used the categorical crossentropy function.
+
+When we trained the network it quickly overfitted on the training dataset but
+otherwise it seemed to work fine. We therefore wanted to try to extend the
+network and add some dropout.
+
 
 \subsubsection{Siamese Neural Network - Iteration 1}
 
