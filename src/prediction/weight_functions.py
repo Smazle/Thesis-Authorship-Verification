@@ -83,7 +83,7 @@ class TextLengthWeight(WeightFunction):
 
 def weight_factory(weight_type):
     if weight_type == 'exp-norm' or weight_type == 'exponential-norm':
-        return [ExponentialNorm(lamb) for lamb in np.linspace(0, 1, num=11)]
+        return [ExponentialNorm(lamb) for lamb in np.linspace(0, 1, num=5)]
     elif weight_type == 'max' or weight_type == 'maximum':
         return [MaximumWeight()]
     elif weight_type == 'min' or weight_type == 'minimum':
