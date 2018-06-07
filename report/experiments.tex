@@ -411,6 +411,7 @@ experiments, we used a 0.5 threshold for classification.
 
 
 \subsubsection{Convolutional Siamese Neural Networks}
+\label{subsubsec:convolutional_siamese_neural_networks}
 
 In the prediction system \ref{def:prediction_system} we need a function $f$
 that takes two texts and returns the probability that those texts are written
@@ -962,7 +963,7 @@ network and add some dropout.
 
 
 
-\subsection{Recurrent Siamese Neural Networks}
+\subsubsection{Recurrent Siamese Neural Networks}
 
 After having attempted some convolutional approaches, as was just described, 
 we proceeded with some recurrent experiments as well. After having looked
@@ -1196,75 +1197,148 @@ accusations by inverting the output of $P$ and divides that by 10. So the
 condition makes sure that only 10\% of the accusations we make are false
 accusations.
 
-In order to further improve in on the handling of this optimization problem, we
-also perform a binary search within the interval of $\theta$ that placed our
-false negative above threshold and below the threshold in order to determine
-which theta-value places us nearest the 10\% limit. This process is performed
-on the weights however. Each false negative computation, checks against all the
-weights, and uses the one giving the best results as the candidate weight for
-that iteration.
+We find the optimal parameters by doing a binary search for
+the threshold $\theta$ that solves the minimization problem
+\eqref{eq:prediction_system_minimization} for each weight function. We start
+the search with a lower threshold of 0.0 and an upper threshold of 1.0. Then we
+continue the search for $\theta$ until we have converged on a fixed point. The
+thresholds and weights we report as the optimum for the networks are based on
+the output of this binary search.
 
-We have chosen to run our prediction system on the network described in Section
-\ref{subsubsec:siamese_neuraon_network_iteration_6}. That is the convolutional
-neural network using max-over-time pooling after the convolutional layer.
-The validation set we run on consists as described only of previously unseen
-authors. It consist of 411 different authors and from them we generate two
-problems each meaning that we end up with 822 different problems. For each
-of the authors we generate a positive sample by taking the newest text as
-the unknown text and a negative sample by choosing a random text from some
-other author in the set. That is we have a 0.5 split between positive and
-negative samples. To find the $\theta$ and $w$ that minimizes Equation
-\ref{eq:prediction_system_minimization} we cross validate with $\theta \in
-0, 0.1, \dots, 1.0$ and $w \in 0, 0.1, \dots, 1.0$ (when $w = 0$ the weights
-are uniform). The results of that cross validation are shown in Figure
-\ref{fig:prediction_system_results_1}. The $\theta$ and $w$ that gave the best
-accuracy while adhering to the constraint was $\theta = 0.2$ and $w = 0.3$ which
-had an accuracy of $0.67153$ and an accusation error of $0.09714$.
+We have run our prediction system on several of the networks we trained as
+part of our experiments. For each of the networks we present several graphs
+showing their performance for different weights and thresholds and we report
+the best configuration for that network. The dataset we use to tune $\theta$
+and the weight function $w$ are F. The set consists of 2000 previously unseen
+authors. From them we generate two problems for each author meaning that we
+end up with 4000 different problems. For each of the authors we generate a
+positive sample by taking the newest text as the unknown text and a negative
+sample by choosing a random text from some other author in the set. That is
+we have a 0.5 split between positive and negative samples. We also tried our
+prediction system on another validation set. In the real world it has been
+estimated that 4\% of turn ins for the \gls{SRP} are written by "ghost writers"
+\footnote{https://politiken.dk/indland/uddannelse/art5603163/Gymnasieelever-\%C2
+\% BBSnyderi-beviser-hvor-vanvittig-betydningsfuld-SRP-er-blevet\%C2\%AB}. We
+therefore also wanted to find the $\theta$ and $w$ for a validation set with
+only 4\% negative samples instead of 50\% negative samples. We generated 2000
+positive samples as before and then for each sample we added a negative sample
+with a 4\% chance.
+
+
+\subsubsection{Convolutional Siamese Neural Network 1}
+
+The first network we tuned hyperparameters for were the network presented
+in Figure TODO. The network used only convolutions on the character level
+to extract features and used a dense network to decide whether or not
+the texts were written by the same author. We have shown the accuracy
+and accusation error for the dataset containing 50\% negatives in Figure
+\ref{fig:prediction_system_results_1} and for the dataset containing 4\%
+negatives in Figure \ref{fig:prediction_system_results_2}.
 
 \begin{figure}
     \centering
     \textbf{Prediction System Results for 0.5 Split}\par\medskip
-    \includegraphics[width=0.49\textwidth]{./pictures/experiments/network3_prediction_system_accuracies.png}
-    \includegraphics[width=0.49\textwidth]{./pictures/experiments/network3_prediction_system_accusation_error.png}
-    \caption{Results of running the prediction system with our best
-        convolutional network on a validation dataset with 50\% positive samples
-        and 50\% negative samples. In the left graph we show the accuracies
-        obtained as a function of $\theta$. There is one line for each weight.
-        We can see that as expected the worst weight function are the uniform
-        weights. On the right we have shown the accusation error as a function
-        $\theta$ again with one line for each weight. We can see that as the
-        threshold increases and we accuse more people of cheating the accusation
-        error rises.}
+    \includegraphics[width=\textwidth]{./pictures/experiments/network3_prediction_system_accuracies.png}
+    \includegraphics[width=\textwidth]{./pictures/experiments/network3_prediction_system_accusation_error.png}
+    \caption{Results of running the prediction system with the network described
+        in Section \ref{subsubsec:convolutional_siamese_neural_networks} on a
+        validation dataset with 50\% positive samples and 50\% negative samples.
+        In the upper graph we show the accuracies obtained as a function of
+        $\theta$ for different weights $w$. At the bottom we have shown the
+        accusation error as a function $\theta$ again with one line for each
+        weight. We can see that as the threshold increases and we accuse more
+        people of cheating the accusation error rises.}
     \label{fig:prediction_system_results_1}
 \end{figure}
-
-We also tried our prediction system on another validation
-set. In the real world it has been estimated that 4\% of
-turn ins for the \gls{SRP} are written by "ghost writers"
-\footnote{https://politiken.dk/indland/uddannelse/art5603163/Gymnasieelever-\%C2
-\% BBSnyderi-beviser-hvor-vanvittig-betydningsfuld-SRP-er-blevet\%C2\%AB}. We
-therefore also wanted to find $\theta$ and $w$ for a validation set with only
-4\% negative samples instead of 50\% negative samples. We generated 411 positive
-samples as before and then for each sample we added a negative sample with a
-4\% chance. We ended up with a validation set with 411 positive samples and 16
-negative samples. The $\theta$ and $w$ that gave the best accuracy while still
-fulfilling the constraint were $\theta = 0.1$ and $w = 0.0$ with an accuracy
-of 0.97189 and an accusation error of 0.0. With that configuration we caught
-$\frac{4}{16}$ of the cheaters with 0 false accusations. We have shown the cross
-validation results in Figure \ref{fig:prediction_system_results_2}.
 
 \begin{figure}
     \centering
     \textbf{Prediction System Results for 0.04 Split}\par\medskip
-    \includegraphics[width=0.49\textwidth]{./pictures/experiments/network3_prediction_system_accuracies_4_percent.png}
-    \includegraphics[width=0.49\textwidth]{./pictures/experiments/network3_prediction_system_accusation_error_4_percent.png}
-    \caption{Results of running the prediction system with our best
-        convolutional network on a validation dataset with about 96\% positive
-        samples and about 4\% negative samples. In the left graph we show the
-        accuracies obtained as a function of $\theta$. There is one line for
-        each weight. On the right we have shown the accusation error as a
-        function $\theta$ again with one line for each weight. We can see that
-        as the threshold increases and we accuse more people of cheating the
-        accusation error rises.}
+    \includegraphics[width=\textwidth]{./pictures/experiments/network3_prediction_system_accuracies_4_percent.png}
+    \includegraphics[width=\textwidth]{./pictures/experiments/network3_prediction_system_accusation_error_4_percent.png}
+    \caption{Results of running the prediction system with the network described
+        in Section \ref{subsubsec:convolutional_siamese_neural_networks} on a
+        validation dataset with 96\% positive samples and 4\% negative samples.
+        In the upper graph we show the accuracies obtained as a function of
+        $\theta$ for different weights $w$. At the bottom we have shown the
+        accusation error as a function $\theta$ again with one line for each
+        weight. We can see that as the threshold increases and we accuse more
+        people of cheating the accusation error rises.}
     \label{fig:prediction_system_results_2}
 \end{figure}
+
+The best configuration for the 0.5 split were using the Exponential Norm
+Weight function with $\lambda = 0.25$ and using the threshold
+$\theta = 0.395398$. That configuration obtained an accusation error of
+9.9761\% and an accuracy of 83.5168 \%. The configuration had 1507 \gls{TN}s,
+1832 \gls{TP}s, 167 \gls{FN}s and 492 \gls{FP}s. The best configuration for the
+0.04 split were using the Exponential Norm Weight function with $\lambda = 0.5$
+and using the threshold $\theta = 0.076101$. That configuratioon obtained an
+accusation error of 5.5556 \% and an accuracy of 96.8750 \%. The configuration
+had 17 \gls{TN}s, 1998 \gls{TP}s, 1 \gls{FN}s and 64 \gls{FP}s.
+
+
+
+%We ended up with a validation set with 2000 positive samples
+%and 16 negative samples. The $\theta$ and $w$ that gave the best accuracy while
+%still fulfilling the constraint were $\theta = 0.1$ and $w = 0.0$ with an
+%accuracy of 0.97189 and an accusation error of 0.0. With that configuration we
+%caught $\frac{4}{16}$ of the cheaters with 0 false accusations. We have shown
+%the cross validation results in Figure \ref{fig:prediction_system_results_2}.
+
+
+
+
+
+
+%We have chosen to run our prediction system on the network described in Section
+%\ref{subsubsec:siamese_neuraon_network_iteration_6}. That is the convolutional
+%neural network using max-over-time pooling after the convolutional layer.
+
+%\begin{figure}
+    %\centering
+    %\textbf{Prediction System Results for 0.5 Split}\par\medskip
+    %\includegraphics[width=0.49\textwidth]{./pictures/experiments/network3_prediction_system_accuracies.png}
+    %\includegraphics[width=0.49\textwidth]{./pictures/experiments/network3_prediction_system_accusation_error.png}
+    %\caption{Results of running the prediction system with our best
+        %convolutional network on a validation dataset with 50\% positive samples
+        %and 50\% negative samples. In the left graph we show the accuracies
+        %obtained as a function of $\theta$. There is one line for each weight.
+        %We can see that as expected the worst weight function are the uniform
+        %weights. On the right we have shown the accusation error as a function
+        %$\theta$ again with one line for each weight. We can see that as the
+        %threshold increases and we accuse more people of cheating the accusation
+        %error rises.}
+    %\label{fig:prediction_system_results_1}
+%\end{figure}
+
+%We also tried our prediction system on another validation
+%set. In the real world it has been estimated that 4\% of
+%turn ins for the \gls{SRP} are written by "ghost writers"
+%\footnote{https://politiken.dk/indland/uddannelse/art5603163/Gymnasieelever-\%C2
+%\% BBSnyderi-beviser-hvor-vanvittig-betydningsfuld-SRP-er-blevet\%C2\%AB}. We
+%therefore also wanted to find $\theta$ and $w$ for a validation set with only
+%4\% negative samples instead of 50\% negative samples. We generated 411 positive
+%samples as before and then for each sample we added a negative sample with a
+%4\% chance. We ended up with a validation set with 411 positive samples and 16
+%negative samples. The $\theta$ and $w$ that gave the best accuracy while still
+%fulfilling the constraint were $\theta = 0.1$ and $w = 0.0$ with an accuracy
+%of 0.97189 and an accusation error of 0.0. With that configuration we caught
+%$\frac{4}{16}$ of the cheaters with 0 false accusations. We have shown the cross
+%validation results in Figure \ref{fig:prediction_system_results_2}.
+
+%\begin{figure}
+    %\centering
+    %\textbf{Prediction System Results for 0.04 Split}\par\medskip
+    %\includegraphics[width=0.49\textwidth]{./pictures/experiments/network3_prediction_system_accuracies_4_percent.png}
+    %\includegraphics[width=0.49\textwidth]{./pictures/experiments/network3_prediction_system_accusation_error_4_percent.png}
+    %\caption{Results of running the prediction system with our best
+        %convolutional network on a validation dataset with about 96\% positive
+        %samples and about 4\% negative samples. In the left graph we show the
+        %accuracies obtained as a function of $\theta$. There is one line for
+        %each weight. On the right we have shown the accusation error as a
+        %function $\theta$ again with one line for each weight. We can see that
+        %as the threshold increases and we accuse more people of cheating the
+        %accusation error rises.}
+    %\label{fig:prediction_system_results_2}
+%\end{figure}
