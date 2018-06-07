@@ -44,7 +44,7 @@ def get_problems(macomreader, linereader, negative_chance=1.0):
     return problems
 
 
-def predict(macomreader, linereader, author_texts, non_author_text):
+def predict(model, macomreader, linereader, author_texts, non_author_text):
     unknown_text = macomreader.read_encoded_line(linereader, non_author_text)
     unknown_text = list(map(lambda x: add_dim_start(x), unknown_text))
     times = np.zeros((len(author_texts)), dtype=np.int)
@@ -61,13 +61,13 @@ def predict(macomreader, linereader, author_texts, non_author_text):
     return predictions, times, text_lengths
 
 
-def predict_all(macomreader, linereader, problems):
+def predict_all(model, macomreader, linereader, problems):
     results = []
 
     for idx, (unknown, knowns, label) in enumerate(problems):
         print(idx, len(problems), file=sys.stderr)
-        predictions, times, lengths = predict(macomreader, linereader, knowns,
-                                              unknown)
+        predictions, times, lengths = predict(model, macomreader, linereader,
+                                              knowns, unknown)
         results.append((predictions, times, lengths))
 
     return results
@@ -169,13 +169,13 @@ def binary_theta_search(weights, labels, results):
                    '{:^10.6f}{:^10.6f}' +
                    '{:^10}{:^10}{:^10}{:^10}{:^10}\033[0m').format(
                        lower_theta, limit_theta, new_theta, errors, acc, tns,
-                       fns, tps, fps, w))
+                       fns, tps, fps, str(w)))
             lower_theta = new_theta
         else:
             print(('{:^10.6f}{:^10.6f}{:^10.6f}{:^10.6f}{:^10.6f}' +
                    '{:^10}{:^10}{:^10}{:^10}{:^10}').format(
                        lower_theta, limit_theta, new_theta, errors, acc, tns,
-                       fns, tps, fps, w))
+                       fns, tps, fps, str(w)))
             limit_theta = new_theta
 
 
@@ -234,7 +234,7 @@ def main():
                 positive_n, negative_n),
             file=sys.stderr)
 
-        results = predict_all(reader, linereader, problems)
+        results = predict_all(model, reader, linereader, problems)
 
         generate_graphs(weights, labels, results)
         binary_theta_search(weights, labels, results)
