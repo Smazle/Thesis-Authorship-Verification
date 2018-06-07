@@ -99,8 +99,10 @@ def add_dim_start(array):
 
 def generate_graphs(weights, labels, results):
     thetas = np.linspace(0, 1, num=1000)
+    total = len(weights)
 
-    for weight in weights:
+    for idx, weight in enumerate(weights):
+        print('{}/{}'.format(idx, total))
         accuracies = []
         errors = []
         for theta in thetas:
