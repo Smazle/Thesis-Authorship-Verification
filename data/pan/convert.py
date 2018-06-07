@@ -6,7 +6,6 @@ import os
 import time
 import sys
 
-
 output = [['ID', 'Text']]
 
 if len(sys.argv) > 1:
@@ -28,9 +27,9 @@ for pan in os.listdir('.'):
                         txt = txt.replace(u'\ufeff', '')
 
                         if len(sys.argv) > 1:
-                            output.append([str(author),
-                                           time.strftime('%d-%m-%y'),
-                                           txt])
+                            output.append(
+                                [str(author),
+                                 time.strftime('%d-%m-%Y'), txt])
                         else:
                             output.append([str(author), txt])
 
@@ -39,8 +38,12 @@ for pan in os.listdir('.'):
 output = np.array(output)
 
 if len(sys.argv) > 1:
-    np.savetxt('formattedPanWithTime.csv', output,
-               delimiter=';', fmt='%s', encoding='utf8')
+    np.savetxt(
+        'formattedPanWithTime.csv',
+        output,
+        delimiter=';',
+        fmt='%s',
+        encoding='utf8')
 else:
-    np.savetxt('formattedPan.csv', output,
-               delimiter=';', fmt='%s', encoding='utf8')
+    np.savetxt(
+        'formattedPan.csv', output, delimiter=';', fmt='%s', encoding='utf8')
