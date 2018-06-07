@@ -912,9 +912,33 @@ at previous experiments made described in \ref{qian:2018}, which showed real
 promise in terms of authorship attribution, we considered this a
 natural extension of our convolutional approaches.
 Every \gls{RNN} experiment was performed on the same data
-as the convolutional ones, and the \textit{Embedding},
+as the convolutional networks, and the \textit{Embedding},
 \textit{Feature Extraction}, \textit{Combining} and \textit{Comparing}
 structure was used as for each of them too. 
+
+The first \gls{RNN}s made, was the first attempt at replicating the some of
+the final networks described by \ref{qian:2018}. The network would still only
+use 1 channel, the character channels. Instead of performing convolutions in
+the \textit{Feature Extraction} part of the network, we used a \gls{GRU} layer
+with 200 units instead. Additionally some comprehensive changed were made to
+both the \textit{Combining} and \textit{Comparing} part of the network, which
+made use of the cosine distance between the two texts, rather than the absolute
+difference between their features, which is the basis of many of the networks we
+produced. This idea of the cosine distance as the \textit{Comparing} part of the
+network, was attempted in later iterations as well, but never yielded very good
+results compared to the using of dense layers, which was the go to comparison
+approach from this point forward. 
+
+In addition to the lack of accuracy yielded
+by a distance measure, this network also revealed the gigantic computational
+requirements a \gls{RNN} needed, having epoch training times of over 40 hours.
+Time we simply didn't have.
+
+
+
+
+
+
 
 
 \subsection{Prediction System}
