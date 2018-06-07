@@ -19,7 +19,7 @@ purpose in our experimentation. The splitting of the data can be seen in Figure
         performed on the number of authors in each set. That means that all of
         an authors texts are contained in the same dataset. In particular that
         means that the test dataset contains completely unseen authors that has
-        not been used in any training/hyperparameter selection.}
+        not been used in any training/hyper-parameter selection.}
     \label{fig:data_split}
 \end{figure}
 
@@ -36,8 +36,7 @@ purpose in our experimentation. The splitting of the data can be seen in Figure
         Consisting of the texts written by 5.500 different authors, this set
         if used in the training process for the \gls{NN}s where it is used for
         training/validation and the prediction system. It is also used for the
-        baseline methods, where this entire set is used as the corpus, and
-        subsections of it is used feature selection and hyper parameter search.
+        baseline methods, where this entire set is used as the corpus.
 
     \item[- (C).]
 
@@ -77,14 +76,14 @@ purpose in our experimentation. The splitting of the data can be seen in Figure
     \item[- (I).]
 
         This is an alternate split of (B), used on the baseline methods together
-        with set (J). This set is used perform the feature selection needed
-        for both the SVM and the Extended Delta methods. The specifics of this
-        process will be described in Section \ref{subsec:baseline}.
+        with set (J). It is used perform the feature selection for both the SVM
+        and the Extended Delta method. The specifics of this process will be
+        described in Section \ref{subsec:baseline}.
 
     \item[- (J).]
 
         This set is used to tune the baseline methods. (J) is used to determine
-        the best hyper parameters for the base line methods. This would be K and
+        the best hyper-parameters for the baseline methods. This would be K and
         p in the case of the Extended Delta Method, and C and Gamma for the SVM.
         Like with (I), the specifics of this parameter selection will be covered
         in Section \ref{subsec:baseline}.
@@ -184,14 +183,19 @@ a batch one, we won't have the same problem.
 \end{figure}
 
 
-All of the neural networks we train are Siamese Neural Networks. They all
-work by comparing two texts at a time. We therefore had to generate problem
-instances that contained two texts from either the same or different authors and
-a class that reflected that. For each author $\alpha$ in the training dataset
-$G$ we generate all possible combinations of two of the texts in $T_\alpha$
-as positive samples. We also generate the same number of negative samples by
-taking a random text in $T_\alpha$ and a random text in $\overline{T_\alpha}$.
-That means that in total the number of problems we generate for each author
-is $2\frac{\left|T_\alpha\right|!}{2!(\left|T_\alpha\right|-2)!}$. The neural
+All of the neural networks we train are Siamese Neural Networks. They all work
+by comparing two texts at a time. We therefore had to generate problem instances
+that contained two texts from either the same or different authors and a class
+that reflected that. For each author $\alpha$ in the training dataset $G$ we
+generate all possible combinations of two of the texts in $T_\alpha$ as positive
+samples. We also generate the same number of negative samples by taking a random
+text in $T_\alpha$ and a random text in $\overline{T_\alpha}$. That means that
+in total the number of problems we generate for each author is
+
+\begin{align}
+2\frac{\left|T_\alpha\right|!}{2!(\left|T_\alpha\right|-2)!}$ &= \frac{|T_\alpha|!}{(|T_alpha| - 2)!}\\
+&== (|T_alpha| - 1) \cdot |T_alpha|. The neural
+\end{align}
+
 networks are trained on these problem instances. We generate problems in the
 same way for the network training validation dataset $H$.
