@@ -193,9 +193,10 @@ text in $T_\alpha$ and a random text in $\overline{T_\alpha}$. That means that
 in total the number of problems we generate for each author is
 
 \begin{align}
-2\frac{\left|T_\alpha\right|!}{2!(\left|T_\alpha\right|-2)!}$ &= \frac{|T_\alpha|!}{(|T_alpha| - 2)!}\\
-&== (|T_alpha| - 1) \cdot |T_alpha|. The neural
+2\frac{\left|T_\alpha\right|!}{2!(\left|T_\alpha\right|-2)!}
+&= \frac{\left|T_\alpha\right|!}{(\left|T_\alpha\right| - 2)!}\\
+&= (\left|T_\alpha\right| - 1) \cdot \left|T_\alpha\right|
 \end{align}
 
-networks are trained on these problem instances. We generate problems in the
+The neural networks are trained on these problem instances. We generate problems in the
 same way for the network training validation dataset $H$.
