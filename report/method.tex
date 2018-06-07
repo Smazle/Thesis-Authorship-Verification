@@ -1268,8 +1268,8 @@ mean an elementwise power.
             \mathbf{v}^{(t+1)} =
                 \gamma\mathbf{v}^{(t)} +
                 (1 - \gamma)\left(
-                    \Delta E|_{\mathbf{w}^{(t)}} \circ
-                    \Delta E|_{\mathbf{w}^{(t)}}
+                    \Delta E|_{\mathbf{w}^{(t + 1)}} \circ
+                    \Delta E|_{\mathbf{w}^{(t + 1)}}
                 \right).
         \end{equation}
 
@@ -1298,16 +1298,16 @@ mean an elementwise power.
         \begin{align}
             \mathbf{m}^{(t+1)} &=
                 \gamma_1\mathbf{m}^{(t)} +
-                (1 - \gamma_1) \Delta E|_{\mathbf{w}^{(t)}}, \\
+                (1 - \gamma_1) \Delta E|_{\mathbf{w}^{(t+1)}}, \\
             \mathbf{v}^{(t+1)} &=
                 \gamma_2\mathbf{v}^{(t)} +
-                (1 - \gamma_2) \Delta \left(
-                    E|_{\mathbf{w}^{(t)}} \circ E|_{\mathbf{w}^{(t)}}
+                (1 - \gamma_2) \left(
+                    \Delta E|_{\mathbf{w}^{(t+1)}} \circ \Delta E|_{\mathbf{w}^{(t+1)}}
                 \right), \\
             \mathbf{\hat{m}}^{(t+1)} &=
-                \frac{\mathbf{m}^{(t+1)}}{1 - \gamma_1^t}, \\
+                \frac{\mathbf{m}^{(t+1)}}{1 - \gamma_1^{t + 1}}, \\
             \mathbf{\hat{v}}^{(t+1)} &=
-                \frac{\mathbf{v}^{(t+1)}}{1 - \gamma_2^t}.
+                \frac{\mathbf{v}^{(t+1)}}{1 - \gamma_2^{t + 1}}.
         \end{align}
 
         The first two equations are very similar to Equation
@@ -1331,8 +1331,8 @@ mean an elementwise power.
         \begin{equation}
             \mathbf{w}^{(t + 1)} = \mathbf{w}^{(t)} -
                 \eta\frac
-                    {\mathbf{\hat{m}}^{(t)}}
-                    {\sqrt{\mathbf{\hat{v}}^{(t)}} + \epsilon}.
+                    {\mathbf{\hat{m}}^{(t+1)}}
+                    {\sqrt{\mathbf{\hat{v}}^{(t+1)}} + \epsilon}.
         \end{equation}
 
         \gls{Adam} prevents division by 0 via the $\epsilon$ parameter which is
@@ -1511,6 +1511,9 @@ assignments for different $\lambda$ values in Figure \ref{fig:weights}.
 \end{figure}
 
 % TODO: Define a weight function that also looks at the length of the texts.
+% TODO: Describe maximum weight function.
+% TODO: Describe minimum weight function.
+% TODO: Describe majority vote weight function.
 
 The $\theta$ parameter in the prediction system determines when we consider an
 unknown text to be written by an author. The natural choice for $\theta$ is 0.5
