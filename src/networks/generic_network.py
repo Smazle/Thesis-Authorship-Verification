@@ -172,6 +172,8 @@ if args.epochs != 0:
             CSVWriter(reader.generate_validation(), val_steps_n,
                     reader.generate_training(), steps_n, args.history,
                     args.weights is not None))
+else:
+    callbacks = []
 
 # If we are asked to visualize model, do so.
 if args.graph is not None:
