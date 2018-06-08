@@ -7,7 +7,13 @@ class WeightFunction:
     def __init__(self):
         pass
 
-    def get_weights(self, times, predictions, text_lenghts):
+    def predict(self, predictions, theta, times, text_lengths):
+        weights = self.get_weights(predictions, times, text_lengths)
+        prediction = np.average(predictions, weights=weights) > theta
+
+        return prediction
+
+    def get_weights(self, predictions, times, text_lenghts):
         raise Exception('Subclasses should implement this.')
 
 
@@ -17,7 +23,7 @@ class ExponentialNorm(WeightFunction):
         self.lamb = lamb
         self.SECS_PER_MONTH = 60 * 60 * 24 * 30
 
-    def get_weights(self, times, predictions, text_lengths):
+    def get_weights(self, predictions, times, text_lengths):
         assert times.shape == predictions.shape
         assert times.shape == text_lengths.shape
 
@@ -40,7 +46,7 @@ class MaximumWeight(WeightFunction):
     def __init__(self):
         pass
 
-    def get_weights(self, times, predictions, text_lengths):
+    def get_weights(self, predictions, times, text_lengths):
         assert times.shape == predictions.shape
         assert times.shape == text_lengths.shape
 
@@ -58,7 +64,7 @@ class MinimumWeight(WeightFunction):
     def __init__(self):
         pass
 
-    def get_weights(self, times, predictions, text_lengths):
+    def get_weights(self, predictions, times, text_lengths):
         assert times.shape == predictions.shape
         assert times.shape == text_lengths.shape
 
@@ -76,7 +82,7 @@ class TextLengthWeight(WeightFunction):
     def __init__():
         self.chars = 1000
 
-    def get_weights(self, times, predictions, text_lengths):
+    def get_weights(self, predictions, times, text_lengths):
         chunked = np.around(text_lengts / self.chars)
         return chunked / np.sum(chunked)
 
