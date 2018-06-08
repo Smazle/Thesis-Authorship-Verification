@@ -48,11 +48,14 @@ def model(reader, convolution_n=3, dense_n=4):
 
     for _ in range(convolution_n):
         char_conv8 = L.Convolution1D(
-            filters=200, kernel_size=8, strides=1, activation='relu', padding='same')
+            filters=200, kernel_size=8, strides=1, activation='relu',
+            padding='same')
         char_conv4 = L.Convolution1D(
-            filters=200, kernel_size=4, strides=1, activation='relu', padding='same')
+            filters=200, kernel_size=4, strides=1, activation='relu',
+            padding='same')
         word_conv8 = L.Convolution1D(
-            filters=100, kernel_size=8, strides=1, activation='relu', padding='same')
+            filters=100, kernel_size=8, strides=1, activation='relu',
+            padding='same')
 
         text_1_char_repr_8 = char_conv8(text_1_char_repr_8)
         text_1_char_repr_4 = char_conv4(text_1_char_repr_4)
