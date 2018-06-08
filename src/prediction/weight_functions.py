@@ -86,6 +86,24 @@ class TextLengthWeight(WeightFunction):
         chunked = np.around(text_lengts / self.chars)
         return chunked / np.sum(chunked)
 
+    def __str__(self):
+        return 'text-length'
+
+
+class MajorityVoteWeight(WeightFunction):
+
+    def __init__(self):
+        pass
+
+    def predict(self, predictions, theta, times, text_lengths):
+        above = np.count_nonzero(predictions > theta)
+        below = np.count_nonzero(predictions <= theta)
+
+        return above >= below
+
+    def __str__(self):
+        return 'majority-vote'
+
 
 def weight_factory(weight_type):
     if weight_type == 'exp-norm' or weight_type == 'exponential-norm':
@@ -94,5 +112,9 @@ def weight_factory(weight_type):
         return [MaximumWeight()]
     elif weight_type == 'min' or weight_type == 'minimum':
         return [MinimumWeight()]
+    elif weight_type == 'text':
+        return [TextLengthWeight()]
+    elif weight_type == 'majority-vote':
+        return [MajorityVoteWeight()]
     else:
         raise Exception('Unknown weight {}'.format(weight_type))

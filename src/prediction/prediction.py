@@ -197,7 +197,7 @@ def main():
         '--weights',
         nargs='+',
         help='Which weights to use.',
-        default=['exp-norm', 'maximum', 'minimum'])
+        default=['exp-norm', 'maximum', 'minimum', 'majority-vote'])
     parser.add_argument(
         '--negative-chance',
         help='The fraction of negative problems wanted.',
