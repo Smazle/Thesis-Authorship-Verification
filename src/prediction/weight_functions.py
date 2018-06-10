@@ -73,6 +73,12 @@ class MinimumWeight(WeightFunction):
 
         return weights
 
+    def predict(self, predictions, theta, times, text_lengths):
+        weights = get_weights(predictions, times, text_lengths)
+        weighted_average = np.average(predictions, weights=weights)
+
+        return weighted_average < theta
+
     def __str__(self):
         return 'minimum'
 
