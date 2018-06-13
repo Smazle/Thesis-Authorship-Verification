@@ -277,20 +277,47 @@ SVM Validation Accuracy:  0.684
 \end{verbatim}
 \end{center}
 
+
 \subsection{Deep Learning}
 
-The main attraction of our authorship verification task, is the implementation
-and testing of different \gls{NN}. In the following sections we will go through
-the different iterations of networks we have produced. A glossary of the
-different layers used can be seen in Figure \ref{glossary}. Throughout out
-experiments, we used a 0.5 threshold for classification.
+In the prediction system from Definition \ref{def:prediction_system} we needed a
+function $f$ that takes two texts and returns the probability that those texts
+are written by the same author. As described earlier Siamese Neural Networks are
+well suited for comparing objects. In this Section we describe the experiments
+we performed for designing the best $f$ possible.
+
+The data we trained our networks on is described in Section \ref{sec:data}. We
+trained the networks on the G dataset that contains 3000 authors. We used early
+stopping based on a validation dataset H that contains 500 authors. Through
+experimentation we found that the validation dataset had to contain completely
+different authors than the training dataset. In the beginning of our project we
+had a validation set that contained different problem instances (two texts to
+compare) from the training set but contained some of the same authors. That lead
+to the validation set not being a very good estimate of the networks performance
+on different authors than the ones seen during training. The networks were
+therefore overfitting on the specific authors and we could not see that in the
+validation datasets accuracy. All accuracy graphs shown in this Section are
+based on a validation dataset with 500 completely unseen authors.
+
+The general structure of our networks will be that they take two texts as input.
+The texts are first embedded into a format that can be used by the network.
+Then the texts are transformed into two sets of features representing the text
+via a weight sharing network. Then the text representation will be combined
+in some way and a dense network will take the combined representations and
+decide whether or not the texts are written by the same author. We call the
+different parts of the network \textit{Embedding}, \textit{Feature Extraction},
+\textit{Combining} and \textit{Decision}.
+
+When we show graphs of the networks we have produced we use specific names for
+different layers in the networks. A glossary of the layer names and paramters of
+the layers are shown in Table \ref{tab:glossary}.
 
 \begin{landscape}
     \begin{table}
         \centering
         \caption{Glossary used when performing experiments, and creating their
             associated models.\cite{chollet2015keras}}
-        \label{glossary}
+        \label{tab:glossary}
         \begin{tabular}{|L{3cm}|L{9cm}|L{11cm}|}
             \hline
             \multicolumn{1}{|c|}{\textbf{Layer}}                               &
@@ -413,34 +440,6 @@ experiments, we used a 0.5 threshold for classification.
 
 \subsubsection{Convolutional Siamese Neural Networks}
 \label{subsubsec:convolutional_siamese_neural_networks}
-
-In the prediction system \ref{def:prediction_system} we need a function $f$
-that takes two texts and returns the probability that those texts are written
-by the same author. As described earlier Siamese Neural Networks are well
-suited for comparing objects. Similarly as described earlier convolutional
-networks are well suited for text classification tasks. We therefore trained
-several different convolutional siamese neural networks to function as $f$.
-The data we trained our networks on is described in Section \ref{sec:data}. We
-trained the networks on the G dataset that contains 3000 authors. We used early
-stopping based on a validation dataset H that contains 500 authors. Through
-experimentation we found that the validation dataset had to contain completely
-different authors than the training dataset. In the beginning of our project we
-had a validation set that contained different problem instances (two texts to
-compare) from the training set but contained some of the same authors. That lead
-to the validation set not being a very good estimate of the networks performance
-on different authors than the ones seen during training. The networks were
-therefore overfitting on the specific authors and we could not see that in the
-validation datasets accuracy. All accuracy graphs shown in this Section are
-based on a validation dataset with 500 completely unseen authors.
-
-The general structure of our networks will be that they take two texts as input.
-The texts are first embedded into a format that can be used by the network. Then
-the texts are transformed into two sets of features representing the text via
-a weight sharing convolutional network. Then the text representation will be
-combined in some way and a dense network will take the combined representations
-and decide whether or not the texts are written by the same author. We call the
-different parts of the network \textit{Embedding}, \textit{Feature Extraction},
-\textit{Combining} and \textit{Decision}.
 
 The first convolutional neural networks we created extracted features from
 the character level of the texts. That means that the convolutions looked at
