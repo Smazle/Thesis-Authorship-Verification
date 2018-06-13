@@ -527,6 +527,22 @@ like "ould ". We have illustrated such a convolutional filter in Figure
 
 \end{description}
 
+We have shown an illustration of the network in Figure \ref{fig:conv-char-NN}.
+In the Figure we have illustrated the Siamese part of the network as a blue box.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{./pictures/experiments/network3.png}
+    \caption{The structure of network \gls{conv-char-NN}. Weights are
+        shared by the embedding layers and the convolutional layers as shown by
+        the blue box. The input to the network is at the top and the output is
+        at the bottom. Information flows downwards through the layers. The final
+        softmax layer produces a probability distribution over the two
+        possibilities that the texts are either written by the same author or
+        not.}
+    \label{fig:conv-char-NN}
+\end{figure}
+
 %As described our first network took as input two sequences of characters. Each
 %character was then one-hot encoded and as described in Section \ref{sec:data} we
 %ignored character with a frequency of less than $10^{-5}$. In the
