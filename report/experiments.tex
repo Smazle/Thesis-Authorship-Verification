@@ -1,4 +1,4 @@
-\section{Experiments} \label{sec:experiments}
+esection{Experiments} \label{sec:experiments}
 
 
 \subsection{Baseline Methods} \label{subsec:baseline}
@@ -37,16 +37,17 @@ basis for all the feature extraction, as was done in \cite{US} as well. This
 corpus consists of 22,476 sentences, and 563,358 words.
 
 The actual implementation of both the \gls{SVM} and the Extended Delta method,
-very closely resembles the implementation used in \cite{US}. There is however
-a very big difference, with the actual application of the delta method.
-Contrary to the scenario in \cite{US}, where PAN data was used, there isn't an
-instance where we only have 1 text per author. As such the original version
-of the delta method can be used. This is where, when given a new text $x$
-supposedly written by an author $\alpha \in \mathcal{A}$, his texts $T_\alpha$
-are extracted, and so is a set of texts no written by him $\overline{T}_alpha$
-where $|\overline{T}_\alpha| = |T_\alpha|$. The text, along with a negative
-sample text $z$, we know now to be written by $\alpha$ is given to a \gls{KNN}
-classifier, which determine if $x \in T_\alpha$ and $z \in \overline{T}_\alpha$.
+very closely resembles the implementation used in \cite{US}. There is however a
+very big difference, with the actual application of the delta method. Contrary
+to the scenario in \cite{US}, where PAN data was used, there isn't an instance
+where we only have 1 text per author. As such the original version of the
+delta method can be used.\cite{evert2015towards} This is where, when given a
+new text $x$ supposedly written by an author $\alpha \in \mathcal{A}$, his
+texts $T_\alpha$ are extracted, and so is a set of texts no written by him
+$\overline{T}_\alpha$ where $|\overline{T}_\alpha| = |T_\alpha|$. The text,
+along with a negative sample text $z$, we know now to be written by $\alpha$ is
+given to a \gls{KNN} classifier, which determine if $x \in T_\alpha$ and $z \in
+\overline{T}_\alpha$.
 
 \subsubsection{Feature Selection}
 
@@ -1012,36 +1013,34 @@ very good, all lying around the 50\% accuracy mark, which of course for a 50/50
 data set, is the worst accuracy possible. Even switching out the \gls{GRU} with
 and \gls{LSTM} layer, didn't do the networks any favors.
 
-At this point we deem deem \gls{RNN}s feasible at the current linguistic
-level. This we move the level up, creating networks that based themselves on
-the sentence level of the provided texts. The best performing \gls{RNN}, among
+At this point we deem \gls{RNN}s feasible at the current linguistic level.
+This we move the level up, creating networks that based themselves on the
+sentence level of the provided texts. The best performing \gls{RNN}, among
 other changes, made use of this sentence level approach. The overall design of
-this network can be seen in Figure [TODO]. Each text provided to the network
-is represented as a sequence of sequences. Each element in the outer sequence
-is considered a sentence, which is represented by a sequence of 25 words from
-the provided text. As such, the text is represented a sequence its the words
-from the texts, split into chunks of 25 words piece. It in this state, we
-provide the text to the first part of the network, the \textit{Embedding}.
-At this stage we parse all the words of each sentence through an embedding
-layer. In the earlier iterations of both the \gls{RNN} and the convolutions,
-these were trained along with the entire network. But as computation
-time/accuracy become increasingly a concern, we opted for pre-trained embeddings
-\footnote{\url{https://github.com/facebookresearch/fastText/blob/master/pretrain
-ed-vectors.md}}\cite{bojanowski2016}. These pre-trained embeddings mapped each
-word into a vector of length 300. As expected this did in fact improve on the
-computation time, and it did so without harming the validation accuracy. With
-each word embedded, we took the average of each 25 word sequence which now
-serves at the representation of the sentence the words were assigned before. Now
-having each sentence represented, we proceed to the next part, \textit{Feature
-Extraction}. For our best \gls{RNN}s, this process consisted of using simply
-using a bidirectional \gls{LSTM} layer. Like in the convolutions the absolute
-difference between these two feature-sets would be computes, and in this case be
-provided directly to the dense output layer. This bidirectional layer, consisted
-of 50 neurons, thus ending up with a total of 100 output. The \gls{LSTM}
-layer makes use of the default parameters as well. This being using the Tanh
-activation function, seen in Equation \eqref{eq:tanh}, when finished, and the
-Hard Sigmoid activation function, seen in Equation \eqref{eq:h_sig}, at each
-recurrent step.
+this network can be seen in Figure [TODO]. Each text provided to the network is
+represented as a sequence of sequences. Each element in the outer sequence is
+considered a sentence, which is represented by a sequence of 25 words from the
+provided text. As such, the text is represented a sequence its the words from
+the texts, split into chunks of 25 words piece. It in this state, we provide the
+text to the first part of the network, the \textit{Embedding}. At this stage we
+parse all the words of each sentence through an embedding layer. In the earlier
+iterations of both the \gls{RNN} and the convolutions, these were trained along
+with the entire network. But as computation time/accuracy become increasingly
+a concern, we opted for pre-trained embeddings \cite{bojanowski2016}. These
+pre-trained embeddings mapped each word into a vector of length 300. As expected
+this did in fact improve on the computation time, and it did so without harming
+the validation accuracy. With each word embedded, we took the average of each 25
+word sequence which now serves at the representation of the sentence the words
+were assigned before. Now having each sentence represented, we proceed to the
+next part, \textit{Feature Extraction}. For our best \gls{RNN}s, this process
+consisted of using simply using a bidirectional \gls{LSTM} layer. Like in the
+convolutions the absolute difference between these two feature-sets would be
+computes, and in this case be provided directly to the dense output layer. This
+bidirectional layer, consisted of 50 neurons, thus ending up with a total of
+100 output. The \gls{LSTM} layer makes use of the default parameters as well.
+This being using the Tanh activation function, seen in Equation \eqref{eq:tanh},
+when finished, and the Hard Sigmoid activation function, seen in Equation
+\eqref{eq:h_sig}, at each recurrent step.
 
 \begin{equation}\label{eq:tanh}
 h(x) = \tanh(x) = \frac{(e^x - e^{-x})}{(e^x + e^{-x})}
