@@ -195,18 +195,18 @@ paper.\cite{DBLP:journals/corr/Schmidhuber14}
 
 \gls{NN}'s have been around since the 1940's. However, back then they
 were merely variations of the linear regressors used at the time, and
-wasn't very reminiscent of the Networks on can see today. It wasn't until
+was not very reminiscent of the Networks on can see today. It was not until
 the late 1960's, early 70's, that networks comparable to the more modern
 approaches surfaced. Examples of such early works, are the two publications
 \cite{ivakhnenko1973cybernetic} and \cite{4308320}, which describe multi-layered
 feed-forward supervised neural network architectures. While the work described
 in \cite{4308320} was indeed one of the first cases of the modern \gls{NN},
 actually getting the network to learn was still a problem, as the tweaking of
-individual weights attributed to each neuron in the network wasn't trivial.
+individual weights attributed to each neuron in the network was not trivial.
 Little did they know, research to solve that problem was already in progress.
 The basics of continuous \gls{BP} was initially described in 1960, in
 \cite{Kelley1960}, quickly followed by a simpler approach which used only the
-chain rule in 1962, \cite{DREYFUS196230}. It wasn't until 1970 that the modern
+chain rule in 1962, \cite{DREYFUS196230}. It was not until 1970 that the modern
 version of \gls{BP} was described, using automatic differentiation as its
 basis. With this, the increase in research of usages of \gls{BP} increased the
 following decades. As the computational power increased several 1000 folds in
@@ -297,7 +297,7 @@ activation function for your neurons, the best function would be the one which
 best approximates the underlying function. Without a good idea as to what
 that function might be, \gls{ReLu} is a good starting point. Its simplicity
 provides a quick computation time, and its below zero limitation means that a
-large portion of the network won't be activating, resulting in an even smaller
+large portion of the network will not be activating, resulting in an even smaller
 computation time. In addition to that, the derivative of the function is 1
 in the case of a positive input, resulting in the \gls{BP} loss having equal
 influence throughout the network. In the case of other activation functions,
@@ -305,7 +305,7 @@ this might not be the case, resulting in an altering of the error as we
 propagate backwards through the network. This could lead to a big error in the
 deeper layers not reaching the shallow layers of the network. This property of
 the \gls{ReLu} activation function, does however not come without its costs.
-If the learning rate of the network isn't configured correctly, a \gls{ReLu}
+If the learning rate of the network is not configured correctly, a \gls{ReLu}
 activated neuron might be blasted with a gradient so large, that it never
 reaches a point of activation again. In other words, the neuron "dies". As such,
 one can risk a network containing a lot of dead non-activation neurons, thus

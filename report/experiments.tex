@@ -103,9 +103,9 @@ would not contribute anything. \gls{POS}-tag-N-grams were a really big burden
 computationally, as such a reduction in possible N-values, had to be made.
 
 These features were extracted from the same data-set described earlier in
-Section \ref{sec:data}. However it wasn't beholden to the same exact limits to
+Section \ref{sec:data}. However it was not beholden to the same exact limits to
 character and unique characters. In the case of the upper limit the lack of
-memory wasn't nearly as severe as in the case of our \gls{NN}s. As for the lower
+memory was not nearly as severe as in the case of our \gls{NN}s. As for the lower
 limit, and natural boundary would occur throughout the extraction process.
 If a file did not have 500 unique words for example, the extraction
 of the 500 most frequent words would cause an error, resulting in that
@@ -117,7 +117,7 @@ amount of texts compared to the test.
 
 Having the features, we could start doing our feature selection. This whole
 process proved very expensive computationally. Having to check every combination
-of 5000 features, simply wasn't feasible. It was for that reason we opted for a
+of 5000 features, simply was not feasible. It was for that reason we opted for a
 greedy algorithm instead.
 
 Before starting any kind of feature selection or hyper-parameter tuning,
@@ -999,13 +999,13 @@ such the experiment from this point on focused mostly on increasing decreasing
 computation time on an \gls{RNN} which made use of denser layers in the
 \textit{Comparing} part of the network. This attempted decrease in computation
 time took many forms. After some minor attempts relating to the number of units
-in our recurrent layer, we concluded that the assailant wasn't the number of
+in our recurrent layer, we concluded that the assailant was not the number of
 units, but the amount of data used provided to the \textit{Feature Extraction}
 part of the network. For that reason convolutional layers and max pooling layers
 were included before the \gls{RNN} in the \textit{Feature Extraction} part of
 the network. The purpose of this was to reduce the amount of data given to the
 \gls{RNN} layers, with the potential additional up-side that the convolutions
-would uncover something the \gls{RNN} couldn't, such as was done in several
+would uncover something the \gls{RNN} could not, such as was done in several
 of our previous convolutional networks. This largely reduced amount of data
 expectedly decreased the amount of time needed for one epoch, from days down to
 hours. The accuracies of these convolution, \gls{RNN} hybrids were however not
