@@ -76,8 +76,7 @@ def predict_all(model, macomreader, linereader, problems):
 def evaluate(labels, results, w, theta):
     tps, tns, fps, fns = 0, 0, 0, 0
     for label, (predictions, times, text_lengths) in zip(labels, results):
-        weights = w.get_weights(times, predictions, text_lengths)
-        prediction = np.average(predictions, weights=weights) > theta
+        prediction = w.predict(predictions, theta, times, text_lengths)
 
         if prediction == label and label == True:  # noqa
             tps = tps + 1
@@ -198,7 +197,7 @@ def main():
         '--weights',
         nargs='+',
         help='Which weights to use.',
-        default=['exp-norm', 'maximum', 'minimum'])
+        default=['exp-norm', 'maximum', 'minimum', 'majority-vote', 'text'])
     parser.add_argument(
         '--negative-chance',
         help='The fraction of negative problems wanted.',

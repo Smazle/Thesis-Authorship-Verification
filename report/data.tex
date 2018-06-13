@@ -183,20 +183,15 @@ a batch one, we won't have the same problem.
 \end{figure}
 
 
-All of the neural networks we train are Siamese Neural Networks. They all work
-by comparing two texts at a time. We therefore had to generate problem instances
-that contained two texts from either the same or different authors and a class
-that reflected that. For each author $\alpha$ in the training dataset $G$ we
-generate all possible combinations of two of the texts in $T_\alpha$ as positive
-samples. We also generate the same number of negative samples by taking a random
-text in $T_\alpha$ and a random text in $\overline{T_\alpha}$. That means that
-in total the number of problems we generate for each author is
-
-\begin{align}
-2\frac{\left|T_\alpha\right|!}{2!(\left|T_\alpha\right|-2)!}
-&= \frac{\left|T_\alpha\right|!}{(\left|T_\alpha\right| - 2)!}\\
-&= (\left|T_\alpha\right| - 1) \cdot \left|T_\alpha\right|
-\end{align}
-
-The neural networks are trained on these problem instances. We generate problems in the
+All of the neural networks we train are Siamese Neural Networks. They all
+work by comparing two texts at a time. We therefore had to generate problem
+instances that contained two texts from either the same or different authors and
+a class that reflected that. For each author $\alpha$ in the training dataset
+$G$ we generate all possible combinations of two of the texts in $T_\alpha$
+as positive samples. We also generate the same number of negative samples by
+taking a random text in $T_\alpha$ and a random text in $\overline{T_\alpha}$.
+That means that in total the number of problems we generate for each author
+is $ 2\frac{\left|T_\alpha\right|!}{2!(\left|T_\alpha\right|-2)!} = 2 \cdot
+(\left|T_\alpha\right| - 0) \cdot (\left|T_\alpha\right| - 1) $. The neural
+networks are trained on these problem instances. We generate problems in the
 same way for the network training validation dataset $H$.
