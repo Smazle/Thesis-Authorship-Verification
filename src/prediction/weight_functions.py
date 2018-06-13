@@ -2,8 +2,8 @@
 
 import numpy as np
 
-class WeightFunction:
 
+class WeightFunction:
     def __init__(self):
         pass
 
@@ -18,7 +18,6 @@ class WeightFunction:
 
 
 class ExponentialNorm(WeightFunction):
-
     def __init__(self, lamb):
         self.lamb = lamb
         self.SECS_PER_MONTH = 60 * 60 * 24 * 30
@@ -38,11 +37,10 @@ class ExponentialNorm(WeightFunction):
         return xs / np.sum(xs)
 
     def __str__(self):
-        return 'exp-norm {}'.format(self.lamb)
+        return r'Exp, $\lambda$ = {}'.format(self.lamb)
 
 
 class MaximumWeight(WeightFunction):
-
     def __init__(self):
         pass
 
@@ -56,11 +54,10 @@ class MaximumWeight(WeightFunction):
         return weights
 
     def __str__(self):
-        return 'maximum'
+        return 'Maximum'
 
 
 class MinimumWeight(WeightFunction):
-
     def __init__(self):
         pass
 
@@ -74,30 +71,28 @@ class MinimumWeight(WeightFunction):
         return weights
 
     def predict(self, predictions, theta, times, text_lengths):
-        weights = get_weights(predictions, times, text_lengths)
+        weights = self.get_weights(predictions, times, text_lengths)
         weighted_average = np.average(predictions, weights=weights)
 
         return weighted_average < theta
 
     def __str__(self):
-        return 'minimum'
+        return 'Minimum'
 
 
 class TextLengthWeight(WeightFunction):
-
-    def __init__():
+    def __init__(self):
         self.chars = 1000
 
     def get_weights(self, predictions, times, text_lengths):
-        chunked = np.around(text_lengts / self.chars)
+        chunked = np.around(text_lengths / self.chars) + 1
         return chunked / np.sum(chunked)
 
     def __str__(self):
-        return 'text-length'
+        return 'Text Length'
 
 
 class MajorityVoteWeight(WeightFunction):
-
     def __init__(self):
         pass
 
@@ -108,7 +103,7 @@ class MajorityVoteWeight(WeightFunction):
         return above >= below
 
     def __str__(self):
-        return 'majority-vote'
+        return 'Majority Vote'
 
 
 def weight_factory(weight_type):
