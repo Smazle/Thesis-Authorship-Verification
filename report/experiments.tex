@@ -1,4 +1,4 @@
-esection{Experiments} \label{sec:experiments}
+\section{Experiments} \label{sec:experiments}
 
 
 \subsection{Baseline Methods} \label{subsec:baseline}
@@ -209,13 +209,13 @@ parameter values:
 \end{align}
 
 The one parameter yet to be explained i $p$, which refers to the p in the
-minkowski distance.
+minkowski distance,
 
-$$
-D(X,Y) = \left(\sum_{i = 1}^n |x_i - y_i|^p\right)^{1/p}
-$$
+\begin{equation}
+    D(X,Y) = \left(\sum_{i = 1}^n |x_i - y_i|^p\right)^{1/p},
+\end{equation}
 
-Where $p=1$ and $p=2$ is the manhattan and eucledian distance respective.
+where $p=1$ and $p=2$ is the manhattan and eucledian distance respectively.
 
 We perform a grid search over all these parameters. For each variation of the
 hyper parameters we average the performance of the method over all unique
@@ -227,41 +227,41 @@ in Table \ref{sec:ed_feat} for \gls{KNN}, and Table \ref{sec:svm_feat} for
 \gls{SVM}.
 
 \begin{table}[h]
-\centering
-\caption{The results from performing a grid search of the p and K parameter
-of the \gls{KNN} algorithm}
-\label{table:KNN}
-\begin{tabular}{|c|ccccc|}
-\hline
-\backslashbox{$K$}{$p$}  & 1     & 2     & 3     & 4     & 5     \\\hline
-1  & \textbf{0.647} & 0.622 & 0.608 & 0.593 & 0.591 \\
-3  & 0.646 & 0.617 & 0.598 & 0.586 & 0.580 \\
-5  & 0.640 & 0.603 & 0.586 & 0.572 & 0.565 \\
-7  & 0.627 & 0.593 & 0.571 & 0.561 & 0.554 \\
-9  & 0.620 & 0.581 & 0.562 & 0.550 & 0.543 \\
-11 & 0.608 & 0.566 & 0.549 & 0.541 & 0.535 \\
-13 & 0.598 & 0.558 & 0.539 & 0.533 & 0.529 \\
-15 & 0.590 & 0.546 & 0.536 & 0.527 & 0.522 \\\hline
-\end{tabular}
+    \centering
+    \caption{The results from performing a grid search of the p and K parameter
+        of the \gls{KNN} algorithm}
+    \label{table:KNN}
+    \begin{tabular}{|c|ccccc|}
+        \hline
+        \backslashbox{$K$}{$p$} & 1 & 2 & 3 & 4 & 5 \\\hline
+        1 & \textbf{0.647} & 0.622 & 0.608 & 0.593 & 0.591 \\
+        3 & 0.646 & 0.617 & 0.598 & 0.586 & 0.580 \\
+        5 & 0.640 & 0.603 & 0.586 & 0.572 & 0.565 \\
+        7 & 0.627 & 0.593 & 0.571 & 0.561 & 0.554 \\
+        9 & 0.620 & 0.581 & 0.562 & 0.550 & 0.543 \\
+        11 & 0.608 & 0.566 & 0.549 & 0.541 & 0.535 \\
+        13 & 0.598 & 0.558 & 0.539 & 0.533 & 0.529 \\
+        15 & 0.590 & 0.546 & 0.536 & 0.527 & 0.522 \\\hline
+    \end{tabular}
 \end{table}
 
 \begin{table}[h]
-\centering
-\caption{The results from performing a grid search for C and gamma, of the
-\gls{SVM} algorithm}
-\label{table:SVM}
-\begin{tabular}{|c|cccccc|}
-\hline
-\backslashbox{$C$}{gamma}  & $10^{-3}$ & $10^{-1}$ & $10^{1}$ & $10^{3}$ & $10^{5}$       & $10^{7}$ \\\hline
-$10^{-16}$ & 0.592     & 0.592     & 0.592    & 0.593    & 0.648          & 0.621    \\
-$10^{-14}$ & 0.592     & 0.592     & 0.592    & 0.630    & \textbf{0.679} & 0.601    \\
-$10^{-12}$ & 0.592     & 0.592     & 0.628    & 0.631    & 0.678          & 0.591    \\
-$10^{-10}$ & 0.592     & 0.629     & 0.629    & 0.631    & 0.678          & 0.585    \\
-$10^{-8}$  & 0.589     & 0.629     & 0.629    & 0.631    & 0.678          & 0.581    \\
-$10^{-6}$  & 0.587     & 0.629     & 0.629    & 0.631    & 0.678          & 0.576    \\
-$10^{-4}$  & 0.587     & 0.629     & 0.629    & 0.631    & 0.678          & 0.573    \\
-$10^{-2}$  & 0.587     & 0.629     & 0.629    & 0.631    & 0.678          & 0.568   \\\hline
-\end{tabular}
+    \centering
+    \caption{The results from performing a grid search for C and gamma, of the
+        \gls{SVM} algorithm}
+    \label{table:SVM}
+    \begin{tabular}{|c|cccccc|}
+        \hline
+        \backslashbox{$C$}{gamma} & $10^{-3}$ & $10^{-1}$ & $10^{1}$ & $10^{3}$ & $10^{5}$ & $10^{7}$ \\\hline
+        $10^{-16}$ & 0.592     & 0.592     & 0.592    & 0.593    & 0.648          & 0.621    \\
+        $10^{-14}$ & 0.592     & 0.592     & 0.592    & 0.630    & \textbf{0.679} & 0.601    \\
+        $10^{-12}$ & 0.592     & 0.592     & 0.628    & 0.631    & 0.678          & 0.591    \\
+        $10^{-10}$ & 0.592     & 0.629     & 0.629    & 0.631    & 0.678          & 0.585    \\
+        $10^{-8}$  & 0.589     & 0.629     & 0.629    & 0.631    & 0.678          & 0.581    \\
+        $10^{-6}$  & 0.587     & 0.629     & 0.629    & 0.631    & 0.678          & 0.576    \\
+        $10^{-4}$  & 0.587     & 0.629     & 0.629    & 0.631    & 0.678          & 0.573    \\
+        $10^{-2}$  & 0.587     & 0.629     & 0.629    & 0.631    & 0.678          & 0.568   \\\hline
+    \end{tabular}
 \end{table}
 
 It is at this point we grab the 20\% of we set aside at the start of our
@@ -277,20 +277,51 @@ SVM Validation Accuracy:  0.684
 \end{verbatim}
 \end{center}
 
+
 \subsection{Deep Learning}
 
-The main attraction of our authorship verification task, is the implementation
-and testing of different \gls{NN}. In the following sections we will go through
-the different iterations of networks we have produced. A glossary of the
-different layers used can be seen in Figure \ref{glossary}. Throughout out
-experiments, we used a 0.5 threshold for classification.
+In the prediction system from Definition \ref{def:prediction_system} we needed
+a function $f$ that takes two texts and returns the probability that those
+texts are written by the same author. As described earlier Siamese Neural
+Networks are well suited for comparing objects. In this Section we describe
+the experiments we performed with different networks architectures and we
+will present three different networks. The three networks are \gls{conv-char-NN}
+in Section \ref{subsubsec:conv_char_nn}, \gls{conv-char-word-NN} in Section
+\ref{subsubsec:conv_char_word_nn}, and \gls{rec-sent-NN} in Section
+\ref{subsubsec:rec_sent_nn}.
+
+The data we trained our networks on is described in Section \ref{sec:data}. We
+trained the networks on the G dataset that contains 3000 authors. We used early
+stopping based on a validation dataset H that contains 500 authors. Through
+experimentation we found that the validation dataset had to contain completely
+different authors than the training dataset. In the beginning of our project we
+had a validation set that contained different problem instances (two texts to
+compare) from the training set but contained some of the same authors. That lead
+to the validation set not being a very good estimate of the networks performance
+on different authors than the ones seen during training. The networks were
+therefore overfitting on the specific authors and we could not see that in the
+validation datasets accuracy. All accuracy graphs shown in this Section are
+based on a validation dataset with 500 completely unseen authors.
+
+The general structure of our networks will be that they take two texts as input.
+The texts are first embedded into a format that can be used by the network.
+Then the texts are transformed into two sets of features representing the text
+via a weight sharing network. Then the text representation will be combined
+in some way and a dense network will take the combined representations and
+decide whether or not the texts are written by the same author. We call the
+different parts of the network \textit{Embedding}, \textit{Feature Extraction},
+\textit{Combining} and \textit{Decision}.
+
+When we show graphs of the networks we have produced we use specific names for
+different layers in the networks. A glossary of the layer names and paramters of
+the layers are shown in Table \ref{tab:glossary}.
 
 \begin{landscape}
     \begin{table}
         \centering
         \caption{Glossary used when performing experiments, and creating their
             associated models.\cite{chollet2015keras}}
-        \label{glossary}
+        \label{tab:glossary}
         \begin{tabular}{|L{3cm}|L{9cm}|L{11cm}|}
             \hline
             \multicolumn{1}{|c|}{\textbf{Layer}}                               &
@@ -411,36 +442,8 @@ experiments, we used a 0.5 threshold for classification.
 \end{landscape}
 
 
-\subsubsection{Convolutional Siamese Neural Networks}
-\label{subsubsec:convolutional_siamese_neural_networks}
-
-In the prediction system \ref{def:prediction_system} we need a function $f$
-that takes two texts and returns the probability that those texts are written
-by the same author. As described earlier Siamese Neural Networks are well
-suited for comparing objects. Similarly as described earlier convolutional
-networks are well suited for text classification tasks. We therefore trained
-several different convolutional siamese neural networks to function as $f$.
-The data we trained our networks on is described in Section \ref{sec:data}. We
-trained the networks on the G dataset that contains 3000 authors. We used early
-stopping based on a validation dataset H that contains 500 authors. Through
-experimentation we found that the validation dataset had to contain completely
-different authors than the training dataset. In the beginning of our project we
-had a validation set that contained different problem instances (two texts to
-compare) from the training set but contained some of the same authors. That lead
-to the validation set not being a very good estimate of the networks performance
-on different authors than the ones seen during training. The networks were
-therefore overfitting on the specific authors and we could not see that in the
-validation datasets accuracy. All accuracy graphs shown in this Section are
-based on a validation dataset with 500 completely unseen authors.
-
-The general structure of our networks will be that they take two texts as input.
-The texts are first embedded into a format that can be used by the network. Then
-the texts are transformed into two sets of features representing the text via
-a weight sharing convolutional network. Then the text representation will be
-combined in some way and a dense network will take the combined representations
-and decide whether or not the texts are written by the same author. We call the
-different parts of the network \textit{Embedding}, \textit{Feature Extraction},
-\textit{Combining} and \textit{Decision}.
+\subsubsection{\glsdesc{conv-char-NN}}
+\label{subsubsec:conv_char_nn}
 
 The first convolutional neural networks we created extracted features from
 the character level of the texts. That means that the convolutions looked at
@@ -507,6 +510,9 @@ When we trained the network it quickly overfitted on the training dataset but
 otherwise it seemed to work fine. We therefore wanted to try to extend the
 network and add some dropout.
 
+
+\subsubsection{\glsdesc{conv-char-word-NN}}
+\label{subsubsec:conv_char_word_nn}
 
 %\subsubsection{Siamese Neural Network - Iteration 1}
 
@@ -963,8 +969,8 @@ network and add some dropout.
 %each. After that we had 30\% dropout and a softmax layer as usual.
 
 
-
-\subsubsection{Recurrent Siamese Neural Networks}
+\subsubsection{\glsdesc{rec-sent-NN}}
+\label{subsubsec:rec_sent_nn}
 
 After having attempted some convolutional approaches, as was just described,
 we proceeded with some recurrent experiments as well. After having looked at

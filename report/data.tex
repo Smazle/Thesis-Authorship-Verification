@@ -167,21 +167,20 @@ applying the methods on a students assignment in a singular fashion rather than
 a batch one, we will not have the same problem.
 
 \begin{figure}[htb]
-\begin{minipage}{.5\linewidth}
-\centering
-\subfloat[]{\label{main:a}\includegraphics[scale=.5]{./pictures/data/Frequencies.png}}
-\end{minipage}%
-\begin{minipage}{.5\linewidth}
-\centering
-\subfloat[]{\label{main:b}\includegraphics[scale=.5]{./pictures/data/SentenceCount.png}}
-\end{minipage}\par\medskip
-\centering
-\subfloat[]{\label{main:c}\includegraphics[scale=.5]{./pictures/data/CharacterCount.png}}
+    \begin{minipage}{.5\linewidth}
+        \centering
+        \subfloat[]{\label{main:a}\includegraphics[scale=.5]{./pictures/data/Frequencies.png}}
+    \end{minipage}%
+    \begin{minipage}{.5\linewidth}
+        \centering
+        \subfloat[]{\label{main:b}\includegraphics[scale=.5]{./pictures/data/SentenceCount.png}}
+    \end{minipage}\par\medskip
+    \centering
+    \subfloat[]{\label{main:c}\includegraphics[scale=.5]{./pictures/data/CharacterCount.png}}
 
-\caption{The different levels of thresholding applied to the data before used.}
-\label{fig:character_frequencies}
+    \caption{The different thresholds applied to the during preprocessing.}
+    \label{fig:character_frequencies}
 \end{figure}
-
 
 All of the neural networks we train are Siamese Neural Networks. They all
 work by comparing two texts at a time. We therefore had to generate problem
