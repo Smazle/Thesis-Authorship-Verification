@@ -39,7 +39,7 @@ corpus consists of 22,476 sentences, and 563,358 words.
 The actual implementation of both the \gls{SVM} and the Extended Delta method,
 very closely resembles the implementation used in \cite{US}. There is however a
 very big difference, with the actual application of the delta method. Contrary
-to the scenario in \cite{US}, where PAN data was used, there isn't an instance
+to the scenario in \cite{US}, where PAN data was used, there is not an instance
 where we only have 1 text per author. As such the original version of the
 delta method can be used.\cite{evert2015towards} This is where, when given a
 new text $x$ supposedly written by an author $\alpha \in \mathcal{A}$, his
@@ -99,25 +99,25 @@ the way to 10 in the case of char-N-grams . Looking at the results
 from \cite{US}, Word-N-grams mostly stopped occurring in texts when getting
 to 4-grams, when looking at the result from \cite{US}. A similar thing
 could be seen with the special-character-N-grams, where an increase in N,
-wouldn't contribute anything. \gls{POS}-tag-N-grams were a really big burden
+would not contribute anything. \gls{POS}-tag-N-grams were a really big burden
 computationally, as such a reduction in possible N-values, had to be made.
 
 These features were extracted from the same data-set described earlier in
-Section \ref{sec:data}. However it wasn't beholden to the same exact limits to
+Section \ref{sec:data}. However it was not beholden to the same exact limits to
 character and unique characters. In the case of the upper limit the lack of
-memory wasn't nearly as severe as in the case of our \gls{NN}s. As for the lower
+memory was not nearly as severe as in the case of our \gls{NN}s. As for the lower
 limit, and natural boundary would occur throughout the extraction process.
 If a file did not have 500 unique words for example, the extraction
 of the 500 most frequent words would cause an error, resulting in that
 text being ignored.
-The distribution of the texts over authors in this data-set isn't
+The distribution of the texts over authors in this data-set is not
 very evenly spread. As such, the random selection of random opposing
 authors has a certain amount of bias towards the authors with a large
 amount of texts compared to the test.
 
 Having the features, we could start doing our feature selection. This whole
 process proved very expensive computationally. Having to check every combination
-of 5000 features, simply wasn't feasible. It was for that reason we opted for a
+of 5000 features, simply was not feasible. It was for that reason we opted for a
 greedy algorithm instead.
 
 Before starting any kind of feature selection or hyper-parameter tuning,
@@ -159,7 +159,7 @@ chance that a fold contains two value of the same class, which means that if $K
 = 3$ in our case, both of those wont ever be able to classified correctly as
 there is only 1 of that class in the training set. As such, stratified K fold
 cross validation is used instead, as it uphold the class distribution in its'
-folds. While this problem wouldn't plague the SVM classifier, we also opted
+folds. While this problem would not plague the SVM classifier, we also opted
 the stratified K fold cross, so we would more directly compare the feature selection
 of the two models.
 
@@ -654,7 +654,7 @@ network and add some dropout.
 %\subsubsection{Siamese Neural Network - Iteration 3}
 
 %In iteration 2 we observed that the network seemed to learn everything in the
-%first epoch and didn't improve much after that. We also observed that the
+%first epoch and did not improve much after that. We also observed that the
 %accuracy improved compared to the first network. We therefore wanted to try a
 %larger network which would be able to hopefully learn more and obtain a higher
 %accuracy than our first two networks.
@@ -783,15 +783,15 @@ network and add some dropout.
 %authors use the phrase "s\aa\ at" (such that). Inexperienced Danish writers will
 %often use the phrase which is considered grammatically incorrect in most Danish
 %sentences. Therefore the network seems to have learned that some writers use
-%"s\aa\ at" while others don't and that it is an important phrase when verifying
+%"s\aa\ at" while others do not and that it is an important phrase when verifying
 %authorship. The second figure seems to look at whether or not an authors uses
 %the phrase "meget" (most). Some authors apparently often describe things using
 %"meget" while others do not. The third figure shows that the network looks at
 %which authors use the phrase "at de" or "at der" ("that they" or "that there").
 %The fourth filter is the one that seems to look at which class a student is in.
 %In our constructed dataset the class of a student will always be a good feature
-%since we don't have any actual ghost writers. However a ghost writer would write
-%the correct class of the student on their submission. Therefore we don't want
+%since we do not have any actual ghost writers. However a ghost writer would write
+%the correct class of the student on their submission. Therefore we do not want
 %the network to learn that particular feature.
 
 %Our main problem is that the networks keep using metadata from the texts to
@@ -928,7 +928,7 @@ network and add some dropout.
 %\subsubsection{Siamese Neural Network - Iteration 7}
 
 %Since the overall performance and runtime of our network described in iterations
-%5 didn't perform very well, we chose a other route in terms of the \gls{RNN}'s.
+%5 did not perform very well, we chose a other route in terms of the \gls{RNN}'s.
 %Using the approaches described in \cite{qian:2018} with some minor changes. A
 %keras generated model can be seen in Figure \ref{fig:r_network6}.
 
@@ -1026,24 +1026,24 @@ forward.
 
 In addition to the lack of accuracy yielded by a distance measure, this network
 also revealed the gigantic computational requirements a \gls{RNN} needed,
-having epoch training times of over 40 hours. Time we simply didn't have. As
+having epoch training times of over 40 hours. Time we simply did not have. As
 such the experiment from this point on focused mostly on increasing decreasing
 computation time on an \gls{RNN} which made use of denser layers in the
 \textit{Comparing} part of the network. This attempted decrease in computation
 time took many forms. After some minor attempts relating to the number of units
-in our recurrent layer, we concluded that the assailant wasn't the number of
+in our recurrent layer, we concluded that the assailant was not the number of
 units, but the amount of data used provided to the \textit{Feature Extraction}
 part of the network. For that reason convolutional layers and max pooling layers
 were included before the \gls{RNN} in the \textit{Feature Extraction} part of
 the network. The purpose of this was to reduce the amount of data given to the
 \gls{RNN} layers, with the potential additional up-side that the convolutions
-would uncover something the \gls{RNN} couldn't, such as was done in several
+would uncover something the \gls{RNN} could not, such as was done in several
 of our previous convolutional networks. This largely reduced amount of data
 expectedly decreased the amount of time needed for one epoch, from days down to
 hours. The accuracies of these convolution, \gls{RNN} hybrids were however not
 very good, all lying around the 50\% accuracy mark, which of course for a 50/50
 data set, is the worst accuracy possible. Even switching out the \gls{GRU} with
-and \gls{LSTM} layer, didn't do the networks any favors.
+and \gls{LSTM} layer, did not do the networks any favors.
 
 At this point we deem \gls{RNN}s feasible at the current linguistic level.
 This we move the level up, creating networks that based themselves on the

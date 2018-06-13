@@ -12,6 +12,7 @@
 *.pyc
 *.hdf5
 *.vec
+*.bak
 
 *__pycache__
 *.csv

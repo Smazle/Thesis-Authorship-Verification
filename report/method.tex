@@ -195,18 +195,18 @@ paper.\cite{DBLP:journals/corr/Schmidhuber14}
 
 \gls{NN}'s have been around since the 1940's. However, back then they
 were merely variations of the linear regressors used at the time, and
-wasn't very reminiscent of the Networks on can see today. It wasn't until
+was not very reminiscent of the Networks on can see today. It was not until
 the late 1960's, early 70's, that networks comparable to the more modern
 approaches surfaced. Examples of such early works, are the two publications
 \cite{ivakhnenko1973cybernetic} and \cite{4308320}, which describe multi-layered
 feed-forward supervised neural network architectures. While the work described
 in \cite{4308320} was indeed one of the first cases of the modern \gls{NN},
 actually getting the network to learn was still a problem, as the tweaking of
-individual weights attributed to each neuron in the network wasn't trivial.
+individual weights attributed to each neuron in the network was not trivial.
 Little did they know, research to solve that problem was already in progress.
 The basics of continuous \gls{BP} was initially described in 1960, in
 \cite{Kelley1960}, quickly followed by a simpler approach which used only the
-chain rule in 1962, \cite{DREYFUS196230}. It wasn't until 1970 that the modern
+chain rule in 1962, \cite{DREYFUS196230}. It was not until 1970 that the modern
 version of \gls{BP} was described, using automatic differentiation as its
 basis. With this, the increase in research of usages of \gls{BP} increased the
 following decades. As the computational power increased several 1000 folds in
@@ -297,7 +297,7 @@ activation function for your neurons, the best function would be the one which
 best approximates the underlying function. Without a good idea as to what
 that function might be, \gls{ReLu} is a good starting point. Its simplicity
 provides a quick computation time, and its below zero limitation means that a
-large portion of the network won't be activating, resulting in an even smaller
+large portion of the network will not be activating, resulting in an even smaller
 computation time. In addition to that, the derivative of the function is 1
 in the case of a positive input, resulting in the \gls{BP} loss having equal
 influence throughout the network. In the case of other activation functions,
@@ -305,7 +305,7 @@ this might not be the case, resulting in an altering of the error as we
 propagate backwards through the network. This could lead to a big error in the
 deeper layers not reaching the shallow layers of the network. This property of
 the \gls{ReLu} activation function, does however not come without its costs.
-If the learning rate of the network isn't configured correctly, a \gls{ReLu}
+If the learning rate of the network is not configured correctly, a \gls{ReLu}
 activated neuron might be blasted with a gradient so large, that it never
 reaches a point of activation again. In other words, the neuron "dies". As such,
 one can risk a network containing a lot of dead non-activation neurons, thus
@@ -843,7 +843,7 @@ different layers.
         validation error follows the training error as the network get more
         and more fit on the training data, then the network has successfully
         learning some general commonality that can be used to describe both the
-        data sets, which is the goal. It is when these two error don't follow
+        data sets, which is the goal. It is when these two error do not follow
         on another, that one has to be alarmed, as network doesn't generalize
         properly. This is where the Dropout layer is useful. By deactivating a
         certain amount of randomly selected neurons in a particular layer, the
@@ -1260,7 +1260,7 @@ mean an elementwise power.
         well since a large gradient is found in a steep volatile area while a
         consistently small gradient is found in a flat non volatile area. In the
         steep areas we are likely to overshoot the target if the learning rate
-        is to high while in flat areas we don't have that problem. The internal
+        is to high while in flat areas we do not have that problem. The internal
         state of the algorithm is a vector $\mathbf{v}$ of the running average
         of gradient magnitudes. It is updated with the equation,
 
@@ -1389,7 +1389,7 @@ performed better in tasks where understanding the whole text was important while
 \gls{CNN}'s performed better when understanding were secondary and it was mainly
 about finding key phrases or statistical information from a text. In authorship
 verification the understanding of the text is generally irrelevant since we
-don't have to say anything about what a text is about but only whether or not
+do not have to say anything about what a text is about but only whether or not
 it is written by the same author as some other text. Furthermore classical
 authorship verification methods have relied on statistical information from the
 texts and not on an actual understanding of the texts. We have therefore chosen
@@ -1469,7 +1469,7 @@ texts an author has written.
 
 The uniform weight function does not use any information we know about the
 texts. It is mostly part of our weight functions as a baseline to make sure we
-don't make any weight functions that are worse than a simple uniform weighing.
+do not make any weight functions that are worse than a simple uniform weighing.
 Our other weight functions makes use of metadata we know about the texts. As an
 example we have a timestamp of when a text was turned in to the MaCom servers.
 We therefore know when the text was written and we assume that newer texts will

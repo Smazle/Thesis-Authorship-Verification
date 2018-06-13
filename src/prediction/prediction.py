@@ -5,6 +5,7 @@ import numpy as np
 from keras.models import load_model
 from ..preprocessing import LineReader
 import argparse
+import time
 import jsonpickle
 import random
 import sys
@@ -100,8 +101,10 @@ def generate_graphs(weights, labels, results):
     thetas = np.linspace(0, 1, num=1000)
     total = len(weights)
 
+    f, axarr = plt.subplots(2, sharex=True)
+
     for idx, weight in enumerate(weights):
-        print('{}/{}'.format(idx, total))
+        print('{}/{}'.format(idx, total), file=sys.stderr)
         accuracies = []
         errors = []
         for theta in thetas:
@@ -118,66 +121,71 @@ def generate_graphs(weights, labels, results):
             accuracies.append(accuracy)
             errors.append(error)
 
-        label = 'Weight {}'.format(weight)
-        plt.figure(1)
-        plt.plot(thetas, accuracies, label=label)
-        plt.figure(2)
-        plt.plot(thetas, errors, label=label)
+        label = str(weight).replace(', $\lambda$ = ', '')
+        axarr[0].plot(thetas, accuracies, label=label)
+        axarr[1].plot(thetas, errors, label=label)
 
-    plt.figure(1)
-    plt.xlabel('Threshold (Theta)')
-    plt.ylabel('Accuracy')
-    plt.grid(True)
-    plt.legend()
+    axarr[0].set_ylabel('Accuracy')
+    axarr[0].grid(True)
 
-    plt.figure(2)
-    plt.xlabel('Threshold (Theta)')
-    plt.ylabel('Accusation Error')
-    plt.grid(True)
-    plt.legend()
+    axarr[1].set_ylabel('Accusation Error')
+    axarr[1].grid(True)
+    axarr[1].legend()
 
+    axarr[1].set_xlabel(r'$\theta$ (Threshold)')
+    lgd = plt.legend(bbox_to_anchor=(1.25, 1), loc=7, fancybox=True)
     plt.show()
+    f.savefig(
+        'Prediction_{}.png'.format(time.time()),
+        bbox_extra_artists=(lgd, ),
+        bbox_inches='tight')
 
 
 def binary_theta_search(weights, labels, results):
     limit_theta = 1
     lower_theta = 0
     print('\nStarting Fine tuned run', file=sys.stderr)
-    print('{:^10}{:^10}{:^10}{:^10}{:^10}{:^10}{:^10}{:^10}{:^10}{:^10}'
-          .format('L-Theta', 'U-Theta', 'A-Theta', 'Err', 'Acc', 'TNS', 'FNS',
-                  'TPS', 'FPS', 'Weight'))
 
-    for _ in range(100):
-        new_theta = (limit_theta + lower_theta) / 2
-        e = [
-            evaluate(labels, results, weight, new_theta) for weight in weights
-        ]
+    for i in np.linspace(0.1, 1, 10):
+        print('{:^10}{:^10}{:^10}{:^10}{:^10}{:^10}' +
+              '{:^10}{:^10}{:^10}{:^10}{:^10}'
+              .format('L-Theta', 'U-Theta', 'A-Theta', 'Err', 'Acc', 'TNS',
+                      'FNS', 'TPS', 'FPS', 'Weight', 'Theta'))
+        for _ in range(50):
+            new_theta = (limit_theta + lower_theta) / 2
+            e = [
+                evaluate(labels, results, weight, new_theta)
+                for weight in weights
+            ]
 
-        accuracies = [((tns, fns, fps, tps),
-                       (tps + tns) / (tps + tns + fps + fns))
-                      for tps, tns, fps, fns in e]
+            accuracies = [((tns, fns, fps, tps),
+                           (tps + tns) / (tps + tns + fps + fns))
+                          for tps, tns, fps, fns in e]
 
-        ((tns, fns, fps, tps), acc) = max(accuracies, key=lambda x: x[1])
-        w = weights[accuracies.index(((tns, fns, fps, tps), acc))]
+            ((tns, fns, fps, tps), acc) = max(accuracies, key=lambda x: x[1])
+            w = weights[accuracies.index(((tns, fns, fps, tps), acc))]
 
-        if fns + tns == 0:
-            errors = 0
-        else:
-            errors = fns / (fns + tns)
+            if fns + tns == 0:
+                errors = 0
+            else:
+                errors = fns / (fns + tns)
 
-        if errors < 0.1:
-            print(('\033[92m' + '{:^10.6f}{:^10.6f}{:^10.6f}' +
-                   '{:^10.6f}{:^10.6f}' +
-                   '{:^10}{:^10}{:^10}{:^10}{:^10}\033[0m').format(
-                       lower_theta, limit_theta, new_theta, errors, acc, tns,
-                       fns, tps, fps, str(w)))
-            lower_theta = new_theta
-        else:
-            print(('{:^10.6f}{:^10.6f}{:^10.6f}{:^10.6f}{:^10.6f}' +
-                   '{:^10}{:^10}{:^10}{:^10}{:^10}').format(
-                       lower_theta, limit_theta, new_theta, errors, acc, tns,
-                       fns, tps, fps, str(w)))
-            limit_theta = new_theta
+            if errors < i:
+                print(
+                    ('\033[92m' + '{:^10.6f}{:^10.6f}{:^10.6f}' +
+                     '{:^10.6f}{:^10.6f}' +
+                     '{:^10}{:^10}{:^10}{:^10}{:^10}{:^10.1f}\033[0m').format(
+                         lower_theta, limit_theta, new_theta, errors, acc, tns,
+                         fns, tps, fps, str(w), i))
+                lower_theta = new_theta
+            else:
+                print(('{:^10.6f}{:^10.6f}{:^10.6f}{:^10.6f}{:^10.6f}' +
+                       '{:^10}{:^10}{:^10}{:^10}{:^10}{:^10.1f}').format(
+                           lower_theta, limit_theta, new_theta, errors, acc,
+                           tns, fns, tps, fps, str(w), i))
+                limit_theta = new_theta
+
+        print('\n\n')
 
 
 def main():

@@ -114,7 +114,7 @@ As can be seen in the statistics in Section \ref{sec:B_stats}, the text
 containing the smallest consists of 0 characters, and does obviously not
 contain any valuable information. In addition to the 200 characters we removed
 initially, we also removed texts that have below 200 characters left after the
-removal, as they don't provide enough information about that specific author,
+removal, as they do not provide enough information about that specific author,
 and would work properly with our baseline methods due to the size.
 The application of this constraint, resulted in 1.823 of the 73.311 texts
 being removed. After which we applied a upper constraint, in terms of the total
@@ -137,7 +137,7 @@ The last constraint regards the unique characters in each text. Look at the
 stats we can see that there is a text containing 219 unique characters, greatly
 exceeding the average of 57. A unique character count like this, implies that a
 non-danish alphabet might have been used, and for that reason texts like these
-don't add to the generalization we strive towards. This is combatted creating a
+do not add to the generalization we strive towards. This is combatted creating a
 list of characters based on the data used for training, each character in this
 list is mapped to a replacement character if ever encountered in either the
 training or the validation set. The characters are placed in this list if they
@@ -164,7 +164,7 @@ of the large SRP assignment the students make at the end of their last year,
 this this constraints scrubs away potential garbage texts. The upper limit
 is removed, as this was only a step to prevent our methods from crashing. By
 applying the methods on a students assignment in a singular fashion rather than
-a batch one, we won't have the same problem.
+a batch one, we will not have the same problem.
 
 \begin{figure}[htb]
     \begin{minipage}{.5\linewidth}
