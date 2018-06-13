@@ -209,13 +209,13 @@ parameter values:
 \end{align}
 
 The one parameter yet to be explained i $p$, which refers to the p in the
-minkowski distance.
+minkowski distance,
 
-$$
-D(X,Y) = \left(\sum_{i = 1}^n |x_i - y_i|^p\right)^{1/p}
-$$
+\begin{equation}
+    D(X,Y) = \left(\sum_{i = 1}^n |x_i - y_i|^p\right)^{1/p},
+\end{equation}
 
-Where $p=1$ and $p=2$ is the manhattan and eucledian distance respective.
+where $p=1$ and $p=2$ is the manhattan and eucledian distance respectively.
 
 We perform a grid search over all these parameters. For each variation of the
 hyper parameters we average the performance of the method over all unique
