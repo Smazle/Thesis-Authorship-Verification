@@ -104,7 +104,7 @@ def generate_graphs(weights, labels, results):
     f, axarr = plt.subplots(2, sharex=True)
 
     for idx, weight in enumerate(weights):
-        print('{}/{}'.format(idx, total))
+        print('{}/{}'.format(idx, total), file=sys.stderr)
         accuracies = []
         errors = []
         for theta in thetas:
