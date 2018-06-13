@@ -227,41 +227,41 @@ in Table \ref{sec:ed_feat} for \gls{KNN}, and Table \ref{sec:svm_feat} for
 \gls{SVM}.
 
 \begin{table}[h]
-\centering
-\caption{The results from performing a grid search of the p and K parameter
-of the \gls{KNN} algorithm}
-\label{table:KNN}
-\begin{tabular}{|c|ccccc|}
-\hline
-\backslashbox{$K$}{$p$}  & 1     & 2     & 3     & 4     & 5     \\\hline
-1  & \textbf{0.647} & 0.622 & 0.608 & 0.593 & 0.591 \\
-3  & 0.646 & 0.617 & 0.598 & 0.586 & 0.580 \\
-5  & 0.640 & 0.603 & 0.586 & 0.572 & 0.565 \\
-7  & 0.627 & 0.593 & 0.571 & 0.561 & 0.554 \\
-9  & 0.620 & 0.581 & 0.562 & 0.550 & 0.543 \\
-11 & 0.608 & 0.566 & 0.549 & 0.541 & 0.535 \\
-13 & 0.598 & 0.558 & 0.539 & 0.533 & 0.529 \\
-15 & 0.590 & 0.546 & 0.536 & 0.527 & 0.522 \\\hline
-\end{tabular}
+    \centering
+    \caption{The results from performing a grid search of the p and K parameter
+        of the \gls{KNN} algorithm}
+    \label{table:KNN}
+    \begin{tabular}{|c|ccccc|}
+        \hline
+        \backslashbox{$K$}{$p$} & 1 & 2 & 3 & 4 & 5 \\\hline
+        1 & \textbf{0.647} & 0.622 & 0.608 & 0.593 & 0.591 \\
+        3 & 0.646 & 0.617 & 0.598 & 0.586 & 0.580 \\
+        5 & 0.640 & 0.603 & 0.586 & 0.572 & 0.565 \\
+        7 & 0.627 & 0.593 & 0.571 & 0.561 & 0.554 \\
+        9 & 0.620 & 0.581 & 0.562 & 0.550 & 0.543 \\
+        11 & 0.608 & 0.566 & 0.549 & 0.541 & 0.535 \\
+        13 & 0.598 & 0.558 & 0.539 & 0.533 & 0.529 \\
+        15 & 0.590 & 0.546 & 0.536 & 0.527 & 0.522 \\\hline
+    \end{tabular}
 \end{table}
 
 \begin{table}[h]
-\centering
-\caption{The results from performing a grid search for C and gamma, of the
-\gls{SVM} algorithm}
-\label{table:SVM}
-\begin{tabular}{|c|cccccc|}
-\hline
-\backslashbox{$C$}{gamma}  & $10^{-3}$ & $10^{-1}$ & $10^{1}$ & $10^{3}$ & $10^{5}$       & $10^{7}$ \\\hline
-$10^{-16}$ & 0.592     & 0.592     & 0.592    & 0.593    & 0.648          & 0.621    \\
-$10^{-14}$ & 0.592     & 0.592     & 0.592    & 0.630    & \textbf{0.679} & 0.601    \\
-$10^{-12}$ & 0.592     & 0.592     & 0.628    & 0.631    & 0.678          & 0.591    \\
-$10^{-10}$ & 0.592     & 0.629     & 0.629    & 0.631    & 0.678          & 0.585    \\
-$10^{-8}$  & 0.589     & 0.629     & 0.629    & 0.631    & 0.678          & 0.581    \\
-$10^{-6}$  & 0.587     & 0.629     & 0.629    & 0.631    & 0.678          & 0.576    \\
-$10^{-4}$  & 0.587     & 0.629     & 0.629    & 0.631    & 0.678          & 0.573    \\
-$10^{-2}$  & 0.587     & 0.629     & 0.629    & 0.631    & 0.678          & 0.568   \\\hline
-\end{tabular}
+    \centering
+    \caption{The results from performing a grid search for C and gamma, of the
+        \gls{SVM} algorithm}
+    \label{table:SVM}
+    \begin{tabular}{|c|cccccc|}
+        \hline
+        \backslashbox{$C$}{gamma} & $10^{-3}$ & $10^{-1}$ & $10^{1}$ & $10^{3}$ & $10^{5}$ & $10^{7}$ \\\hline
+        $10^{-16}$ & 0.592     & 0.592     & 0.592    & 0.593    & 0.648          & 0.621    \\
+        $10^{-14}$ & 0.592     & 0.592     & 0.592    & 0.630    & \textbf{0.679} & 0.601    \\
+        $10^{-12}$ & 0.592     & 0.592     & 0.628    & 0.631    & 0.678          & 0.591    \\
+        $10^{-10}$ & 0.592     & 0.629     & 0.629    & 0.631    & 0.678          & 0.585    \\
+        $10^{-8}$  & 0.589     & 0.629     & 0.629    & 0.631    & 0.678          & 0.581    \\
+        $10^{-6}$  & 0.587     & 0.629     & 0.629    & 0.631    & 0.678          & 0.576    \\
+        $10^{-4}$  & 0.587     & 0.629     & 0.629    & 0.631    & 0.678          & 0.573    \\
+        $10^{-2}$  & 0.587     & 0.629     & 0.629    & 0.631    & 0.678          & 0.568   \\\hline
+    \end{tabular}
 \end{table}
 
 It is at this point we grab the 20\% of we set aside at the start of our
