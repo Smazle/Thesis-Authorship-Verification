@@ -280,11 +280,15 @@ SVM Validation Accuracy:  0.684
 
 \subsection{Deep Learning}
 
-In the prediction system from Definition \ref{def:prediction_system} we needed a
-function $f$ that takes two texts and returns the probability that those texts
-are written by the same author. As described earlier Siamese Neural Networks are
-well suited for comparing objects. In this Section we describe the experiments
-we performed for designing the best $f$ possible.
+In the prediction system from Definition \ref{def:prediction_system} we needed
+a function $f$ that takes two texts and returns the probability that those
+texts are written by the same author. As described earlier Siamese Neural
+Networks are well suited for comparing objects. In this Section we describe
+the experiments we performed with different networks architectures and we
+will present three different networks. The three networks are \gls{conv-char-NN}
+in Section \ref{subsubsec:conv_char_nn}, \gls{conv-char-word-NN} in Section
+\ref{subsubsec:conv_char_word_nn}, and \gls{rec-sent-NN} in Section
+\ref{subsubsec:rec_sent_nn}.
 
 The data we trained our networks on is described in Section \ref{sec:data}. We
 trained the networks on the G dataset that contains 3000 authors. We used early
@@ -438,8 +442,8 @@ the layers are shown in Table \ref{tab:glossary}.
 \end{landscape}
 
 
-\subsubsection{Convolutional Siamese Neural Networks}
-\label{subsubsec:convolutional_siamese_neural_networks}
+\subsubsection{\glsdesc{conv-char-NN}}
+\label{subsubsec:conv_char_nn}
 
 The first convolutional neural networks we created extracted features from
 the character level of the texts. That means that the convolutions looked at
@@ -506,6 +510,9 @@ When we trained the network it quickly overfitted on the training dataset but
 otherwise it seemed to work fine. We therefore wanted to try to extend the
 network and add some dropout.
 
+
+\subsubsection{\glsdesc{conv-char-word-NN}}
+\label{subsubsec:conv_char_word_nn}
 
 %\subsubsection{Siamese Neural Network - Iteration 1}
 
@@ -962,8 +969,8 @@ network and add some dropout.
 %each. After that we had 30\% dropout and a softmax layer as usual.
 
 
-
-\subsubsection{Recurrent Siamese Neural Networks}
+\subsubsection{\glsdesc{rec-sent-NN}}
+\label{subsubsec:rec_sent_nn}
 
 After having attempted some convolutional approaches, as was just described,
 we proceeded with some recurrent experiments as well. After having looked at
