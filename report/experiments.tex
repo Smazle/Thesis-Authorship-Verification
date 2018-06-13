@@ -51,19 +51,23 @@ given to a \gls{KNN} classifier, which determine if $x \in T_\alpha$ and $z \in
 
 \subsubsection{Feature Selection}
 
-A large part of the experiments performed when applying the extended delta and
-\gls{SVM} method was parameter tuning. Neither method does any quality analysis
-of the feature they are applied on, as other methods such as the random forest
-does. This means that they are susceptible to noisy feature, and as a result
-would most likely benefit from us selecting the features for them.
+The larger part of the experiments performed using the baseline methods, was
+centered around parameter tuning. Not only parameter as the K in the extended
+delta method, but also the feature supplied to the method. Other methods such
+as random forest has a built in filter for bad and noisy feature. This is not
+the case for both the \gls{SVM} and extended delta method, who does performs any
+kind of quality analysis of the feature they are given, making them susceptible
+to the negative influences these features include. It is for this reason that
+we chose to select the features for them, rather than just having them use the
+entire set available to them.
 
-Contrary to our previous work made in \cite{US}, this process wont
+Contrary to our previous work made in \cite{US}, this process did not
 consist of trying out some random selection of features, but rather
 a more systematic approach was used.
 
-However, before starting to do that, a feature set was to be created
+However, before starting to do that, a feature set had to be created
 first. In order for us to find the very best set of features, we wanted
-to create a very large feature set, so as to increase our search space.
+to create a very large initial feature set, so as to increase our search space.
 The corpus used had the following quantities of the different features.
 
 \begin{itemize}
@@ -76,7 +80,7 @@ The corpus used had the following quantities of the different features.
 
 The quantities here are of course very large due to the size of the corpus,
 and will continue to rise as N increases. Rather than extracting all
-of those feature from our texts, we chose to focus on the most N-grams
+of those feature from our texts, we chose to focus on the N-grams
 with highest frequency, as we would reach a point where a specific N-gram
 determined to be in the corpus, would be unique that same corpus, making it
 irrelevant for new texts, not associated with the corpus.
