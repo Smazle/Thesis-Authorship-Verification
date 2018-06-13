@@ -445,14 +445,17 @@ the layers are shown in Table \ref{tab:glossary}.
 \subsubsection{\glsdesc{conv-char-NN}}
 \label{subsubsec:conv_char_nn}
 
-The first convolutional neural networks we created extracted features from
-the character level of the texts. That means that the convolutions looked at
-some number of characters at a time and gave a single output for that sequence
-of characters. Let us for example assume that we have a convolutional filter
-that looks for the character sequence "ould ". Let's also assume that the
-filter is followed by a max pool. Then we expect the filter to produce a high
-value when it is in a location where many of the characters match and a low
-value otherwise. We have shown an example of such a convolution in Figure
+The idea behind network \gls{conv-char-NN} is that we wanted to use convolutions
+to look for n-grams in texts. Traditional authorship verification/attribution
+is based on carefully engineered n-grams that are compared between two texts
+\cite{stamatos2009}. Instead of choosing the n-grams ourselves we wanted the
+network to learn which features are important for the authorship verification
+task. The features are learned through convolutions. The convolutions
+look at some number of characters at a time and gives a single output for
+those characters. Assume for example that the network has learned that the
+character sequence "ould " is important for deciding the author of a text.
+Then we expect the network to react strongly to character sequences that looks
+like "ould ". We have illustrated such a convolutional filter in Figure
 \ref{fig:convolution_text_example}.
 
 \begin{figure}
@@ -469,46 +472,80 @@ value otherwise. We have shown an example of such a convolution in Figure
     \label{fig:convolution_text_example}
 \end{figure}
 
-As described our first network took as input two sequences of characters. Each
-character was then one-hot encoded and as described in Section \ref{sec:data} we
-ignored character with a frequency of less than $10^{-5}$. In the
-\textit{Embedding} part of the network we embedded the characters into a 5
-dimensional space. The embeddings are learnable and the hope is that similar
-characters will end up in similar places in the output space.
+\begin{description}
 
-In the \textit{Feature Extraction} part of the network we applied 1000
-convolutional filters of size 10 to each of the texts. We used stride 1
-such that each filter was placed in all possible positions. We did not
-use padding in the convolutional layer so the output will be slightly
-smaller than the input. As the activation function in the convolutional
-layer we used the \gls{ReLu} function for the reasons described in Section
-\ref{subsubsec:activation_functions}. After the convolutional layer we applied a
-global max pooling layer. The global max pooling layer will output the maximum
-activation for each filter in the convolutional layer. We do so for both of the
-texts so afterwards we will have two vectors containing 1000 numbers each. The
-first vector represent the maximum activation of the 1000 filters on the first
-text and the second vector represents the maximum activation of the 1000 filters
-on the second text. These 1000 numbers are seen as the extracted features of the
-texts and they will represent the text in the following layers.
+    \item[Embedding:]
 
-In the \textit{Combining} part of the network we concatenate the representations
-of the two texts to obtain a single vector of size 2000.
+        The embedding takes as input a sequence of integers. Each different
+        integer is a compact one-hot encoding of each character. The one-hot
+        encoded character stream is embedded in a five dimensional space. The
+        hope is that the layer will learn that similar characters should be
+        placed close to each other in the output space and dissimilar characters
+        should be placed far apart. The same embedding is performed on both of
+        the input texts and the layer is therefore part of the Siamese part of
+        the network.
 
-Lastly the \textit{Decision} network takes the combined vectors and applies a
-fully connected network to it. The fully connected network consist of a layer
-with 500 neurons using the \gls{ReLu} activation function and a layer of two
-neurons using the softmax activation function. The idea is that the hidden dense
-layer will compare the vector representations and that the output layer will
-output a probability distribution. The probability distribution represents the
-probability that the texts are written by the same author.
+    \item[Feature Extraction:]
 
-As the optimization function we use the \gls{Adam} optimizer. We used the
-default parameters of $\eta = 0.001$, $\gamma_1 = 0.9$ and $\gamma_2=0.999$.
-As the loss function we used the categorical crossentropy function.
+        Features are extracted from the two texts via a layer of convolutions
+        with different sizes. We use both convolutions with a window size of 8
+        and convolutions with a window size of 4. We use 700 of size 8 and 500
+        of size 4. We used a window size of 8 since \cite{aalykke2016} found
+        that n-grams of size 8 worked the best for Danish texts and we also
+        added 4 so the network could look at smaller n-grams as well. We used a
+        stride of 1 such that each convolutional filter could observe all parts
+        of the texts and give an output for each one.
 
-When we trained the network it quickly overfitted on the training dataset but
-otherwise it seemed to work fine. We therefore wanted to try to extend the
-network and add some dropout.
+    \item[Combining:]
+
+        Describe combining.
+
+    \item[Decision:]
+
+        Describe decision.
+
+\end{description}
+
+%As described our first network took as input two sequences of characters. Each
+%character was then one-hot encoded and as described in Section \ref{sec:data} we
+%ignored character with a frequency of less than $10^{-5}$. In the
+%\textit{Embedding} part of the network we embedded the characters into a 5
+%dimensional space. The embeddings are learnable and the hope is that similar
+%characters will end up in similar places in the output space.
+
+%In the \textit{Feature Extraction} part of the network we applied 1000
+%convolutional filters of size 10 to each of the texts. We used stride 1
+%such that each filter was placed in all possible positions. We did not
+%use padding in the convolutional layer so the output will be slightly
+%smaller than the input. As the activation function in the convolutional
+%layer we used the \gls{ReLu} function for the reasons described in Section
+%\ref{subsubsec:activation_functions}. After the convolutional layer we applied a
+%global max pooling layer. The global max pooling layer will output the maximum
+%activation for each filter in the convolutional layer. We do so for both of the
+%texts so afterwards we will have two vectors containing 1000 numbers each. The
+%first vector represent the maximum activation of the 1000 filters on the first
+%text and the second vector represents the maximum activation of the 1000 filters
+%on the second text. These 1000 numbers are seen as the extracted features of the
+%texts and they will represent the text in the following layers.
+
+%In the \textit{Combining} part of the network we concatenate the representations
+%of the two texts to obtain a single vector of size 2000.
+
+%Lastly the \textit{Decision} network takes the combined vectors and applies a
+%fully connected network to it. The fully connected network consist of a layer
+%with 500 neurons using the \gls{ReLu} activation function and a layer of two
+%neurons using the softmax activation function. The idea is that the hidden dense
+%layer will compare the vector representations and that the output layer will
+%output a probability distribution. The probability distribution represents the
+%probability that the texts are written by the same author.
+
+%As the optimization function we use the \gls{Adam} optimizer. We used the
+%default parameters of $\eta = 0.001$, $\gamma_1 = 0.9$ and $\gamma_2=0.999$.
+%As the loss function we used the categorical crossentropy function.
+
+%When we trained the network it quickly overfitted on the training dataset but
+%otherwise it seemed to work fine. We therefore wanted to try to extend the
+%network and add some dropout.
 
 
 \subsubsection{\glsdesc{conv-char-word-NN}}
