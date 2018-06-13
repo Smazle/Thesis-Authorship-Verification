@@ -121,7 +121,7 @@ def generate_graphs(weights, labels, results):
             accuracies.append(accuracy)
             errors.append(error)
 
-        label = str(weight).replace(', $\lambda$ = ', '')
+        label = str(weight)
         axarr[0].plot(thetas, accuracies, label=label)
         axarr[1].plot(thetas, errors, label=label)
 
@@ -147,10 +147,10 @@ def binary_theta_search(weights, labels, results):
     print('\nStarting Fine tuned run', file=sys.stderr)
 
     for i in np.linspace(0.1, 1, 10):
-        print('{:^10}{:^10}{:^10}{:^10}{:^10}{:^10}' +
-              '{:^10}{:^10}{:^10}{:^10}{:^10}'
-              .format('L-Theta', 'U-Theta', 'A-Theta', 'Err', 'Acc', 'TNS',
-                      'FNS', 'TPS', 'FPS', 'Weight', 'Theta'))
+        print(('{:^2}{:^10}{:^10}{:^10}{:^10}{:^10}{:^6}' +
+               '{:^6}{:^6}{:^6}{:^10}{:^10}')
+              .format('  ', 'L-Theta', 'U-Theta', 'A-Theta', 'Err', 'Acc',
+                      'TNS', 'FNS', 'TPS', 'FPS', 'Weight', 'Theta'))
         for _ in range(50):
             new_theta = (limit_theta + lower_theta) / 2
             e = [
@@ -170,19 +170,18 @@ def binary_theta_search(weights, labels, results):
             else:
                 errors = fns / (fns + tns)
 
+            w = str(w).replace(', $\lambda$ =', '')
             if errors < i:
-                print(
-                    ('\033[92m' + '{:^10.6f}{:^10.6f}{:^10.6f}' +
-                     '{:^10.6f}{:^10.6f}' +
-                     '{:^10}{:^10}{:^10}{:^10}{:^10}{:^10.1f}\033[0m').format(
-                         lower_theta, limit_theta, new_theta, errors, acc, tns,
-                         fns, tps, fps, str(w), i))
+                print(('{:^2}{:^10.6f}{:^10.6f}{:^10.6f}{:^10.6f}{:^10.6f}' +
+                       '{:^6}{:^6}{:^6}{:^6}{:^10}{:^10.1f}').format(
+                           '->', lower_theta, limit_theta, new_theta, errors,
+                           acc, tns, fns, tps, fps, w, i))
                 lower_theta = new_theta
             else:
-                print(('{:^10.6f}{:^10.6f}{:^10.6f}{:^10.6f}{:^10.6f}' +
-                       '{:^10}{:^10}{:^10}{:^10}{:^10}{:^10.1f}').format(
-                           lower_theta, limit_theta, new_theta, errors, acc,
-                           tns, fns, tps, fps, str(w), i))
+                print(('{:^2}{:^10.6f}{:^10.6f}{:^10.6f}{:^10.6f}{:^10.6f}' +
+                       '{:^6}{:^6}{:^6}{:^6}{:^10}{:^10.1f}').format(
+                           '  ', lower_theta, limit_theta, new_theta, errors,
+                           acc, tns, fns, tps, fps, w, i))
                 limit_theta = new_theta
 
         print('\n\n')
