@@ -445,14 +445,17 @@ the layers are shown in Table \ref{tab:glossary}.
 \subsubsection{\glsdesc{conv-char-NN}}
 \label{subsubsec:conv_char_nn}
 
-The first convolutional neural networks we created extracted features from
-the character level of the texts. That means that the convolutions looked at
-some number of characters at a time and gave a single output for that sequence
-of characters. Let us for example assume that we have a convolutional filter
-that looks for the character sequence "ould ". Let's also assume that the
-filter is followed by a max pool. Then we expect the filter to produce a high
-value when it is in a location where many of the characters match and a low
-value otherwise. We have shown an example of such a convolution in Figure
+The idea behind network \gls{conv-char-NN} is that we wanted to use convolutions
+to look for n-grams in texts. Traditional authorship verification/attribution
+is based on carefully engineered n-grams that are compared between two texts
+\cite{stamatos2009}. Instead of choosing the n-grams ourselves we wanted the
+network to learn which features are important for the authorship verification
+task. The features are learned through convolutions. The convolutions
+look at some number of characters at a time and gives a single output for
+those characters. Assume for example that the network has learned that the
+character sequence "ould " is important for deciding the author of a text.
+Then we expect the network to react strongly to character sequences that looks
+like "ould ". We have illustrated such a convolutional filter in Figure
 \ref{fig:convolution_text_example}.
 
 \begin{figure}
@@ -468,6 +471,29 @@ value otherwise. We have shown an example of such a convolution in Figure
         get the same size output as input.}
     \label{fig:convolution_text_example}
 \end{figure}
+
+\begin{description}
+
+    \item[Embedding:]
+
+        Describe embedding.
+
+    \item[Feature Extraction:]
+
+        Describe feature extraction.
+
+    \item[Combining:]
+
+        Describe combining.
+
+    \item[Decision:]
+
+        Describe decision.
+
+\end{description}
+
+
+
 
 As described our first network took as input two sequences of characters. Each
 character was then one-hot encoded and as described in Section \ref{sec:data} we
