@@ -634,7 +634,14 @@ didn't get any better results. After that change we changed the convolutional
 filters from using 1000 filters of size 10 to using 500 filters of size 8 and
 500 of size 4. We used those window sizes for the reasons described above. At
 the same time we added more dense layers to the model. We again observed the
-validation accuracy increasing further.
+validation accuracy increasing further. Since our architecture seemed to work
+well we scaled up the size of the network to having 4 dense layers instead of
+1 as in the final network.
+
+After expanding the network we wanted to figure out which features the network
+were looking at. Since the convolutional layer (feature extractor) is followed
+by a global max pool we knew that the feature a specific filter was looking at
+could be determined by finding the maximum activation of that filter.
 
 
 \subsubsection{\glsdesc{conv-char-word-NN}}
