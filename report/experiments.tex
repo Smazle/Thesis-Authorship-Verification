@@ -107,15 +107,18 @@ features was produced, containing
     \item The 50 most frequent special-character-N-grams for $N \in \{2,3,4\}$.
 \end{itemize}
 
-The selection the quantities, bases on the number available in the corpus, as
-listed earlier. As the for the N in the N-grams, \cite{aalykke2016} found out
-that char-8-grams worked very well in his case, which is why N goes all the
-way to 10 in the case of char-N-grams . Looking at the results from \cite{US},
-Word-N-grams mostly stopped occurring in texts when getting to 4-grams, when
-looking at the result from \cite{US}. A similar thing could be seen with
-the special-character-N-grams, where an increase in N, would not contribute
-anything. \gls{POS}-tag-N-grams were a really big burden computationally, as
-such a reduction in possible N-values, had to be made.
+The selection the quantities, was based on the number available in the corpus,
+listed earlier. The number of different character N-grams we extracted was based
+on the amount used in \cite{aalykke2016}. They found out that char-8-grams
+worked very well on MaComs data, which is the reason why we chose to include
+char-N-grams with a N spanning the values from 1 to 10. Looking at the results
+from \cite{US}, revealed that the N in word-N-grams reach a value of 4,
+the probability of that sequence actually occurring drastically reduced,
+and with it its' overall impact. A similar thing could be seen with the
+special-character-N-grams, where an increase in N, would not contribute
+anything. The reason for the small amount of \gls{POS}-tag-N-grams was that
+they were a really big burden computationally, as such a reduction in possible
+N-values had to be made.
 
 It should be noted that the work done in \cite{US} was done on English
 texts rather than Danish as is the case in this paper. While there there is
@@ -128,43 +131,32 @@ that Danish end English are in fact not so lexical different, which makes sense
 as the both derive from the germanic branch of the indo-European language
 family.
 
-These features were extracted from the same data-set described earlier in
-Section \ref{sec:data}. However it was not beholden to the same exact limits to
-character and unique characters. In the case of the upper limit the lack of
-memory was not nearly as severe as in the case of our \gls{NN}s. As for the lower
-limit, and natural boundary would occur throughout the extraction process.
-If a file did not have 500 unique words for example, the extraction
-of the 500 most frequent words would cause an error, resulting in that
-text being ignored.
-The distribution of the texts over authors in this data-set is not
-very evenly spread. As such, the random selection of random opposing
-authors has a certain amount of bias towards the authors with a large
-amount of texts compared to the test.
+These features were extracted from the data-set (I) described in Section
+\cite{sec:data}. The distribution of the texts over authors in this data-set is
+not very evenly spread. As such, the random selection of random opposing authors
+has a certain amount of bias towards the authors with a large amount of texts
+compared to the test.
 
 Having the features, we could start doing our feature selection. This whole
 process proved very expensive computationally. Having to check every combination
 of 5000 features, simply was not feasible. It was for that reason we opted for a
-greedy algorithm instead.
-
-Before starting any kind of feature selection or hyper-parameter tuning,
-we split the training data up into training and validation, with a
-80/20 respective split. All the work described from this point on,
-was done on the 80\% training data set.
+greedy algorithm in combination with the drastically small data-set (I) instead.
 
 The greedy algorithm works as described by \cite{kanDeng}, which is a simple
 forward feature selection. Having out previously created feature set, we loop
 through each single feature, validating its' accuracy when applied to each
-$\alpha \in \mathcal{A}$. As eluded to earlier, this consists of fetching
-$T_{\alpha}$ and a set $\overline{T}_{\alpha}$, where $|\overline{T}_\alpha| =
-|T_\alpha|$. Using this set of positive and negative cases, we make use k-fold
-cross validation to determine the performance of the feature for that author.
-This is done for all authors, and when averaged we have the performance of
-that single feature. This process is then repeated for all features. The best
-performing feature is then added to out candidate set of features. The next
-iteration we loop through all the feature again, but we validate against each
-feature in combination with the already selected features. This process is
-repeated until a set number of features are selected. At this point we determine
-at which point we had the best candidate set, and use that hence fourth.
+$\alpha \in \mathcal{A}$, where in this case $\mathcal{A}$ is the dataset
+(I). As eluded to earlier, this consists of fetching $T_{\alpha}$ and a set
+$\hat{T}^{(I)}_{\alpha}$, where $|\overline{T}_\alpha| = |T_\alpha|$. Using
+this set of positive and negative cases, we make use k-fold cross validation
+to determine the performance of the feature for that author. This is done for
+all authors, and when averaged we have the performance of that single feature.
+This process is then repeated for all features. The best performing feature is
+then added to out candidate set of features. The next iteration we loop through
+all the feature again, but we validate against each feature in combination with
+the already selected features. This process is repeated until a set number of
+features are selected. At this point we determine at which point we had the best
+candidate set, and use that hence fourth.
 
 Even this greedy approach proved to be very time consuming. As such, we only did
 as described and found the best features, but left out the hyper-parameters C,
@@ -188,18 +180,17 @@ the class distribution in its' folds. While this problem would not plague the
 SVM classifier, we also opted the stratified K fold cross, so we would more
 directly compare the feature selection of the two models.
 
-For both the \gls{SVM} and Extended Delta method, we ran this algorithm until
-350 features were selected. Computation time was still and issue, so we also
-limited the computed on dataset to only 5\% of the total number of authors. The
-SVM performed its' feature selection using the default RBF kernel, a C with
-value 1, and $\gamma = \frac{1}{\text{n\_features}}$. Due to some authors having
-below 3 texts, the default K value of \gls{KNN}s K parameter was set to 3 for
-the feature selection.
+For both the \gls{SVM} and Extended Delta method, we ran this algorithm
+until 450 features were selected. The SVM performed its' feature
+selection using the default RBF kernel, a C with value 1, and $\gamma =
+\frac{1}{\text{n\_features}}$. Due to some authors having below 3 texts,
+the default K value of \gls{KNN}s K parameter was set to 3 for the feature
+selection.
 
 The results of both the SVM and the Extended Delta method feature selection can
 be seen in Figure \ref{fig:fs_results}. We got that the best number of selected
-feature were 75 for the SVM and 10 for the Extended Delta Method, scoring an
-accuracy of 0.675 and 0.666 respectively.
+feature were 220 for the SVM and 4 for the Extended Delta Method, scoring an
+accuracy of [TODO:Res] and [TODO:Res] respectively.
 
 \begin{figure}
     \centering
@@ -241,6 +232,9 @@ minkowski distance,
 \end{equation}
 
 where $p=1$ and $p=2$ is the manhattan and eucledian distance respectively.
+
+The following was perform on the data-set (J) as this, contrary to the feature
+selection is more computationally efficient.
 
 We perform a grid search over all these parameters. For each variation of the
 hyper parameters we average the performance of the method over all unique
@@ -287,16 +281,16 @@ in Table \ref{sec:ed_feat} for \gls{KNN}, and Table \ref{sec:svm_feat} for
     \end{tabular}
 \end{table}
 
-It is at this point we grab the 20\% of we set aside at the start of our
-experimentation. While applying these finely tuned methods to a validation set
+It is at this point we grab the data-set (C), our external
+validation set. While applying these finely tuned methods to a validation set
 wont change anything in terms of the parameters we have selected, it will give
 us the ability to gauge the accuracy of our methods when applied to a new, never
 before seen, test-set.
 
 \begin{center}
 \begin{verbatim}
-Extended Delta Validation Accuracy: 0.602
-SVM Validation Accuracy:  0.684
+Extended Delta Validation Accuracy: [TODO:RES]
+SVM Validation Accuracy:  [TODO:RES]
 \end{verbatim}
 \end{center}
 
