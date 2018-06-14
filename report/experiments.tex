@@ -1111,7 +1111,9 @@ extension of our convolutional approaches. Every \gls{RNN} experiment
 was performed on the same data as the convolutional networks, and the
 \textit{Embedding}, \textit{Feature Extraction}, \textit{Combining} and
 \textit{Comparing} structure was used as for each of them too, and the best
-model used can be seen depicted in figure [TODO].
+model used can be seen depicted in figure [TODO:REF]. After [TODO:EPOCH COUNT]
+epochs this network peaked with a validation accuracy of [TODO:ACC]. When
+applied to the external validation set (C), it got a accuracy of [TODO:ACC].
 
 \begin{description}
 
@@ -1123,7 +1125,7 @@ this network works on the sentence level rather than the character level. It
 initially takes in a sequence of sequences. The outer sequence representing a
 sentence, and the sequence contained within the word associated with that. In
 order for the dimensionality to work, the amount of word in a sequence is padded
-or truncated so they consist of 25 words each. A number which was chosen based
+or truncated so they consist of 25 words each. An amount which was chosen based
 on the analytics of the training data set. Contrary to the earlier networks
 created throughout our experiments, the embedded representations of these words
 were not trained as as part of the network. Pre-trained embedding produced by
@@ -1162,7 +1164,8 @@ by a 0.3 dropout layer. The result of the dropout layer is then provided to the
 last dense layer, consisting of 2 neurons, and the soft-max activation function,
 thus mapping it into a usable probability space. Since two neurons were used to
 depict the final output, the loss function used for the network was categorical
-cross-entropy, paired with a \gls{Adam} optimizer with the default learning rate.
+cross-entropy, paired with a \gls{adam} optimizer with the learning rate
+of 0.0005, 50\% of the default value.
 
 \end{description}
 
@@ -1179,114 +1182,36 @@ estimated 140 hours to run through a single epochs. Thus from this point on, the
 goal became creating a recurrent network which would peak in accuracy run within
 a feasible time-fame.
 
-An attempt at this was the inclusion of a convolutional in the feature extraction
-part of the network. This would be placed be the recurrent layers, in an attempt
-to minimize the amount of data that was given to the current layers. 
+An attempt at this was the inclusion of a convolutional in the feature
+extraction part of the network. This would be placed be the recurrent layers, in
+an attempt to minimize the amount of data that was given to the current layers.
+This did increase the runtime, but revealed the lack of learning the network
+did, only getting a validation accuracy of [TODO:Insert ACC Here], at its' peak.
+This was slightly increased when changing out the cosine similarity approach
+with a series of dense layers instead, and using a bidirectional \gls{LSTM}
+layer rather than a single \gls{GRU} layer. In other words the problem lied in
+the lack of performance to be assumed to lie in inclusion of the convolutional
+layer, which precedes the recurrent one. It was however due to this convolutional
+layer that running any of the recurrent networks was possible within an acceptable
+time-frame, so another approach had to be used.
 
-% HER
+This secondary approach to limiting the run-time used, came in the form of
+changing the linguistic level out network worked at. Against inspired by
+\ref{qian:2018}, we elevated our network from using the characters of the texts,
+to using the sentences. This sentence representation was achieved by doing as
+was described in the \textbf{Embedding} part above. This approach yielded only
+significantly decreased the runtime to around $1.5$ hours. But it also revealed
+the reason why a recurrent network might not be the best choice for a task like
+this. The validation error throughout training the network wasn't very high
+compared to earlier convolutional network, and after running it through the
+prediction system it became obvious that the network was really good a learning
+individual author. In a task such as this, were generalization is a key factor,
+a network that does this individual learning really suffers when it comes to
+accuracy. This lead to the final network described above. This network included 
+an extra bidirectional \gls{LSTM} layer for added complexity, and the 0.3
+dropout for extra generalization.
 
-
-The first \gls{RNN}s made, was the first attempt at replicating the some of
-the final networks described by \cite{qian:2018}. The network would still only
-use 1 channel, the character channels, and have each of the two input texts
-move through the network in a parallel fashion between layers sharing weights.
-Instead of performing convolutions in the \textit{Feature Extraction} part of
-the network, we used a \gls{GRU} layer with 200 units instead. Additionally
-some comprehensive changed were made to both the \textit{Combining} and
-\textit{Comparing} part of the network, which made use of the cosine distance
-between the two texts, rather than the absolute difference between their
-features, which is the basis of many of the networks we produced. This idea of
-the cosine distance as the \textit{Comparing} part of the network, was attempted
-in later iterations as well, but never yielded very good results compared to the
-using of dense layers, which was the go to comparison approach from this point
-forward.
-
-In addition to the lack of accuracy yielded by a distance measure, this network
-also revealed the gigantic computational requirements a \gls{RNN} needed,
-having epoch training times of over 40 hours. Time we simply did not have. As
-such the experiment from this point on focused mostly on increasing decreasing
-computation time on an \gls{RNN} which made use of denser layers in the
-\textit{Comparing} part of the network. This attempted decrease in computation
-time took many forms. After some minor attempts relating to the number of units
-in our recurrent layer, we concluded that the assailant was not the number of
-units, but the amount of data used provided to the \textit{Feature Extraction}
-part of the network. For that reason convolutional layers and max pooling layers
-were included before the \gls{RNN} in the \textit{Feature Extraction} part of
-the network. The purpose of this was to reduce the amount of data given to the
-\gls{RNN} layers, with the potential additional up-side that the convolutions
-would uncover something the \gls{RNN} could not, such as was done in several
-of our previous convolutional networks. This largely reduced amount of data
-expectedly decreased the amount of time needed for one epoch, from days down to
-hours. The accuracies of these convolution, \gls{RNN} hybrids were however not
-very good, all lying around the 50\% accuracy mark, which of course for a 50/50
-data set, is the worst accuracy possible. Even switching out the \gls{GRU} with
-and \gls{LSTM} layer, did not do the networks any favors.
-
-At this point we deem \gls{RNN}s feasible at the current linguistic level.
-This we move the level up, creating networks that based themselves on the
-sentence level of the provided texts. The best performing \gls{RNN}, among
-other changes, made use of this sentence level approach. The overall design of
-this network can be seen in Figure [TODO]. Each text provided to the network is
-represented as a sequence of sequences. Each element in the outer sequence is
-considered a sentence, which is represented by a sequence of 25 words from the
-provided text. As such, the text is represented a sequence its the words from
-the texts, split into chunks of 25 words piece. It in this state, we provide the
-text to the first part of the network, the \textit{Embedding}. At this stage we
-parse all the words of each sentence through an embedding layer. In the earlier
-iterations of both the \gls{RNN} and the convolutions, these were trained along
-with the entire network. But as computation time/accuracy become increasingly
-a concern, we opted for pre-trained embeddings \cite{bojanowski2016}. These
-pre-trained embeddings mapped each word into a vector of length 300. As expected
-this did in fact improve on the computation time, and it did so without harming
-the validation accuracy. With each word embedded, we took the average of each 25
-word sequence which now serves at the representation of the sentence the words
-were assigned before. Now having each sentence represented, we proceed to the
-next part, \textit{Feature Extraction}. For our best \gls{RNN}s, this process
-consisted of using simply using a bidirectional \gls{LSTM} layer. Like in the
-convolutions the absolute difference between these two feature-sets would be
-computes, and in this case be provided directly to the dense output layer. This
-bidirectional layer, consisted of 50 neurons, thus ending up with a total of
-100 output. The \gls{LSTM} layer makes use of the default parameters as well.
-This being using the Tanh activation function, seen in Equation \eqref{eq:tanh},
-when finished, and the Hard Sigmoid activation function, seen in Equation
-\eqref{eq:h_sig}, at each recurrent step.
-
-\begin{equation}\label{eq:tanh}
-h(x) = \tanh(x) = \frac{(e^x - e^{-x})}{(e^x + e^{-x})}
-\end{equation}
-
-\begin{equation}\label{eq:h_sig}
-h(x) = \max(0, \min(1, x \cdot 0.2 + 0.5))
-\end{equation}
-
-The Adam optimizer also made use of the default parameters, $\eta = 0.001$,
-$\gamma_1 = 0.9$ and $\gamma_2=0.999$. and a decay of 0. As the loss function we
-used the categorical cross-entropy function.
-
-Using this sentence level \gls{RNN} yielded surprisingly great result initially.
-However, after having applied these results to the prediction system, a big
-flaw became apparent. During training the validation accuracy of network
-extremely good getting results in the 90\% range, the 50/50 data set it was
-given. But when given to the prediction system, the results were horrific. In
-our initial split of the data, authors would be present in both the training
-data applied to the network, and the validation data used after each epoch to
-determine the unbiased performance of the network. This was the cause of the
-problem. The goal of the networks we produced for this paper, was to generalize
-of all students. The network did however learn each specific student very
-well, and for that reason the presence of the student in was trained on in the
-validation set, made predictions very easy, resulting in the high accuracy.
-After fixing this data sample creation problem, the results aligned with the
-ones produced by the prediction system. These results can be seen in figure
-\ref{fig:network_8_accuracies}.
-
-\begin{figure}
-    \centering
-    \includegraphics[width=0.5\textwidth]{./pictures/experiments/network_8_accuracies.png}
-    \caption{Shows the training and validation accuracies over the epochs of
-        training on the eighth iteration of our networks.}
-    \label{fig:network_8_accuracies}
-\end{figure}
-
+% TODO Results
 
 \subsection{Prediction System}
 
