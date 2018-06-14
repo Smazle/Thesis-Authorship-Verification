@@ -173,22 +173,21 @@ and $\gamma$ for the SVM, and K and the distance metric for the extended delta
 method. These hyper-parameters were selected through a separate process
 which will be described in a later section.
 
-Due to the increased run-time when using leave one out cross validation,
-we had to make use of some other model selection approach. Under normal
-circumstances, normal X-fold cross validation would work out fine, but a complication
-arose when doing this with the extended delta method, which yielded normal
-cross validation unfit for that specific classifier.
-The reason for this was that there was a scenario where an unlucky split of
-folds would cause a lot of error. A generic example of this would be if we
-had the 2 class training set consisting of 6 value, evenly split between the
-2 classes. In the case where we split those 6 values into 3 folds, there is a
-chance that a fold contains two value of the same class, which means that if $K
-= 3$ in our case, both of those wont ever be able to classified correctly as
-there is only 1 of that class in the training set. As such, stratified K fold
-cross validation is used instead, as it uphold the class distribution in its'
-folds. While this problem would not plague the SVM classifier, we also opted
-the stratified K fold cross, so we would more directly compare the feature selection
-of the two models.
+Due to the increased run-time when using leave one out cross validation, we had
+to make use of some other model selection approach. Under normal circumstances,
+normal X-fold cross validation would work out fine, but a complication arose
+when doing this with the extended delta method, which yielded normal cross
+validation unfit for that specific classifier. The reason for this was that
+there was a scenario where an unlucky split of folds would cause a lot of error.
+A generic example of this would be if we had the 2 class training set consisting
+of 6 value, evenly split between the 2 classes. In the case where we split those
+6 values into 3 folds, there is a chance that a fold contains two value of the
+same class, which means that if $K = 3$ in our case, both of those wont ever be
+able to classified correctly as there is only 1 of that class in the training
+set. As such, stratified K fold cross validation is used instead, as it uphold
+the class distribution in its' folds. While this problem would not plague the
+SVM classifier, we also opted the stratified K fold cross, so we would more
+directly compare the feature selection of the two models.
 
 For both the \gls{SVM} and Extended Delta method, we ran this algorithm until
 350 features were selected. Computation time was still and issue, so we also
@@ -205,7 +204,7 @@ accuracy of 0.675 and 0.666 respectively.
 
 \begin{figure}
     \centering
-    \includegraphics[scale=0.8]{./pictures/experiments/FeatureSelect.png}
+    \includegraphics[scale=0.8]{./pictures/experiments/feature_selection.png}
     \caption{The process of the greedy feature selection of the SVM and the Extended Delta Method}
     \label{fig:fs_results}
 \end{figure}
@@ -577,7 +576,7 @@ accuracies during training in Figure \ref{fig:conv-char-NN-accuracies}.
 
 \begin{figure}
     \centering
-    \includegraphics[width=\textwidth]{./pictures/experiments/network3.png}
+    \includegraphics[width=\textwidth]{./pictures/experiments/conv_char_nn/model.png}
     \caption{The structure of network \gls{conv-char-NN}. Weights are
         shared by the embedding layers and the convolutional layers as shown by
         the blue box. The input to the network is at the top and the output is
@@ -590,7 +589,7 @@ accuracies during training in Figure \ref{fig:conv-char-NN-accuracies}.
 
 \begin{figure}
     \centering
-    \includegraphics[width=\textwidth]{./pictures/experiments/conv-char-NN-training-accuracy.png}
+    \includegraphics[width=\textwidth]{./pictures/experiments/conv_char_nn/training_accuracy.png}
     \caption{The training and validation accuracy of \gls{conv-char-NN} during
         training. Each epoch contains several thousand minibatches which is why
         the training and validation accuracies rises so much in the first
@@ -663,295 +662,45 @@ After expanding the network we wanted to figure out which features the network
 were looking at. Since the convolutional layer (feature extractor) is followed
 by a global max pool we knew that the feature a specific filter was looking at
 could be determined by finding the maximum activation of that filter.
+Unfortunately we found that the network were looking at metadata about the
+texts. Specifically the network were looking at names and school class numbers.
+Obviously a real ghost writer would make sure that the correct name and school
+class were written on the assignment so in the real world those features should
+not be used. The features are a product of the creation of the dataset we are
+training on. Since different students assignments are combined to create the
+negative samples we are training on (almost) all negative samples will have
+different names written in them. Similarly (almost) all negative samples will
+have different school classes written on them. Therefore such metadata will be
+great features in our training dataset but not necessarily great features in the
+real world. In Table \ref{tab:name_features} we have shown the activation
+strings of the convolutional filter looking at Danish names.
 
+\begin{table}
+    \begin{tabular}{ll}
+        \textbf{Activation String} & \textbf{Danish Surnames Matching} \\
+        \hline
+        \verb!adsen\n\n\n! & Madsen. \\
+        \verb!ndsen\n\n\n! & Svendsen, Frandsen. \\
+        \verb!elsen\n\n\n! & Nielsen, Mikkelsen. \\
+        \verb!ersen\n\n\n! & Pedersen, Andersen, Petersen, Iversen, Jespersen. \\
+        \verb!ansen\n\n\n! & Hansen, Christiansen, Johansen, Kristiansen. \\
+        \verb!ensen\n\n\n! & Jensen, Christensen, S\o rensen, J\o rgensen, Kristensen,
+                             Mortensen, Mogensen. \\
+        \verb!arsen\n\n\n! & Larsen. \\
+        \verb!ulsen\n\n\n! & Poulsen.
+    \end{tabular}
+    \caption{Showing the mapping from a convolutional filter looking at endings
+        of common Danish surnames and the actual surnames. We found the list of
+        the most common Danish surnames at
+        \url{http://www.mydanishroots.com/surnames-meaning-and-origin/the-100-most-common-surnames-in-denmark.html}}
+    \label{tab:name_features}
+\end{table}
 
-\subsubsection{\glsdesc{conv-char-word-NN}}
-\label{subsubsec:conv_char_word_nn}
-
-%\subsubsection{Siamese Neural Network - Iteration 1}
-
-%The network we used to try and solve the problem is shown in Figure
-%\ref{fig:network_1}. The Siamese part of the network is the Convolutional
-%Layer. We used 1000 filters of size 10. That means that 1000 different features
-%are supposed to be learned by the network and each feature can use a local
-%context of 10 characters to extract a feature. After the convolution we have a
-%max-over-time pooling layer. The layer takes the maximum value of each feature
-%such that we have 1000 features from each text. We then have a normal dense
-%neural network on top of that which are given the features of both texts. The
-%dense network is then supposed to learn how to compare the features from the two
-%texts. We have 1 dense hidden layer each with 500 neurons. At the end we have
-%a output layer with two outputs. The activation function for all layers except
-%the last one is the rectified linear unit and the activation function of the
-%last layer is the softmax function. The output of the network is a probability
-%distribution over the two classes.
-
-%The input to the network first goes through an embedding layer. The embedding
-%layer transforms integers into dense vectors of floating point numbers. The
-%embedding layer functions as a lookup table such that each integer is mapped
-%to the same dense vector. The embedding is trainable meaning that better
-%embeddings will be learned while the network is training.
-
-%\begin{figure}[htb]
-    %\centering
-    %\includegraphics[width=0.6\textwidth]{./pictures/experiments/network1.png}
-    %\caption{Illustrate the structure of our first Siamese Neural Network
-        %Architecture.}
-    %\label{fig:network_1}
-%\end{figure}
-
-%The network obtained a validation accuracy of 0.68684. We have shown both the
-%training and validation accuracies in the different epochs in Figure
-%\ref{fig:network1_accuracies}. In that plot we can see that the network very
-%quickly overfits the training data and no longer learns anything general.
-
-%\begin{figure}[htb]
-    %\centering
-    %\includegraphics[width=0.5\textwidth]{./pictures/experiments/network_1_accuracies.png}
-    %\caption{Training and validation accuracies for the iteration 1 network in
-        %the different epochs of the networks execution.}
-    %\label{fig:network1_accuracies}
-%\end{figure}
-
-
-%\subsubsection{Siamese Neural Network - Iteration 2}
-
-%In our last network we observed that the network after a few number of epochs
-%overfitted on the training dataset. The validation accuracy quickly began
-%stalling as the training accuracy went to 100\%. We therefore focused our second
-%network architecture on limiting overfitting. We added a dropout layer before
-%the output layer.
-
-%In iteration 1 the function we used to merge features from the known and unknown
-%text together were a concatenation. If we let the extracted features of the
-%known text be $K_i$ and the extracted features of the unknown text be $U_i$ then
-%$K_0$ and $U_0$ correspond to the same feature extracted from the two texts. The
-%concatenation merge function would then produce,
-
-%\begin{equation} merge(K, U) \rightarrow \left(
-        %K_0, K_1, \dots, K_n, U_0, U_1, \dots, U_n
-    %\right)^T.
-%\end{equation}
-
-%That means that the neural network would have to figure out by itself that input
-%$0$ were related in particular to input $n + 1$. To save the network that task
-%we also replaced the merging function to the absolute difference of the feature
-%vectors. That means that our merge function became,
-
-%\begin{equation}
-    %merge(K, U) \rightarrow \left(
-        %(|K_0 - U_0|), (|K_1 - U_1|), \dots, (|K_n - U_n|)
-    %\right)^T.
-%\end{equation}
-
-%So the network no longer has to learn arbitrary indexes. Instead it can learn
-%which features is important for authorship verification and learn thresholds for
-%when each feature is important. With the new merging we will have a large number
-%whenever the two features are far apart and a small number whenever they are
-%close to each other.
-
-%We changed the convolutional filters we used from 1000 convolutional filters of
-%size 10 to 500 convolutional filters of size 4 and 500 convolutional filters of
-%size 8. The idea was that the filters could learn different features where some
-%of the features would consist of a large number of characters and other of the
-%features would consist of a small number of characters. The architecture of our
-%network from iteration 2 is shown in Figure \ref{fig:network_2}.
-
-%\begin{figure}
-    %\centering
-    %\includegraphics[width=\textwidth]{./pictures/experiments/network2.png}
-    %\caption{Illustrate the structure of our second Siamese Neural Network
-        %Architecture.}
-    %\label{fig:network_2}
-%\end{figure}
-
-%We also added more dense layers to the model. A plot of the
-%training and validation accuracies per epoch can be seen in Figure
-%\ref{fig:network2_accuracies}.
-
-%\begin{figure}
-    %\centering
-    %\includegraphics[width=0.5\textwidth]{./pictures/experiments/network_2_accuracies.png}
-    %\caption{Shows the training and validation accuracies on the second
-        %network.}
-    %\label{fig:network2_accuracies}
-%\end{figure}
-
-%The maximum validation accuracy obtained were 0.74464 in epoch 12.
-
-
-%\subsubsection{Siamese Neural Network - Iteration 3}
-
-%In iteration 2 we observed that the network seemed to learn everything in the
-%first epoch and did not improve much after that. We also observed that the
-%accuracy improved compared to the first network. We therefore wanted to try a
-%larger network which would be able to hopefully learn more and obtain a higher
-%accuracy than our first two networks.
-
-%We both tried adding more convolutions and adding more dense layers. Our third
-%network use 700 convolutions of size 8 (currently drawn confusingly) and 500
-%convolutions of size 4. The network then contains 4 dense layers all with 500
-%hidden neurons with \gls{ReLu} activation function. Then a dropout layer with
-%30\% dropout and finally the output layer with 2 neurons and a softmax
-%activation function. The function we use to combine the features from the two
-%texts are still the absolute difference as that seemed to work fine for the
-%previous network. We have shown the structure of the third network in Figure
-%\ref{fig:network3}.
-
-%\begin{figure}
-    %\centering
-    %\includegraphics[width=\textwidth]{./pictures/experiments/network3.png}
-    %\caption{Illustrate the structure of our third Siamese Neural Network.
-        %Weights are shared by the embedding layers and the convolutional
-        %layers.}
-    %\label{fig:network3}
-%\end{figure}
-
-%Our third network were able to obtain an accuracy of 0.83612. We have shown the
-%training and validation accuracies in Figure \ref{fig:network_3_accuracies}. We
-%can see that the network quickly improve to about 80\% accuracy and after that
-%not much happens.
-
-%\begin{figure}
-    %\centering
-    %\includegraphics[width=0.5\textwidth]{./pictures/experiments/network_3_accuracies.png}
-    %\caption{Shows the training and validation accuracies over the epochs of
-        %training on the third network.}
-    %\label{fig:network_3_accuracies}
-%\end{figure}
-
-%To get an idea of which features the network were looking at we looked at the
-%output of the convolutional layers. After the convolutional layers we have a
-%max-over-time pool so we know that higher values are important. We could then
-%take a text, feed it to the network, find the index of the maximum output of
-%the convolutional layers and then show the text snipped (char-N-gram) that
-%produced that high value. We then did that for all the texts in the dataset. The
-%first filter in the network for example yielded many short strings ending with 3
-%newlines. Some examples of these are,
-
-%\begin{lstlisting}[gobble=4]
-    %'adsen\n\n\n'
-    %'ndsen\n\n\n'
-    %'umeer\n\n\n'
-    %'endte\n\n\n'
-    %'ingen\n\n\n'
-    %'ehren\n\n\n'
-    %'elsen\n\n\n'
-    %'ommer\n\n\n'
-    %'Ruter\n\n\n'
-    %'ummer\n\n\n'
-    %'ersen\n\n\n'
-    %'ansen\n\n\n'
-    %'heden\n\n\n'
-    %'ensen\n\n\n'
-    %'arsen\n\n\n'
-    %'orten\n\n\n'
-    %'ulsen\n\n\n'
-    %'orgen\n\n\n'
-%\end{lstlisting}
-
-%Many of those short string looks like the ending of common Danish
-%names followed by three newlines. Here are some examples of the
-%names taken from a list of the 100 most frequent surnames in Denmark
-%\footnote{http://www.mydanishroots.com/surnames-meaning-and-origin/the-100-most-
-%common-surnames-in-denmark.html},
-
-%\begin{description}
-    %\item[adsen:] Madsen.
-    %\item[ndsen:] Svendsen, Frandsen.
-    %\item[elsen:] Nielsen, Mikkelsen.
-    %\item[ersen:] Pedersen, Andersen, Petersen, Iversen, Jespersen.
-    %\item[ansen:] Hansen, Christiansen, Johansen, Kristiansen.
-    %\item[ensen:] Jensen, Christensen, S\o rensen, J\o rgensen, Kristensen,
-        %Mortensen, Mogensen.
-    %\item[arsen:] Larsen.
-    %\item[ulsen:] Poulsen.
-%\end{description}
-
-%The network therefore seems to have learned that a name followed by whitespace
-%are an important feature when determining the authorship of a text. Clearly when
-%a student buy an assignment from a ghost writer the text will contain the
-%students own name. Therefore these features are counter productive since the
-%network learns that as a result of how we have created the training dataset
-%where each text has the correct authors name in it.
-
-
-%\subsubsection{Siamese Neural Network - Iteration 4}
-
-%In this iteration we trained the third network again but now using a dataset
-%where names were substituted by empty strings. We wanted to see how well the
-%network would perform when it was not able to use peoples names as a feature.
-%A graph of the training and validation accuracies can be seen in Figure
-%\ref{fig:network_4_accuracies}. The best validation result we found was in epoch
-%22 with an accuracy of 0.79843. That means that we lost about 4\% accuracy now
-%that we can no longer look at peoples names.
-
-%\begin{figure}
-    %\centering
-    %\includegraphics[width=0.5\textwidth]{./pictures/experiments/network_4_accuracies.png}
-    %\caption{Shows the training and validation accuracies over the epochs of
-        %training on the fourth iteration of the network.}
-    %\label{fig:network_4_accuracies}
-%\end{figure}
-
-%We wanted to verify whether or not the network still looked at the names of the
-%authors. It is not possible for us to look at all 1200 filters but we looked
-%at a couple and did not find any that looked like they were looking at names.
-%However we did find that the network now seems to be looking at which class
-%the student is in. The classes in Danish schools are typically written as 1.p,
-%1.q, 2.p, 2,q, etc. and we found that one of the convolutional 4 filters were
-%looking at character sequences such as those. We have generated a couple of
-%tables that shows what the network is now looking at. We generated the tables by
-%taking the first 50 texts from the dataset and extracting the maximum value of a
-%particular filter from each text. That gives a single string of the convolution
-%size from each text and a number which is higher the more important that string
-%is. We then sorted the extractions by the importance score. The result of a
-%couple of the filters are shown in Figures \ref{fig:features_convolution_8_1},
-%\ref{fig:features_convolution_8_5}, \ref{fig:features_convolution_8_100} and
-%\ref{fig:features_convolution_4_100}. The first figure looks at whether or not
-%authors use the phrase "s\aa\ at" (such that). Inexperienced Danish writers will
-%often use the phrase which is considered grammatically incorrect in most Danish
-%sentences. Therefore the network seems to have learned that some writers use
-%"s\aa\ at" while others do not and that it is an important phrase when verifying
-%authorship. The second figure seems to look at whether or not an authors uses
-%the phrase "meget" (most). Some authors apparently often describe things using
-%"meget" while others do not. The third figure shows that the network looks at
-%which authors use the phrase "at de" or "at der" ("that they" or "that there").
-%The fourth filter is the one that seems to look at which class a student is in.
-%In our constructed dataset the class of a student will always be a good feature
-%since we do not have any actual ghost writers. However a ghost writer would write
-%the correct class of the student on their submission. Therefore we do not want
-%the network to learn that particular feature.
-
-%Our main problem is that the networks keep using metadata from the texts to
-%make the predictions. The metadata will always match even though a ghost writer
-%has written the assignment. It is probably not possible for us to remove all
-%metadata from all texts. Even though names are supposed to have been removed
-%the dataset still contains a couple of them and there is so many different ways
-%of writing the class of a student that it is not feasible for us to remove
-%all of them. The metadata will typically occur in the beginning of the text
-%and sometimes throughout the text in headers. When training a neural network
-%on images it is normal practice to rotate, shift, shear and zoom the images
-%randomly during training. The shifting of the images produces new images where
-%part of the image is no longer part of the training set. In each epoch the
-%image is shifted a different amount in different directions and the network can
-%therefore learn to recognise objects even though part of the image is not there.
-%We wanted to do something similar for the texts we are training on. At the
-%moment the network relies on finding metadata in the text. That is only possible
-%when it is given the whole text since metadata will only occur in parts of the
-%text. We therefore want to try to only give part of the texts to the network
-%during training. We can do that by replacing some random part of the input text
-%with a special value during training. For example each time a text is used
-%during training we might replace 50\% of it with a special garbage character.
-%Therefore the network will no longer be able to rely on finding metadata about
-%the text since the metadata will not always be present.
-
-%Another problem our current networks has is that each filter extract
-%only a single value from a text. For example the filter shown in Figure
-%\ref{fig:features_convolution_8_1} that looked at the phrase "s\aa\ at". The
-%filter is able to find out whether or not a text contains the phrase but are not
-%able to say anything about how often that phrase is used by the author. To find
-%out how often a phrase is used we need to stop using max over time pooling and
-%start using some kind of average.
+As described in Section \ref{sec:data} we tried to remove as much personal
+information as possible from the texts by removing the first 200 characters
+and by deleting names from the texts. When we trained the network again with
+those preprocessing steps and got a substantial hit in network performance.
+However the network were hopefully not looking at names metadata.
 
 
 %\subsubsection{Siamese Neural Network - Iteration 5}
@@ -1181,7 +930,7 @@ the default parameters the number of units in the layer.
 the combinations of our two siamese paths, are done by taking the absolute difference
 of their two pooling outputs.
 
-\item[Descision:] The decision part of this network was kept quite simple. It
+\item[Decision:] The decision part of this network was kept quite simple. It
 simply consists of a single dense layer, of 100 units, which is then followed
 by a 0.3 dropout layer. The result of the dropout layer is then provided to the
 last dense layer, consisting of 2 neurons, and the soft-max activation function,
@@ -1235,6 +984,11 @@ an extra bidirectional \gls{LSTM} layer for added complexity, and the 0.3
 dropout for extra generalization.
 
 % TODO Results
+
+
+\subsubsection{\glsdesc{conv-char-word-NN}}
+\label{subsubsec:conv_char_word_nn}
+
 
 \subsection{Prediction System}
 
@@ -1353,14 +1107,6 @@ accusations by inverting the output of $P$ and divides that by 10. So the
 condition makes sure that only 10\% of the accusations we make are false
 accusations.
 
-We find the optimal parameters by doing a binary search for
-the threshold $\theta$ that solves the minimization problem
-\eqref{eq:prediction_system_minimization} for each weight function. We start
-the search with a lower threshold of 0.0 and an upper threshold of 1.0. Then we
-continue the search for $\theta$ until we have converged on a fixed point. The
-thresholds and weights we report as the optimum for the networks are based on
-the output of this binary search.
-
 We have run our prediction system on several of the networks we trained as
 part of our experiments. For each of the networks we present several graphs
 showing their performance for different weights and thresholds and we report
@@ -1381,44 +1127,44 @@ positive samples as before and then for each sample we added a negative sample
 with a 4\% chance.
 
 
-\subsubsection{Convolutional Siamese Neural Network 1}
+\subsubsection{\glsdesc{conv-char-NN}}
 
 The first network we tuned hyperparameters for were the network presented
-in Figure TODO. The network used only convolutions on the character level
-to extract features and used a dense network to decide whether or not
-the texts were written by the same author. We have shown the accuracy
+in Figure \ref{fig:conv-char-NN}. The network used only convolutions on the
+character level to extract features and used a dense network to decide whether
+or not the texts were written by the same author. We have shown the accuracy
 and accusation error for the dataset containing 50\% negatives in Figure
-\ref{fig:prediction_system_results_1} and for the dataset containing 4\%
-negatives in Figure \ref{fig:prediction_system_results_2}.
+\ref{fig:conv-char-NN-pred-50} and for the dataset containing 4\% negatives in
+Figure \ref{fig:conv-char-NN-pred-4}.
 
 \begin{figure}
     \centering
     \textbf{Prediction System Results for 0.5 Split}\par\medskip
-    \includegraphics[width=\textwidth]{./pictures/experiments/Prediction_Network3_50.png}
+    \includegraphics[width=\textwidth]{./pictures/experiments/conv_char_nn/prediction_system_50.png}
     \caption{Results of running the prediction system with the network described
-        in Section \ref{subsubsec:convolutional_siamese_neural_networks} on a
-        validation dataset with 50\% positive samples and 50\% negative samples.
-        In the upper graph we show the accuracies obtained as a function of
-        $\theta$ for different weights $w$. At the bottom we have shown the
-        accusation error as a function $\theta$ again with one line for each
-        weight. We can see that as the threshold increases and we accuse more
-        people of cheating the accusation error rises.}
-    \label{fig:prediction_system_results_1}
+        in Section \ref{subsubsec:conv_char_nn} on a validation dataset with
+        50\% positive samples and 50\% negative samples. In the upper graph we
+        show the accuracies obtained as a function of $\theta$ for different
+        weights $w$. At the bottom we have shown the accusation error as a
+        function $\theta$ again with one line for each weight. We can see that
+        as the threshold increases and we accuse more people of cheating the
+        accusation error rises.}
+    \label{fig:conv-char-NN-pred-50}
 \end{figure}
 
 \begin{figure}
     \centering
     \textbf{Prediction System Results for 0.04 Split}\par\medskip
-    \includegraphics[width=\textwidth]{./pictures/experiments/Prediction_Network6_04.png}
+    \includegraphics[width=\textwidth]{./pictures/experiments/conv_char_nn/prediction_system_04.png}
     \caption{Results of running the prediction system with the network described
-        in Section \ref{subsubsec:convolutional_siamese_neural_networks} on a
-        validation dataset with 96\% positive samples and 4\% negative samples.
-        In the upper graph we show the accuracies obtained as a function of
-        $\theta$ for different weights $w$. At the bottom we have shown the
-        accusation error as a function $\theta$ again with one line for each
-        weight. We can see that as the threshold increases and we accuse more
-        people of cheating the accusation error rises.}
-    \label{fig:prediction_system_results_2}
+        in Section \ref{subsubsec:conv_char_nn} on a validation dataset with
+        96\% positive samples and 4\% negative samples. In the upper graph we
+        show the accuracies obtained as a function of $\theta$ for different
+        weights $w$. At the bottom we have shown the accusation error as a
+        function $\theta$ again with one line for each weight. We can see that
+        as the threshold increases and we accuse more people of cheating the
+        accusation error rises.}
+    \label{fig:conv-char-NN-pred-4}
 \end{figure}
 
 The best configuration for the 0.5 split were using the Exponential Norm Weight
@@ -1432,44 +1178,44 @@ $\theta = 0.076101$. That configuration obtained an accusation error of 5.5556
 \gls{TP}s, 1 \gls{FN}s and 64 \gls{FP}s.
 
 
-\subsubsection{Convolutional Siamese Neural Network 2}
+\subsubsection{\glsdesc{conv-char-word-NN}}
 
 The second network we tuned hyperparameters for were the network presented
 in Figure TODO. The network used convolutions on the character level and
 word level to extract features and used a dense network to decide whether or
 not the texts were written by the same author. We have shown the accuracy
 and accusation error for the dataset containing 50\% negatives in Figure
-\ref{fig:prediction_system_results_3} and for the dataset containing 4\%
-negatives in Figure \ref{fig:prediction_system_results_4}.
+\ref{fig:conv-char-word-NN-pred-50} and for the dataset containing 4\%
+negatives in Figure \ref{fig:conv-char-word-NN-pred-4}.
 
 \begin{figure}
     \centering
     \textbf{Prediction System Results for 0.5 Split}\par\medskip
-    \includegraphics[width=\textwidth]{./pictures/experiments/prediction_system_network6_50.png}
+    \includegraphics[width=\textwidth]{./pictures/experiments/conv_char_word_nn/prediction_system_50.png}
     \caption{Results of running the prediction system with the network described
-        in Section \ref{subsubsec:convolutional_siamese_neural_networks} on a
-        validation dataset with 50\% positive samples and 50\% negative samples.
-        In the upper graph we show the accuracies obtained as a function of
-        $\theta$ for different weights $w$. At the bottom we have shown the
-        accusation error as a function $\theta$ again with one line for each
-        weight. We can see that as the threshold increases and we accuse more
-        people of cheating the accusation error rises.}
-    \label{fig:prediction_system_results_3}
+        in Section \ref{subsubsec:conv_char_word_nn} on a validation dataset
+        with 50\% positive samples and 50\% negative samples. In the upper graph
+        we show the accuracies obtained as a function of $\theta$ for different
+        weights $w$. At the bottom we have shown the accusation error as a
+        function $\theta$ again with one line for each weight. We can see that
+        as the threshold increases and we accuse more people of cheating the
+        accusation error rises.}
+    \label{fig:conv-char-word-NN-pred-50}
 \end{figure}
 
 \begin{figure}
     \centering
     \textbf{Prediction System Results for 0.04 Split}\par\medskip
-    \includegraphics[width=\textwidth]{./pictures/experiments/Prediction_Network6_04.png}
+    \includegraphics[width=\textwidth]{./pictures/experiments/conv_char_word_nn/prediction_system_04.png}
     \caption{Results of running the prediction system with the network described
-        in Section \ref{subsubsec:convolutional_siamese_neural_networks} on a
-        validation dataset with 96\% positive samples and 4\% negative samples.
-        In the upper graph we show the accuracies obtained as a function of
-        $\theta$ for different weights $w$. At the bottom we have shown the
-        accusation error as a function $\theta$ again with one line for each
-        weight. We can see that as the threshold increases and we accuse more
-        people of cheating the accusation error rises.}
-    \label{fig:prediction_system_results_4}
+        in Section \ref{subsubsec:conv_char_word_nn} on a validation dataset
+        with 96\% positive samples and 4\% negative samples. In the upper graph
+        we show the accuracies obtained as a function of $\theta$ for different
+        weights $w$. At the bottom we have shown the accusation error as a
+        function $\theta$ again with one line for each weight. We can see that
+        as the threshold increases and we accuse more people of cheating the
+        accusation error rises.}
+    \label{fig:conv-char-word-NN-pred-4}
 \end{figure}
 
 The best configuration for the 0.5 split were using the Exponential Norm Weight
