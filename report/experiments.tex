@@ -150,22 +150,21 @@ and $\gamma$ for the SVM, and K and the distance metric for the extended delta
 method. These hyper-parameters were selected through a separate process
 which will be described in a later section.
 
-Due to the increased run-time when using leave one out cross validation,
-we had to make use of some other model selection approach. Under normal
-circumstances, normal X-fold cross validation would work out fine, but a complication
-arose when doing this with the extended delta method, which yielded normal
-cross validation unfit for that specific classifier.
-The reason for this was that there was a scenario where an unlucky split of
-folds would cause a lot of error. A generic example of this would be if we
-had the 2 class training set consisting of 6 value, evenly split between the
-2 classes. In the case where we split those 6 values into 3 folds, there is a
-chance that a fold contains two value of the same class, which means that if $K
-= 3$ in our case, both of those wont ever be able to classified correctly as
-there is only 1 of that class in the training set. As such, stratified K fold
-cross validation is used instead, as it uphold the class distribution in its'
-folds. While this problem would not plague the SVM classifier, we also opted
-the stratified K fold cross, so we would more directly compare the feature selection
-of the two models.
+Due to the increased run-time when using leave one out cross validation, we had
+to make use of some other model selection approach. Under normal circumstances,
+normal X-fold cross validation would work out fine, but a complication arose
+when doing this with the extended delta method, which yielded normal cross
+validation unfit for that specific classifier. The reason for this was that
+there was a scenario where an unlucky split of folds would cause a lot of error.
+A generic example of this would be if we had the 2 class training set consisting
+of 6 value, evenly split between the 2 classes. In the case where we split those
+6 values into 3 folds, there is a chance that a fold contains two value of the
+same class, which means that if $K = 3$ in our case, both of those wont ever be
+able to classified correctly as there is only 1 of that class in the training
+set. As such, stratified K fold cross validation is used instead, as it uphold
+the class distribution in its' folds. While this problem would not plague the
+SVM classifier, we also opted the stratified K fold cross, so we would more
+directly compare the feature selection of the two models.
 
 For both the \gls{SVM} and Extended Delta method, we ran this algorithm until
 350 features were selected. Computation time was still and issue, so we also
