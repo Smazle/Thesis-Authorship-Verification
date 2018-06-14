@@ -639,6 +639,45 @@ After expanding the network we wanted to figure out which features the network
 were looking at. Since the convolutional layer (feature extractor) is followed
 by a global max pool we knew that the feature a specific filter was looking at
 could be determined by finding the maximum activation of that filter.
+Unfortunately we found that the network were looking at metadata about the
+texts. Specifically the network were looking at names and school class numbers.
+Obviously a real ghost writer would make sure that the correct name and school
+class were written on the assignment so in the real world those features should
+not be used. The features are a product of the creation of the dataset we are
+training on. Since different students assignments are combined to create the
+negative samples we are training on (almost) all negative samples will have
+different names written in them. Similarly (almost) all negative samples will
+have different school classes written on them. Therefore such metadata will be
+great features in our training dataset but not necessarily great features in the
+real world. In Table \ref{tab:name_features} we have shown the activation
+strings of the convolutional filter looking at Danish names.
+
+\begin{table}
+    \begin{tabular}{ll}
+        \textbf{Activation String} & \textbf{Danish Surnames Matching} \\
+        \hline
+        \verb!adsen\n\n\n! & Madsen. \\
+        \verb!ndsen\n\n\n! & Svendsen, Frandsen. \\
+        \verb!elsen\n\n\n! & Nielsen, Mikkelsen. \\
+        \verb!ersen\n\n\n! & Pedersen, Andersen, Petersen, Iversen, Jespersen. \\
+        \verb!ansen\n\n\n! & Hansen, Christiansen, Johansen, Kristiansen. \\
+        \verb!ensen\n\n\n! & Jensen, Christensen, S\o rensen, J\o rgensen, Kristensen,
+                             Mortensen, Mogensen. \\
+        \verb!arsen\n\n\n! & Larsen. \\
+        \verb!ulsen\n\n\n! & Poulsen.
+    \end{tabular}
+    \caption{Showing the mapping from a convolutional filter looking at endings
+        of common Danish surnames and the actual surnames. We found the list of
+        the most common Danish surnames at
+        \url{http://www.mydanishroots.com/surnames-meaning-and-origin/the-100-most-common-surnames-in-denmark.html}}
+    \label{tab:name_features}
+\end{table}
+
+As described in Section \ref{sec:data} we tried to remove as much personal
+information as possible from the texts by removing the first 200 characters
+and by deleting names from the texts. When we trained the network again with
+those preprocessing steps and got a substantial hit in network performance.
+However the network were hopefully not looking at names metadata.
 
 
 \subsubsection{\glsdesc{conv-char-word-NN}}
