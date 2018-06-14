@@ -30,7 +30,7 @@ class TimeAndLength(WeightFunction):
         return w1 + w2
 
     def __str__(self):
-        return r'Exp, $\lambda$ = {} + Text Length'.format(self.exp_norm.lamb)
+        return u'Exp λ={} + Text Length'.format(self.exp_norm.lamb)
 
 
 class ExponentialNorm(WeightFunction):
@@ -53,7 +53,7 @@ class ExponentialNorm(WeightFunction):
         return xs / np.sum(xs)
 
     def __str__(self):
-        return r'Exp, $\lambda$ = {}'.format(self.lamb)
+        return u'Exp λ={}'.format(self.lamb)
 
 
 class MaximumWeight(WeightFunction):
