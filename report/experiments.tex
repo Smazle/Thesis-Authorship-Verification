@@ -27,9 +27,9 @@ the case where that element is characters, and n is 3, the string "hello" would
 produce the character-3-grams "hel", "ell" and "llo". This also means that a
 feature such as word frequencies can be considered word-1-grams.
 
-\gls{POS} tags, refer to the grammatical class a certain words belongs to,
-such as nouns and adjectives. In order to extract these we made use
-of a POS-tag extractor, provided by \cite{polyglot}.
+\gls{POS} tags, refer to the grammatical class a certain words belongs to, such
+as nouns and adjectives. In order to extract these we made use of a POS-tag
+extractor, provided by \cite{polyglot}.
 
 For all of these experiments a Danish third party corpus, provided by
 \texttt{NLTK}\footnote{\url{http://www.nltk.org/index.html}}, was used as the
@@ -454,11 +454,11 @@ to look for n-grams in texts. Traditional authorship verification/attribution
 is based on carefully engineered n-grams that are compared between two texts
 \cite{stamatos2009}. Instead of choosing the n-grams ourselves we wanted the
 network to learn which features are important for the authorship verification
-task. The features are learned through convolutions. The convolutions
-look at some number of characters at a time and gives a single output for
-those characters. Assume for example that the network has learned that the
-character sequence "ould " is important for deciding the author of a text.
-Then we expect the network to react strongly to character sequences that looks
+task. The features are learned through convolutions. The convolutions look
+at some number of characters at a time and gives a single output for those
+characters. Assume for example that the network has learned that the character
+sequence "ould " is important for deciding the author of a text. Then we
+expect the network to react strongly to character sequences that looks
 like "ould ". We have illustrated such a convolutional filter in Figure
 \ref{fig:convolution_text_example}.
 

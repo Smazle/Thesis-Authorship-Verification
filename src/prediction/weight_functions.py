@@ -17,6 +17,22 @@ class WeightFunction:
         raise Exception('Subclasses should implement this.')
 
 
+class TimeAndLength(WeightFunction):
+
+    def __init__(self):
+        self.exp_norm = ExponentialNorm(0.25)
+        self.text_length = TextLengthWeight()
+
+    def get_weights(self, predictions, times, text_lengths):
+        w1 = self.exp_norm.get_weights(predictions, times, text_lengths)
+        w2 = self.text_length.get_weights(predictions, times, text_lengths)
+
+        return w1 + w2
+
+    def __str__(self):
+        return r'Exp, $\lambda$ = {} + Text Length'.format(self.exp_norm.lamb)
+
+
 class ExponentialNorm(WeightFunction):
     def __init__(self, lamb):
         self.lamb = lamb
@@ -111,5 +127,7 @@ def weight_factory(weight_type):
         return [TextLengthWeight()]
     elif weight_type == 'majority-vote':
         return [MajorityVoteWeight()]
+    elif weight_type == 'text-time-combined':
+        return [TimeAndLength()]
     else:
         raise Exception('Unknown weight {}'.format(weight_type))
