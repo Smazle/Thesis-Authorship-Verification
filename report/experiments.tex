@@ -533,6 +533,25 @@ like "ould ". We have illustrated such a convolutional filter in Figure
 
 We have shown an illustration of the network in Figure \ref{fig:conv-char-NN}.
 In the Figure we have illustrated the Siamese part of the network as a blue box.
+The 4 phases of the network is not illustrated in the Figure but it should be
+possible to find them by reading the description above. We trained the network
+on the dataset described in the Section \ref{sec:data} and in the beginning
+of this Section. We used the \gls{Adam} optimizer during the training of the
+network. We used a learning rate of $\eta = 0.0005$, half of what was suggested
+by \cite{DBLP:journals/corr/KingmaB14}. We did that as we had problems with
+neurons dying during the training of the network otherwise. Other than the
+learning rate we used the parameters suggested in the article. That is, the
+remembering rates were set to $\gamma_1 = 0.9$ and $\gamma_2 = 0.999$. As the
+error function we used the Categorical Crossentropy function described in
+Section TODO. When we trained the network we were able to obtain a validation
+accuracy of 0.71773 in epoch 6. The training accuracy continued rising but we
+used early stopping since the validation accuracy had stopped improving. We have
+shown a graph of the training and validation accuracies during training in
+Figure \ref{fig:conv-char-NN-accuracies}. During the training we used minibatch
+learning with a minibatch size of 8. We used a size of 8 as that was the largest
+batch size that could fit in the GPUs memory. During the training we padded all
+texts with zeros such that all texts in each batch had the same length. We did
+that as it is required by Keras.
 
 \begin{figure}
     \centering
@@ -546,6 +565,14 @@ In the Figure we have illustrated the Siamese part of the network as a blue box.
         not.}
     \label{fig:conv-char-NN}
 \end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{./pictures/experiments/conv-char-NN-training-accuracy.png}
+    \caption{The training and validation accuracy of \gls{conv-char-NN} during
+        training. Each epoch contains several thousand minibatches which is why
+        the training and validation accuracies rises so much in the first
+        epoch.}
 
 %As described our first network took as input two sequences of characters. Each
 %character was then one-hot encoded and as described in Section \ref{sec:data} we
