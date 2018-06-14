@@ -524,8 +524,8 @@ like "ould ". We have illustrated such a convolutional filter in Figure
         500 neurons, a dropout layer and an output layer. The 4 dense layers
         also use the \gls{ReLu} activation function. The dropout layer is added
         just before the output layer and performs 30\% dropout to try to combat
-        overfitting. The actual prediction is performed in the output layer. The
-        output layer use the softmax function to return a probability
+        overfitting. The actual prediction is performed in the output layer.
+        The output layer use the softmax function to return a probability
         distribution over the two possibilities that the texts are written by
         the same author and that they are written by different authors.
 
@@ -545,13 +545,13 @@ remembering rates were set to $\gamma_1 = 0.9$ and $\gamma_2 = 0.999$. As the
 error function we used the Categorical Crossentropy function described in
 Section TODO. When we trained the network we were able to obtain a validation
 accuracy of 0.71773 in epoch 6. The training accuracy continued rising but we
-used early stopping since the validation accuracy had stopped improving. We have
-shown a graph of the training and validation accuracies during training in
+used early stopping since the validation accuracy had stopped improving. We
+have shown a graph of the training and validation accuracies during training in
 Figure \ref{fig:conv-char-NN-accuracies}. During the training we used minibatch
 learning with a minibatch size of 8. We used a size of 8 as that was the largest
-batch size that could fit in the GPUs memory. During the training we padded all
-texts with zeros such that all texts in each batch had the same length. We did
-that as it is required by Keras. We have shown the training and validation
+batch size that could fit in the GPUs memory. During the training we padded
+all texts with zeros such that all texts in each batch had the same length. We
+did that as it is required by Keras. We have shown the training and validation
 accuracies during training in Figure \ref{fig:conv-char-NN-accuracies}.
 
 \begin{figure}
@@ -595,8 +595,8 @@ several similar architectures. We started with a network that used,
         Instead of the absolute difference we used a concatenation of the
         feature vectors extracted from the two texts. If we let the extracted
         features of the first text be $T_{1,i}$ and the extracted features of
-        the second text be $T_{2,i}$ then $T_{1,0}$ and $T_{2,0}$ correspond to
-        the same feature extracted from the two texts. The concatenation
+        the second text be $T_{2,i}$ then $T_{1,0}$ and $T_{2,0}$ correspond
+        to the same feature extracted from the two texts. The concatenation
         combining function would then compute,
 
         \begin{equation}
@@ -608,7 +608,7 @@ several similar architectures. We started with a network that used,
     \item[Decision:]
 
         We used a small dense network with only a single hidden layer of 500
-        neurons. The output layer was similar to the one described above. 
+        neurons. The output layer was similar to the one described above.
 
 \end{description}
 
@@ -625,7 +625,7 @@ features. The new combination function is computed as,
 
 \begin{equation}
     combine(T_1, T_2) \rightarrow \left(
-        (|T_{1,0} - T_{2,0}|), (|T_{1,1} - T_{2,1}|), \dots, (|T_{1,n} - T_{2,n}|)
+        |T_{1,0} - T_{2,0}|, |T_{1,1} - T_{2,1}|, \dots, |T_{1,n} - T_{2,n}|
     \right)^T.
 \end{equation}
 
