@@ -60,7 +60,7 @@ along with a negative sample text $z$, we know now to be written by $\alpha$ is
 given to a \gls{KNN} classifier, which determine if $x \in T_\alpha$ and $z \in
 \overline{T}_\alpha$.
 
-\subsubsection{Feature Selection}
+\subsubsection{Feature Selection *Under Reconstruction*}
 
 The larger part of the experiments performed using the baseline methods, was
 centered around parameter tuning. Not only parameter as the K in the extended
@@ -107,15 +107,27 @@ features was produced, containing
     \item The 50 most frequent special-character-N-grams for $N \in \{2,3,4\}$.
 \end{itemize}
 
-The selection the quantities, bases on the number available in the corpus,
-as listed earlier. As the for the N in the N-grams, \cite{aalykke2016} found
-out that char-8-grams worked very well in his case, which is why N goes all
-the way to 10 in the case of char-N-grams . Looking at the results
-from \cite{US}, Word-N-grams mostly stopped occurring in texts when getting
-to 4-grams, when looking at the result from \cite{US}. A similar thing
-could be seen with the special-character-N-grams, where an increase in N,
-would not contribute anything. \gls{POS}-tag-N-grams were a really big burden
-computationally, as such a reduction in possible N-values, had to be made.
+The selection the quantities, bases on the number available in the corpus, as
+listed earlier. As the for the N in the N-grams, \cite{aalykke2016} found out
+that char-8-grams worked very well in his case, which is why N goes all the
+way to 10 in the case of char-N-grams . Looking at the results from \cite{US},
+Word-N-grams mostly stopped occurring in texts when getting to 4-grams, when
+looking at the result from \cite{US}. A similar thing could be seen with
+the special-character-N-grams, where an increase in N, would not contribute
+anything. \gls{POS}-tag-N-grams were a really big burden computationally, as
+such a reduction in possible N-values, had to be made.
+
+It should be noted that the work done in \cite{US} was done on English
+texts rather than Danish as is the case in this paper. While there there is
+a discernible between the languages the overall difference isn't actually
+that far. This is a point also made in \cite{konstantin:2000}, where
+using a lexical distance equation he computed the distance between all
+the European languages. A upgraded figure of his finding can be found
+here\footnote{\url{https://alternativetransport.files.wordpress.com/2015/05/lexi
+cal-distance-among-the-languages-of-europe-2-1-mid-size.png}}. This model reveal
+that Danish end English are in fact not so lexical different, which makes sense
+as the both derive from the germanic branch of the indo-European language
+family.
 
 These features were extracted from the same data-set described earlier in
 Section \ref{sec:data}. However it was not beholden to the same exact limits to
@@ -1175,7 +1187,7 @@ by a 0.3 dropout layer. The result of the dropout layer is then provided to the
 last dense layer, consisting of 2 neurons, and the soft-max activation function,
 thus mapping it into a usable probability space. Since two neurons were used to
 depict the final output, the loss function used for the network was categorical
-cross-entropy, paired with a \gls{adam} optimizer with the learning rate
+cross-entropy, paired with a adam optimizer with the learning rate
 of 0.0005, 50\% of the default value.
 
 \end{description}
