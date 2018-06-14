@@ -202,7 +202,7 @@ parameter values:
 \begin{align}
     \text{SVM} &:
     \begin{array}{lr}
-        C=\{10^{-16}, 10^{-14}, 10^{-12}, 10^{-10}, 10^{-8}, 10^{-6}, 10^{-4}, 10^{-2}\} \\
+        C=\{10^{-3}, 10^{-1}, 10^{1}, 10^{3}, 10^{5}, 10^7\}\\
         \gamma=\{10^{-3}, 10^{-1}, 10^{1}, 10^{3}, 10^{5}, 10^7\}
     \end{array} \\
     \text{Extended Delta} &:
@@ -293,17 +293,17 @@ in Section \ref{subsubsec:conv_char_nn}, \gls{conv-char-word-NN} in Section
 \ref{subsubsec:rec_sent_nn}.
 
 The data we trained our networks on is described in Section \ref{sec:data}. We
-trained the networks on the G dataset that contains 3000 authors. We used early
-stopping based on a validation dataset H that contains 500 authors. Through
-experimentation we found that the validation dataset had to contain completely
-different authors than the training dataset. In the beginning of our project we
-had a validation set that contained different problem instances (two texts to
-compare) from the training set but contained some of the same authors. That lead
-to the validation set not being a very good estimate of the networks performance
-on different authors than the ones seen during training. The networks were
-therefore overfitting on the specific authors and we could not see that in the
-validation datasets accuracy. All accuracy graphs shown in this Section are
-based on a validation dataset with 500 completely unseen authors.
+trained the networks on the (G) dataset that contains 3000 authors. We used
+early stopping based on a validation dataset (H) that contains 500 authors.
+Through experimentation we found that the validation dataset had to contain
+completely different authors than the training dataset. In the beginning of
+our project we had a validation set that contained different problem instances
+(two texts to compare) from the training set but contained some of the same
+authors. That lead to the validation set not being a very good estimate of the
+networks performance on different authors than the ones seen during training.
+The networks were therefore overfitting on the specific authors and we could not
+see that in the validation datasets accuracy. All accuracy graphs shown in this
+Section are based on a validation dataset with 500 completely unseen authors.
 
 The general structure of our networks will be that they take two texts as input.
 The texts are first embedded into a format that can be used by the network.
