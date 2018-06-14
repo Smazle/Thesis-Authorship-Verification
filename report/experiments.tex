@@ -1062,7 +1062,43 @@ model used can be seen depicted in figure [TODO].
 
 \begin{description}
 
-    \item[Embedding:] Test
+\item[Embedding:] In this recurrent network we started deviating in terms of
+our approach in the embedding layer. Like with the previous
+networks, this network is siamese as well. It is each training sample
+consists of two texts. As the title of this section suggests,
+this network works on the sentence level rather than the character level. It
+initially takes in a sequence of sequences. The outer sequence representing a
+sentence, and the sequence contained within the word associated with that. In
+order for the dimensionality to work, the amount of word in a sequence is padded
+or truncated so they consist of 25 words each. A number which was chosen based
+on the analytics of the training data set. Contrary to the earlier networks
+created throughout our experiments, the embedded representations of these words
+were not trained as as part of the network. Pre-trained embedding produced by
+Facebook\footnote{\url{https://github.com/facebookresearch/fastText/blob/master/
+pretrained-vectors.md}}, using the method described in
+\cite{bojanowski2016enriching} was used instead, resulting in each word being
+mapped to a 300 dimensional vector. At this point we have a sequence of
+sentences each containing a sequence of 300 dimensional word-embeddings. The
+network then proceeds to take the average of the word sequence contained within
+each sentence, resulting in each sentence being represented as the average of
+its' words.
+
+\item[Feature Extraction:] The feature extraction made in this network, of
+course bases itself on the usage recurrent layers, in this case the \gls{LSTM}
+layer which was described Section \ref{layer:LSTM}. Two of these are placed
+right after one another. Both of them consists of 50 units, and has the flag
+\textit{return\_sequence} set to true. This results in all time-steps of the
+\gls{RNN} being returned, rather than just the last one, giving us a sequence of
+outputs. We then proceed to combine all the returned sequences, using a global
+average pooling layer.
+
+\item[Combining:] Like the networks described in the earlier sections,
+the combinations of our two siamese paths, are done by taking the absolute difference
+of their two pooling outputs.
+
+\item[Descision:]
+
+
 
 \end{description}
 
