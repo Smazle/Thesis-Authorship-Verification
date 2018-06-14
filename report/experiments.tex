@@ -554,7 +554,7 @@ accuracies during training in Figure \ref{fig:conv-char-NN-accuracies}.
 
 \begin{figure}
     \centering
-    \includegraphics[width=\textwidth]{./pictures/experiments/network3.png}
+    \includegraphics[width=\textwidth]{./pictures/experiments/conv_char_nn/model.png}
     \caption{The structure of network \gls{conv-char-NN}. Weights are
         shared by the embedding layers and the convolutional layers as shown by
         the blue box. The input to the network is at the top and the output is
@@ -567,7 +567,7 @@ accuracies during training in Figure \ref{fig:conv-char-NN-accuracies}.
 
 \begin{figure}
     \centering
-    \includegraphics[width=\textwidth]{./pictures/experiments/conv-char-NN-training-accuracy.png}
+    \includegraphics[width=\textwidth]{./pictures/experiments/conv_char_nn/training_accuracy.png}
     \caption{The training and validation accuracy of \gls{conv-char-NN} during
         training. Each epoch contains several thousand minibatches which is why
         the training and validation accuracies rises so much in the first
@@ -1433,44 +1433,44 @@ positive samples as before and then for each sample we added a negative sample
 with a 4\% chance.
 
 
-\subsubsection{Convolutional Siamese Neural Network 1}
+\subsubsection{\glsdesc{conv-char-NN}}
 
 The first network we tuned hyperparameters for were the network presented
-in Figure TODO. The network used only convolutions on the character level
-to extract features and used a dense network to decide whether or not
-the texts were written by the same author. We have shown the accuracy
+in Figure \ref{fig:conv-char-NN}. The network used only convolutions on the
+character level to extract features and used a dense network to decide whether
+or not the texts were written by the same author. We have shown the accuracy
 and accusation error for the dataset containing 50\% negatives in Figure
-\ref{fig:prediction_system_results_1} and for the dataset containing 4\%
-negatives in Figure \ref{fig:prediction_system_results_2}.
+\ref{fig:conv-char-NN-pred-50} and for the dataset containing 4\% negatives in
+Figure \ref{fig:conv-char-NN-pred-4}.
 
 \begin{figure}
     \centering
     \textbf{Prediction System Results for 0.5 Split}\par\medskip
-    \includegraphics[width=\textwidth]{./pictures/experiments/Prediction_Network3_50.png}
+    \includegraphics[width=\textwidth]{./pictures/experiments/conv_char_nn/prediction_system_50.png}
     \caption{Results of running the prediction system with the network described
-        in Section \ref{subsubsec:convolutional_siamese_neural_networks} on a
-        validation dataset with 50\% positive samples and 50\% negative samples.
-        In the upper graph we show the accuracies obtained as a function of
-        $\theta$ for different weights $w$. At the bottom we have shown the
-        accusation error as a function $\theta$ again with one line for each
-        weight. We can see that as the threshold increases and we accuse more
-        people of cheating the accusation error rises.}
-    \label{fig:prediction_system_results_1}
+        in Section \ref{subsubsec:conv_char_nn} on a validation dataset with
+        50\% positive samples and 50\% negative samples. In the upper graph we
+        show the accuracies obtained as a function of $\theta$ for different
+        weights $w$. At the bottom we have shown the accusation error as a
+        function $\theta$ again with one line for each weight. We can see that
+        as the threshold increases and we accuse more people of cheating the
+        accusation error rises.}
+    \label{fig:conv-char-NN-pred-50}
 \end{figure}
 
 \begin{figure}
     \centering
     \textbf{Prediction System Results for 0.04 Split}\par\medskip
-    \includegraphics[width=\textwidth]{./pictures/experiments/Prediction_Network6_04.png}
+    \includegraphics[width=\textwidth]{./pictures/experiments/conv_char_nn/prediction_system_04.png}
     \caption{Results of running the prediction system with the network described
-        in Section \ref{subsubsec:convolutional_siamese_neural_networks} on a
-        validation dataset with 96\% positive samples and 4\% negative samples.
-        In the upper graph we show the accuracies obtained as a function of
-        $\theta$ for different weights $w$. At the bottom we have shown the
-        accusation error as a function $\theta$ again with one line for each
-        weight. We can see that as the threshold increases and we accuse more
-        people of cheating the accusation error rises.}
-    \label{fig:prediction_system_results_2}
+        in Section \ref{subsubsec:conv_char_nn} on a validation dataset with
+        96\% positive samples and 4\% negative samples. In the upper graph we
+        show the accuracies obtained as a function of $\theta$ for different
+        weights $w$. At the bottom we have shown the accusation error as a
+        function $\theta$ again with one line for each weight. We can see that
+        as the threshold increases and we accuse more people of cheating the
+        accusation error rises.}
+    \label{fig:conv-char-NN-pred-4}
 \end{figure}
 
 The best configuration for the 0.5 split were using the Exponential Norm Weight
@@ -1484,44 +1484,44 @@ $\theta = 0.076101$. That configuration obtained an accusation error of 5.5556
 \gls{TP}s, 1 \gls{FN}s and 64 \gls{FP}s.
 
 
-\subsubsection{Convolutional Siamese Neural Network 2}
+\subsubsection{\glsdesc{conv-char-word-NN}}
 
 The second network we tuned hyperparameters for were the network presented
 in Figure TODO. The network used convolutions on the character level and
 word level to extract features and used a dense network to decide whether or
 not the texts were written by the same author. We have shown the accuracy
 and accusation error for the dataset containing 50\% negatives in Figure
-\ref{fig:prediction_system_results_3} and for the dataset containing 4\%
-negatives in Figure \ref{fig:prediction_system_results_4}.
+\ref{fig:conv-char-word-NN-pred-50} and for the dataset containing 4\%
+negatives in Figure \ref{fig:conv-char-word-NN-pred-4}.
 
 \begin{figure}
     \centering
     \textbf{Prediction System Results for 0.5 Split}\par\medskip
-    \includegraphics[width=\textwidth]{./pictures/experiments/prediction_system_network6_50.png}
+    \includegraphics[width=\textwidth]{./pictures/experiments/conv_char_word_nn/prediction_system_50.png}
     \caption{Results of running the prediction system with the network described
-        in Section \ref{subsubsec:convolutional_siamese_neural_networks} on a
-        validation dataset with 50\% positive samples and 50\% negative samples.
-        In the upper graph we show the accuracies obtained as a function of
-        $\theta$ for different weights $w$. At the bottom we have shown the
-        accusation error as a function $\theta$ again with one line for each
-        weight. We can see that as the threshold increases and we accuse more
-        people of cheating the accusation error rises.}
-    \label{fig:prediction_system_results_3}
+        in Section \ref{subsubsec:conv_char_word_nn} on a validation dataset
+        with 50\% positive samples and 50\% negative samples. In the upper graph
+        we show the accuracies obtained as a function of $\theta$ for different
+        weights $w$. At the bottom we have shown the accusation error as a
+        function $\theta$ again with one line for each weight. We can see that
+        as the threshold increases and we accuse more people of cheating the
+        accusation error rises.}
+    \label{fig:conv-char-word-NN-pred-50}
 \end{figure}
 
 \begin{figure}
     \centering
     \textbf{Prediction System Results for 0.04 Split}\par\medskip
-    \includegraphics[width=\textwidth]{./pictures/experiments/Prediction_Network6_04.png}
+    \includegraphics[width=\textwidth]{./pictures/experiments/conv_char_word_nn/prediction_system_04.png}
     \caption{Results of running the prediction system with the network described
-        in Section \ref{subsubsec:convolutional_siamese_neural_networks} on a
-        validation dataset with 96\% positive samples and 4\% negative samples.
-        In the upper graph we show the accuracies obtained as a function of
-        $\theta$ for different weights $w$. At the bottom we have shown the
-        accusation error as a function $\theta$ again with one line for each
-        weight. We can see that as the threshold increases and we accuse more
-        people of cheating the accusation error rises.}
-    \label{fig:prediction_system_results_4}
+        in Section \ref{subsubsec:conv_char_word_nn} on a validation dataset
+        with 96\% positive samples and 4\% negative samples. In the upper graph
+        we show the accuracies obtained as a function of $\theta$ for different
+        weights $w$. At the bottom we have shown the accusation error as a
+        function $\theta$ again with one line for each weight. We can see that
+        as the threshold increases and we accuse more people of cheating the
+        accusation error rises.}
+    \label{fig:conv-char-word-NN-pred-4}
 \end{figure}
 
 The best configuration for the 0.5 split were using the Exponential Norm Weight
