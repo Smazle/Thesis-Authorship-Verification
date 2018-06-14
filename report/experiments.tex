@@ -182,7 +182,7 @@ accuracy of 0.675 and 0.666 respectively.
 
 \begin{figure}
     \centering
-    \includegraphics[scale=0.8]{./pictures/experiments/FeatureSelect.png}
+    \includegraphics[scale=0.8]{./pictures/experiments/feature_selection.png}
     \caption{The process of the greedy feature selection of the SVM and the Extended Delta Method}
     \label{fig:fs_results}
 \end{figure}
@@ -1329,14 +1329,6 @@ otherwise. The right hand side of the inequality simply counts the number of
 accusations by inverting the output of $P$ and divides that by 10. So the
 condition makes sure that only 10\% of the accusations we make are false
 accusations.
-
-We find the optimal parameters by doing a binary search for
-the threshold $\theta$ that solves the minimization problem
-\eqref{eq:prediction_system_minimization} for each weight function. We start
-the search with a lower threshold of 0.0 and an upper threshold of 1.0. Then we
-continue the search for $\theta$ until we have converged on a fixed point. The
-thresholds and weights we report as the optimum for the networks are based on
-the output of this binary search.
 
 We have run our prediction system on several of the networks we trained as
 part of our experiments. For each of the networks we present several graphs
