@@ -97,94 +97,33 @@ def add_dim_start(array):
     return np.reshape(array, [1] + list(array.shape))
 
 
-def generate_graphs(weights, labels, results):
-    thetas = np.linspace(0, 1, num=1000)
-
+def output_csv(weights, thetas, labels, results):
     f, axarr = plt.subplots(2, sharex=True)
 
+    print('weight,threshold,accuracy,accusation_error,tps,tns,fps,fns')
     for idx, weight in enumerate(weights):
         print('Weight {}/{}'.format(idx + 1, len(weights)), file=sys.stderr)
-        accuracies = []
-        errors = []
+
         for theta in thetas:
             # Compute results.
             tps, tns, fps, fns = evaluate(labels, results, weight, theta)
+            accuracy = compute_accuracy(tps, tns, fps, fns)
+            error = compute_accusation_error(tps, tns, fps, fns)
 
-            accuracy = (tps + tns) / (tps + tns + fps + fns)
-
-            if fns + tns == 0:
-                error = 0
-            else:
-                error = fns / (fns + tns)
-
-            accuracies.append(accuracy)
-            errors.append(error)
-
-        label = str(weight)
-        axarr[0].plot(thetas, accuracies, label=label)
-        axarr[1].plot(thetas, errors, label=label)
-
-    axarr[0].set_ylabel('Accuracy')
-    axarr[0].grid(True)
-
-    axarr[1].set_ylabel('Accusation Error')
-    axarr[1].grid(True)
-    axarr[1].legend()
-
-    axarr[1].set_xlabel(r'$\theta$ (Threshold)')
-    lgd = plt.legend(bbox_to_anchor=(1.25, 1), loc=7, fancybox=True)
-    plt.show()
-    f.savefig(
-        'Prediction_{}.png'.format(time.time()),
-        bbox_extra_artists=(lgd, ),
-        bbox_inches='tight')
+            print('{},{},{},{},{},{},{},{}'
+                  .format(str(weight), theta, accuracy, error, tps, tns, fps,
+                          fns))
 
 
-def binary_theta_search(weights, labels, results):
-    print('\nStarting Fine tuned run', file=sys.stderr)
+def compute_accuracy(tps, tns, fps, fns):
+    return (tps + tns) / (tps + tns + fps + fns)
 
-    for i in np.linspace(0.1, 1, 10):
-        upper_theta = 1
-        lower_theta = 0
 
-        print(('{:^2}{:^10}{:^10}{:^10}{:^10}{:^10}{:^6}' +
-               '{:^6}{:^6}{:^6}{:^10}{:^10}')
-              .format('  ', 'L-Theta', 'U-Theta', 'A-Theta', 'Err', 'Acc',
-                      'TNS', 'FNS', 'TPS', 'FPS', 'Weight', 'Theta'))
-        for _ in range(50):
-            new_theta = (upper_theta + lower_theta) / 2
-            e = [
-                evaluate(labels, results, weight, new_theta)
-                for weight in weights
-            ]
-
-            accuracies = [((tns, fns, fps, tps),
-                           (tps + tns) / (tps + tns + fps + fns))
-                          for tps, tns, fps, fns in e]
-
-            ((tns, fns, fps, tps), acc) = max(accuracies, key=lambda x: x[1])
-            w = weights[accuracies.index(((tns, fns, fps, tps), acc))]
-
-            if fns + tns == 0:
-                errors = 0
-            else:
-                errors = fns / (fns + tns)
-
-            w = str(w).replace(', $\lambda$ =', '')
-            if errors < i:
-                print(('{:^2}{:^10.6f}{:^10.6f}{:^10.6f}{:^10.6f}{:^10.6f}' +
-                       '{:^6}{:^6}{:^6}{:^6}{:^10}{:^10.1f}').format(
-                           '->', lower_theta, upper_theta, new_theta, errors,
-                           acc, tns, fns, tps, fps, w, i))
-                lower_theta = new_theta
-            else:
-                print(('{:^2}{:^10.6f}{:^10.6f}{:^10.6f}{:^10.6f}{:^10.6f}' +
-                       '{:^6}{:^6}{:^6}{:^6}{:^10}{:^10.1f}').format(
-                           '  ', lower_theta, upper_theta, new_theta, errors,
-                           acc, tns, fns, tps, fps, w, i))
-                upper_theta = new_theta
-
-        print('\n\n')
+def compute_accusation_error(tps, tns, fps, fns):
+    if fns + tns == 0:
+        return 0
+    else:
+        return fns / (fns + tns)
 
 
 def main():
@@ -245,8 +184,7 @@ def main():
 
         results = predict_all(model, reader, linereader, problems)
 
-        generate_graphs(weights, labels, results)
-        binary_theta_search(weights, labels, results)
+        output_csv(weights, np.linspace(0.0, 1.0, num=1001), labels, results)
 
 
 if __name__ == '__main__':

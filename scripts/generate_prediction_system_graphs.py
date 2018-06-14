@@ -5,55 +5,71 @@ import argparse
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+import sys
 
-parse = argparse.ArgumentParser(
+parser = argparse.ArgumentParser(
     'Produces a graph of the results of the prediction system')
+parser.add_argument(
+    '--image-out',
+    help='Where to save the graph showing accuracies and errors.'
+)
+args = parser.parse_args()
 
-parse.add_argument('data', help='Path to the data needed presenting', type=str)
+data = pd.read_csv(sys.stdin)
 
-args = parse.parse_args()
+weights = data.as_matrix(columns=['weight'])
+thetas = data.as_matrix(columns=['threshold'])
+accuracies = data.as_matrix(columns=['accuracy'])
+accusation_errors = data.as_matrix(columns=['accusation_error'])
+tps = data.as_matrix(columns=['tps'])
+tns = data.as_matrix(columns=['tns'])
+fps = data.as_matrix(columns=['fps'])
+fns = data.as_matrix(columns=['fns'])
 
-data = pd.read_csv(args.data, sep=r'\s+')
-print(data)
-
-thetas = data.as_matrix(columns=['Theta'])
-weights = data.as_matrix(columns=['Weights'])
-accuracies = data.as_matrix(columns=['ACC'])
-errors = data.as_matrix(columns=['ERR'])
-
-data = data.as_matrix(columns=['Theta', 'Weights', 'ACC', 'ERR'])
-
+# Generate graph.
+f, axarr = plt.subplots(2, sharex=True)
 for weight in np.unique(weights):
-    label = 'Weight {}'.format(weight)
-    thetas_w = thetas[weights == weight]
-    accuracies_w = accuracies[weights == weight]
+    accs = accuracies[weights == weight]
+    errs = accusation_errors[weights == weight]
+    thresholds = thetas[weights == weight]
 
-    plt.plot(thetas_w, accuracies_w, label=label)
-plt.xlabel('Threshold (Theta)')
-plt.ylabel('Accuracy')
-plt.grid(True)
-plt.legend()
-plt.savefig('Accuracy.png')
-plt.show()
-plt.clf()
+    axarr[0].plot(thresholds, accs, label=weight)
+    axarr[1].plot(thresholds, errs, label=weight)
 
+axarr[0].set_ylabel('Accuracy')
+axarr[0].grid(True)
+
+axarr[1].set_ylabel('Accusation Error')
+axarr[1].grid(True)
+axarr[1].legend()
+
+axarr[1].set_xlabel('θ (Threshold)')
+lgd = plt.legend(bbox_to_anchor=(1.25, 1), loc=7, fancybox=True)
+
+if args.image_out is None:
+    plt.show()
+else:
+    f.savefig(
+        args.image_out,
+        bbox_extra_artists=(lgd, ),
+        bbox_inches='tight'
+    )
+
+# Find the best configuration for each weight.
+print('weight,allowed_error,theta,accuracy,accusation_error,tps,tns,fps,fns')
 for weight in np.unique(weights):
-    label = 'Weight {}'.format(weight)
-    thetas_w = thetas[weights == weight]
-    errors_t = errors[weights == weight]
+    for allowed_error in np.linspace(0.1, 0.9, num=9):
+        accs = accuracies[weights == weight]
+        errs = accusation_errors[weights == weight]
 
-    plt.plot(thetas_w, errors_t, label=label)
-plt.xlabel('Threshold (Theta)')
-plt.ylabel('Accusation Error')
-plt.grid(True)
-plt.legend()
-plt.savefig('Accusation_Error.png')
-plt.show()
-plt.clf()
+        best_index = np.argmax(accs * (errs < allowed_error))
 
-valid = data[data[:, 3] < 0.1]
-best_index = np.argmax(valid[:, 2])
-best_conf = valid[best_index]
-print('The best legal configuration are theta={}, weight={},\
-        accuracy={}, error={}'.format(best_conf[0], best_conf[1], best_conf[2],
-                                      best_conf[3]))
+        tp = tps[weights == weight][best_index]
+        tn = tns[weights == weight][best_index]
+        fp = fps[weights == weight][best_index]
+        fn = fns[weights == weight][best_index]
+        theta = thetas[weights == weight][best_index]
+
+        print('{},{},{},{},{},{},{},{},{}'
+              .format(weight, allowed_error, theta, accs[best_index],
+                      errs[best_index], tp, tn, fp, fn))
