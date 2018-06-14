@@ -533,6 +533,26 @@ like "ould ". We have illustrated such a convolutional filter in Figure
 
 We have shown an illustration of the network in Figure \ref{fig:conv-char-NN}.
 In the Figure we have illustrated the Siamese part of the network as a blue box.
+The 4 phases of the network is not illustrated in the Figure but it should be
+possible to find them by reading the description above. We trained the network
+on the dataset described in the Section \ref{sec:data} and in the beginning
+of this Section. We used the \gls{Adam} optimizer during the training of the
+network. We used a learning rate of $\eta = 0.0005$, half of what was suggested
+by \cite{DBLP:journals/corr/KingmaB14}. We did that as we had problems with
+neurons dying during the training of the network otherwise. Other than the
+learning rate we used the parameters suggested in the article. That is, the
+remembering rates were set to $\gamma_1 = 0.9$ and $\gamma_2 = 0.999$. As the
+error function we used the Categorical Crossentropy function described in
+Section TODO. When we trained the network we were able to obtain a validation
+accuracy of 0.71773 in epoch 6. The training accuracy continued rising but we
+used early stopping since the validation accuracy had stopped improving. We have
+shown a graph of the training and validation accuracies during training in
+Figure \ref{fig:conv-char-NN-accuracies}. During the training we used minibatch
+learning with a minibatch size of 8. We used a size of 8 as that was the largest
+batch size that could fit in the GPUs memory. During the training we padded all
+texts with zeros such that all texts in each batch had the same length. We did
+that as it is required by Keras. We have shown the training and validation
+accuracies during training in Figure \ref{fig:conv-char-NN-accuracies}.
 
 \begin{figure}
     \centering
@@ -547,46 +567,74 @@ In the Figure we have illustrated the Siamese part of the network as a blue box.
     \label{fig:conv-char-NN}
 \end{figure}
 
-%As described our first network took as input two sequences of characters. Each
-%character was then one-hot encoded and as described in Section \ref{sec:data} we
-%ignored character with a frequency of less than $10^{-5}$. In the
-%\textit{Embedding} part of the network we embedded the characters into a 5
-%dimensional space. The embeddings are learnable and the hope is that similar
-%characters will end up in similar places in the output space.
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{./pictures/experiments/conv-char-NN-training-accuracy.png}
+    \caption{The training and validation accuracy of \gls{conv-char-NN} during
+        training. Each epoch contains several thousand minibatches which is why
+        the training and validation accuracies rises so much in the first
+        epoch.}
+    \label{fig:conv-char-NN-accuracies}
+\end{figure}
 
-%In the \textit{Feature Extraction} part of the network we applied 1000
-%convolutional filters of size 10 to each of the texts. We used stride 1
-%such that each filter was placed in all possible positions. We did not
-%use padding in the convolutional layer so the output will be slightly
-%smaller than the input. As the activation function in the convolutional
-%layer we used the \gls{ReLu} function for the reasons described in Section
-%\ref{subsubsec:activation_functions}. After the convolutional layer we applied a
-%global max pooling layer. The global max pooling layer will output the maximum
-%activation for each filter in the convolutional layer. We do so for both of the
-%texts so afterwards we will have two vectors containing 1000 numbers each. The
-%first vector represent the maximum activation of the 1000 filters on the first
-%text and the second vector represents the maximum activation of the 1000 filters
-%on the second text. These 1000 numbers are seen as the extracted features of the
-%texts and they will represent the text in the following layers.
+To arrive at the network architecture described above we experimented with
+several similar architectures. We started with a network that used,
 
-%In the \textit{Combining} part of the network we concatenate the representations
-%of the two texts to obtain a single vector of size 2000.
+\begin{description}
 
-%Lastly the \textit{Decision} network takes the combined vectors and applies a
-%fully connected network to it. The fully connected network consist of a layer
-%with 500 neurons using the \gls{ReLu} activation function and a layer of two
-%neurons using the softmax activation function. The idea is that the hidden dense
-%layer will compare the vector representations and that the output layer will
-%output a probability distribution. The probability distribution represents the
-%probability that the texts are written by the same author.
+    \item[Embedding:]
 
-%As the optimization function we use the \gls{Adam} optimizer. We used the
-%default parameters of $\eta = 0.001$, $\gamma_1 = 0.9$ and $\gamma_2=0.999$.
-%As the loss function we used the categorical crossentropy function.
+        Same as described above.
 
-%When we trained the network it quickly overfitted on the training dataset but
-%otherwise it seemed to work fine. We therefore wanted to try to extend the
-%network and add some dropout.
+    \item[Feature Extraction:]
+
+        1000 convolutional filters of size 10.
+
+    \item[Combining:]
+
+        Instead of the absolute difference we used a concatenation of the
+        feature vectors extracted from the two texts. If we let the extracted
+        features of the first text be $T_{1,i}$ and the extracted features of
+        the second text be $T_{2,i}$ then $T_{1,0}$ and $T_{2,0}$ correspond to
+        the same feature extracted from the two texts. The concatenation
+        combining function would then compute,
+
+        \begin{equation}
+            combine(T_1, T_2) \rightarrow \left(
+                T_{1,0}, T_{1,1}, \dots, T_{1,n}, T_{2,0}, T_{2,1}, \dots, T_{2,n}
+            \right)^T.
+        \end{equation}
+
+    \item[Decision:]
+
+        We used a small dense network with only a single hidden layer of 500
+        neurons. The output layer was similar to the one described above. 
+
+\end{description}
+
+The network gave promising results which is why we continued working with it but
+it quickly overfitted on the training data so we added some dropout. Like in
+the network presented above we added the dropout layer just before the output
+layer and used 30\% dropout. That regularization allowed the training accuracy
+and validation accuracy to follow each other for more epochs making the final
+validation accuracy better.
+
+We changed the combining function from a concatenation to a absolute difference
+since the network would then not have to learn which features belonged to other
+features. The new combination function is computed as,
+
+\begin{equation}
+    combine(T_1, T_2) \rightarrow \left(
+        (|T_{1,0} - T_{2,0}|), (|T_{1,1} - T_{2,1}|), \dots, (|T_{1,n} - T_{2,n}|)
+    \right)^T.
+\end{equation}
+
+We also tried other combining functions such as the cosine difference but we
+didn't get any better results. After that change we changed the convolutional
+filters from using 1000 filters of size 10 to using 500 filters of size 8 and
+500 of size 4. We used those window sizes for the reasons described above. At
+the same time we added more dense layers to the model. We again observed the
+validation accuracy increasing further.
 
 
 \subsubsection{\glsdesc{conv-char-word-NN}}
@@ -1426,8 +1474,7 @@ negatives in Figure \ref{fig:prediction_system_results_4}.
 \begin{figure}
     \centering
     \textbf{Prediction System Results for 0.5 Split}\par\medskip
-    \includegraphics[width=0.8\textwidth]{./pictures/experiments/network6_prediction_system_accuracies.png}
-    \includegraphics[width=0.8\textwidth]{./pictures/experiments/network6_prediction_system_accusation_error.png}
+    \includegraphics[width=\textwidth]{./pictures/experiments/prediction_system_network6_50.png}
     \caption{Results of running the prediction system with the network described
         in Section \ref{subsubsec:convolutional_siamese_neural_networks} on a
         validation dataset with 50\% positive samples and 50\% negative samples.
