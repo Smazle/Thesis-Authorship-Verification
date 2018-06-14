@@ -238,14 +238,14 @@ in Table \ref{sec:ed_feat} for \gls{KNN}, and Table \ref{sec:svm_feat} for
     \begin{tabular}{|c|ccccc|}
         \hline
         \backslashbox{$K$}{$p$} & 1 & 2 & 3 & 4 & 5 \\\hline
-        1 & \textbf{0.647} & 0.622 & 0.608 & 0.593 & 0.591 \\
-        3 & 0.646 & 0.617 & 0.598 & 0.586 & 0.580 \\
-        5 & 0.640 & 0.603 & 0.586 & 0.572 & 0.565 \\
-        7 & 0.627 & 0.593 & 0.571 & 0.561 & 0.554 \\
-        9 & 0.620 & 0.581 & 0.562 & 0.550 & 0.543 \\
-        11 & 0.608 & 0.566 & 0.549 & 0.541 & 0.535 \\
-        13 & 0.598 & 0.558 & 0.539 & 0.533 & 0.529 \\
-        15 & 0.590 & 0.546 & 0.536 & 0.527 & 0.522 \\\hline
+        1 & \textbf{0.630} & 0.603 & 0.588 & 0.577 & 0.570\\
+        3 & 0.628 & 0.589 & 0.572 & 0.565 & 0.555        \\
+        5 & 0.621 & 0.576 & 0.559 & 0.549 & 0.545        \\
+        7 & 0.612 & 0.564 & 0.546 & 0.537 & 0.533        \\
+        9 & 0.600 & 0.554 & 0.537 & 0.527 & 0.524        \\
+        11 & 0.587 & 0.542 & 0.527 & 0.520 & 0.517       \\
+        13 & 0.581 & 0.537 & 0.524 & 0.517 & 0.514       \\
+        15 & 0.571 & 0.532 & 0.519 & 0.514 & 0.512      \\\hline
     \end{tabular}
 \end{table}
 
@@ -257,14 +257,12 @@ in Table \ref{sec:ed_feat} for \gls{KNN}, and Table \ref{sec:svm_feat} for
     \begin{tabular}{|c|cccccc|}
         \hline
         \backslashbox{$C$}{gamma} & $10^{-3}$ & $10^{-1}$ & $10^{1}$ & $10^{3}$ & $10^{5}$ & $10^{7}$ \\\hline
-        $10^{-16}$ & 0.592     & 0.592     & 0.592    & 0.593    & 0.648          & 0.621    \\
-        $10^{-14}$ & 0.592     & 0.592     & 0.592    & 0.630    & \textbf{0.679} & 0.601    \\
-        $10^{-12}$ & 0.592     & 0.592     & 0.628    & 0.631    & 0.678          & 0.591    \\
-        $10^{-10}$ & 0.592     & 0.629     & 0.629    & 0.631    & 0.678          & 0.585    \\
-        $10^{-8}$  & 0.589     & 0.629     & 0.629    & 0.631    & 0.678          & 0.581    \\
-        $10^{-6}$  & 0.587     & 0.629     & 0.629    & 0.631    & 0.678          & 0.576    \\
-        $10^{-4}$  & 0.587     & 0.629     & 0.629    & 0.631    & 0.678          & 0.573    \\
-        $10^{-2}$  & 0.587     & 0.629     & 0.629    & 0.631    & 0.678          & 0.568   \\\hline
+         $10^{-3}$ & 0.626 & 0.626 & 0.626 & 0.641 & 0.558 & 0.500\\ 
+         $10^{-1}$ & 0.626 & 0.626 & 0.626 & 0.641 & 0.558 & 0.500\\ 
+         $10^{1}$  & 0.626 & 0.626 & 0.626 & \textbf{0.689} & 0.576 & 0.501\\ 
+         $10^{3}$  & 0.626 & 0.626 & 0.681 & 0.687 & 0.576 & 0.501\\ 
+         $10^{5}$  & 0.626 & 0.680 & 0.678 & 0.687 & 0.576 & 0.501\\ 
+         $10^{7}$  & 0.674 & 0.678 & 0.678 & 0.687 & 0.576 & 0.501 \\\hline
     \end{tabular}
 \end{table}
 
@@ -1142,31 +1140,51 @@ its' words.
 course bases itself on the usage recurrent layers, in this case the \gls{LSTM}
 layer which was described Section \ref{layer:LSTM}. Two of these are placed
 right after one another. Both of them consists of 50 units, and has the flag
-\textit{return\_sequence} set to true. This results in all time-steps of the
-\gls{RNN} being returned, rather than just the last one, giving us a sequence of
-outputs. We then proceed to combine all the returned sequences, using a global
-average pooling layer.
+\textit{return\_sequence} set to true. This results in all time-steps of
+the \gls{RNN} being returned, rather than just the last one, giving us a
+sequence of outputs. We then proceed to combine all the returned sequences,
+using a global average pooling layer. Rather then using a simple ReLu, which
+was the activation function we used on most layers for the reason explained
+in Section \ref{subsubsec:activation_functions}, the LSTM layer makes use
+2 other activation functions. It makes use of the tahn activation function
+\eqref{eq:tanh} after the last time step, and the hard sigmoid activation
+function \eqref{eq:h_sig} after each individual time-step. This configuration
+is the default of the LSTM layer provided by keras, making the only change to
+the default parameters the number of units in the layer.
 
 \item[Combining:] Like the networks described in the earlier sections,
 the combinations of our two siamese paths, are done by taking the absolute difference
 of their two pooling outputs.
 
-\item[Descision:]
-
-
+\item[Descision:] The decision part of this network was kept quite simple. It
+simply consists of a single dense layer, of 100 units, which is then followed
+by a 0.3 dropout layer. The result of the dropout layer is then provided to the
+last dense layer, consisting of 2 neurons, and the soft-max activation function,
+thus mapping it into a usable probability space. Since two neurons were used to
+depict the final output, the loss function used for the network was categorical
+cross-entropy, paired with a \gls{adam} optimizer with the default learning rate.
 
 \end{description}
 
+The path to this final design was a long one. The initial network designs
+for our recurrent networks bases itself on a combination of the work done in
+\ref{qian:2018} and our own character based convolutional network described in
+Section \ref{subsubsec:conv_char_nn}. We simply replaced the feature extraction
+component in the network, from convolutional layers to a single recurrent layer.
+In addition that, the first \gls{RNN} network also used the cosine similarity
+as its' method of combination on decision. It was when running this network,
+that the main hindrance when using a character level recurrent network became
+apparent, computation time. This first iteration of the network needed and
+estimated 140 hours to run through a single epochs. Thus from this point on, the
+goal became creating a recurrent network which would peak in accuracy run within
+a feasible time-fame.
 
+An attempt at this was the inclusion of a convolutional in the feature extraction
+part of the network. This would be placed be the recurrent layers, in an attempt
+to minimize the amount of data that was given to the current layers. 
 
+% HER
 
-
-
-
-
- Like with the
-convolutions, categorical loss, the Adam optimizer and a finishing 2 neuron
-dense layer with a soft-max activation was used.
 
 The first \gls{RNN}s made, was the first attempt at replicating the some of
 the final networks described by \cite{qian:2018}. The network would still only
@@ -1428,8 +1446,7 @@ negatives in Figure \ref{fig:prediction_system_results_2}.
 \begin{figure}
     \centering
     \textbf{Prediction System Results for 0.5 Split}\par\medskip
-    \includegraphics[width=0.8\textwidth]{./pictures/experiments/network3_prediction_system_accuracies.png}
-    \includegraphics[width=0.8\textwidth]{./pictures/experiments/network3_prediction_system_accusation_error.png}
+    \includegraphics[width=\textwidth]{./pictures/experiments/Prediction_Network3_50.png}
     \caption{Results of running the prediction system with the network described
         in Section \ref{subsubsec:convolutional_siamese_neural_networks} on a
         validation dataset with 50\% positive samples and 50\% negative samples.
@@ -1444,8 +1461,7 @@ negatives in Figure \ref{fig:prediction_system_results_2}.
 \begin{figure}
     \centering
     \textbf{Prediction System Results for 0.04 Split}\par\medskip
-    \includegraphics[width=0.8\textwidth]{./pictures/experiments/network3_prediction_system_accuracies_4_percent.png}
-    \includegraphics[width=0.8\textwidth]{./pictures/experiments/network3_prediction_system_accusation_error_4_percent.png}
+    \includegraphics[width=\textwidth]{./pictures/experiments/Prediction_Network6_04.png}
     \caption{Results of running the prediction system with the network described
         in Section \ref{subsubsec:convolutional_siamese_neural_networks} on a
         validation dataset with 96\% positive samples and 4\% negative samples.
@@ -1496,8 +1512,7 @@ negatives in Figure \ref{fig:prediction_system_results_4}.
 \begin{figure}
     \centering
     \textbf{Prediction System Results for 0.04 Split}\par\medskip
-    \includegraphics[width=0.8\textwidth]{./pictures/experiments/network6_prediction_system_accuracies_4_percent.png}
-    \includegraphics[width=0.8\textwidth]{./pictures/experiments/network6_prediction_system_accusation_error_4_percent.png}
+    \includegraphics[width=\textwidth]{./pictures/experiments/Prediction_Network6_04.png}
     \caption{Results of running the prediction system with the network described
         in Section \ref{subsubsec:convolutional_siamese_neural_networks} on a
         validation dataset with 96\% positive samples and 4\% negative samples.

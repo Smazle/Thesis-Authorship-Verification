@@ -344,7 +344,22 @@ probability of each class in a classification problem.
     \label{fig:softmax_activation}
 \end{figure}
 
-%TODO Move Theta and Hard Sigmoid
+Exceptions to usage of the \gls{ReLu} activation function can be found when
+we make use LSTM layers during our experimentation. It makes use of the
+tanh activation function,
+
+\begin{equation}\label{eq:tanh}
+h(x) = \tanh(x) = \frac{(e^x - e^{-x})}{(e^x + e^{-x})}
+\end{equation}
+
+and the hard sigmoid activation function
+
+\begin{equation}\label{eq:h_sig}
+h(x) = \max(0, \min(1, x \cdot 0.2 + 0.5))
+\end{equation}
+
+The specific usage of these two activation function will be elaborated upon in 
+in the relevant sections.
 
 \subsubsection{Layers} \label{subsubsec:layers}
 
