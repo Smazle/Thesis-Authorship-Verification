@@ -63,7 +63,7 @@ out = name[-1].split('.')
 out.insert(1, '_processed.')
 name[-1] = ''.join(out)
 
-with open(splitChar.join(name), 'w') as output:
+with open(splitChar.join(name), 'w', encoding="utf-8") as output:
     output.write(header)
 
     for idx, line in enumerate(f):
