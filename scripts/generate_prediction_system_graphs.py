@@ -72,3 +72,5 @@ for weight in np.sort(np.unique(weights)):
         print('{:^15}{:^13.1f}{:^10.3f}{:^10.5f}{:^18.3f}{:^8}{:^8}{:^8}{:^8}'
               .format(p_weight, allowed_error, theta, accs[best_index],
                       errs[best_index], tp, tn, fp, fn))
+
+    print()
