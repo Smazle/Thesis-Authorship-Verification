@@ -11,8 +11,7 @@ parser = argparse.ArgumentParser(
     'Produces a graph of the results of the prediction system')
 parser.add_argument(
     '--image-out',
-    help='Where to save the graph showing accuracies and errors.'
-)
+    help='Where to save the graph showing accuracies and errors.')
 args = parser.parse_args()
 
 data = pd.read_csv(sys.stdin)
@@ -49,14 +48,13 @@ lgd = plt.legend(bbox_to_anchor=(1.25, 1), loc=7, fancybox=True)
 if args.image_out is None:
     plt.show()
 else:
-    f.savefig(
-        args.image_out,
-        bbox_extra_artists=(lgd, ),
-        bbox_inches='tight'
-    )
+    f.savefig(args.image_out, bbox_extra_artists=(lgd, ), bbox_inches='tight')
 
 # Find the best configuration for each weight.
-print('weight,allowed_error,theta,accuracy,accusation_error,tps,tns,fps,fns')
+print('{:^15}{:^13}{:^10}{:^10}{:^18}{:^8}{:^8}{:^8}{:^8}'.format(
+    'weight', 'allowed_error', 'theta', 'accuracy', 'accusation_error', 'tps',
+    'tns', 'fps', 'fns'))
+
 for weight in np.unique(weights):
     for allowed_error in np.linspace(0.1, 0.9, num=9):
         accs = accuracies[weights == weight]
@@ -70,6 +68,7 @@ for weight in np.unique(weights):
         fn = fns[weights == weight][best_index]
         theta = thetas[weights == weight][best_index]
 
-        print('{},{},{},{},{},{},{},{},{}'
-              .format(weight, allowed_error, theta, accs[best_index],
+        p_weight = weight.replace('+ Text Length', '+')
+        print('{:^15}{:^13.1f}{:^10.3f}{:^10.5f}{:^18.3f}{:^8}{:^8}{:^8}{:^8}'
+              .format(p_weight, allowed_error, theta, accs[best_index],
                       errs[best_index], tp, tn, fp, fn))
