@@ -17,28 +17,32 @@ parser.add_argument(
     type=int,
     help='Removed the first characters in each text, \
         the amount of which is specified by this argument. \
-        Keep in mind that this is done before anything else')
+        Keep in mind that this is done before anything else',
+    default=200)
 
 parser.add_argument(
     '-ucl',
     '--upper-char-limit',
     type=int,
     help='The upper limit of the amount \
-                of characters accepted in each text')
+                of characters accepted in each text',
+    default=30000)
 
 parser.add_argument(
     '-lcl',
     '--lower-char-limit',
     type=int,
     help='The lower limit of the amount \
-                of characters accpted in each text')
+                of characters accpted in each text',
+    default=200)
 
 parser.add_argument(
     '-usl',
     '--upper-sentence-limit',
     type=int,
     help='The upper limit on how many \
-                sentences are accepted in each text')
+                sentences are accepted in each text',
+    default=500)
 
 args = parser.parse_args()
 
@@ -59,7 +63,7 @@ out = name[-1].split('.')
 out.insert(1, '_processed.')
 name[-1] = ''.join(out)
 
-with open(splitChar.join(name), 'w') as output:
+with open(splitChar.join(name), 'w', encoding="utf-8") as output:
     output.write(header)
 
     for idx, line in enumerate(f):
@@ -90,3 +94,5 @@ with open(splitChar.join(name), 'w') as output:
         output.write(';'.join([author, date, raw_text]))
 
 print(len(under), len(over), len(sents), len(under) + len(over) + len(sents))
+
+f.close()
