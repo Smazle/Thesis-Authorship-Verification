@@ -8,7 +8,8 @@ import pandas as pd
 import sys
 
 parser = argparse.ArgumentParser(
-    'Produces a graph of the results of the prediction system')
+    'Produces a graph of the results of the prediction system.' +
+    'The output is given as stdin to the program.')
 parser.add_argument(
     '--image-out',
     help='Where to save the graph showing accuracies and errors.')
@@ -27,7 +28,7 @@ fns = data.as_matrix(columns=['fns'])
 
 # Generate graph.
 f, axarr = plt.subplots(2, sharex=True)
-for weight in np.unique(weights):
+for weight in np.sort(np.unique(weights)):
     accs = accuracies[weights == weight]
     errs = accusation_errors[weights == weight]
     thresholds = thetas[weights == weight]
@@ -54,8 +55,7 @@ else:
 print('{:^15}{:^13}{:^10}{:^10}{:^18}{:^8}{:^8}{:^8}{:^8}'.format(
     'weight', 'allowed_error', 'theta', 'accuracy', 'accusation_error', 'tps',
     'tns', 'fps', 'fns'))
-
-for weight in np.unique(weights):
+for weight in np.sort(np.unique(weights)):
     for allowed_error in np.linspace(0.1, 0.9, num=9):
         accs = accuracies[weights == weight]
         errs = accusation_errors[weights == weight]

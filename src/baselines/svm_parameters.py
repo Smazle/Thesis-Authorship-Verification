@@ -60,7 +60,7 @@ if args.features is not None:
     X = X[:, features_to_use]
 
 # Find the best hyperparameters using the training authors.
-C_range = [float(10**x) for x in range(-16, 0, 2)]
+C_range = [float(10**x) for x in range(-3, 9, 2)]
 gamma_range = [float(10**x) for x in range(-3, 9, 2)]
 best_params = Counter()
 res = {}
