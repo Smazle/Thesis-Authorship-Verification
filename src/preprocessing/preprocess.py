@@ -63,7 +63,7 @@ out = name[-1].split('.')
 out.insert(1, '_processed.')
 name[-1] = ''.join(out)
 
-with open(splitChar.join(name), 'w', encoding="utf-8") as output:
+with open(splitChar.join(name), 'w', encoding='utf-8') as output:
     output.write(header)
 
     for idx, line in enumerate(f):
@@ -91,7 +91,7 @@ with open(splitChar.join(name), 'w', encoding="utf-8") as output:
             sents.append(idx)
             continue
 
-        output.write(';'.join([author, date, raw_text]))
+        output.write(';'.join([author, date, raw_text]) + '\n')
 
 print(len(under), len(over), len(sents), len(under) + len(over) + len(sents))
 
