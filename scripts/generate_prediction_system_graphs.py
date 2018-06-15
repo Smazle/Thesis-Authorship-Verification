@@ -8,7 +8,8 @@ import pandas as pd
 import sys
 
 parser = argparse.ArgumentParser(
-    'Produces a graph of the results of the prediction system')
+    'Produces a graph of the results of the prediction system. The output is ' +
+    'given as stdin to the program.')
 parser.add_argument(
     '--image-out',
     help='Where to save the graph showing accuracies and errors.'
