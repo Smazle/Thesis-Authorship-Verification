@@ -94,3 +94,5 @@ with open(splitChar.join(name), 'w', encoding="utf-8") as output:
         output.write(';'.join([author, date, raw_text]))
 
 print(len(under), len(over), len(sents), len(under) + len(over) + len(sents))
+
+f.close()
