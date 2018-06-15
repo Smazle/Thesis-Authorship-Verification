@@ -113,17 +113,17 @@ make the data-set generalize better by removing the outliers.
 As can be seen in the statistics in Section \ref{sec:B_stats}, the text
 containing the smallest consists of 0 characters, and does obviously not
 contain any valuable information. In addition to the 200 characters we removed
-initially, we also removed texts that have below 200 characters left after the
-removal, as they do not provide enough information about that specific author,
-and would work properly with our baseline methods due to the size.
-The application of this constraint, resulted in 1.823 of the 73.311 texts
-being removed. After which we applied a upper constraint, in terms of the total
-number of characters. The reason for this, was a mentioned earlier, that there
-are some texts eating up all the available memory, such as the largest text in
-(B), which consists of 338.315 characters. We found that limiting the number of
-characters to 30.000 gave good results, by removing the crash-inducing texts,
-without affecting the overall data-quality too much, as this only removed 119
-texts from (B).
+initially, we also removed texts that have below 200 characters left after
+the removal, as they do not provide enough information about that specific
+author, and would work properly with our baseline methods due to the size. The
+application of this constraint, resulted in 1.823 of the 73.311 texts being
+removed. After which we applied a upper constraint, in terms of the total number
+of characters. The reason for this, was a mentioned earlier, that there are some
+texts eating up all the available memory, such as the largest text in (B), which
+consists of 338.315 characters. We found that limiting the number of characters
+to 30.000 gave good results, by removing the crash-inducing texts, without
+affecting the overall data-quality too much, as this only removed 119 texts from
+(B).
 
 Since we also perform some sentence level networks as well, we also chose to
 limit the max number of sentences, for the same reason as with the characters.
@@ -149,11 +149,10 @@ that they generalize danish student well. Additionally we can see in Figure
 the character frequency threshold, the overall of frequency of the specific
 characters drops dramatically.
 
-After applying all of the constraints, and taking into account
-overlap between them, 1.944 texts were removed from the total 73.311 in (B),
-which is a negligible amount compared to the computational and generalization
-advantages it includes.
-In the end this leaves set (B) with 71.367 texts.
+After applying all of the constraints, and taking into account overlap between
+them, 1.944 texts were removed from the total 73.311 in (B), which is a
+negligible amount compared to the computational and generalization advantages it
+includes. In the end this leaves set (B) with 71.367 texts.
 
 The aforementioned constraints were not all applied to entirety (A) in the same
 manner. Both (C) and (D) are used in a testing context, for that reason removing
