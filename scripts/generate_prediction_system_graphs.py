@@ -28,7 +28,7 @@ fns = data.as_matrix(columns=['fns'])
 
 # Generate graph.
 f, axarr = plt.subplots(2, sharex=True)
-for weight in np.unique(weights):
+for weight in np.sort(np.unique(weights)):
     accs = accuracies[weights == weight]
     errs = accusation_errors[weights == weight]
     thresholds = thetas[weights == weight]
@@ -57,7 +57,7 @@ else:
 
 # Find the best configuration for each weight.
 print('weight,allowed_error,theta,accuracy,accusation_error,tps,tns,fps,fns')
-for weight in np.unique(weights):
+for weight in np.sort(np.unique(weights)):
     for allowed_error in np.linspace(0.1, 0.9, num=9):
         accs = accuracies[weights == weight]
         errs = accusation_errors[weights == weight]
