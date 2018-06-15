@@ -105,7 +105,6 @@ def output_csv(weights, thetas, labels, results):
         print('Weight {}/{}'.format(idx + 1, len(weights)), file=sys.stderr)
 
         for theta in thetas:
-            # Compute results.
             tps, tns, fps, fns = evaluate(labels, results, weight, theta)
             accuracy = compute_accuracy(tps, tns, fps, fns)
             error = compute_accusation_error(tps, tns, fps, fns)
