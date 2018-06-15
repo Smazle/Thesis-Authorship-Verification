@@ -33,6 +33,7 @@ for weight in np.sort(np.unique(weights)):
     errs = accusation_errors[weights == weight]
     thresholds = thetas[weights == weight]
 
+    weight = weight.replace('+ Text Length', '+ TL')
     axarr[0].plot(thresholds, accs, label=weight)
     axarr[1].plot(thresholds, errs, label=weight)
 
@@ -44,12 +45,16 @@ axarr[1].grid(True)
 axarr[1].legend()
 
 axarr[1].set_xlabel('θ (Threshold)')
-lgd = plt.legend(bbox_to_anchor=(1.25, 1), loc=7, fancybox=True)
+lgd = plt.legend(bbox_to_anchor=(1.4, 1), loc=7, fancybox=True)
 
 if args.image_out is None:
     plt.show()
 else:
-    f.savefig(args.image_out, bbox_extra_artists=(lgd, ), bbox_inches='tight')
+    f.savefig(
+        args.image_out,
+        bbox_extra_artists=(lgd, ),
+        bbox_inches='tight',
+        dpi=1024)
 
 # Find the best configuration for each weight.
 print('{:^15}{:^13}{:^10}{:^10}{:^18}{:^8}{:^8}{:^8}{:^8}'.format(
