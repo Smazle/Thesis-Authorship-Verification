@@ -12,44 +12,44 @@ beginning of the digital age, giving birth to online digital text forensics
 tasks, such as the work by \citet{pan:2015}. Initial attempts at quantifying
 writing style can be seen in \citet{Mendenhall237}, who attempted to determine
 the authorship of several of Shakespeare's texts. There is a theory that
-Shakespeare did not write some or all of his texts, or that he was at least a
-front for one or more unknown authors. \citet{Mendenhall237} attempted this
-classification, using the frequency distribution of words of different lengths.
-Throughout the years the approaches to this problem has changed quite a bit.
-When authorship attribution started to interest researchers the approaches
-were Stylometric. In addition to that, fully automated systems were rare as
-authorship attribution/verification was mostly used in an supporting manner. It
-was during the 1990's that fully automated systems became more prevalent. The
-main reason for this was the Internet. Before the Internet, the data available
-simply was not suitable for authorship attribution tasks. Books were too big,
-resulting in a lack in homogeneity, and the amount of authors, and bench-marking
-data was to small. The Internet paved the way for insurmountable amount of data,
-and variations of that data, impacting areas such as information retrieval,
-machine learning and \gls{NLP}.
+Shakespeare did not write some or all of his texts, or that he was a synonym
+for one of more more unknown authors. \citet{Mendenhall237} attempted this
+classification using the frequency distribution of words of different lengths.
+Throughout the years the approaches to this problem have changed quite a bit.
+When authorship attribution started to interest researchers the approaches were
+Stylometric i.e. they were based on the linguistic style of authors. In addition
+to that, fully automated systems were rare and was mostly used in a supporting
+manner. It was during the 1990's that fully automated systems became more
+prevalent. The main reason for this was the Internet. Before the Internet, the
+data available simply was not suitable for authorship attribution tasks. Books
+were too big, resulting in a lack in homogeneity, and the amount of authors and
+bench-marking data was too small. The Internet paved the way for insurmountable
+amounts of data and variations of that data, impacting areas such as information
+retrieval, machine learning and \gls{NLP}.
 
 In order for any fully automatic authorship verification to work, stylometric
 features describing the text has to be automatically extracted. These features
-span multiple linguistic layers, ranging from the low level character n-grams,
-to the high level application specific features such as text creation date,
-and number of edits. It is using these features many of the current day
-state-of-the-art approaches are based.
+span multiple linguistic layers, ranging from the low level character n-grams
+to the high level application specific features such as text creation date and
+number of edits. Many of the current day state-of-the-art approaches are based
+on these features.
 
 % The reason for writing about this topic:
 
-In this thesis we want to experiment with and solve an authorship
-verification task for the Danish company \texttt{MaCom A/S}
-\footnote{\url{http://www.macom.dk/}}. MaCom is the company behind the product
-\texttt{Lectio} \footnote{\url{https://www.lectio.dk/}}, which is a website
-that allows for student administration, communication, and digital teaching
-aid. Lectio is used in schools all over Denmark. A service the website offers,
-is the submission and handling of assignments written by students throughout
-their enrollment. MaCom has shown interest in determining whether or not these
-assignment were possible written by someone other than the student (a "ghost
-writer"). Ghost writing is especially a problem on the \gls{SRP} assignment.
-\gls{SRP} is an interdisciplinary assignment all Danish secondary school
-students turn in at the end of their third year. There is no oral examination
-for the assignment and the grade obtained is part of the students final results
-from the secondary school. The combination of the importance of the assignment
+We want to experiment with and solve an authorship verification task for the
+Danish company \texttt{MaCom A/S} \footnote{\url{http://www.macom.dk/}}.
+MaCom is the company behind the product \texttt{Lectio}
+\footnote{\url{https://www.lectio.dk/}}, which is a website that allows for
+student administration, communication, and digital teaching aid. Lectio is used
+in schools all over Denmark. A service the website offers is the submission
+and handling of assignments written by students throughout their enrollment.
+MaCom has shown interest in determining whether or not these assignment were
+possible written by someone other than the student (a ``ghost writer'').
+Ghost writing is especially a problem on the \gls{SRP} assignment. \gls{SRP}
+is an interdisciplinary assignment all Danish secondary school students turn
+in at the end of their third year. There is no oral examination for the
+assignment and the grade obtained is part of the students final results from
+the secondary school. The combination of the importance of the assignment
 and no oral examination leads to students turning in assignments written by
 ghost writers. The Danish state owned public service radio and television
 company \texttt{DR} has written an article describing the ghost writer problem
@@ -61,55 +61,55 @@ writing based on machine learning methods. The system is meant to help teachers
 make decisions about whether or not an assignment turned in by a student is
 written by someone else. It is not important that the system catches 100\% of
 the assignments written by someone else. If the system only catches a fraction
-of the cheaters it will function as a deterrent for other students cheating.
-What is most important is that the system does not accuse anyone of cheating
-who has turned in their own assignment. The system should also be able to give
-a reason for why we think a particular assignment is written by someone else.
-Such a reason could for example be that the frequency of particular words are
-significantly different in the new assignment than in all previously handed in
-by the student. Reasons for why we think an assignment is written by someone
-else will help a teacher if he/she wants to accuse a student of using a ghost
-writer.
+of the cheaters, it will deter other students from cheating. What is most
+important is that the system does not accuse anyone of cheating who has turned
+in their own assignment. The system should also be able to give evidence for why
+we think a particular assignment is written by someone else. Such evidence could
+for example be that the frequency of particular words is significantly different
+in the new assignment than in all previously handed in by the student. Evidence
+for why we think an assignment is written by someone else will help a teacher if
+he/she wants to accuse a student of using a ghost writer.
 
 % Introduce the main ideas that stem from your topic/title and the order in
 % which you will discuss them?
 
-A more formal definition of the problem we will be working with are,
+A more formal definition of the problem we will be working with are given below.
 
 \begin{definition}[Authorship Verification]
 
     Given a set of texts $T_\alpha$ written by author $\alpha$ and a single
-    text $x$ of unknown authorship. Determine if $x \in T_\alpha$.
+    text $x$ of unknown authorship, determine if $x \in T_\alpha$.
 
 \end{definition}
 
 Authorship verification is closely linked with the problem of authorship
-attribution,
+attribution as can be seen in the definition of authorship attribution shown
+below.
 
 \begin{definition}[Authorship Attribution]
 
     Given a set of authors $\mathcal{A} = \{ \alpha_1, \alpha_2,...\alpha_N\}$,
     each with set of text $T_{\alpha_i}$, and a text of unknown authorship
-    \texttt{x}. Determine which $\alpha_i \in \mathcal{A}$ is the author of
+    \texttt{x}, determine which $\alpha_i \in \mathcal{A}$ is the author of
     \texttt{x}.
 
 \end{definition}
 
 The problems are closely linked since an answer for authorship attribution
 can be obtained by using authorship verification and an answer for authorship
-verification can be obtained by using authorship attribution. Consider a
-case where we are given a solution to the authorship verification problem
+verification can be obtained by using authorship attribution. Consider a case
+where we are given an oracle answering the authorship verification problem
 $\mathcal{S}$. $\mathcal{S}$ is a mapping from an author $\alpha$ and text
 $x$ to either true or false. Given an instance of the authorship attribution
 problem with authors $\mathcal{A}$ and text $x$ we solve the problem by using
 $\mathcal{S}$ on each author $\alpha \in \mathcal{A}$. We return the author
 where $\mathcal{S}$ reports true. Now consider a case where we are given a
-solution to the authorship attribution problem $\mathcal{S}$. $\mathcal{S}$ is
-now a mapping from a set of authors $\mathcal{A}$ and text $x$ to an author
+solution to the authorship attribution problem $\mathcal{S}'$. $\mathcal{S}'$
+is now a mapping from a set of authors $\mathcal{A}$ and text $x$ to an author
 $\alpha \in \mathcal{A}$. Given an instance of the authorship verification
-problem with author $\alpha_i \in \mathcal{A}$ and text $x$ and a set of
-texts written by different authors $\overline{T}_{\alpha} = \bigcup\{T_\beta
-| \beta \in \mathcal{A} \land \beta \neq \alpha\}$ we solve the verification
-problem by applying the attribution function to the texts $T_{\alpha} \cup
-\overline{T}_{\alpha}$ and the text of unknown authorship $x$. If $x \in
-T_{\alpha}$ back we report true and otherwise false.
+problem with author $\alpha_i \in \mathcal{A}$ and text $x$ and a set of texts
+written by different authors $\overline{T}_{\alpha} = \bigcup_{\beta \in A
+\setminus \{\alpha\}} T_\beta$ we solve the verification problem by applying the
+attribution function to the texts $T_{\alpha} \cup \overline{T}_{\alpha}$ and
+the text of unknown authorship $x$. If $x \in T_{\alpha}$ we report true and
+otherwise false.
