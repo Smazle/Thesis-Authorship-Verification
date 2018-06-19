@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import re
+import numpy as np
 
 
 def clean(txt):
@@ -17,6 +18,10 @@ def wordProcess(txt):
     words = list(filter(lambda x: x != '', words))
 
     return words
+
+
+def add_dim_start(array):
+    return np.reshape(array, [1] + list(array.shape))
 
 
 if __name__ == '__main__':

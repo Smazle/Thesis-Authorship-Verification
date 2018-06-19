@@ -11,6 +11,7 @@ import random
 import sys
 from src.prediction.weight_functions import weight_factory
 import matplotlib.pyplot as plt
+from src.util import utilities as util
 
 
 def get_problems(macomreader, linereader, negative_chance=1.0):
@@ -47,7 +48,7 @@ def get_problems(macomreader, linereader, negative_chance=1.0):
 
 def predict(model, macomreader, linereader, author_texts, non_author_text):
     unknown_text = macomreader.read_encoded_line(linereader, non_author_text)
-    unknown_text = list(map(lambda x: add_dim_start(x), unknown_text))
+    unknown_text = list(map(lambda x: util.add_dim_start(x), unknown_text))
     times = np.zeros((len(author_texts)), dtype=np.int)
     predictions = np.zeros((len(author_texts), ), dtype=np.float)
     text_lengths = np.zeros((len(author_texts), ), dtype=np.int)
@@ -56,7 +57,7 @@ def predict(model, macomreader, linereader, author_texts, non_author_text):
     for i, known in enumerate(author_texts):
         known_text, times[i], text_lengths[i] = macomreader.read_encoded_line(
             linereader, known, with_meta=True)
-        known_text = list(map(lambda x: add_dim_start(x), known_text))
+        known_text = list(map(lambda x: util.add_dim_start(x), known_text))
         predictions[i] = model.predict(known_text + unknown_text)[0, 1]
 
     return predictions, times, text_lengths
@@ -91,10 +92,6 @@ def evaluate(labels, results, w, theta):
             raise Exception('This case should be impossible')
 
     return tps, tns, fps, fns
-
-
-def add_dim_start(array):
-    return np.reshape(array, [1] + list(array.shape))
 
 
 def output_csv(weights, thetas, labels, results):
