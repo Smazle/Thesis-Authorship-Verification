@@ -11,7 +11,7 @@ import random
 import sys
 from src.prediction.weight_functions import weight_factory
 import matplotlib.pyplot as plt
-from src.util import utilities as util
+import src.util.utilities as util
 
 
 def get_problems(macomreader, linereader, negative_chance=1.0):

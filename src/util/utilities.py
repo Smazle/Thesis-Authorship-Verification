@@ -24,5 +24,9 @@ def add_dim_start(array):
     return np.reshape(array, [1] + list(array.shape))
 
 
+def add_dim_start_all(arrays):
+    return list(map(lambda x: add_dim_start(x), arrays))
+
+
 if __name__ == '__main__':
     print(clean('Hello, World!$NL$Hello$NAME$, World!'))
