@@ -16,7 +16,7 @@ convolutional network.
 
 In this section we will go through the experiments performed in order to get
 our baseline results. While many different features can be used when performing
-\gls{NLP}, we chose the same features, as was used in \cite{US}, since they
+\gls{NLP}, we chose the same features, as was used in \citet{US}, since they
 span several several of the different linguistic layers. The linguistic layers
 are different areas which all serve to describe a certain text. An example this
 could be the character level layer, which as the name implies, focuses on the
@@ -40,19 +40,19 @@ feature such as word frequencies can be considered word-1-grams.
 
 \gls{POS} tags, refer to the grammatical class a certain words belongs to, such
 as nouns and adjectives. In order to extract these we made use of a POS-tag
-extractor, provided by \cite{polyglot}.
+extractor, provided by \citet{polyglot}.
 
 For all of these experiments a Danish third party corpus, provided by
 \texttt{NLTK}\footnote{\url{http://www.nltk.org/index.html}}, was used as the
-basis for all the feature extraction, as was done in \cite{US} as well. This
+basis for all the feature extraction, as was done in \citet{US} as well. This
 corpus consists of 22,476 sentences, and 563,358 words.
 
 The actual implementation of both the \gls{SVM} and the Extended Delta method,
-very closely resembles the implementation used in \cite{US}. There is however a
+very closely resembles the implementation used in \citet{US}. There is however a
 very big difference, with the actual application of the delta method. Contrary
-to the scenario in \cite{US}, where PAN data was used, there is not an instance
+to the scenario in \citet{US}, where PAN data was used, there is not an instance
 where we only have 1 text per author. As such the original version of the
-delta method can be used.\cite{evert2015towards} This is where, when given a
+delta method can be used \citep{evert2015towards}. This is where, when given a
 new text $x$ supposedly written by an author $\alpha \in \mathcal{A}$, his
 texts $T_\alpha$ are extracted, and so is a set of texts no written by him
 $\overline{T}_\alpha$ where $|\overline{T}_\alpha| = |T_\alpha|$. The text,
@@ -72,7 +72,7 @@ to the negative influences these features include. It is for this reason that
 we chose to select the features for them, rather than just having them use the
 entire set available to them.
 
-Contrary to our previous work made in \cite{US}, this process did not
+Contrary to our previous work made in \citet{US}, this process did not
 consist of trying out some random selection of features, but rather
 a more systematic approach was used.
 
@@ -109,10 +109,10 @@ features was produced, containing
 
 The selection the quantities, was based on the number available in the corpus,
 listed earlier. The number of different character N-grams we extracted was based
-on the amount used in \cite{aalykke2016}. They found out that char-8-grams
+on the amount used in \citet{aalykke2016}. They found out that char-8-grams
 worked very well on MaComs data, which is the reason why we chose to include
 char-N-grams with a N spanning the values from 1 to 10. Looking at the results
-from \cite{US}, revealed that the N in word-N-grams reach a value of 4,
+from \citet{US}, revealed that the N in word-N-grams reach a value of 4,
 the probability of that sequence actually occurring drastically reduced,
 and with it its' overall impact. A similar thing could be seen with the
 special-character-N-grams, where an increase in N, would not contribute
@@ -120,10 +120,10 @@ anything. The reason for the small amount of \gls{POS}-tag-N-grams was that
 they were a really big burden computationally, as such a reduction in possible
 N-values had to be made.
 
-It should be noted that the work done in \cite{US} was done on English
+It should be noted that the work done in \citet{US} was done on English
 texts rather than Danish as is the case in this paper. While there there is
 a discernible between the languages the overall difference is not actually
-that far. This is a point also made in \cite{konstantin:2000}, where
+that far. This is a point also made in \citet{konstantin:2000}, where
 using a lexical distance equation he computed the distance between all
 the European languages. A upgraded figure of his finding can be found
 here\footnote{\url{https://bit.ly/1BOMe9l}}. This model reveal
@@ -142,7 +142,7 @@ process proved very expensive computationally. Having to check every combination
 of 5000 features, simply was not feasible. It was for that reason we opted for a
 greedy algorithm in combination with the drastically small data-set (I) instead.
 
-The greedy algorithm works as described by \cite{kanDeng}, which is a simple
+The greedy algorithm works as described by \citet{kanDeng}, which is a simple
 forward feature selection. Having out previously created feature set, we loop
 through each single feature, validating its' accuracy when applied to each
 $\alpha \in \mathcal{A}$, where in this case $\mathcal{A}$ is the dataset
@@ -337,7 +337,7 @@ the layers are shown in Table \ref{tab:glossary}.
     \begin{table}
         \centering
         \caption{Glossary used when performing experiments, and creating their
-            associated models.\cite{chollet2015keras}}
+            associated models \citep{chollet2015keras}}.
         \label{tab:glossary}
         \begin{tabular}{|L{3cm}|L{9cm}|L{11cm}|}
             \hline
@@ -465,7 +465,7 @@ the layers are shown in Table \ref{tab:glossary}.
 The idea behind network \gls{conv-char-NN} is that we wanted to use convolutions
 to look for n-grams in texts. Traditional authorship verification/attribution
 is based on carefully engineered n-grams that are compared between two texts
-\cite{stamatos2009}. Instead of choosing the n-grams ourselves we wanted the
+\citep{stamatos2009}. Instead of choosing the n-grams ourselves we wanted the
 network to learn which features are important for the authorship verification
 task. The features are learned through convolutions. The convolutions look
 at some number of characters at a time and gives a single output for those
@@ -507,7 +507,7 @@ like "ould ". We have illustrated such a convolutional filter in Figure
         Features are extracted from the two texts via a layer of convolutions
         with different sizes. We use both convolutions with a window size of
         8 and convolutions with a window size of 4. We use 700 of size 8 and
-        500 of size 4. We used a window size of 8 since \cite{aalykke2016}
+        500 of size 4. We used a window size of 8 since \citet{aalykke2016}
         found that n-grams of size 8 worked the best for Danish texts and we
         also added 4 so the network could look at smaller n-grams as well.
         We used a stride of 1 such that each convolutional filter could
@@ -551,7 +551,7 @@ possible to find them by reading the description above. We trained the network
 on the dataset described in the Section \ref{sec:data} and in the beginning
 of this Section. We used the \gls{Adam} optimizer during the training of the
 network. We used a learning rate of $\eta = 0.0005$, half of what was suggested
-by \cite{DBLP:journals/corr/KingmaB14}. We did that as we had problems with
+by \citet{DBLP:journals/corr/KingmaB14}. We did that as we had problems with
 neurons dying during the training of the network otherwise. Other than the
 learning rate we used the parameters suggested in the article. That is, the
 remembering rates were set to $\gamma_1 = 0.9$ and $\gamma_2 = 0.999$. As the
@@ -870,7 +870,7 @@ However the network were hopefully not looking at names metadata.
 
 After having attempted some convolutional approaches, as was just described,
 we proceeded with some recurrent experiments as well. After having looked at
-previous experiments made described in \cite{qian:2018}, which showed real
+previous experiments made described in \citet{qian:2018}, which showed real
 promise in terms of authorship attribution, we considered this a natural
 extension of our convolutional approaches. Every \gls{RNN} experiment
 was performed on the same data as the convolutional networks, and the
@@ -925,7 +925,7 @@ resulting in an output dimensionality twice the unit count, 100 in this case.
         trained as as part of the network. Pre-trained embedding produced by
         Facebook\footnote{\url{https://github.com/facebookresearch/fastText/blob
         /master/ pretrained-vectors.md}}, using the method described in
-        \cite{bojanowski2016enriching} was used instead, resulting in each
+        \citet{bojanowski2016enriching} was used instead, resulting in each
         word being mapped to a 300 dimensional vector. At this point we have
         a sequence of sentences each containing a sequence of 300 dimensional
         word-embeddings. The network then proceeds to take the average of the
