@@ -877,8 +877,8 @@ was performed on the same data as the convolutional networks, and the
 \textit{Embedding}, \textit{Feature Extraction}, \textit{Combining} and
 \textit{Comparing} structure was used as for each of them too, and the best
 model used can be seen depicted in figure \ref{fig:rec-sent-NN}. After
-[TODO:EPOCH COUNT] epochs this network peaked with a validation accuracy of
-[TODO:ACC]. When applied to the external validation set (C), it got a accuracy
+10 epochs this network peaked with a validation accuracy of
+0.657. When applied to the external validation set (C), it got a accuracy
 of [TODO:ACC].
 
 \begin{figure}
@@ -989,7 +989,7 @@ An attempt at this was the inclusion of a convolutional in the feature
 extraction part of the network. This would be placed be the recurrent layers,
 in an attempt to minimize the amount of data that was given to the current
 layers. This did increase the runtime, but revealed the lack of learning the
-network did, only getting a validation accuracy of [TODO:Insert ACC Here], at
+network did, only getting a validation accuracy of 0.532, at
 its' peak. This was slightly increased when changing out the cosine similarity
 approach with a series of dense layers instead, and using a bidirectional
 \gls{LSTM} layer rather than a single \gls{GRU} layer. In other words the
@@ -1014,8 +1014,9 @@ accuracy. This lead to the final network described above. This network included
 an extra bidirectional \gls{LSTM} layer for added complexity, and the 0.3
 dropout for extra generalization.
 
-% TODO Results
-
+As mentioned this final network yielded the accuracy initially described,
+0.657 after 10 epochs. The validation and training accuracy progression can be
+seen in figure [TODO: Figure].
 
 \subsubsection{\glsdesc{conv-char-word-NN}}
 \label{subsubsec:conv_char_word_nn}
