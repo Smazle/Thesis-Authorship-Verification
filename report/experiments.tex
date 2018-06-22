@@ -592,38 +592,25 @@ accuracies during training in Figure \ref{fig:conv-char-NN-accuracies}.
 
 To arrive at the network architecture described above we experimented with
 several similar architectures. We started with a network that used,
+that wasn't too far from the final one.
+All the work computed in this network was applied to the same one-hot encoded
+character level as the final network was. The feature extraction layer
+was however quite different. It made use of a singular convolutional layer
+consisting of 1000 filters with a window size of 10, the selection
+of which didn't have any proper argument, and was selected solely to
+determine the initial performance on the data.
+In addition to that, the combination part of the network also differed.
+Rather than computing the absolute difference as was done in the final network,
+this initial network simply concatenated the two siamese branches.
+If we let $t = \{t_1, t_2, \dots, t_n\}$ be the extracted features of the 
+text $t$, then the concatenation would be computed as such:
 
-\begin{description}
+$$
+combine(t, t') \rightarrow (t_1, t_2, \dots, t_n, t'_1, t'_2, \dots t'_n)
+$$
 
-    \item[Embedding:]
-
-        Same as described above.
-
-    \item[Feature Extraction:]
-
-        1000 convolutional filters of size 10.
-
-    \item[Combining:]
-
-        Instead of the absolute difference we used a concatenation of the
-        feature vectors extracted from the two texts. If we let the extracted
-        features of the first text be $T_{1,i}$ and the extracted features of
-        the second text be $T_{2,i}$ then $T_{1,0}$ and $T_{2,0}$ correspond
-        to the same feature extracted from the two texts. The concatenation
-        combining function would then compute,
-
-        \begin{equation}
-            combine(T_1, T_2) \rightarrow \left(
-                T_{1,0}, T_{1,1}, \dots, T_{1,n}, T_{2,0}, T_{2,1}, \dots, T_{2,n}
-            \right)^T.
-        \end{equation}
-
-    \item[Decision:]
-
-        We used a small dense network with only a single hidden layer of 500
-        neurons. The output layer was similar to the one described above.
-
-\end{description}
+Finally the decision part of the network simply consisted of a 500 neuron dense
+network.
 
 The network gave promising results which is why we continued working with it but
 it quickly overfitted on the training data so we added some dropout. Like in
@@ -637,8 +624,8 @@ since the network would then not have to learn which features belonged to other
 features. The new combination function is computed as,
 
 \begin{equation}
-    combine(T_1, T_2) \rightarrow \left(
-        |T_{1,0} - T_{2,0}|, |T_{1,1} - T_{2,1}|, \dots, |T_{1,n} - T_{2,n}|
+    combine(t, t') \rightarrow \left(
+        |t_0 - t'_0|, |t_1 - t'_1|, \dots, |t_n - t'_n|
     \right)^T.
 \end{equation}
 
@@ -1003,15 +990,15 @@ changing the linguistic level out network worked at. Against inspired by
 to using the sentences. This sentence representation was achieved by doing as
 was described in the \textbf{Embedding} part above. This approach yielded only
 significantly decreased the runtime to around $1.5$ hours. But it also revealed
-the reason why a recurrent network might not be the best choice for a task like
-this. The validation error throughout training the network was not very high
-compared to earlier convolutional network, and after running it through the
-prediction system it became obvious that the network was really good a learning
-individual author. In a task such as this, were generalization is a key factor,
-a network that does this individual learning really suffers when it comes to
-accuracy. This lead to the final network described above. This network included
-an extra bidirectional \gls{LSTM} layer for added complexity, and the 0.3
-dropout for extra generalization.
+the reason why a recurrent network might not be the best choice for a task
+like this. The validation error throughout training the network was not very
+high compared to earlier convolutional network, and after running it through
+the prediction system it became obvious that the network was really good a
+learning individual author. In a task such as this, were generalization is a
+key factor, a network that does this individual learning really suffers when it
+comes to accuracy. This lead to the final network described above. This network
+included an extra bidirectional \gls{LSTM} layer, and the 0.3 dropout for extra
+generalization.
 
 As mentioned this final network yielded the accuracy initially described,
 0.657 after 10 epochs. The validation and training accuracy progression can be
