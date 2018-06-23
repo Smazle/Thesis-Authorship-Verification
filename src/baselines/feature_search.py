@@ -3,7 +3,6 @@ from sklearn.model_selection import cross_val_score
 from sklearn.preprocessing import StandardScaler
 import numpy as np
 import pandas as pd
-import pickle
 
 
 class FeatureSearch:
@@ -96,6 +95,7 @@ class FeatureSearch:
         return np.mean(authorScores)
 
     def __generateData__(self, filePath):
+        print('Loading {} ...'.format(filePath))
         with open(filePath, 'r') as f:
             data = pd.read_csv(f)
             print(data.columns.values)
@@ -123,7 +123,6 @@ class FeatureSearch:
         if self.normalize:
             scaler = StandardScaler()
             scaler.fit(self.data)
-            pickle.dump(scaler, open('Scaler.p', 'wb'))
             self.data = scaler.transform(self.data)
             self.scaler = scaler
 

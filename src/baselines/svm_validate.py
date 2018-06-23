@@ -6,7 +6,6 @@ import numpy as np
 from .feature_search import FeatureSearch
 from sklearn.svm import SVC
 import pandas as pd
-import pickle
 
 parser = argparse.ArgumentParser(
     description='Uses the selected features and parameters, \
@@ -31,8 +30,6 @@ parser.add_argument(
 parser.add_argument(
     '--gamma', type=float, help='The parameter selected value of gamma')
 
-parser.add_arumgent('--model', type=str, help='Path to pickled model')
-
 args = parser.parse_args()
 
 classifier = SVC(C=args.C, gamma=args.gamma, kernel='rbf')
@@ -45,32 +42,23 @@ with open(args.features, 'r') as f:
     feature_n = np.argmax(accuracies)
     feature_set = indices[0:feature_n]
 
-if args.model is None:
-    train = FeatureSearch(None, None, authorLimit=None, normalize=False)
-    train.__generateData__(args.trainingFile)
-
-    X = y = []
-    for author in np.unique(train.authors):
-        new_x, new_y = train.__generateAuthorData(author)
-        X += new_x
-        y += new_y
-
-    classifier.fit(X[:, feature_set], y)
-    pickle.dump(classifier, open('Model_SVM.p', 'wb'))
-else:
-    pickle.load(open(args.model, 'rb'))
+train = FeatureSearch(None, None, authorLimit=None, normalize=False)
+train.__generateData__(args.trainingFile)
 
 validation = FeatureSearch(None, None, authorLimit=None, normalize=False)
-validation.__generateData__(args.validation)
+validation.__generateData__(args.validationFile)
 
-X = y = []
-for author in np.unique(validation.authors):
-    new_x, new_y = validation.__generateAuthorData(author)
-    X += new_x
-    y += new_y
+correct = 0
 
-results = classifier.predict(X[:, feature_n])
-results = sum(np.equal(results, y)) / len(results)
+for idx, row in enumerate(validation.data):
+    author = validation.author[idx]
+    X, y = train.__generateData__(author)
+    classifier.fit(X[:, feature_set], y)
+
+    if classifier.predict(row) == author:
+        correct += 1
+
+results = correct / len(validation.data)
 
 print('Validation Result, with C={} and gamma={}:\
         {}'.format(args.C, args.gamma, results))
