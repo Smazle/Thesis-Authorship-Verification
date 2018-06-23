@@ -40,6 +40,7 @@ class FeatureSearch:
         self.authorLimit = authorLimit
         self.normalize = normalize
         self.validator = validator
+        self.scaler = None
 
     def fit(self, dataFile, outfile):
         self.__generateData__(dataFile)
@@ -124,6 +125,7 @@ class FeatureSearch:
             scaler.fit(self.data)
             pickle.dump(scaler, open('Scaler.p', 'wb'))
             self.data = scaler.transform(self.data)
+            self.scaler = scaler
 
         self.maxFeatureCount = self.data.shape[1]
 

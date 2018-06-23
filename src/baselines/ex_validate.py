@@ -12,6 +12,11 @@ parser = argparse.ArgumentParser(
                 to compute the validation error of the training')
 
 parser.add_argument(
+    'trainingFile',
+    type=str,
+    help='Path to training file containing raw features')
+
+parser.add_argument(
     'validationFile', type=str, help='Path to file containing raw features')
 
 parser.add_argument(
@@ -28,19 +33,45 @@ parser.add_argument(
     type=str,
     help='Path to standard scaler fitted to the training data')
 
+parser.add_argument('--model', type=str, help='Path to pickled model')
+
 args = parser.parse_args()
 
-scaler = pickle.load(open(args.scaler, 'rb'))
 classifier = KNeighborsClassifier(n_neighbors=args.K, p=args.p)
 
 features = np.loadtxt(args.features, dtype=float, delimiter=',')
 features = features[:np.argmax(features, axis=0)[0]][:, 0].astype(int)
 
-fs = FeatureSearch(None, None, None)
-fs.__generateData__(args.validationFile)
-fs.data = scaler.transform(fs.data)
+if args.model is None or args.scaler is None:
+    train = FeatureSearch(None, None, None)
+    train.__generateData__(args.trainingFile)
 
-output = fs.__evaluate_classifier__(classifier, features)
+    X = y = []
+    for author in np.unique(train.authors):
+        new_x, new_y = train.__generateAuthorData(author)
+        X += new_x
+        y += new_y
 
-print('Validation Result, with K={} and p={}:\
-        {}'.format(args.K, args.p, output))
+    classifier.fit(X[:, features], y)
+    pickle.dump(classifier, open('Model_ED.p', 'wb'))
+    scaler = train.scaler
+
+if args.model is not None and args.scaler is not None:
+    scaler = pickle.loads(open(args.scaler, 'rb'))
+    model = pickle.loads(open(args.model, 'rb'))
+
+validation = FeatureSearch(None, None, None)
+validation.__generateData__(args.validationFile)
+validation.data = scaler.transform(validation.data)
+
+X = y = []
+for author in np.unique(validation.authors):
+    new_x, new_y = validation.__generateAuthorData(author)
+    X += new_x
+    y += new_y
+
+results = classifier.predict(X)
+results = sum(np.equal(results, y)) / len(results)
+
+print('Result, with K={} and p={}:\
+        {}'.format(args.K, args.p, results))

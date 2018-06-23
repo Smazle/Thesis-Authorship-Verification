@@ -6,11 +6,16 @@ import numpy as np
 from .feature_search import FeatureSearch
 from sklearn.svm import SVC
 import pandas as pd
-from sklearn.model_selection import StratifiedKFold
+import pickle
 
 parser = argparse.ArgumentParser(
     description='Uses the selected features and parameters, \
                 to compute the validation error of the training')
+
+parser.add_argument(
+    'trainingFile',
+    type=str,
+    help='Path to training file containing raw features')
 
 parser.add_argument(
     'validationFile', type=str, help='Path to file containing raw features')
@@ -26,6 +31,8 @@ parser.add_argument(
 parser.add_argument(
     '--gamma', type=float, help='The parameter selected value of gamma')
 
+parser.add_arumgent('--model', type=str, help='Path to pickled model')
+
 args = parser.parse_args()
 
 classifier = SVC(C=args.C, gamma=args.gamma, kernel='rbf')
@@ -38,15 +45,32 @@ with open(args.features, 'r') as f:
     feature_n = np.argmax(accuracies)
     feature_set = indices[0:feature_n]
 
-fs = FeatureSearch(
-    None,
-    None,
-    authorLimit=None,
-    normalize=False,
-    validator=StratifiedKFold(3))
-fs.__generateData__(args.validationFile)
+if args.model is None:
+    train = FeatureSearch(None, None, authorLimit=None, normalize=False)
+    train.__generateData__(args.trainingFile)
 
-output = fs.__evaluate_classifier__(classifier, feature_set)
+    X = y = []
+    for author in np.unique(train.authors):
+        new_x, new_y = train.__generateAuthorData(author)
+        X += new_x
+        y += new_y
+
+    classifier.fit(X[:, feature_set], y)
+    pickle.dump(classifier, open('Model_SVM.p', 'wb'))
+else:
+    pickle.load(open(args.model, 'rb'))
+
+validation = FeatureSearch(None, None, authorLimit=None, normalize=False)
+validation.__generateData__(args.validation)
+
+X = y = []
+for author in np.unique(validation.authors):
+    new_x, new_y = validation.__generateAuthorData(author)
+    X += new_x
+    y += new_y
+
+results = classifier.predict(X[:, feature_n])
+results = sum(np.equal(results, y)) / len(results)
 
 print('Validation Result, with C={} and gamma={}:\
-        {}'.format(args.C, args.gamma, output))
+        {}'.format(args.C, args.gamma, results))
