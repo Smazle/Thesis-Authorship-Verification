@@ -242,7 +242,7 @@ authors in the training set, in a manner very similar to the feature selection.
 We make use of the same 3-fold stratified cross validation, and arrange each
 authors with set of opposing set of text, amounting to the same number he has
 written himself. The accuracy of each parameter configuration can be seen
-in Table \ref{sec:ed_feat} for \gls{KNN}, and Table \ref{sec:svm_feat} for
+in Table \ref{table:KNN} for \gls{KNN}, and Table \ref{table:SVM} for
 \gls{SVM}.
 
 \begin{table}[h]
@@ -285,7 +285,7 @@ It is at this point we grab the data-set (C), our external
 validation set. While applying these finely tuned methods to a validation set
 wont change anything in terms of the parameters we have selected, it will give
 us the ability to gauge the accuracy of our methods when applied to a new, never
-before seen, test-set.
+before seen, test-set (D). 
 
 \begin{center}
 \begin{verbatim}
@@ -605,9 +605,9 @@ this initial network simply concatenated the two siamese branches.
 If we let $t = \{t_1, t_2, \dots, t_n\}$ be the extracted features of the 
 text $t$, then the concatenation would be computed as such:
 
-$$
+\begin{equation}
 combine(t, t') \rightarrow (t_1, t_2, \dots, t_n, t'_1, t'_2, \dots t'_n)
-$$
+\end{equation}
 
 Finally the decision part of the network simply consisted of a 500 neuron dense
 network.
@@ -623,7 +623,7 @@ We changed the combining function from a concatenation to a absolute difference
 since the network would then not have to learn which features belonged to other
 features. The new combination function is computed as,
 
-\begin{equation}
+\begin{equation}\label{eq:abs}
     combine(t, t') \rightarrow \left(
         |t_0 - t'_0|, |t_1 - t'_1|, \dots, |t_n - t'_n|
     \right)^T.
@@ -856,7 +856,7 @@ However the network were hopefully not looking at names metadata.
 
 After having attempted some convolutional approaches, as was just described,
 we proceeded with some recurrent experiments as well. After having looked at
-previous experiments made described in \citet{qian:2018}, which showed real
+previous experiments made described in \cite{qian:2018}, which showed real
 promise in terms of authorship attribution, we considered this a natural
 extension of our convolutional approaches. Every \gls{RNN} experiment
 was performed on the same data as the convolutional networks, and the
@@ -942,7 +942,8 @@ resulting in an output dimensionality twice the unit count, 100 in this case.
 
         Like the networks described in the earlier sections, the combinations
         of our two siamese paths, are done by taking the absolute difference of
-        their two pooling outputs.
+        their two pooling outputs. The computation for this is done according
+        to \eqref{eq:abs}.
 
     \item[Decision:]
 
@@ -960,7 +961,7 @@ resulting in an output dimensionality twice the unit count, 100 in this case.
 
 The path to this final design was a long one. The initial network designs
 for our recurrent networks bases itself on a combination of the work done in
-\ref{qian:2018} and our own character based convolutional network described in
+\cite{qian:2018} and our own character based convolutional network described in
 Section \ref{subsubsec:conv_char_nn}. We simply replaced the feature extraction
 component in the network, from convolutional layers to a single recurrent layer.
 In addition that, the first \gls{RNN} network also used the cosine similarity
@@ -986,15 +987,15 @@ within an acceptable time-frame, so another approach had to be used.
 
 This secondary approach to limiting the run-time used, came in the form of
 changing the linguistic level out network worked at. Against inspired by
-\ref{qian:2018}, we elevated our network from using the characters of the texts,
-to using the sentences. This sentence representation was achieved by doing as
-was described in the \textbf{Embedding} part above. This approach yielded only
-significantly decreased the runtime to around $1.5$ hours. But it also revealed
-the reason why a recurrent network might not be the best choice for a task
-like this. The validation error throughout training the network was not very
-high compared to earlier convolutional network, and after running it through
-the prediction system it became obvious that the network was really good a
-learning individual author. In a task such as this, were generalization is a
+\cite{qian:2018}, we elevated our network from using the characters of the
+texts, to using the sentences. This sentence representation was achieved by
+doing as was described in the \textbf{Embedding} part above. This approach
+yielded only significantly decreased the runtime to around $1.5$ hours. But it
+also revealed the reason why a recurrent network might not be the best choice
+for a task like this. The validation error throughout training the network was
+not very high compared to earlier convolutional network, and after running it
+through the prediction system it became obvious that the network was really good
+a learning individual author. In a task such as this, were generalization is a
 key factor, a network that does this individual learning really suffers when it
 comes to accuracy. This lead to the final network described above. This network
 included an extra bidirectional \gls{LSTM} layer, and the 0.3 dropout for extra
