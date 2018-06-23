@@ -42,52 +42,118 @@ def compare_texts(model, reader, linereader, text1, text2, n):
     text2 = read_clean(linereader, text2)
 
     result = find_difference(model, text1_channels, text2_channels, n)
-    results = zip(result['filter_index'], result['text_1_character_index'],
-                  result['text_2_character_index'], result['text_1_value'],
-                  result['text_2_value'])
-    for filter_index, text1_ind, text2_ind, text1_val, text2_val in results:
-        part1 = text1[text1_ind:text1_ind + 8]
-        part2 = text2[text2_ind:text2_ind + 8]
 
-        print('\tDifference in filter', filter_index)
-        print('\t', repr(part1), text1_val)
-        print('\t', repr(part2), text2_val)
+    for r in result:
+        print(Result(r, text1, text2))
+    # results = zip(result['filter_index'], result['text_1_character_index'],
+                  # result['text_2_character_index'], result['text_1_value'],
+                  # result['text_2_value'])
+    # for filter_index, text1_ind, text2_ind, text1_val, text2_val in results:
+        # part1 = text1[text1_ind:text1_ind + 8]
+        # part2 = text2[text2_ind:text2_ind + 8]
+
+        # print('\tDifference in filter', filter_index)
+        # print('\t', repr(part1), text1_val)
+        # print('\t', repr(part2), text2_val)
 
 
 def find_difference(model, text1_channels, text2_channels, n):
-    layer_output_f = get_output_of_layer(model, 'convolutional_8')
-    [text1_out, text2_out] = layer_output_f(
-        text1_channels + text2_channels + [0])
+    # Construct functions to get outputs from feature extraction layers.
+    output8_1 = get_output_of_layer(model, 'convolutional_8')
+    output8_2 = get_output_of_layer(model, 'convolutional_8_2')
+    output4 = get_output_of_layer(model, 'convolutional_4')
+
+    # Extract output.
+    [text1_out8_1, text2_out8_1] = util.remove_dim_start_all(output8_1(
+        text1_channels + text2_channels + [0]))
+    [text1_out8_2, text2_out8_2] = util.remove_dim_start_all(output8_2(
+        text1_channels + text2_channels + [0]))
+    [text1_out4, text2_out4] = util.remove_dim_start_all(output4(
+        text1_channels + text2_channels + [0]))
 
     # Each row in text1_out and text2_out corresponds to the output of a
     # particular filter in the convolutional layer. Each column correspond to a
     # different index in the text.
-    text1_out, text2_out = text1_out[0].T, text2_out[0].T
+    text1_out8 = np.vstack([text1_out8_1.T, text1_out8_2.T])
+    text2_out8 = np.vstack([text2_out8_1.T, text2_out8_2.T])
+    text1_out4 = text1_out4.T
+    text2_out4 = text2_out4.T
 
     # We should have same number of filters in each.
-    assert text1_out.shape[0] == text2_out.shape[0]
+    assert text1_out8.shape[0] == text2_out8.shape[0]
+    assert text1_out4.shape[0] == text2_out4.shape[0]
 
-    text1_max = np.amax(text1_out, axis=1)
-    text2_max = np.amax(text2_out, axis=1)
+    text1_max8 = np.amax(text1_out8, axis=1)
+    text2_max8 = np.amax(text2_out8, axis=1)
+    text1_max4 = np.amax(text1_out4, axis=1)
+    text2_max4 = np.amax(text2_out4, axis=1)
 
     # The n greatest filter differences.
-    n_greatest = np.argsort(np.abs(text1_max - text2_max))[::-1][0:n]
+    n_greatest8 = np.argsort(np.abs(text1_max8 - text2_max8))[::-1][0:n]
+    n_greatest4 = np.argsort(np.abs(text1_max4 - text2_max4))[::-1][0:n]
 
     # The index of the maximum value of the n max filters.
-    text1_ind = np.argmax(text1_out[n_greatest], axis=1)
-    text2_ind = np.argmax(text2_out[n_greatest], axis=1)
+    text1_ind8 = np.argmax(text1_out8[n_greatest8], axis=1)
+    text2_ind8 = np.argmax(text2_out8[n_greatest8], axis=1)
+    text1_ind4 = np.argmax(text1_out4[n_greatest4], axis=1)
+    text2_ind4 = np.argmax(text2_out4[n_greatest4], axis=1)
 
     # The value of the maximum value of the n max filters.
-    text1_value = text1_out[n_greatest, text1_ind]
-    text2_value = text2_out[n_greatest, text2_ind]
+    text1_value8 = text1_out8[n_greatest8, text1_ind8]
+    text2_value8 = text2_out8[n_greatest8, text2_ind8]
+    text1_value4 = text1_out4[n_greatest4, text1_ind4]
+    text2_value4 = text2_out4[n_greatest4, text2_ind4]
 
-    return {
-        'filter_index': n_greatest,
-        'text_1_character_index': text1_ind,
-        'text_2_character_index': text2_ind,
-        'text_1_value': text1_value,
-        'text_2_value': text2_value
-    }
+    return [
+        FeatureMaxDifference(n_greatest8, text1_ind8, text2_ind8,
+                             text1_value8, text2_value8, 8),
+        FeatureMaxDifference(n_greatest4, text1_ind4, text2_ind4,
+                             text1_value4, text2_value4, 4)
+    ]
+
+
+class FeatureMaxDifference:
+
+    def __init__(self, filter_number, text1_max_index, text2_max_index,
+                 text1_value, text2_value, size):
+
+        self.filter_number = filter_number
+        self.text1_max_index = text1_max_index
+        self.text2_max_index = text2_max_index
+        self.text1_value = text1_value
+        self.text2_value = text2_value
+        self.size = size
+
+
+class Result:
+
+    def __init__(self, feature_max_difference, text1, text2):
+        self.feature_max_difference = feature_max_difference
+        self.text1 = text1
+        self.text2 = text2
+
+        text1_max_index = self.feature_max_difference.text1_max_index
+        text2_max_index = self.feature_max_difference.text2_max_index
+        size = self.feature_max_difference.size
+
+        self.text1_char_n_grams = []
+        self.text2_char_n_grams = []
+
+        for ind1, ind2 in zip(text1_max_index, text2_max_index):
+            self.text1_char_n_grams.append(text1[ind1:ind1 + size])
+            self.text2_char_n_grams.append(text2[ind2:ind2 + size])
+
+    def __str__(self):
+        filter_inds = self.feature_max_difference.filter_number
+        text1s = self.text1_char_n_grams
+        text2s = self.text2_char_n_grams
+
+        string = ''
+        for filter_ind, text1, text2 in zip(filter_inds, text1s, text2s):
+            string += '\tfilter {}\ttext1 {}\ttext2 {}\n'\
+                .format(filter_ind, repr(text1), repr(text2))
+
+        return string
 
 
 def parse_arguments():

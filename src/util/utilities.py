@@ -28,5 +28,17 @@ def add_dim_start_all(arrays):
     return list(map(lambda x: add_dim_start(x), arrays))
 
 
+def remove_dim_start(array):
+    return np.reshape(array, tail(array.shape))
+
+
+def remove_dim_start_all(arrays):
+    return list(map(lambda x: remove_dim_start(x), arrays))
+
+
+def tail(l):
+    return l[1:]
+
+
 if __name__ == '__main__':
     print(clean('Hello, World!$NL$Hello$NAME$, World!'))
