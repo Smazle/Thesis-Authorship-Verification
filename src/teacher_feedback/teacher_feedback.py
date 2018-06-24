@@ -9,6 +9,59 @@ import src.preprocessing.macomreader as Macom
 import src.util.utilities as util
 
 
+# Represent the n largest differences in filters between two texts.
+# filter_number is a list of indices of the filters with the largest
+# differences, text1_max_index is the offset in the text where the largest
+# value were found for the first text, text2_max_index is similar for the
+# second text, text1_value is the max value obtained for the first text,
+# text2_value is similar for the second text and size is the size of the
+# convolutional window.
+class FeatureMaxDifference:
+
+    def __init__(self, filter_number, text1_max_index, text2_max_index,
+                 text1_value, text2_value, size):
+
+        self.filter_number = filter_number
+        self.text1_max_index = text1_max_index
+        self.text2_max_index = text2_max_index
+        self.text1_value = text1_value
+        self.text2_value = text2_value
+        self.size = size
+
+
+# Showable result class. Used to prettyprint FeatureMaxDifference by providing
+# the texts the differences are between.
+class Result:
+
+    def __init__(self, feature_max_difference, text1, text2):
+        self.feature_max_difference = feature_max_difference
+        self.text1 = text1
+        self.text2 = text2
+
+        text1_max_index = self.feature_max_difference.text1_max_index
+        text2_max_index = self.feature_max_difference.text2_max_index
+        size = self.feature_max_difference.size
+
+        self.text1_char_n_grams = []
+        self.text2_char_n_grams = []
+
+        for ind1, ind2 in zip(text1_max_index, text2_max_index):
+            self.text1_char_n_grams.append(text1[ind1:ind1 + size])
+            self.text2_char_n_grams.append(text2[ind2:ind2 + size])
+
+    def __str__(self):
+        filter_inds = self.feature_max_difference.filter_number
+        text1s = self.text1_char_n_grams
+        text2s = self.text2_char_n_grams
+
+        string = ''
+        for filter_ind, text1, text2 in zip(filter_inds, text1s, text2s):
+            string += '\tfilter {}\ttext1 {}\ttext2 {}\n'\
+                .format(filter_ind, repr(text1), repr(text2))
+
+        return string
+
+
 def main():
     args = parse_arguments()
     model = M.load_model(args.model)
@@ -45,16 +98,6 @@ def compare_texts(model, reader, linereader, text1, text2, n):
 
     for r in result:
         print(Result(r, text1, text2))
-    # results = zip(result['filter_index'], result['text_1_character_index'],
-                  # result['text_2_character_index'], result['text_1_value'],
-                  # result['text_2_value'])
-    # for filter_index, text1_ind, text2_ind, text1_val, text2_val in results:
-        # part1 = text1[text1_ind:text1_ind + 8]
-        # part2 = text2[text2_ind:text2_ind + 8]
-
-        # print('\tDifference in filter', filter_index)
-        # print('\t', repr(part1), text1_val)
-        # print('\t', repr(part2), text2_val)
 
 
 def find_difference(model, text1_channels, text2_channels, n):
@@ -110,50 +153,6 @@ def find_difference(model, text1_channels, text2_channels, n):
         FeatureMaxDifference(n_greatest4, text1_ind4, text2_ind4,
                              text1_value4, text2_value4, 4)
     ]
-
-
-class FeatureMaxDifference:
-
-    def __init__(self, filter_number, text1_max_index, text2_max_index,
-                 text1_value, text2_value, size):
-
-        self.filter_number = filter_number
-        self.text1_max_index = text1_max_index
-        self.text2_max_index = text2_max_index
-        self.text1_value = text1_value
-        self.text2_value = text2_value
-        self.size = size
-
-
-class Result:
-
-    def __init__(self, feature_max_difference, text1, text2):
-        self.feature_max_difference = feature_max_difference
-        self.text1 = text1
-        self.text2 = text2
-
-        text1_max_index = self.feature_max_difference.text1_max_index
-        text2_max_index = self.feature_max_difference.text2_max_index
-        size = self.feature_max_difference.size
-
-        self.text1_char_n_grams = []
-        self.text2_char_n_grams = []
-
-        for ind1, ind2 in zip(text1_max_index, text2_max_index):
-            self.text1_char_n_grams.append(text1[ind1:ind1 + size])
-            self.text2_char_n_grams.append(text2[ind2:ind2 + size])
-
-    def __str__(self):
-        filter_inds = self.feature_max_difference.filter_number
-        text1s = self.text1_char_n_grams
-        text2s = self.text2_char_n_grams
-
-        string = ''
-        for filter_ind, text1, text2 in zip(filter_inds, text1s, text2s):
-            string += '\tfilter {}\ttext1 {}\ttext2 {}\n'\
-                .format(filter_ind, repr(text1), repr(text2))
-
-        return string
 
 
 def parse_arguments():
