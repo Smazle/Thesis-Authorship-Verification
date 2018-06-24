@@ -1461,8 +1461,13 @@ the texts. The only constraint on a weight function $w$ is that $\sum_{t \in
 T_\alpha} w(t) = 1$. We will ignore that constraint in the following definitions
 of weight functions. Any function $w: T_\alpha \rightarrow \mathbb{R}^+$
 that does not follow the constraint can be transformed into a version $w^*:
-T_\alpha \rightarrow [0,1]$ that does follow the constraint where $w^*(t) =
-\frac{w(t)}{\sum_{t \in T_\alpha} w(t)}$. We can therefore define the weight
+T_\alpha \rightarrow [0,1]$ that does follow the constraint where 
+
+\begin{equation}\label{eq:normalize}
+w^*(t) = \frac{w(t)}{\sum_{t \in T_\alpha} w(t)}
+\end{equation}
+
+We can therefore define the weight
 functions $w$ while ignoring the constraint but use $w^*$ as the actual weight
 function in the prediction system.
 
@@ -1525,9 +1530,90 @@ assignments for different $\lambda$ values in Figure \ref{fig:weights}.
     \label{fig:weights}
 \end{figure}
 
-% TODO: Define a weight function that also looks at the length of the texts.
-% TODO: Describe maximum weight function.
-% TODO: Describe minimum weight function.
+We are also going to include the usage of some other weighing approaches,
+Another weighing method used also looks at the metadata, as was done in 
+exponential dropoff weighing.
+
+\begin{definition}[Length Weighing]
+
+    The length weight function $w_{length}: T_\alpha \rightarrow \mathbb{N}^+$
+    is defined as,
+
+    \begin{equation}
+        w_{length}(t) = \lfloor (|t| / 1000) \rceil + 1 
+    \end{equation}
+
+\end{definition}
+
+In this method the length of the text t denotes the number of characters
+included in text t. Thus this methods weigh based on the amount of 1000
+character chunks is in each text. This is rounded to the nearest integer, where
+the addition of 1 makes sure no zero division error happens when mapping this
+function is mapped into the $[0,1]$ range using the same approach as in Equation
+\ref{eq:normalize}.
+
+This was in turn used to produce combined weight function 
+
+\begin{definition}[Time-Length Weighing]
+    
+    The time-length weighing $w_{tl}: T_\alpha \rightarrow [0,2]$ is defined
+    as,
+
+    \begin{equation}
+        w_{tl} = w_e(t) + w_{length}(t)
+    \end{equation}
+
+\end{definition}
+
+Which is as the definition describe, simply the addition of the exponential
+dropoff weight, and the length based weight, after they are both individually
+applied to the text.
+
+Some comparative approach was created as well. These weight methods
+bases themselves on their likeness with the unknown text. This likeness
+is computed using the prediction method chosen, which is denoted by $f$.
+
+\begin{definition}[Maximum]
+
+    The maximum weight function $w_{max}: T_\alpha, t_{unknown}, f \rightarrow \{0,1\}$ is
+    defined as,
+
+    \begin{equation}
+        w_{max}(t) = \begin{cases}
+            1 & \text{if } f(t, t_{unknown}) = \mathbf{max}(\{f(t_{known},
+                t_{unknown}) | t_{known} \in T_\alpha\})\\
+            0 & \text{otherwise}
+    \end{cases}
+    \end{equation}
+
+\end{definition}
+
+\begin{definition}[Minimum]
+
+    The maximum weight function $w_{min}: T_\alpha, t_{unknown}, f \rightarrow \{0,1\}$ is
+    defined as,
+
+    \begin{equation}
+        w_{max}(t) = \begin{cases}
+            1 & \text{if } f(t, t_{unknown}) = \mathbf{min}(\{f(t_{known},
+                t_{unknown}) | t_{known} \in T_\alpha\})\\
+            0 & \text{otherwise}
+    \end{cases}
+    \end{equation}
+
+\end{definition}
+
+It can be seen the weight computation is relative, which is the reason for the
+inclusion of the extra arguments. In both of these cases the inclusion of our
+predictive method, and the unknown texts allow us to compute the weight based on
+their similarity with the proposed unknown text. The first one, maximum weight,
+weighs the texts such that is is only the one most alike the unknown text that
+is used for the comparison, thus removing the possible negative influence the
+other texts introduce due their difference from the unknown text. The minimum
+weight on the other hand only uses the text least like the unknown text, thus
+increasing the performance required from the prediction model.
+
+
 % TODO: Describe majority vote weight function.
 
 The $\theta$ parameter in the prediction system determines when we consider an
