@@ -285,18 +285,21 @@ It is at this point we grab the data-set (C), our external validation set. While
 applying these finely tuned methods to a validation set wont change anything
 in terms of the parameters we have selected, it will give us the ability to
 gauge the accuracy of our methods when applied to a new, never before seen,
-test-set (D). This was done by taking the entirety of the training data set (B),
-and using that as the basis for our training now that our parameters has been
-selected. This is done in a fashion similar to the process done when selecting
-parameters. For each sample in the validation set a new model is trained. The
-texts written by that author are extracted from the supplied training set. Not
-only that but an equal amount of texts not written by that author is extracted
-from the training set as well, this is extraction consists of simply taking
-a random sample set, thus creating an equal amount of negative samples. The
-respective model is trained on this set of positive and negative samples, after
-which is is supplied with the validation sample the training data was produced
-based on. Doing this for each of the samples in the validation set resulted in
-the following accuracies.
+test-set (D). 
+
+% TODO: Fix approach
+%This was done by taking the entirety of the training data set (B),
+%and using that as the basis for our training now that our parameters has been
+%selected. This is done in a fashion similar to the process done when selecting
+%parameters. For each sample in the validation set a new model is trained. The
+%texts written by that author are extracted from the supplied training set. Not
+%only that but an equal amount of texts not written by that author is extracted
+%from the training set as well, this is extraction consists of simply taking
+%a random sample set, thus creating an equal amount of negative samples. The
+%respective model is trained on this set of positive and negative samples, after
+%which is is supplied with the validation sample the training data was produced
+%based on. Doing this for each of the samples in the validation set resulted in
+%the following accuracies.
 
 \begin{center}
 \begin{verbatim}
