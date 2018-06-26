@@ -132,11 +132,12 @@ number of accusations made. This can be described as:
     \text{Accusation Error} = \frac{FN}{FN + TN}
 \end{equation}
 
-The goal is also to keep this error under a certain threshold specified by
-MaCom, which in this case is $0.1$ or $10\%$. In other words, of the accusations
-we made, only $10\%$ of them are allowed to be false. In order to accommodate
-this constraint we can take certain actions, which depends on the model used.
-Details about these actions will be addressed in Section \ref{sec:prediction}.
+The goal is also to keep this error under a certain threshold specified
+by MaCom, which in this case is $0.1$ or $10\%$. In other words, of the
+accusations we made, only $10\%$ of them are allowed to be false. In order
+to accommodate this constraint we can take certain actions, which depends
+on the model used. Details about these actions will be addressed in Section
+\ref{subsec:prediction_system}.
 
 \subsection{Baseline Methods}
 
@@ -1397,24 +1398,27 @@ compare the feature-sets extracted. The Siamese part of the network is the
 convolutional part of the network which will share weights when extracting
 n-grams from the two texts.
 
-\citet{DBLP:journals/corr/0001KYS17} presented a comparative study of \gls{CNN}'s
-and \gls{RNN}'s in common \gls{NLP} tasks. They found that \gls{RNN}'s generally
-performed better in tasks where understanding the whole text was important while
-\gls{CNN}'s performed better when understanding were secondary and it was mainly
-about finding key phrases or statistical information from a text. In authorship
-verification the understanding of the text is generally irrelevant since we
-do not have to say anything about what a text is about but only whether or not
-it is written by the same author as some other text. Furthermore classical
-authorship verification methods have relied on statistical information from the
-texts and not on an actual understanding of the texts. We have therefore chosen
-to start out with using convolutional neural networks.
+\citet{DBLP:journals/corr/0001KYS17} presented a comparative study of
+\gls{CNN}'s and \gls{RNN}'s in common \gls{NLP} tasks. They found that
+\gls{RNN}'s generally performed better in tasks where understanding the whole
+text was important while \gls{CNN}'s performed better when understanding were
+secondary and it was mainly about finding key phrases or statistical information
+from a text. In authorship verification the understanding of the text is
+generally irrelevant since we do not have to say anything about what a text is
+about but only whether or not it is written by the same author as some other
+text. Furthermore classical authorship verification methods have relied on
+statistical information from the texts and not on an actual understanding of the
+texts. We have therefore chosen to start out with using convolutional neural
+networks.
 
 The final output of the network will be a probability that $\alpha = \beta$.
 Since the MaCom dataset consist of multiple known texts per author and this
 network architecture only compares two texts we define a separate system for
 making the final prediction.
 
-\subsection{Prediction System}\label{sec:prediction}
+\subsection{Prediction System}\label{subsec:prediction_system}
+
+In the network presented in Section \ref{subsec}
 
 In the MaCom problem we are given a set of texts for each author so we can make
 use of multiple texts when making our predictions. We can also use metadata
