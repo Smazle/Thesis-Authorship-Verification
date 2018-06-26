@@ -1,13 +1,14 @@
 \section{Method} \label{sec:method}
 
 In this Section we will describe the method we have used to solve the Authorship
-Verification problem presented. In general there are two methods of representing
-each author. There is the instance based approach and the profile based
-approach. In the instance based approach each author is represented by a set of
-texts they have written while in the profile based approach they are represented
-by the sum of the set of texts they have written. The instance based approach is
-illustrated in Figure \ref{fig:instance_based} and the profile based approach is
-illustrated in Figure \ref{fig:profile_based}.
+Verification problem presented in Definition \ref{def:authorship_verification}.
+In general there are two methods of representing each author. There is the
+instance based approach and the profile based approach. In the instance based
+approach each author is represented by a set of texts they have written while
+in the profile based approach they are represented by the sum of the set of
+texts they have written. The instance based approach is illustrated in Figure
+\ref{fig:instance_based} and the profile based approach is illustrated in Figure
+\ref{fig:profile_based}.
 
 \begin{figure}[htb]
     \centering
@@ -179,11 +180,11 @@ of this new text as well.
 
 \subsection{Deep Learning}
 
-In this paper we will approach the authorship verification/attribution problem
-using deep-learning. The term deep learning, was first introduced to machine
-machine learning in 1989, and afterward to \gls{NN}'s in 2000. The terms quickly
-became synonymous with \gls{NN}'s due to them being some of the more efficient
-deep learning methods \citep{Schmidhuber:2015}.
+In this paper we will approach the authorship verification problem using
+deep-learning. The term deep learning, was first introduced to machine machine
+learning in 1989, and afterward to \gls{NN}'s in 2000. The terms quickly became
+synonymous with \gls{NN}'s due to them being some of the more efficient deep
+learning methods \citep{Schmidhuber:2015}.
 
 With the inner workings of the brain used as the basis, a standard simple
 \gls{NN} consists of a set interconnected processors, called neurons. Each of
@@ -1360,7 +1361,7 @@ mean an elementwise power.
 \end{description}
 
 
-\subsubsection{Siamese Networks}
+\subsubsection{Siamese Networks}\label{subsubsec:siamese_networks}
 
 Classical machine learning approaches for text analysis and all our baseline
 methods are based on handcrafted feature sets. Deep learning has shown
@@ -1384,7 +1385,7 @@ convolution extracted. An example of this architecture can be seen in Figure
     \includegraphics[scale=0.5]{./pictures/method/Siamese.png}
     \caption{The basic architecture of a Siamese neural network, which takes in
         two sources of data, and runs it through two parallelle networks,
-        sharing their weights at each layer}
+        sharing their weights at each layer.}
     \label{fig:siamese_example}
 \end{figure}
 
@@ -1418,30 +1419,29 @@ making the final prediction.
 
 \subsection{Prediction System}\label{subsec:prediction_system}
 
-In the network presented in Section \ref{subsec}
-
-In the MaCom problem we are given a set of texts for each author so we can make
-use of multiple texts when making our predictions. We can also use metadata
-about the individual texts to make our prediction. An advantage of using
-multiple texts for each author to make a prediction is that outliers will be
-averaged out.
+In the generic Siamese \gls{NN} presented in Section
+\ref{subsubsec:siamese_networks} the output of the network is a probability that
+two texts are written by the same author. However in the problem we are trying
+solve defined in Definition \ref{def:authorship_verification} we take several
+texts as input. We therefore need a method of combining the predictions on
+multiple texts to a single prediction on a particular problem instance. We do
+that using a prediction system defined in Definition
+\ref{def:prediction_system}.
 
 \begin{definition}[Prediction System]
 
     \label{def:prediction_system}
 
-    Our prediction system is a function $P:f, w, T, t_{unkown}, \theta
-    \rightarrow \{0, 1\}$ where $f$ is a function taking two texts and giving
-    the probability that the texts are written by the same author, $T$ is a set
-    of texts written by a candidate author, $t_{unknown}$ is a text of unknown
-    authorship, $w:T \rightarrow [0,1]$ is a function where $\sum_{t_{known}
-    \in T} w(t_{known}) = 1$ and $\theta \in [0,1]$. The prediction system then
-    returns,
+    Our prediction system is a function $P:f, w, T, t, \theta \rightarrow \{0,
+    1\}$ where $f$ is a function taking two texts and giving the probability
+    that the texts are written by the same author, $T$ is a set of texts written
+    by a candidate author, $t$ is a text of unknown authorship, $w:T \rightarrow
+    [0,1]$ is a function where $\sum_{t' \in T} w(t') = 1$ and $\theta \in
+    [0,1]$. The prediction system then returns,
 
     \begin{equation}
-        P(f, w, T, t_{unkown}, \theta) = \begin{cases}
-            1 & \text{if } \sum_{t_{known} \in T} w(t_{known})
-                f(t_{known}, t_{unkown}) > \theta \\
+        P(f, w, T, t, \theta) = \begin{cases}
+            1 & \text{if } \sum_{t' \in T} w(t') f(t', t) > \theta \\
             0 & \text{otherwise}.
         \end{cases}
     \end{equation}
@@ -1449,9 +1449,8 @@ averaged out.
 \end{definition}
 
 That is the prediction system returns 1 if the weighted average of the
-probability that $t_{unknown}$ is written by the same author as $t_{known}$
-for each $t_{known} \in T_\alpha$ is greater than the threshold $\theta$ and 0
-otherwise.
+probability that $t$ is written by the same author as $t'$ for each $t' \in
+T_\alpha$ is greater than the threshold $\theta$ and 0 otherwise.
 
 The $f$ parameter can be anything that takes two texts and returns a
 probability. We are going to present several different networks that can be used
@@ -1463,17 +1462,16 @@ differently. We are going to try several different weight functions that weigh
 texts based on metadata such as the time they were written and the length of
 the texts. The only constraint on a weight function $w$ is that $\sum_{t \in
 T_\alpha} w(t) = 1$. We will ignore that constraint in the following definitions
-of weight functions. Any function $w: T_\alpha \rightarrow \mathbb{R}^+$
+of weight functions as any function $w: T_\alpha \rightarrow \mathbb{R}^+$
 that does not follow the constraint can be transformed into a version $w^*:
 T_\alpha \rightarrow [0,1]$ that does follow the constraint where 
 
 \begin{equation}\label{eq:normalize}
-w^*(t) = \frac{w(t)}{\sum_{t \in T_\alpha} w(t)}
+    w^*(t) = \frac{w(t)}{\sum_{t \in T_\alpha} w(t)}.
 \end{equation}
 
-We can therefore define the weight
-functions $w$ while ignoring the constraint but use $w^*$ as the actual weight
-function in the prediction system.
+We can therefore define the weight functions $w$ while ignoring the constraint
+but use $w^*$ as the actual weight function in the prediction system.
 
 The most obvious weighing scheme is to just use a uniform weighting. That way
 we simply take an average of the predictions of our networks over the different
@@ -1491,22 +1489,21 @@ texts an author has written.
 \end{definition}
 
 The uniform weight function does not use any information we know about the
-texts. It is mostly part of our weight functions as a baseline to make sure we
-do not make any weight functions that are worse than a simple uniform weighing.
-Our other weight functions makes use of metadata we know about the texts. As an
-example we have a timestamp of when a text was turned in to the MaCom servers.
-We therefore know when the text was written and we assume that newer texts will
-better reflect the current writing style of a student than older texts. We
-have therefore defined several weight functions using the times the texts was
-written. Let $\tau: T_\alpha \rightarrow \mathbb{N}$ be the function returning
+texts. We define it as a baseline to make sure we do not make any weight
+functions that are worse than a simple uniform weighing. Our other weight
+functions makes use of metadata we know about the texts. We start by defining a
+weight function \textit{Exponential Dropoff} that use the time a text was turned
+in to MaCom's servers to weight the texts. We assume that newer texts will
+better reflect the current writing style of a student than older texts. In the
+following let $\tau: T_\alpha \rightarrow \mathbb{N}$ be the function returning
 the number of months between when the newest text $t \in T_\alpha$ and the text
-it is given were turned in where a month is considered 30 days. Our time based
-weight function are then defined as,
+it is given were turned in where a month is considered 30 days. Then our time
+based weight function are then defined as,
 
 \begin{definition}[Exponential Dropoff]
 
-    The exponential dropoff function $w_e: T_\alpha \rightarrow [0, 1]$ is
-    defined as,
+    The time based exponential dropoff function $w_e: T_\alpha \rightarrow [0,
+    1]$ is defined as,
 
     \begin{equation}
         w_e(t) = e^{-\lambda \tau(t)}
@@ -1515,10 +1512,11 @@ weight function are then defined as,
 \end{definition}
 
 The $\lambda$ parameter in that weight function can be used to control how
-important the newer texts are. When $\lambda = 0$ the Exponential Dropoff is
-equivalent to the Uniform Weighing and as $\lambda \rightarrow \infty$ more
-weight is given to the latest text. We have shown the weights given to different
-assignments for different $\lambda$ values in Figure \ref{fig:weights}.
+important newer texts are. When $\lambda = 0$ the Exponential Dropoff is
+equivalent to the \textit{Uniform Weighing} function and as $\lambda \rightarrow
+\infty$ more weight is given to the latest text. We have shown the weights
+given to different assignments for different $\lambda$ values in Figure
+\ref{fig:weights}.
 
 \begin{figure}
     \centering
@@ -1534,37 +1532,37 @@ assignments for different $\lambda$ values in Figure \ref{fig:weights}.
     \label{fig:weights}
 \end{figure}
 
-We are also going to include the usage of some other weighing approaches,
-Another weighing method used also looks at the metadata, as was done in 
-exponential dropoff weighing.
+We have also defined weight functions that use other metadata besides the time
+of writing. Specifically we have used the length of texts. The idea is that
+longer texts provide better insight into an authors writing style than shorter
+texts. So we wanted to see if we could obtain better results if we considered
+text length.
 
-\begin{definition}[Length Weighing]
+\begin{definition}[Length]
 
-    The length weight function $w_{length}: T_\alpha \rightarrow \mathbb{N}^+$
+    The length weight function $w_l: T_\alpha \rightarrow \mathbb{N}^+$
     is defined as,
 
     \begin{equation}
-        w_{length}(t) = \lfloor (|t| / 1000) \rceil + 1 
+        w_l(t) = \lceil \frac{|t|}{1000} \rceil
     \end{equation}
 
 \end{definition}
 
-In this method the length of the text t denotes the number of characters
-included in text t. Thus this methods weigh based on the amount of 1000
-character chunks is in each text. This is rounded to the nearest integer, where
-the addition of 1 makes sure no zero division error happens when mapping this
-function is mapped into the $[0,1]$ range using the same approach as in Equation
-\ref{eq:normalize}.
+In this method $|t|$ denotes the length of the text $t$ measured in characters.
+Thus this weight function gives more weight the longer a text is but where only
+differences on the order of thousands of characters are considered significant.
+We used the \textit{Exponential Dropoff} and \textit{Length} weighing functions
+to implement another weight function that use both text length and time stamps
+to give weights to an assignment. The combined weight function is shown below.
 
-This was in turn used to produce combined weight function 
+\begin{definition}[Exponential Dropoff + Length]
 
-\begin{definition}[Time-Length Weighing]
-    
-    The time-length weighing $w_{tl}: T_\alpha \rightarrow [0,2]$ is defined
-    as,
+    The exponential dropoff + length weight function $w_{tl}: T_\alpha
+    \rightarrow [0,2]$ is defined as,
 
     \begin{equation}
-        w_{tl} = w_e(t) + w_{length}(t)
+        w_{tl} = w^*_e(t) + w^*_l(t)
     \end{equation}
 
 \end{definition}
