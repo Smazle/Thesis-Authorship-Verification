@@ -295,8 +295,8 @@ describing it the text in the sample is or is not written by $\alpha$.
 
 \begin{center}
 \begin{verbatim}
-Extended Delta Validation Accuracy: TODO
-SVM Validation Accuracy:  TODO
+Extended Delta Validation Accuracy: 0.664
+SVM Validation Accuracy: 0.730
 \end{verbatim}
 \end{center}
 
@@ -693,175 +693,6 @@ those preprocessing steps and got a substantial hit in network performance.
 However the network were hopefully not looking at names metadata.
 
 
-%\subsubsection{Siamese Neural Network - Iteration 5}
-
-%The problems in the previous network were mainly due to the use of a global
-%max pool. That allowed our networks to look at the presence of certain strings
-%in texts. Our fifth iteration therefore does not include any global max pools.
-%Furthermore the network is an \gls{RNN}. We used an \gls{RNN} since they are
-%very good at sequence processing \cite{DBLP:series/sci/2012-385}. A text can
-%be viewed as a sequence where each character is a different timestep in the
-%sequence. We took inspiration from \cite{DBLP:journals/corr/RuderGB16c} who
-%used an \gls{RNN} for authorship verification. However instead of representing
-%the text as a sequence of sentences we represent it as a sequence of characters
-%and instead of using the output of each timestep we only used the last output
-%of the \gls{RNN}. We used the same basic architecture as before. Two texts are
-%presented to the network at the same time and features are extracted from the
-%texts by a Siamese Network. The features are then compared using a normal dense
-%network. In this iteration we used a combination of convolutions and \gls{RNN}'s
-%to extract the features. The input is as usual encoded in an embedding layer.
-%The embedding layer is followed by a convolutional layer of size 8 and stride
-%1. The idea is that the convolutional layer can look at 8 characters at a time
-%and learn features from that. After the convolutional layer we have a max pool
-%with pool size 8. That is mainly to save computation power as the size of the
-%texts are reduced to $\frac{1}{8}$ of the original size. After the max pool we
-%have a \gls{LSTM} layer with 100 output neurons. The \gls{LSTM} layer loops
-%through the output from the convolution and max pool and extracts 100 features
-%from it. Now we have 100 features from each of the input texts. As earlier we
-%combine the features with the elementwise absolute difference. On top of that
-%Siamese part of the network we compare the features extracted with a classic
-%dense network. The network has a single layer with 500 neurons and activated by
-%the \gls{ReLu} activation function. Lastly we have a dropout layer with 30\%
-%dropout and the output layer with a softmax as before. We have shown the network
-%in Figure \ref{fig:network5}.
-
-%\begin{figure}
-    %\centering
-    %\includegraphics[width=\textwidth]{./pictures/experiments/network5.png}
-    %\caption{Illustrate the structure of our fifth Siamese Neural Network.
-        %Weights are shared by the embedding layers, the convolutional layer and
-        %the LSTM layer. This Figure will be replaced by the new format when we
-        %decide what that format is.}
-    %\label{fig:network5}
-%\end{figure}
-
-%The network reached an accuracy of 0.89393 in epoch 18. The training and
-%validation accuracies are shown in Figure \ref{fig:network_5_accuracies}. At the
-%end of the training the network suddenly goes from about 90\% accuracy and back
-%to 50\% accuracy. A reason for that happening could be that the optimizer
-%overshot a target and therefore ended up with a worse result.
-
-%\begin{figure}
-    %\centering
-    %\includegraphics[width=0.5\textwidth]{./pictures/experiments/network_5_accuracies.png}
-    %\caption{Shows the training and validation accuracies over the epochs of
-        %training on the fifth iteration of our networks.}
-    %\label{fig:network_5_accuracies}
-%\end{figure}
-
-%The students normally write their personal information in the beginning of
-%assignments. Earlier we described that MaCom removed most of the names from
-%the assignment. But they still contain information such as classes, dates and
-%a different number of new line characters per student. We were suspicious
-%that the networks still made use of some meta data from the texts so we tried
-%training the network again but where we removed the 200 first characters from
-%each text. Since most of the metadata are located in the beginning of the
-%text we hoped that that would remove the problem. On this new dataset the
-%best validation accuracy was obtained in epoch 3 with an accuracy of 0.53233.
-%Clearly the network relied exclusively on the metadata in the beginning of
-%the texts. We have shown the training and validation accuracies in Figure
-%\ref{fig:network_5_accuracies_2}.
-
-%\begin{figure}
-    %\centering
-    %\includegraphics[width=0.5\textwidth]{./pictures/experiments/network_5_accuracies_2.png}
-    %\caption{Shows the training and validation accuracies over the epochs of
-        %training on the fifth iteration of our networks where we removed the 200
-        %first characters.}
-    %\label{fig:network_5_accuracies_2}
-%\end{figure}
-
-
-%\subsubsection{Siamese Neural Network - Iteration 6}
-%\label{subsubsec:siamese_neuraon_network_iteration_6}
-
-%In this iteration we trained our third network again but this time with the 200
-%first characters removed like in Iteration 5. We wanted to see how much worse
-%the network would perform now that we had hopefully removed some more personal
-%information from what the network had available to look at. We have shown the
-%training and validation accuracies in Figure \ref{fig:network_6_accuracies}. The
-%best validation accuracy was obtained in epoch 57 with an accuracy of 0.74370.
-%That means that we lost about 5\% accuracy by removing the first 200 characters.
-
-%\begin{figure}
-    %\centering
-    %\includegraphics[width=0.5\textwidth]{./pictures/experiments/network_6_accuracies.png}
-    %\caption{Shows the training and validation accuracies over the epochs of
-        %training on the sixth iteration of our networks.}
-    %\label{fig:network_6_accuracies}
-%\end{figure}
-
-
-%\subsubsection{Siamese Neural Network - Iteration 7}
-
-%Since the overall performance and runtime of our network described in iterations
-%5 did not perform very well, we chose a other route in terms of the \gls{RNN}'s.
-%Using the approaches described in \cite{qian:2018} with some minor changes. A
-%keras generated model can be seen in Figure \ref{fig:r_network6}.
-
-%\begin{figure}
-    %\centering
-    %\includegraphics[width=0.5\textwidth]{./pictures/experiments/network6.png}
-    %\caption{A keras generated model, showing the design of the \cite{qian:2018}
-        %inspired network.}
-    %\label{fig:r_network6}
-%\end{figure}
-
-%Contrary to previous networks we've produced, this network works on a higher
-%linguistic level, by using words and sentences rather than characters. It does
-%so by initially representing each text as a sequence of sequences. The outer
-%sequence is a sentence and the inner sequence is the words of that sentence.
-%We then proceed with representing each sentence as the sum of the embedded
-%words in it. Each words is embedded to a vector of size 150, resulting in the
-%summarized vector being the same size. Each of these summations are given to a
-%bidirectional \gls{LSTM} layer, of 50 neurons. All this is done in a Siamese
-%fashion so we have two branches of computation for each of the two texts given
-%to the network, which are merged using the absolute difference. After this is
-%done we simply feed this into a softmax dense layer to get the predictions.
-
-%All sentences are padded and truncated to have length 25 and all texts in each
-%batch are padded with 0 vectors to have the same length in sentences as the
-%longest text in the batch. We use a bidirectional \gls{LSTM} to allow the
-%network to use context from both sides of the current timestep.
-
-%We have shown the training accuracy and validation accuracy in Figure
-%\ref{fig:network_7_accuracies} (clearly we need to train some more epochs which
-%should be running at the moment). The highest validation accuracy was obtained
-%in epoch two with accuracy 0.92075.
-
-%\begin{figure}
-    %\centering
-    %\includegraphics[width=0.5\textwidth]{./pictures/experiments/network_7_accuracies.png}
-    %\caption{Shows the training and validation accuracies over the epochs of
-        %training on the seventh iteration of our networks.}
-    %\label{fig:network_7_accuracies}
-%\end{figure}
-
-
-%\subsubsection{Siamese Neural Network - Iteration 8}
-
-%In this iteration we tried an extended version of the previous network. We used
-%two bidirectional \gls{LSTM} layers on top of the word embeddings from before.
-%Both of them returned sequences and we computed the final "features" by taking
-%the average of the returned sequences giving us 50 numbers which indicated the
-%author. We had huge problems with overfitting of the network on the training
-%data authors. We have shown a graph of the training and validation accuracies
-%in Figure \ref{fig:network_8_accuracies}.
-
-
-%\subsubsection{Siamese Neural Network - Iteration 9}
-
-%In this iteration we went back to using convolutional neural networks. Now we
-%tried using both embedded words and embedded characters. We had a two
-%convolutional layers for the characters, one looking at 8 characters and one
-%looking at 4. For the words we had a convolutional layer looking at 8 words at a
-%time. After the convolutional layer we had a max over time pooling layer for
-%each of the filters and we combined the output for 2 texts with the absolute
-%difference. We then had a densely connected network on top of that which learned
-%from the features extracted. The dense network had 2 layers with 500 neurons in
-%each. After that we had 30\% dropout and a softmax layer as usual.
-
-
 \subsubsection{\glsdesc{rec-sent-NN}}
 \label{subsubsec:rec_sent_nn}
 
@@ -904,8 +735,7 @@ resulting in an output dimensionality twice the unit count, 100 in this case.
 \end{figure}
 
 \begin{description}
-
-    \item[Embedding:]
+\item[Embedding:]
 
         In this recurrent network we started deviating in terms of our approach
         in the embedding layer. Like with the previous networks, this network
@@ -1169,7 +999,7 @@ Figure \ref{fig:conv-char-NN-pred-4}.
 \begin{figure}
     \centering
     \textbf{Prediction System Results for 0.5 Split, Character Level CNN}\par\medskip
-    \includegraphics[width=\textwidth]{./pictures/experiments/conv_char_nn/prediction_system_50.png}
+    \includegraphics[scale=0.35]{./pictures/experiments/conv_char_nn/prediction_system_50.png}
     \caption{Results of running the prediction system with the network described
         in Section \ref{subsubsec:conv_char_nn} on a validation dataset with
         50\% positive samples and 50\% negative samples. In the upper graph we
@@ -1184,7 +1014,7 @@ Figure \ref{fig:conv-char-NN-pred-4}.
 \begin{figure}
     \centering
     \textbf{Prediction System Results for 0.04 Split, Character Level CNN}\par\medskip
-    \includegraphics[width=\textwidth]{./pictures/experiments/conv_char_nn/prediction_system_04.png}
+    \includegraphics[scale=0.35]{./pictures/experiments/conv_char_nn/prediction_system_04.png}
     \caption{Results of running the prediction system with the network described
         in Section \ref{subsubsec:conv_char_nn} on a validation dataset with
         96\% positive samples and 4\% negative samples. In the upper graph we
@@ -1220,7 +1050,7 @@ negatives in Figure \ref{fig:conv-char-word-NN-pred-4}.
 \begin{figure}
     \centering
     \textbf{Prediction System Results for 0.5 Split, Char+Word Level CNN}\par\medskip
-    \includegraphics[width=\textwidth]{./pictures/experiments/conv_char_word_nn/prediction_system_50.png}
+    \includegraphics[scale=0.35]{./pictures/experiments/conv_char_word_nn/prediction_system_50.png}
     \caption{Results of running the prediction system with the network described
         in Section \ref{subsubsec:conv_char_word_nn} on a validation dataset
         with 50\% positive samples and 50\% negative samples. In the upper graph
@@ -1235,7 +1065,7 @@ negatives in Figure \ref{fig:conv-char-word-NN-pred-4}.
 \begin{figure}
     \centering
     \textbf{Prediction System Results for 0.04 Split, Char+Word Level CNN}\par\medskip
-    \includegraphics[width=\textwidth]{./pictures/experiments/conv_char_word_nn/prediction_system_04.png}
+    \includegraphics[scale=0.35]{./pictures/experiments/conv_char_word_nn/prediction_system_04.png}
     \caption{Results of running the prediction system with the network described
         in Section \ref{subsubsec:conv_char_word_nn} on a validation dataset
         with 96\% positive samples and 4\% negative samples. In the upper graph

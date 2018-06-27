@@ -13,6 +13,7 @@ parser = argparse.ArgumentParser(
 parser.add_argument(
     '--image-out',
     help='Where to save the graph showing accuracies and errors.')
+
 args = parser.parse_args()
 
 data = pd.read_csv(sys.stdin)
@@ -27,25 +28,29 @@ fps = data.as_matrix(columns=['fps'])
 fns = data.as_matrix(columns=['fns'])
 
 # Generate graph.
-f, axarr = plt.subplots(2, sharex=True)
+f = plt.figure(figsize=(20, 10))
+ax1 = f.add_subplot(211)
+ax2 = f.add_subplot(212, sharex=ax1)
+
 for weight in np.sort(np.unique(weights)):
     accs = accuracies[weights == weight]
     errs = accusation_errors[weights == weight]
     thresholds = thetas[weights == weight]
 
     weight = weight.replace('+ Text Length', '+ TL')
-    axarr[0].plot(thresholds, accs, label=weight)
-    axarr[1].plot(thresholds, errs, label=weight)
+    ax1.plot(thresholds, accs, label=weight)
+    ax2.plot(thresholds, errs, label=weight)
 
-axarr[0].set_ylabel('Accuracy')
-axarr[0].grid(True)
+ax1.set_ylabel('Accuracy', fontsize=15)
+ax1.grid(True)
 
-axarr[1].set_ylabel('Accusation Error')
-axarr[1].grid(True)
-axarr[1].legend()
+ax2.set_ylabel('Accusation Error', fontsize=15)
+ax2.grid(True)
+ax2.legend()
 
-axarr[1].set_xlabel('θ (Threshold)')
-lgd = plt.legend(bbox_to_anchor=(1.4, 1), loc=7, fancybox=True)
+ax2.set_xlabel('θ (Threshold)', fontsize=15)
+lgd = plt.legend(
+    bbox_to_anchor=(0.11, -0.2), loc='upper left', prop={'size': 15}, ncol=5)
 
 if args.image_out is None:
     plt.show()
@@ -54,7 +59,7 @@ else:
         args.image_out,
         bbox_extra_artists=(lgd, ),
         bbox_inches='tight',
-        dpi=1024)
+        dpi=128)
 
 # Find the best configuration for each weight.
 print('{:^15}{:^13}{:^10}{:^10}{:^18}{:^8}{:^8}{:^8}{:^8}'.format(
