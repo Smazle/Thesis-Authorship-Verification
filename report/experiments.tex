@@ -285,18 +285,40 @@ It is at this point we grab the data-set (C), our external validation set. While
 applying these finely tuned methods to a validation set wont change anything in
 terms of the parameters we have selected, it will give us the ability to gauge
 the accuracy of our methods when applied to a new, never before seen, test-set
-(D). Using this untouched data set as the base, the validation loops through
-each sample in the data-set. For each sample the author $\alpha$ is extracted,
-which we then use to extract $T_\alpha$ from the same data, excluding the
-current sample. In conjunction with a random subset of $\overline{T}_\alpha$ 
-of equal size, the mode in being validated is trained. The trained
-model is then applied to the current sample, giving a binary result
-describing it the text in the sample is or is not written by $\alpha$.
+(D). Using this untouched data set as the base, the validation determines what
+text from each author is the newest one, ending up with a set of samples of
+the form $(t, \alpha)$, where $t$ is a text, and $\alpha$ is an author. For
+each of these samples $T'_\alpha = T_\alpha \setminus \{t\}$ is extracted
+from (C). Additonally another randomly sampled set $\hat{T}_\alpha \subset
+\overline{T}_\alpha$ is extracted where $|\hat{T}_\alpha| = |T'_\alpha|$. Using
+the combined set $T_'\alpha \cup \hat{T}_\alpha$, we can train the model in
+question, having provided it with both positive and negative examples of author
+$\alpha$s writing style. To include samples that depict a student that used a
+ghost writer, we change up which text we do our prediction on. For each sample
+there is a preset chance that the sample will be regarded as negative. If
+that is the case we pick out a random $t'$ where $t' \in (\overline{T}_\alpha
+\setminus \hat{T}_\alpha )$, and predict on that, where a correct prediction
+would be the model say he did not write it. In the positive case, we simply
+predict on $t$ and a correct prediction would be the model saying he did write
+it. A more precise notation of this can be seen in definition
+
+For the 1000 authors in (C), and a negative chance of 50\% 
+the following results were computed.
 
 \begin{center}
 \begin{verbatim}
-Extended Delta Validation Accuracy: 0.664
-SVM Validation Accuracy: 0.730
+Extended Delta Validation Accuracy: TODO
+SVM Validation Accuracy: TODO
+\end{verbatim}
+\end{center}
+
+For the data-set but a 4\% chance of a negative case,
+the following results were computed.
+
+\begin{center}
+\begin{verbatim}
+Extended Delta Validation Accuracy: TODO
+SVM Validation Accuracy: TODO
 \end{verbatim}
 \end{center}
 
