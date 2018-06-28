@@ -266,12 +266,12 @@ in Table \ref{table:KNN} for \gls{KNN}, and Table \ref{table:SVM} for
 
 \begin{table}[h]
     \centering
-    \caption{The results from performing a grid search for C and gamma, of the
+    \caption{The results from performing a grid search for C and $\gamma$, of the
         \gls{SVM} algorithm}
     \label{table:SVM}
     \begin{tabular}{|c|cccccc|}
         \hline
-        \backslashbox{$C$}{gamma} & $10^{-3}$ & $10^{-1}$ & $10^{1}$ & $10^{3}$ & $10^{5}$ & $10^{7}$ \\\hline
+        \backslashbox{$C$}{$\gamma$} & $10^{-3}$ & $10^{-1}$ & $10^{1}$ & $10^{3}$ & $10^{5}$ & $10^{7}$ \\\hline
          $10^{-3}$ & 0.626 & 0.626 & 0.626 & 0.641 & 0.558 & 0.500\\ 
          $10^{-1}$ & 0.626 & 0.626 & 0.626 & 0.641 & 0.558 & 0.500\\ 
          $10^{1}$  & 0.626 & 0.626 & 0.626 & \textbf{0.689} & 0.576 & 0.501\\ 
@@ -291,7 +291,7 @@ the form $(t, \alpha)$, where $t$ is a text, and $\alpha$ is an author. For
 each of these samples $T'_\alpha = T_\alpha \setminus \{t\}$ is extracted
 from (C). Additonally another randomly sampled set $\hat{T}_\alpha \subset
 \overline{T}_\alpha$ is extracted where $|\hat{T}_\alpha| = |T'_\alpha|$. Using
-the combined set $T_'\alpha \cup \hat{T}_\alpha$, we can train the model in
+the combined set $T'_\alpha \cup \hat{T}_\alpha$, we can train the model in
 question, having provided it with both positive and negative examples of author
 $\alpha$s writing style. To include samples that depict a student that used a
 ghost writer, we change up which text we do our prediction on. For each sample
@@ -307,12 +307,12 @@ the following results were computed.
 
 \begin{center}
 \begin{verbatim}
-Extended Delta Validation Accuracy: 
-Extended Delta Validation Accursation Error: 
+Extended Delta Validation Accuracy: TODO
+Extended Delta Validation Accursation Error: TODO
 
 
-SVM Validation Accuracy: 0.74
-SVM Validation Accursation Error: 0.4
+SVM Validation Accuracy: 0.737
+SVM Validation Accursation Error: 0.24
 
 \end{verbatim}
 \end{center}
@@ -322,12 +322,12 @@ the following results were computed.
 
 \begin{center}
 \begin{verbatim}
-Extended Delta Validation Accuracy: 
-Extended Delta Validation Accursation Error: 
+Extended Delta Validation Accuracy: TODO
+Extended Delta Validation Accursation Error: TODO
 
 
-SVM Validation Accuracy: 0.752
-SVM Validation Accursation Error: 0.92
+SVM Validation Accuracy: 0.76
+SVM Validation Accursation Error: 0.91
 \end{verbatim}
 \end{center}
 
