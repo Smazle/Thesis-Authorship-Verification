@@ -54,6 +54,7 @@ for author in np.unique(feature_search.authors):
         continue
 
     # Predict a positive.
+    positives += 1
     X_positives = X[y == 1]
     X_negatives = X[y == 0]
     y_positives = y[y == 1]
@@ -74,6 +75,7 @@ for author in np.unique(feature_search.authors):
 
     # Predict a negative if we are asked to.
     if random.random() <= args.negative_chance:
+        negatives += 1
         newest_X = X_negatives[-1]
         newest_y = y_negatives[-1]
         train_X = np.vstack([X_positives[0:-1], X_negatives[0:-1]])
@@ -90,5 +92,5 @@ for author in np.unique(feature_search.authors):
 accuracy = (tps + tns) / (tps + tns + fps + fns)
 accusation_error = fns / (fns + tns)
 
-print('tps,tns,fps,fns,accuracy,accusation_error')
-print(tps, tns, fps, fns, accuracy, accusation_error)
+print('tps,tns,fps,fns,accuracy,accusation_error,positives,negatives')
+print(tps, tns, fps, fns, accuracy, accusation_error, positives, negatives)
