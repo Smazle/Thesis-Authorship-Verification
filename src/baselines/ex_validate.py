@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-
 import argparse
 import numpy as np
 from .feature_search import FeatureSearch
@@ -21,18 +20,20 @@ parser.add_argument(
     type=str,
     help='File containing the product of the feature selection')
 
-parser.add_argument('--scaler', type=str, help='Path to pickled scaler object',
-                    required=True)
+parser.add_argument(
+    '--scaler', type=str, help='Path to pickled scaler object', required=True)
 
-parser.add_argument('--K', type=int, help='The parameter selected value of K',
-                    required=True)
+parser.add_argument(
+    '--K', type=int, help='The parameter selected value of K', required=True)
 
-parser.add_argument('--p', type=int, help='The parameter selected value of p',
-                    required=True)
+parser.add_argument(
+    '--p', type=int, help='The parameter selected value of p', required=True)
 
-parser.add_argument('--negative-chance', type=float,
-                    help='With what chance to generate a negative sample.',
-                    required=True)
+parser.add_argument(
+    '--negative-chance',
+    type=float,
+    help='With what chance to generate a negative sample.',
+    required=True)
 
 args = parser.parse_args()
 
@@ -106,5 +107,8 @@ for author in np.unique(feature_search.authors):
 accuracy = (tps + tns) / (tps + tns + fps + fns)
 accusation_error = fns / (fns + tns)
 
-print('tps,tns,fps,fns,accuracy,accusation_error,positives,negatives')
-print(tps, tns, fps, fns, accuracy, accusation_error, positives, negatives)
+print('positives \t negatives \t tps \t tns \t fps fns' +
+      '\t accuracy \t accusation_error')
+
+print(positives, '\t', negatives, '\t', tps, '\t', tns, '\t', fps, '\t', fns,
+      '\t', accuracy, '\t', accusation_error)

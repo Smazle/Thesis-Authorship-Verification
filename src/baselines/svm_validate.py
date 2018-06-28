@@ -20,10 +20,14 @@ parser.add_argument(
 parser.add_argument(
     '--C', type=float, help='The parameter selected value of C', required=True)
 parser.add_argument(
-    '--gamma', type=float, help='The parameter selected value of gamma',
+    '--gamma',
+    type=float,
+    help='The parameter selected value of gamma',
     required=True)
 parser.add_argument(
-    '--negative-chance', type=float, help='How many negatives we want.',
+    '--negative-chance',
+    type=float,
+    help='How many negatives we want.',
     required=True)
 args = parser.parse_args()
 
@@ -92,5 +96,8 @@ for author in np.unique(feature_search.authors):
 accuracy = (tps + tns) / (tps + tns + fps + fns)
 accusation_error = fns / (fns + tns)
 
-print('tps,tns,fps,fns,accuracy,accusation_error,positives,negatives')
-print(tps, tns, fps, fns, accuracy, accusation_error, positives, negatives)
+print('positives \t negatives \t tps \t tns \t fps \t fns' +
+      '\t accuracy \t accusation_error')
+
+print(positives, '\t', negatives, '\t', tps, '\t', tns, '\t', fps, '\t', fns,
+      '\t', accuracy, '\t', accusation_error)
