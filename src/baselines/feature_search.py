@@ -148,19 +148,3 @@ class FeatureSearch:
         y = np.array([1] * len(own_texts) + [0] * len(other_texts))
 
         return X, y
-
-    def getAuthorData(self, author, feats):
-        X, y = self.__generateAuthorData__(author)
-
-        idx = listIdx(X, feats)
-
-        X = np.delete(X, idx, axis=0)
-        y = np.delete(y, idx)
-
-        return X, y
-
-
-def listIdx(mat, l):
-    for idx, m in enumerate(mat):
-        if np.allclose(m, l):
-            return idx

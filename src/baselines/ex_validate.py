@@ -25,36 +25,71 @@ parser.add_argument('--K', type=int, help='The parameter selected value of K')
 
 parser.add_argument('--p', type=int, help='The parameter selected value of p')
 
-args = parser.parse_args()
+parser.add_argument('--negative-chance', type=float,
+                    help='With what chance to generate a negative asmple.')
 
-classifier = KNeighborsClassifier(n_neighbors=args.K, p=args.p)
-scaler = pickle.load(open(args.scaler, 'rb'))
+args = parser.parse_args()
 
 features = np.loadtxt(args.features, dtype=float, delimiter=',')
 features = features[:np.argmax(features, axis=0)[0]][:, 0].astype(int)
 
-feature_obj = FeatureSearch(None, None, None)
-feature_obj.__generateData__(args.validationFile)
-feature_obj.data = scaler.transform(feature_obj.data)
+# Loop through unique authors and evaluate performance of his/her newest text.
+feature_search = FeatureSearch(None, None, authorLimit=None, normalize=False)
+feature_search.__generateData__(args.validation_file)
 
-correct = 0
+classifier = KNeighborsClassifier(n_neighbors=args.K, p=args.p)
+scaler = pickle.load(open(args.scaler, 'rb'))
 
-for idx, row in enumerate(feature_obj.data):
-    print(idx, len(feature_obj.data))
-    author = feature_obj.authors[idx]
-    row = np.array(row)
+tps = 0
+tns = 0
+fps = 0
+fns = 0
+positives = 0
+negatives = 0
+for author in np.unique(feature_search.authors):
+    X, y = feature_search.__generateAuthorData__(author)
+    X = X[:, features]
 
-    X, y = feature_obj.getAuthorData(author, row)
+    if y.shape == (2, ):
+        print('WARNING to few texts', file=sys.stderr)
+        continue
 
-    print(y)
-    classifier.fit(X[:, features], y)
+    # Predict a positive.
+    X_positives = X[y == 1]
+    X_negatives = X[y == 0]
+    y_positives = y[y == 1]
+    y_negatives = y[y == 0]
 
-    print(author, classifier.predict(row[features].reshape(1, -1)))
-    if classifier.predict(row[features].reshape(1, -1)) == author:
-        correct += 1
+    newest_X = X_positives[-1]
+    newest_y = y_positives[-1]
+    train_X = np.vstack([X_positives[0:-1], X_negatives[0:-1]])
+    train_y = np.hstack([y_positives[0:-1], y_negatives[0:-1]])
 
-print(correct)
-results = correct / float(len(feature_obj.data))
+    classifier.fit(train_X, train_y)
+    prediction = classifier.predict(newest_X.reshape(1, -1))[0]
 
-print('Result, with K={} and p={}:\
-        {}'.format(args.K, args.p, results))
+    if prediction == 1:
+        tps += 1
+    else:
+        fns += 1
+
+    # Predict a negative if we are asked to.
+    if random.random() <= args.negative_chance:
+        newest_X = X_negatives[-1]
+        newest_y = y_negatives[-1]
+        train_X = np.vstack([X_positives[0:-1], X_negatives[0:-1]])
+        train_y = np.hstack([y_positives[0:-1], y_negatives[0:-1]])
+
+        classifier.fit(train_X, train_y)
+        prediction = classifier.predict(newest_X.reshape(1, -1))[0]
+
+        if prediction == 1:
+            fps += 1
+        else:
+            tns += 1
+
+accuracy = (tps + tns) / (tps + tns + fps + fns)
+accusation_error = fns / (fns + tns)
+
+print('tps,tns,fps,fns,accuracy,accusation_error')
+print(tps, tns, fps, fns, accuracy, accusation_error)

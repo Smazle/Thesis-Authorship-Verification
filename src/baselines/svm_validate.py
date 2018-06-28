@@ -5,47 +5,90 @@ import argparse
 import numpy as np
 from .feature_search import FeatureSearch
 from sklearn.svm import SVC
+import random
+import sys
 
 parser = argparse.ArgumentParser(
     description='Uses the selected features and parameters, \
                 to compute the validation error of the training')
-
 parser.add_argument(
-    'validationFile', type=str, help='Path to file containing raw features')
-
+    'validation_file', type=str, help='Path to file containing raw features')
 parser.add_argument(
     'features',
     type=str,
     help='File containing the product of the feature selection')
-
 parser.add_argument(
-    '--C', type=float, help='The parameter selected value of C')
-
+    '--C', type=float, help='The parameter selected value of C', required=True)
 parser.add_argument(
-    '--gamma', type=float, help='The parameter selected value of gamma')
-
+    '--gamma', type=float, help='The parameter selected value of gamma',
+    required=True)
+parser.add_argument(
+    '--negative-chance', type=float, help='How many negatives we want.',
+    required=True)
 args = parser.parse_args()
+
+# Load the indices of the features we should use.
+features = np.loadtxt(args.features, dtype=np.str, delimiter=',')
+accuracies = features[:, 1].astype(np.float)
+features = features[:, 0].astype(np.int)
+features = features[0:np.argmax(accuracies)]
+
+# Loop through unique authors and evaluate performance of his/her newest text.
+feature_search = FeatureSearch(None, None, authorLimit=None, normalize=False)
+feature_search.__generateData__(args.validation_file)
 
 classifier = SVC(C=args.C, gamma=args.gamma, kernel='rbf')
 
-features = np.loadtxt(args.features, dtype=float, delimiter=',')
-features = features[:np.argmax(features, axis=0)[0]][:, 0].astype(int)
+tps = 0
+tns = 0
+fps = 0
+fns = 0
+positives = 0
+negatives = 0
+for author in np.unique(feature_search.authors):
+    X, y = feature_search.__generateAuthorData__(author)
+    X = X[:, features]
 
-feature_obj = FeatureSearch(None, None, authorLimit=None, normalize=False)
-feature_obj.__generateData__(args.validationFile)
+    if y.shape == (2, ):
+        print('WARNING to few texts', file=sys.stderr)
+        continue
 
-correct = 0
+    # Predict a positive.
+    X_positives = X[y == 1]
+    X_negatives = X[y == 0]
+    y_positives = y[y == 1]
+    y_negatives = y[y == 0]
 
-for idx, row in enumerate(feature_obj.data):
-    author = feature_obj.authors[idx]
+    newest_X = X_positives[-1]
+    newest_y = y_positives[-1]
+    train_X = np.vstack([X_positives[0:-1], X_negatives[0:-1]])
+    train_y = np.hstack([y_positives[0:-1], y_negatives[0:-1]])
 
-    X, y = feature_obj.getAuthorData(author, row)
-    classifier.fit(X[:, features], y)
+    classifier.fit(train_X, train_y)
+    prediction = classifier.predict(newest_X.reshape(1, -1))[0]
 
-    if classifier.predict(row[features].reshape(1, -1)) == author:
-        correct += 1
+    if prediction == 1:
+        tps += 1
+    else:
+        fns += 1
 
-results = correct / len(feature_obj.data)
+    # Predict a negative if we are asked to.
+    if random.random() <= args.negative_chance:
+        newest_X = X_negatives[-1]
+        newest_y = y_negatives[-1]
+        train_X = np.vstack([X_positives[0:-1], X_negatives[0:-1]])
+        train_y = np.hstack([y_positives[0:-1], y_negatives[0:-1]])
 
-print('Validation Result, with C={} and gamma={}:\
-        {}'.format(args.C, args.gamma, results))
+        classifier.fit(train_X, train_y)
+        prediction = classifier.predict(newest_X.reshape(1, -1))[0]
+
+        if prediction == 1:
+            fps += 1
+        else:
+            tns += 1
+
+accuracy = (tps + tns) / (tps + tns + fps + fns)
+accusation_error = fns / (fns + tns)
+
+print('tps,tns,fps,fns,accuracy,accusation_error')
+print(tps, tns, fps, fns, accuracy, accusation_error)
