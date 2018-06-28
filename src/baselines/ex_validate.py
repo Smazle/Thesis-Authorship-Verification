@@ -6,39 +6,52 @@ import numpy as np
 from .feature_search import FeatureSearch
 from sklearn.neighbors import KNeighborsClassifier
 import pickle
+import random
+import sys
 
 parser = argparse.ArgumentParser(
     description='Uses the selected features and parameters, \
                 to compute the validation error of the training')
 
 parser.add_argument(
-    'validationFile', type=str, help='Path to file containing raw features')
+    'validation_file', type=str, help='Path to file containing raw features')
 
 parser.add_argument(
     'features',
     type=str,
     help='File containing the product of the feature selection')
 
-parser.add_argument('--scaler', type=str, help='Path to pickled scaler object')
+parser.add_argument('--scaler', type=str, help='Path to pickled scaler object',
+                    required=True)
 
-parser.add_argument('--K', type=int, help='The parameter selected value of K')
+parser.add_argument('--K', type=int, help='The parameter selected value of K',
+                    required=True)
 
-parser.add_argument('--p', type=int, help='The parameter selected value of p')
+parser.add_argument('--p', type=int, help='The parameter selected value of p',
+                    required=True)
 
 parser.add_argument('--negative-chance', type=float,
-                    help='With what chance to generate a negative asmple.')
+                    help='With what chance to generate a negative sample.',
+                    required=True)
 
 args = parser.parse_args()
 
-features = np.loadtxt(args.features, dtype=float, delimiter=',')
-features = features[:np.argmax(features, axis=0)[0]][:, 0].astype(int)
+# Load the indices of the features we should use.
+features = np.loadtxt(args.features, dtype=np.str, delimiter=',')
+accuracies = features[:, 1].astype(np.float)
+features = features[:, 0].astype(np.int)
+features = features[0:np.argmax(accuracies)]
 
 # Loop through unique authors and evaluate performance of his/her newest text.
 feature_search = FeatureSearch(None, None, authorLimit=None, normalize=False)
 feature_search.__generateData__(args.validation_file)
 
+# Scale data according to training.
+with open(args.scaler, 'rb') as f:
+    scaler = pickle.load(f)
+    feature_search.data = scaler.transform(feature_search.data)
+
 classifier = KNeighborsClassifier(n_neighbors=args.K, p=args.p)
-scaler = pickle.load(open(args.scaler, 'rb'))
 
 tps = 0
 tns = 0
