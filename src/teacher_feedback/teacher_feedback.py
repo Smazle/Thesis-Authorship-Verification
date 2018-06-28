@@ -44,20 +44,27 @@ class Result:
 
         self.text1_char_n_grams = []
         self.text2_char_n_grams = []
+        self.text1_value = self.feature_max_difference.text1_value
+        self.text2_value = self.feature_max_difference.text2_value
 
         for ind1, ind2 in zip(text1_max_index, text2_max_index):
             self.text1_char_n_grams.append(text1[ind1:ind1 + size])
             self.text2_char_n_grams.append(text2[ind2:ind2 + size])
+            # self.text1_value.append(featurehjmcclhj)
 
     def __str__(self):
         filter_inds = self.feature_max_difference.filter_number
         text1s = self.text1_char_n_grams
         text2s = self.text2_char_n_grams
+        value1s = self.text1_value
+        value2s = self.text2_value
+
+        zipped = zip(filter_inds, text1s, text2s, value1s, value2s)
 
         string = ''
-        for filter_ind, text1, text2 in zip(filter_inds, text1s, text2s):
-            string += '\tfilter {}\ttext1 {}\ttext2 {}\n'\
-                .format(filter_ind, repr(text1), repr(text2))
+        for filter_ind, text1, text2, value1, value2 in zipped:
+            string += '\tfilter {}\ttext1 {}\ttext2 {}\tvalue1 {:^.2f}\tvalue2 {:^.2f}\n'\
+                .format(filter_ind, repr(text1), repr(text2), value1, value2)
 
         return string
 
