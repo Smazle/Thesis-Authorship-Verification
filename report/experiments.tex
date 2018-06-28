@@ -300,36 +300,23 @@ that is the case we pick out a random $t'$ where $t' \in (\overline{T}_\alpha
 \setminus \hat{T}_\alpha )$, and predict on that, where a correct prediction
 would be the model say he did not write it. In the positive case, we simply
 predict on $t$ and a correct prediction would be the model saying he did write
-it. 
+it. The results of this process can be seen in Table \ref{tab:baseline-val-res}.
 
-For the 1000 authors in (C), and with a negative chance of 50\% 
-the following results were computed.
-
-\begin{center}
-\begin{verbatim}
-Extended Delta Validation Accuracy: 0.644
-Extended Delta Validation Accursation Error: 0.323
-
-
-SVM Validation Accuracy: 0.737
-SVM Validation Accursation Error: 0.24
-
-\end{verbatim}
-\end{center}
-
-For the data-set but a 4\% chance of a negative case,
-the following results were computed.
-
-\begin{center}
-\begin{verbatim}
-Extended Delta Validation Accuracy: 0.721
-Extended Delta Validation Accursation Error: 0.92
-
-
-SVM Validation Accuracy: 0.76
-SVM Validation Accursation Error: 0.91
-\end{verbatim}
-\end{center}
+\begin{table}[h]
+\centering
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|}
+\hline
+Chance & Classifier & Positives & Negatives & TPS & TNS & FPS & FNS & \textbf{Accuracy} & \textbf{Accu Err} \\ \hline
+\multirow{2}{*}{50\%} & SVM & 1000 & 1000 & 759 & 692 & 308 & 241 & \textbf{0.7255} & \textbf{0.2583} \\ \cline{2-10} 
+ & ED & 1000 & 1000 & 667 & 583 & 417 & 333 & \textbf{0.625} & \textbf{0.36353} \\ \hline
+\multirow{2}{*}{4\%} & SVM & 1000 & 48 & 762 & 23 & 25 & 238 & \textbf{0.749} & \textbf{0.91187} \\ \cline{2-10} 
+ & ED & 1000 & 46 & 680 & 23 & 23 & 320 & \textbf{0.67208} & \textbf{0.93294} \\ \hline
+\end{tabular}
+\caption{The results of running our two baseline methods, SVM and Extended Delta
+(ED), on the data-set (C), the validation set. The percentage found in the
+chance column denotes the amount of the data-set which is negative samples.}
+\label{tab:baseline-val-res}
+\end{table}
 
 Unfortunately both of these methods aren't suitable for the prediction system
 described earlier, and thus a fine tuning to get it below the allowed accusation

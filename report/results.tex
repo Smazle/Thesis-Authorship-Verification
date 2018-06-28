@@ -15,7 +15,25 @@ hyper parameters that provided best on the training set.
 For the Extended Delta method, this was a K value, and a p value of 1.
 Then using the same sample generation as was described in the bottom
 of Section \ref{sec:hyp_select}, and normalizing using the scaler
-produced when generating the features, we applied were able to apply the model,
-getting the following results.
+produced when generating the features, we applied were able to apply the model.
+The same was done with the SVM, where we used to optimal found hyper-parameters,
+$C=10$ and $\gamma = 1000$, to train the model. The results can be seen in Table
+\ref{tab:baseline-res}.
 
 
+
+\begin{table}
+\centering
+\begin{tabular}{|c|c|c|c|c|c|c|c||c|c|}
+\hline
+Chance & Classifier & Positives & Negatives & TPS & TNS & FPS & FNS & \textbf{Accuracy} & \textbf{Accu Err} \\ \hline
+\multirow{2}{*}{50\%} & SVM & 3550 & 3550 & 2667 & 2442 & 1100 & 883 & \textbf{0.71958} & \textbf{0.26556} \\ \cline{2-10} 
+ & ED & 3550 & 3550 & 2349 & 2064 & 1486 & 1201 & \textbf{0.62155} & \textbf{0.36784} \\ \hline
+\multirow{2}{*}{4\%} & SVM & 3550 & 149 & 2629 & 98 & 57 & 921 & \textbf{0.73723} & \textbf{0.90382} \\ \cline{2-10} 
+ & ED & 3500 & 148 & 2369 & 92 & 56 & 1181 & \textbf{0.66549} & \textbf{0.92773} \\ \hline
+\end{tabular}
+\caption{Table describing the conditions and results of running the two baseline methods,
+Extended Delta(ED) and SVM. The chance column describes with what probability a negative sample was
+created.}
+\label{tab:baseline-res}
+\end{table}
