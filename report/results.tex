@@ -20,20 +20,57 @@ The same was done with the SVM, where we used to optimal found hyper-parameters,
 $C=10$ and $\gamma = 1000$, to train the model. The results can be seen in Table
 \ref{tab:baseline-res}.
 
-
-
-\begin{table}
+\begin{table}[h]
 \centering
 \begin{tabular}{|c|c|c|c|c|c|c|c||c|c|}
 \hline
-Chance & Classifier & Positives & Negatives & TPS & TNS & FPS & FNS & \textbf{Accuracy} & \textbf{Accu Err} \\ \hline
-\multirow{2}{*}{50\%} & SVM & 3550 & 3550 & 2667 & 2442 & 1100 & 883 & \textbf{0.71958} & \textbf{0.26556} \\ \cline{2-10} 
+Split & Classifier & Positives & Negatives & TPS & TNS & FPS & FNS & \textbf{Accuracy} & \textbf{Accu Err} \\ \hline
+\multirow{2}{*}{50/50} & SVM & 3550 & 3550 & 2667 & 2442 & 1100 & 883 & \textbf{0.71958} & \textbf{0.26556} \\ \cline{2-10} 
  & ED & 3550 & 3550 & 2349 & 2064 & 1486 & 1201 & \textbf{0.62155} & \textbf{0.36784} \\ \hline
-\multirow{2}{*}{4\%} & SVM & 3550 & 149 & 2629 & 98 & 57 & 921 & \textbf{0.73723} & \textbf{0.90382} \\ \cline{2-10} 
+\multirow{2}{*}{96/04} & SVM & 3550 & 149 & 2629 & 98 & 57 & 921 & \textbf{0.73723} & \textbf{0.90382} \\ \cline{2-10} 
  & ED & 3500 & 148 & 2369 & 92 & 56 & 1181 & \textbf{0.66549} & \textbf{0.92773} \\ \hline
 \end{tabular}
 \caption{Table describing the conditions and results of running the two baseline methods,
-Extended Delta(ED) and SVM. The chance column describes with what probability a negative sample was
-created.}
+Extended Delta(ED) and SVM. }
 \label{tab:baseline-res}
 \end{table}
+
+With this we have our baseline to beat. As briefly mentioned in Section
+\ref{subsec:baseline}, these method are not very well suited for this particular
+task. Since they both provide binary results denoting a students innocence, or
+lack thereof, it is not possible to apply any kind of thresholding to force
+our models under the 10\% accusation error goal. They always perform at their
+maximum capacity. For this reason we had to alter they way we compare the deep
+learning approaches with our baselines. This was done by determining the beast
+performing $\theta$ and weight function for our neural network with
+regard to accuracy, and with no regard to the accusation error, as both
+our baselines do not focus on that either. Thus we compared the
+results of our base lines on the 50/50 data-set and the 96/04 data-set
+with the highest unconstrained accuracy our deep learning methods could
+muster.
+
+Finding and computing these values for \gls{conv-char-NN},
+using the test data-set D, yielded the following results.
+
+\begin{center}
+\textbf{\gls{conv-char-NN}, 50/50 data-set.}\\
+\begin{tabular}{lcccccccc}
+ & {\ul Weight} & {\ul TPS} & {\ul TNS} & {\ul FPS} & {\ul FNS} & {\ul $\theta$} & {\ul Accuracy} & {\ul Accu Error} \\
+Unconstrained: & Time + Length & 3231 & 2913 & 637 & 319 & 0.486 & 0.86535 & 0.09870 \\
+Constrained: & Majority Vote & 3392 & 2344 & 1206 & 158 & 0.39 & 0.80788 & 0.06314
+\end{tabular}
+\end{center}
+
+\begin{center}
+\textbf{\gls{conv-char-NN}, 96/04 data-set.}\\
+\begin{tabular}{lcccccccc}
+                & {\ul Weight}  & {\ul TPS} & {\ul TNS} & {\ul FPS} & {\ul FNS} & {\ul $\theta$} & {\ul Accuracy} & {\ul Accu Error} \\
+Unconstrained:        & Time + Length & 3540      & 28        & 125       & 10        & 0.137          & 0.96354       & 0.26315          \\
+Constrained: & Majority Vote & 3546      & 13        & 140       & 4         & 0.057          & 0.96111       & 0.23529         
+\end{tabular}
+\end{center}
+
+The first row describes the maximum accuracy of the network using the $\theta$
+value and weight function that yielded the highest unconstrained accuracy, and
+the second row shows the highest constrained accuracy.
+

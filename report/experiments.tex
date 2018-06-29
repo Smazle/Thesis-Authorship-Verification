@@ -306,15 +306,14 @@ it. The results of this process can be seen in Table \ref{tab:baseline-val-res}.
 \centering
 \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|}
 \hline
-Chance & Classifier & Positives & Negatives & TPS & TNS & FPS & FNS & \textbf{Accuracy} & \textbf{Accu Err} \\ \hline
-\multirow{2}{*}{50\%} & SVM & 1000 & 1000 & 759 & 692 & 308 & 241 & \textbf{0.7255} & \textbf{0.2583} \\ \cline{2-10} 
+Split & Classifier & Positives & Negatives & TPS & TNS & FPS & FNS & \textbf{Accuracy} & \textbf{Accu Err} \\ \hline
+\multirow{2}{*}{50/50} & SVM & 1000 & 1000 & 759 & 692 & 308 & 241 & \textbf{0.7255} & \textbf{0.2583} \\ \cline{2-10} 
  & ED & 1000 & 1000 & 667 & 583 & 417 & 333 & \textbf{0.625} & \textbf{0.36353} \\ \hline
-\multirow{2}{*}{4\%} & SVM & 1000 & 48 & 762 & 23 & 25 & 238 & \textbf{0.749} & \textbf{0.91187} \\ \cline{2-10} 
+\multirow{2}{*}{96/04} & SVM & 1000 & 48 & 762 & 23 & 25 & 238 & \textbf{0.749} & \textbf{0.91187} \\ \cline{2-10} 
  & ED & 1000 & 46 & 680 & 23 & 23 & 320 & \textbf{0.67208} & \textbf{0.93294} \\ \hline
 \end{tabular}
 \caption{The results of running our two baseline methods, SVM and Extended Delta
-(ED), on the data-set (C), the validation set. The percentage found in the
-chance column denotes the amount of the data-set which is negative samples.}
+(ED), on the data-set (C), the validation set. }
 \label{tab:baseline-val-res}
 \end{table}
 
