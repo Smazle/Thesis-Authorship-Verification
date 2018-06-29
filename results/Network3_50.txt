@@ -1,0 +1,5 @@
+weight	threshold	accuracy	accusation_error	tps	tns	fps	fns
+Weight 1/1
+Limit: Exp λ=0.25 + Text Length	0.39	0.8078873239436619	0.06314948041566747	3392	2344	1206	158
+Max: Exp λ=0.25 + Text Length	0.486	0.8653521126760564	0.09870049504950495	3231	2913	637	319
+
