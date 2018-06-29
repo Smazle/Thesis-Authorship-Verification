@@ -18,8 +18,7 @@ texts they have written. The instance based approach is illustrated in Figure
         Authorship Attribution solution setup. Inspired by \citet{stamatos2009}
         a set of authors are given as input each with a set of texts. Some
         Machine Learning model is trained on the input texts and the model is
-        used to predict an unknown text. }
-
+        used to predict an unknown text.}
     \label{fig:instance_based}
 \end{figure}
 
@@ -27,14 +26,12 @@ texts they have written. The instance based approach is illustrated in Figure
     \centering
     \textbf{Profile Based Authorship Verification or Authorship Attribution}\par\medskip
     \includegraphics[scale=0.5]{./pictures/method/ProfileBased.png}
-
     \caption{Illustrate the typical profile based Authorship Verification or
         Authorship Attribution setup. Inspired by \citet{stamatos2009} the texts
         of each author are combined using some combination function such as an
         average or a concatenation. Those \textit{profiles} are then given to a
         Machine Learning model to train. The output is a model which is used to
-        predict unknown texts. }
-
+        predict unknown texts.}
     \label{fig:profile_based}
 \end{figure}
 
@@ -122,7 +119,6 @@ reporting on throughout our experiments,
     \text{Accuracy} = \frac{TP + TN}{TP + FP + TN + FN}.
 \end{equation}
 
-
 In the case of MaCom, we want to minimize the \gls{FNR} as much as possible,
 so as to not wrongfully accuse anyone of not having written their assignment.
 This however leaves out a equally important metric. While a low \gls{FNR} is the
@@ -139,6 +135,7 @@ accusations we made, only $10\%$ of them are allowed to be false. In order
 to accommodate this constraint we can take certain actions, which depends
 on the model used. Details about these actions will be addressed in Section
 \ref{subsec:prediction_system}.
+
 
 \subsection{Baseline Methods}
 
@@ -270,6 +267,7 @@ be explained in later chapters. The training of a \gls{NN} consists of changing
 the weights applied at each neuron, with the goal of modeling the relationships
 present in the data.
 
+
 \subsubsection{Activation Functions} \label{subsubsec:activation_functions}
 
 The activation function $h$, used at each neuron, defines the output of the
@@ -362,6 +360,7 @@ h(x) = \max(0, \min(1, x \cdot 0.2 + 0.5))
 
 The specific usage of these two activation function will be elaborated upon in 
 in the relevant sections.
+
 
 \subsubsection{Layers} \label{subsubsec:layers}
 
@@ -1417,6 +1416,7 @@ Since the MaCom dataset consist of multiple known texts per author and this
 network architecture only compares two texts we define a separate system for
 making the final prediction.
 
+
 \subsection{Prediction System}\label{subsec:prediction_system}
 
 In the generic Siamese \gls{NN} presented in Section
@@ -1460,18 +1460,19 @@ That is the prediction system returns 1 if the weighted average of the
 probability that $t$ is written by the same author as $t'$ for each $t' \in
 T_\alpha$ is greater than the threshold $\theta$ and 0 otherwise.
 
-The $\theta$ parameter in the prediction system determines when we consider an
-unknown text to be written by an author. The natural choice for $\theta$ is 0.5
-since that is what the network use when it computes the loss of each training
-sample. However the $\theta$ parameter can be used to enforce how sure we have
-to be of a decision to accuse an author of not having written an assignment. As
-described earlier MaCom does not want to accuse innocent students of cheating.
-That means that it is very important to MaCom to minimize the number accusation
-error. We can use the $\theta$ parameter to control that error. Hopefully the
-\gls{FN}s generally end up with a value closer to 1 than the \gls{TN}s. If that
-is the case then lowering $\theta$ value will lower the fraction since there
-will be fewer \gls{FN}s. That might lower the overall accuracy of the prediction
-system but will make sure that at few students as possible are falsely accused.
+The $\theta$ parameter in the prediction system determines when we consider
+an unknown text to be written by an author. The natural choice for $\theta$
+is 0.5 since that is what the network use when it computes the loss of each
+training sample. However the $\theta$ parameter can be used to enforce how
+sure we have to be of a decision to accuse an author of not having written
+an assignment. As described earlier MaCom does not want to accuse innocent
+students of cheating. That means that it is very important to MaCom to minimize
+the number accusation error. We can use the $\theta$ parameter to control that
+error. Hopefully the \gls{FN}s will generally end up with a value closer to 1
+than the \gls{TN}s. If that is the case then lowering $\theta$ value will lower
+the fraction since there will be fewer \gls{FN}s. That might lower the overall
+accuracy of the prediction system but will make sure that at few students as
+possible are falsely accused.
 
 The $w$ parameter in the prediction system can be used to weigh the known texts
 differently. We are going to try several different weight functions that weigh
@@ -1593,7 +1594,7 @@ below.
 
     \begin{align}
         &lexp_\lambda \colon \mathcal{T} \rightarrow [0, 2] \\
-        &lexp_\lambda \colon t \mapsto epx_\lambda(t) + l(t).
+        &lexp_\lambda \colon t \mapsto epx^*_\lambda(t) + l^*(t).
     \end{align}
 
 \end{definition}

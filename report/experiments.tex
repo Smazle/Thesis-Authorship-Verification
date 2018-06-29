@@ -729,27 +729,16 @@ of [TODO:ACC].
 
 \begin{figure}
     \centering
-    \includegraphics[width=\textwidth]{./pictures/experiments/conv_char_nn/model.png}
-    \caption{The structure of network \gls{conv-char-NN}. Weights are
-        shared by the embedding layers and the convolutional layers as shown by
-        the blue box. The input to the network is at the top and the output is
-        at the bottom. Information flows downwards through the layers. The final
-        softmax layer produces a probability distribution over the two
-        possibilities that the texts are either written by the same author or
-        not.}
-    \label{fig:conv-char-NN}
-\end{figure}
-
-\begin{figure}
-\centering
-\includegraphics[width=\textwidth]{./pictures/experiments/rec_sent_nn/RNN_model.png}
-\caption{The structure of network \gls{rec-sent-NN}. The weights are shared from
-from the embedding layer all the way down to right before the two paths merge.
-The lambda layer takes each sentence and averages along the first axis
-causing the dimensionality to chance from (25, 300) to (, 300). The LSTM
-layers are bidirectional meaning its runs through the layer from both directions,
-resulting in an output dimensionality twice the unit count, 100 in this case.
-\label{fig:rec-sent-NN}}
+    \includegraphics[width=\textwidth]{./pictures/experiments/rec_sent_nn/model.png}
+    \caption{The structure of network \gls{rec-sent-NN}. The weights are shared
+        from from the embedding layer all the way down to right before the two
+        paths merge. The lambda layer takes each sentence and averages along
+        the first axis causing the dimensionality to change from a matrix with
+        25 rows and 300 columns to a column vector with 300 elements. The LSTM
+        layers are bidirectional meaning its runs through the layer from both
+        directions, resulting in an output dimensionality twice the unit count,
+        100 in this case.
+    \label{fig:rec-sent-NN}}
 \end{figure}
 
 \begin{description}
@@ -844,8 +833,8 @@ convolutional layer, which precedes the recurrent one. It was however due to
 this convolutional layer that running any of the recurrent networks was possible
 within an acceptable time-frame, so another approach had to be used.
 
-This secondary approach to limiting the run-time used, came in the form of
-changing the linguistic level out network worked at. Against inspired by
+This secondary approach to limiting the run-time used, came in the form
+of changing the linguistic level out network worked at. Again inspired by
 \cite{qian:2018}, we elevated our network from using the characters of the
 texts, to using the sentences. This sentence representation was achieved by
 doing as was described in the \textbf{Embedding} part above. This approach
@@ -1016,7 +1005,7 @@ Figure \ref{fig:conv-char-NN-pred-4}.
 
 \begin{figure}
     \centering
-    \textbf{Prediction System Results for 0.5 Split, Character Level CNN}\par\medskip
+    \textbf{Prediction System Results for 0.5 Split, \glsdesc{conv-char-NN}}\par\medskip
     \includegraphics[scale=0.35]{./pictures/experiments/conv_char_nn/prediction_system_50.png}
     \caption{Results of running the prediction system with the network described
         in Section \ref{subsubsec:conv_char_nn} on a validation dataset with
@@ -1031,7 +1020,7 @@ Figure \ref{fig:conv-char-NN-pred-4}.
 
 \begin{figure}
     \centering
-    \textbf{Prediction System Results for 0.04 Split, Character Level CNN}\par\medskip
+    \textbf{Prediction System Results for 0.04 Split, \glsdesc{conv-char-NN}}\par\medskip
     \includegraphics[scale=0.35]{./pictures/experiments/conv_char_nn/prediction_system_04.png}
     \caption{Results of running the prediction system with the network described
         in Section \ref{subsubsec:conv_char_nn} on a validation dataset with
@@ -1062,12 +1051,12 @@ was quite the factor for this network, which is the reason it was
 trained on the sentence level of the texts it received.
 
 Applying the prediction system to this network gave the results which
-can be seen in the Figures, \ref{fig:rec-sent-NN-pred-50} and \ref{fig:rec-sent-NN-pred-04}
+can be seen in the Figures, \ref{fig:rec-sent-NN-pred-50} and \ref{fig:rec-sent-NN-pred-4}
 
 \begin{figure}
     \centering
-    \textbf{Prediction System Results for 0.5 Split, Char+Word Level CNN}\par\medskip
-    \includegraphics[scale=0.35]{./pictures/experiments/rec_sent_nn/pred_50_rnn.png}
+    \textbf{Prediction System Results for 0.5 Split, \glsdesc{rec-sent-NN}}\par\medskip
+    \includegraphics[scale=0.35]{./pictures/experiments/rec_sent_nn/prediction_system_50.png}
     \caption{Results of running the prediction system with the network described
         in Section \ref{subsubsec:rec_sent_nn} on a validation dataset
         with 50\% positive samples and 50\% negative samples. In the upper graph
@@ -1081,8 +1070,8 @@ can be seen in the Figures, \ref{fig:rec-sent-NN-pred-50} and \ref{fig:rec-sent-
 
 \begin{figure}
     \centering
-    \textbf{Prediction System Results for 0.04 Split, Char+Word Level CNN}\par\medskip
-    \includegraphics[scale=0.35]{./pictures/experiments/rec_sent_nn/pred_04_rnn.png}
+    \textbf{Prediction System Results for 0.04 Split, \glsdesc{rec-sent-NN}}\par\medskip
+    \includegraphics[scale=0.35]{./pictures/experiments/rec_sent_nn/prediction_system_04.png}
     \caption{Results of running the prediction system with the network described
         in Section \ref{subsubsec:rec_sent_nn} on a validation dataset
         with 96\% positive samples and 4\% negative samples. In the upper graph
@@ -1108,6 +1097,7 @@ error leaves the model very little room to increase the accuracy in. This is
 most likely the result of the aforementioned author specific learning the
 network does.
 
+
 \subsubsection{\glsdesc{conv-char-word-NN}}
 
 The third network we tuned hyperparameters for was the network presented
@@ -1120,7 +1110,7 @@ negatives in Figure \ref{fig:conv-char-word-NN-pred-4}.
 
 \begin{figure}
     \centering
-    \textbf{Prediction System Results for 0.5 Split, Sentence Level RNN}\par\medskip
+    \textbf{Prediction System Results for 0.5 Split, \glsdesc{conv-char-word-NN}}\par\medskip
     \includegraphics[scale=0.35]{./pictures/experiments/conv_char_word_nn/prediction_system_50.png}
     \caption{Results of running the prediction system with the network described
         in Section \ref{subsubsec:conv_char_word_nn} on a validation dataset
@@ -1135,7 +1125,7 @@ negatives in Figure \ref{fig:conv-char-word-NN-pred-4}.
 
 \begin{figure}
     \centering
-    \textbf{Prediction System Results for 0.04 Split, Sentence Level RNN}\par\medskip
+    \textbf{Prediction System Results for 0.04 Split, \glsdesc{conv-char-word-NN}}\par\medskip
     \includegraphics[scale=0.35]{./pictures/experiments/conv_char_word_nn/prediction_system_04.png}
     \caption{Results of running the prediction system with the network described
         in Section \ref{subsubsec:conv_char_word_nn} on a validation dataset
@@ -1157,4 +1147,3 @@ Maximum Weight function and using the threshold $\theta = 0.235470$. That
 configuration obtained an accusation error of 0 \% and an accuracy of 96.9022
 \%. The configuration had 3 \gls{TN}s, 1999 \gls{TP}s, 0 \gls{FN}s and 64
 \gls{FP}s.
-

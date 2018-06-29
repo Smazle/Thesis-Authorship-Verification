@@ -7,6 +7,32 @@ import numpy as np
 import pandas as pd
 import sys
 
+
+def get_weight_report_name(previous_name):
+    if previous_name == 'Exp λ=0.0':
+        return r'$P_{u}$'
+    elif previous_name == 'Exp λ=0.25':
+        return r'$P_{exp_{0.25}}$'
+    elif previous_name == 'Exp λ=0.5':
+        return r'$P_{exp_{0.50}}$'
+    elif previous_name == 'Exp λ=0.75':
+        return r'$P_{exp_{0.75}}$'
+    elif previous_name == 'Exp λ=1.0':
+        return r'$P_{exp_{1.00}}$'
+    elif previous_name == 'Maximum':
+        return r'$P_{max}$'
+    elif previous_name == 'Minimum':
+        return r'$P_{min}$'
+    elif previous_name == 'Majority Vote':
+        return r'$P_{MV}$'
+    elif previous_name == 'Text Length':
+        return r'$P_l$'
+    elif previous_name == 'Exp λ=0.25 + Text Length':
+        return r'$P_{lexp_{0.25}}$'
+    else:
+        raise Exception('Unknown weight function')
+
+
 parser = argparse.ArgumentParser(
     'Produces a graph of the results of the prediction system.' +
     'The output is given as stdin to the program.')
@@ -37,7 +63,7 @@ for weight in np.sort(np.unique(weights)):
     errs = accusation_errors[weights == weight]
     thresholds = thetas[weights == weight]
 
-    weight = weight.replace('+ Text Length', '+ TL')
+    weight = get_weight_report_name(weight)
     ax1.plot(thresholds, accs, label=weight)
     ax2.plot(thresholds, errs, label=weight)
 
@@ -50,7 +76,7 @@ ax2.legend()
 
 ax2.set_xlabel('θ (Threshold)', fontsize=15)
 lgd = plt.legend(
-    bbox_to_anchor=(0.11, -0.2), loc='upper left', prop={'size': 15}, ncol=5)
+    bbox_to_anchor=(0.247, -0.2), loc='upper left', prop={'size': 15}, ncol=5)
 
 if args.image_out is None:
     plt.show()
