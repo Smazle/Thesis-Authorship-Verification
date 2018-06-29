@@ -742,7 +742,7 @@ of [TODO:ACC].
 
 \begin{figure}
 \centering
-\includegraphics[width=\textwidth]{./pictures/experiments/rec_sent_nn/RNN_model.png}
+\includegraphics[width=\textwidth]{./pictures/experiments/rec_sent_nn/model.png}
 \caption{The structure of network \gls{rec-sent-NN}. The weights are shared from
 from the embedding layer all the way down to right before the two paths merge.
 The lambda layer takes each sentence and averages along the first axis
@@ -1016,7 +1016,7 @@ Figure \ref{fig:conv-char-NN-pred-4}.
 
 \begin{figure}
     \centering
-    \textbf{Prediction System Results for 0.5 Split, Character Level CNN}\par\medskip
+    \textbf{Prediction System Results for 0.5 Split, \glsdesc{conv-char-NN}}\par\medskip
     \includegraphics[scale=0.35]{./pictures/experiments/conv_char_nn/prediction_system_50.png}
     \caption{Results of running the prediction system with the network described
         in Section \ref{subsubsec:conv_char_nn} on a validation dataset with
@@ -1031,7 +1031,7 @@ Figure \ref{fig:conv-char-NN-pred-4}.
 
 \begin{figure}
     \centering
-    \textbf{Prediction System Results for 0.04 Split, Character Level CNN}\par\medskip
+    \textbf{Prediction System Results for 0.04 Split, \glsdesc{conv-char-NN}}\par\medskip
     \includegraphics[scale=0.35]{./pictures/experiments/conv_char_nn/prediction_system_04.png}
     \caption{Results of running the prediction system with the network described
         in Section \ref{subsubsec:conv_char_nn} on a validation dataset with
@@ -1062,12 +1062,12 @@ was quite the factor for this network, which is the reason it was
 trained on the sentence level of the texts it received.
 
 Applying the prediction system to this network gave the results which
-can be seen in the Figures, \ref{fig:rec-sent-NN-pred-50} and \ref{fig:rec-sent-NN-pred-04}
+can be seen in the Figures, \ref{fig:rec-sent-NN-pred-50} and \ref{fig:rec-sent-NN-pred-4}
 
 \begin{figure}
     \centering
-    \textbf{Prediction System Results for 0.5 Split, Char+Word Level CNN}\par\medskip
-    \includegraphics[scale=0.35]{./pictures/experiments/rec_sent_nn/pred_50_rnn.png}
+    \textbf{Prediction System Results for 0.5 Split, \glsdesc{rec-sent-NN}}\par\medskip
+    \includegraphics[scale=0.35]{./pictures/experiments/rec_sent_nn/prediction_system_50.png}
     \caption{Results of running the prediction system with the network described
         in Section \ref{subsubsec:rec_sent_nn} on a validation dataset
         with 50\% positive samples and 50\% negative samples. In the upper graph
@@ -1081,8 +1081,8 @@ can be seen in the Figures, \ref{fig:rec-sent-NN-pred-50} and \ref{fig:rec-sent-
 
 \begin{figure}
     \centering
-    \textbf{Prediction System Results for 0.04 Split, Char+Word Level CNN}\par\medskip
-    \includegraphics[scale=0.35]{./pictures/experiments/rec_sent_nn/pred_04_rnn.png}
+    \textbf{Prediction System Results for 0.04 Split, \glsdesc{rec-sent-NN}}\par\medskip
+    \includegraphics[scale=0.35]{./pictures/experiments/rec_sent_nn/prediction_system_04.png}
     \caption{Results of running the prediction system with the network described
         in Section \ref{subsubsec:rec_sent_nn} on a validation dataset
         with 96\% positive samples and 4\% negative samples. In the upper graph
@@ -1108,6 +1108,7 @@ error leaves the model very little room to increase the accuracy in. This is
 most likely the result of the aforementioned author specific learning the
 network does.
 
+
 \subsubsection{\glsdesc{conv-char-word-NN}}
 
 The third network we tuned hyperparameters for was the network presented
@@ -1120,7 +1121,7 @@ negatives in Figure \ref{fig:conv-char-word-NN-pred-4}.
 
 \begin{figure}
     \centering
-    \textbf{Prediction System Results for 0.5 Split, Sentence Level RNN}\par\medskip
+    \textbf{Prediction System Results for 0.5 Split, \glsdesc{conv-char-word-NN}}\par\medskip
     \includegraphics[scale=0.35]{./pictures/experiments/conv_char_word_nn/prediction_system_50.png}
     \caption{Results of running the prediction system with the network described
         in Section \ref{subsubsec:conv_char_word_nn} on a validation dataset
@@ -1135,7 +1136,7 @@ negatives in Figure \ref{fig:conv-char-word-NN-pred-4}.
 
 \begin{figure}
     \centering
-    \textbf{Prediction System Results for 0.04 Split, Sentence Level RNN}\par\medskip
+    \textbf{Prediction System Results for 0.04 Split, \glsdesc{conv-char-word-NN}}\par\medskip
     \includegraphics[scale=0.35]{./pictures/experiments/conv_char_word_nn/prediction_system_04.png}
     \caption{Results of running the prediction system with the network described
         in Section \ref{subsubsec:conv_char_word_nn} on a validation dataset
