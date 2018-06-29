@@ -165,16 +165,16 @@ The problems are closely linked since an answer for authorship attribution
 can be obtained by using authorship verification and an answer for authorship
 verification can be obtained by using authorship attribution. Consider a case
 where we are given an oracle answering the authorship verification problem
-$\mathcal{S}$. $\mathcal{S}$ is a mapping from an author $\alpha$ and text $x$
+$\mathcal{S}$. $\mathcal{S}$ is a mapping from an author $\alpha$ and text $t$
 to either true or false. Given an instance of the authorship attribution problem
-with authors $A$ and text $x$ we solve the problem by using $\mathcal{S}$ on
+with authors $A$ and text $t$ we solve the problem by using $\mathcal{S}$ on
 each author $\alpha \in A$. We return the author where $\mathcal{S}$ reports
 true. Now consider a case where we are given a solution to the authorship
 attribution problem $\mathcal{S}'$. $\mathcal{S}'$ is now a mapping from a set
-of authors $\mathcal{A}$ and text $x$ to an author $\alpha \in A$. Given an
-instance of the authorship verification problem with author $\alpha_i \in A$ and
-text $x$ and a set of texts written by different authors $\overline{T}_{\alpha}
-= \bigcup_{\beta \in A \setminus \{\alpha\}} T_\beta$ we solve the verification
+of authors $A$ and text $t$ to an author $\alpha \in A$. Given an instance
+of the authorship verification problem with author $\alpha_i \in A$ and text
+$t$ and a set of texts written by different authors $\overline{T}_{\alpha} =
+\bigcup_{\beta \in A \setminus \{\alpha\}} T_\beta$ we solve the verification
 problem by applying the attribution function to the texts $T_{\alpha} \cup
-\overline{T}_{\alpha}$ and the text of unknown authorship $x$. If $x \in
+\overline{T}_{\alpha}$ and the text of unknown authorship $t$. If $t \in
 T_{\alpha}$ we report true and otherwise false.
