@@ -1066,9 +1066,9 @@ can be seen in the Figures, \ref{fig:rec-sent-NN-pred-50} and \ref{fig:rec-sent-
 \begin{figure}
     \centering
     \textbf{Prediction System Results for 0.5 Split, Char+Word Level CNN}\par\medskip
-    \includegraphics[scale=0.35]{./pictures/experiments/conv_char_word_nn/prediction_system_50.png}
+    \includegraphics[scale=0.35]{./pictures/experiments/rec_sent_nn/pred_50_rnn.png}
     \caption{Results of running the prediction system with the network described
-        in Section \ref{subsubsec:conv_char_word_nn} on a validation dataset
+        in Section \ref{subsubsec:rec_sent_nn} on a validation dataset
         with 50\% positive samples and 50\% negative samples. In the upper graph
         we show the accuracies obtained as a function of $\theta$ for different
         weights $w$. At the bottom we have shown the accusation error as a
@@ -1081,9 +1081,9 @@ can be seen in the Figures, \ref{fig:rec-sent-NN-pred-50} and \ref{fig:rec-sent-
 \begin{figure}
     \centering
     \textbf{Prediction System Results for 0.04 Split, Char+Word Level CNN}\par\medskip
-    \includegraphics[scale=0.35]{./pictures/experiments/conv_char_word_nn/prediction_system_04.png}
+    \includegraphics[scale=0.35]{./pictures/experiments/rec_sent_nn/pred_04_rnn.png}
     \caption{Results of running the prediction system with the network described
-        in Section \ref{subsubsec:conv_char_word_nn} on a validation dataset
+        in Section \ref{subsubsec:rec_sent_nn} on a validation dataset
         with 96\% positive samples and 4\% negative samples. In the upper graph
         we show the accuracies obtained as a function of $\theta$ for different
         weights $w$. At the bottom we have shown the accusation error as a
@@ -1093,6 +1093,19 @@ can be seen in the Figures, \ref{fig:rec-sent-NN-pred-50} and \ref{fig:rec-sent-
     \label{fig:rec-sent-NN-pred-4}
 \end{figure}
 
+As can be seen, the \gls{RNN} severely underperforms even when compared
+to earlier results. The best configuration for the 50/50 split, under the
+accusation error constraint, was the combination weight function and a $\theta$
+value of 0.033. Using this configuration the network got 1965 \gls{TP}s,
+310 \gls{TN}s, 1689 \gls{FP}s and 34 \gls{FN}s, resulting in an accuracy of
+0.569, with an accusation error of 0.099. As for the 96/04 split, its' best
+configuration was the combination of length and time, and a theta value of
+0.002. This got us 1999 \gls{TP}s, 1 \gls{TN}, 79 \gls{FP}s and 0 \gls{FN}s,
+resulting in an accuracy of 0.962 and an accusation error of 0.0. These result
+are to expected when looking at the graphs. The immediate spike in accusation
+error leaves the model very little room to increase the accuracy in. This is
+most likely the result of the aforementioned author specific learning the
+network does.
 
 \subsubsection{\glsdesc{conv-char-word-NN}}
 
@@ -1106,7 +1119,7 @@ negatives in Figure \ref{fig:conv-char-word-NN-pred-4}.
 
 \begin{figure}
     \centering
-    \textbf{Prediction System Results for 0.5 Split, Char+Word Level CNN}\par\medskip
+    \textbf{Prediction System Results for 0.5 Split, Sentence Level RNN}\par\medskip
     \includegraphics[scale=0.35]{./pictures/experiments/conv_char_word_nn/prediction_system_50.png}
     \caption{Results of running the prediction system with the network described
         in Section \ref{subsubsec:conv_char_word_nn} on a validation dataset
@@ -1121,7 +1134,7 @@ negatives in Figure \ref{fig:conv-char-word-NN-pred-4}.
 
 \begin{figure}
     \centering
-    \textbf{Prediction System Results for 0.04 Split, Char+Word Level CNN}\par\medskip
+    \textbf{Prediction System Results for 0.04 Split, Sentence Level RNN}\par\medskip
     \includegraphics[scale=0.35]{./pictures/experiments/conv_char_word_nn/prediction_system_04.png}
     \caption{Results of running the prediction system with the network described
         in Section \ref{subsubsec:conv_char_word_nn} on a validation dataset
