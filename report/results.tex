@@ -1,12 +1,12 @@
 \section{Results} \label{sec:results}
 
 We have finally reached the point where we can determine the unbiased accuracy
-our different models. To do this we will make use of the (D) data-set. Just
+our different models. To do this we will make use of the (D) dataset. Just
 to reiterate the details contained in Section \ref{sec:data}, this data set
 consists of last 3558 authors available to us, where none of these authors are
 repeated in any of the other sets.
 
-We have 5 models which we are going to apply to this test data-set,
+We have 5 models which we are going to apply to this test dataset,
 our two baseline methods, the character-level \gls{CNN}, the sentence
 level RNN, and the character-word-level \gls{CNN}.
 
@@ -16,7 +16,7 @@ For the Extended Delta method, this was a K value, and a p value of 1.
 Then using the same sample generation as was described in the bottom
 of Section \ref{sec:hyp_select}, and normalizing using the scaler
 produced when generating the features, we applied were able to apply the model.
-The same was done with the SVM, where we used to optimal found hyper-parameters,
+The same was done with the SVM, where we used to optimal found hyperparameters,
 $C=10$ and $\gamma = 1000$, to train the model. The results can be seen in Table
 \ref{tab:baseline-res}.
 
@@ -45,15 +45,15 @@ learning approaches with our baselines. This was done by determining the beast
 performing $\theta$ and weight function for our neural network with
 regard to accuracy, and with no regard to the accusation error, as both
 our baselines do not focus on that either. Thus we compared the
-results of our base lines on the 50/50 data-set and the 96/04 data-set
+results of our base lines on the 50/50 dataset and the 96/04 dataset
 with the highest unconstrained accuracy our deep learning methods could
 muster.
 
 Finding and computing these values for \gls{conv-char-NN},
-using the test data-set D, yielded the following results.
+using the test dataset D, yielded the following results.
 
 \begin{center}
-\textbf{\gls{conv-char-NN}, 50/50 data-set.}\\
+\textbf{\gls{conv-char-NN}, 50/50 dataset.}\\
 \begin{tabular}{lcccccccc}
  & {\ul Weight} & {\ul TPS} & {\ul TNS} & {\ul FPS} & {\ul FNS} & {\ul $\theta$} & {\ul Accuracy} & {\ul Accu Error} \\
 Unconstrained: & Time + Length & 3231 & 2913 & 637 & 319 & 0.486 & 0.86535 & 0.09870 \\
@@ -62,7 +62,7 @@ Constrained: & Majority Vote & 3392 & 2344 & 1206 & 158 & 0.39 & 0.80788 & 0.063
 \end{center}
 
 \begin{center}
-\textbf{\gls{conv-char-NN}, 96/04 data-set.}\\
+\textbf{\gls{conv-char-NN}, 96/04 dataset.}\\
 \begin{tabular}{lcccccccc}
                 & {\ul Weight}  & {\ul TPS} & {\ul TNS} & {\ul FPS} & {\ul FNS} & {\ul $\theta$} & {\ul Accuracy} & {\ul Accu Error} \\
 Unconstrained:        & Time + Length & 3540      & 28        & 125       & 10        & 0.137          & 0.96354       & 0.26315          \\

@@ -131,8 +131,8 @@ that Danish end English are in fact not so lexical different, which makes sense
 as the both derive from the germanic branch of the indo-European language
 family.
 
-These features were extracted from the data-set (I) described in Section
-\ref{sec:data}. The distribution of the texts over authors in this data-set is
+These features were extracted from the dataset (I) described in Section
+\ref{sec:data}. The distribution of the texts over authors in this dataset is
 not very evenly spread. As such, the random selection of random opposing authors
 has a certain amount of bias towards the authors with a large amount of texts
 compared to the test.
@@ -140,7 +140,7 @@ compared to the test.
 Having the features, we could start doing our feature selection. This whole
 process proved very expensive computationally. Having to check every combination
 of 5000 features, simply was not feasible. It was for that reason we opted for a
-greedy algorithm in combination with the drastically small data-set (I) instead.
+greedy algorithm in combination with the drastically small dataset (I) instead.
 
 The greedy algorithm works as described by \citet{kanDeng}, which is a simple
 forward feature selection. Having out previously created feature set, we loop
@@ -159,9 +159,9 @@ features are selected. At this point we determine at which point we had the best
 candidate set, and use that hence fourth.
 
 Even this greedy approach proved to be very time consuming. As such, we only did
-as described and found the best features, but left out the hyper-parameters C,
+as described and found the best features, but left out the hyperparameters C,
 and $\gamma$ for the SVM, and K and the distance metric for the extended delta
-method. These hyper-parameters were selected through a separate process
+method. These hyperparameters were selected through a separate process
 which will be described in a later section.
 
 Due to the increased run-time when using leave one out cross validation, we had
@@ -233,7 +233,7 @@ minkowski distance,
 
 where $p=1$ and $p=2$ is the manhattan and eucledian distance respectively.
 
-The following was perform on the data-set (J) as this, contrary to the feature
+The following was perform on the dataset (J) as this, contrary to the feature
 selection is more computationally efficient.
 
 We perform a grid search over all these parameters. For each variation of the
@@ -281,7 +281,7 @@ in Table \ref{table:KNN} for \gls{KNN}, and Table \ref{table:SVM} for
     \end{tabular}
 \end{table}
 
-It is at this point we grab the data-set (C), our external validation set. While
+It is at this point we grab the dataset (C), our external validation set. While
 applying these finely tuned methods to a validation set wont change anything in
 terms of the parameters we have selected, it will give us the ability to gauge
 the accuracy of our methods when applied to a new, never before seen, test-set
@@ -313,7 +313,7 @@ Split & Classifier & Positives & Negatives & TPS & TNS & FPS & FNS & \textbf{Acc
  & ED & 1000 & 46 & 680 & 23 & 23 & 320 & \textbf{0.67208} & \textbf{0.93294} \\ \hline
 \end{tabular}
 \caption{The results of running our two baseline methods, SVM and Extended Delta
-(ED), on the data-set (C), the validation set. }
+(ED), on the dataset (C), the validation set. }
 \label{tab:baseline-val-res}
 \end{table}
 
@@ -621,12 +621,12 @@ accuracies during training in Figure \ref{fig:conv-char-NN-accuracies}.
 
 To arrive at the network architecture described above we experimented with
 several similar architectures. We started with a network that used,
-that wasn't too far from the final one.
+that was not too far from the final one.
 All the work computed in this network was applied to the same one-hot encoded
 character level as the final network was. The feature extraction layer
 was however quite different. It made use of a singular convolutional layer
 consisting of 1000 filters with a window size of 10, the selection
-of which didn't have any proper argument, and was selected solely to
+of which did not have any proper argument, and was selected solely to
 determine the initial performance on the data.
 In addition to that, the combination part of the network also differed.
 Rather than computing the absolute difference as was done in the final network,
@@ -1055,7 +1055,7 @@ $\theta = 0.076101$. That configuration obtained an accusation error of 5.5556
 \gls{TP}s, 1 \gls{FN}s and 64 \gls{FP}s.
 
 \subsection{\glsdesc{rec-sent-NN}}
-The second network we tuned hyper-parameters for was the network shown
+The second network we tuned hyperparameters for was the network shown
 depicted in \ref{fig:rec-sent-NN}. This network was the one \gls{RNN}
 we attempted to use to solve this problem. As explained, run-time
 was quite the factor for this network, which is the reason it was
