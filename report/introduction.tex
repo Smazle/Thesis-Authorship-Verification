@@ -77,6 +77,64 @@ in the new assignment than in all previously handed in by the student. Evidence
 for why we think an assignment is written by someone else will help a teacher if
 he/she wants to accuse a student of using a ghost writer.
 
+
+\subsection{Notation}
+
+We will work with several different kinds of objects. The main ones are texts
+and authors. We will generally call texts $t$ and authors $\alpha$. If multiple
+texts or authors is used we will generally call them $t'$ and $\beta$. A text
+consists of a sequence of characters. When we are working with multiple texts in
+a set we will generally call such sets $T$. We denote the universe of all texts
+as $\mathcal{T}$.
+
+\begin{definition}[Text Universe]
+    \label{def:text_universe}
+
+    Let the universe of all texts be $\mathcal{T} = \{t_1, t_2, \dots\}$.
+
+\end{definition}
+
+An author is a subset of $\mathcal{T}$. A special set of texts $T_\alpha$
+corresponds to all the $t \in \mathcal{T}$ which is written by author $\alpha$.
+We denote the set of all authors as $\mathcal{A}$.
+
+\begin{definition}[Author Universe]
+    \label{def:author_universe}
+
+    Let the universe of all authors,
+
+    \begin{equation}
+        \mathcal{A} = \left\{\{T_{\alpha_1}, T_{\alpha_2}, \dots,
+            T_{\alpha_{|T_\alpha|}}\} \{T_{\beta_1}, T_{\beta_2},
+            \dots, T_{\beta_{|T_\beta|}}\}, \dots\right\},
+    \end{equation}
+
+    be a partition of $\mathcal{T}$ such that $\bigcup_{\alpha \in \mathcal{A}}
+    T_\alpha = \mathcal{T}$ and for any author $\alpha \in \mathcal{A}$ and
+    $\beta \in \mathcal{A}$, $T_\alpha \cap T_\beta = \emptyset$.
+
+\end{definition}
+
+We also use a couple of functions that work on texts.
+
+\begin{definition}[Text Length]
+    \label{def:text_length}
+
+    Let $|t| \colon \mathcal{T} \rightarrow \mathbb{N}^+$ denote the length of a
+    text in the number of characters.
+
+\end{definition}
+
+\begin{definition}[Text Relative Time]
+    \label{def:text_relative_time}
+
+    Let $\tau \colon \mathcal{T} \rightarrow \mathbb{N}^+$ denote the relative
+    time of a text. The relative time is the number of months between the turn
+    in of text $t$ and the turn in of the newest $t' \in T_\alpha$ where $t \in
+    T_\alpha$.
+
+\end{definition}
+
 % Introduce the main ideas that stem from your topic/title and the order in
 % which you will discuss them?
 
@@ -87,7 +145,7 @@ authorship verification which is defined below.
     \label{def:authorship_verification}
 
     Given a set of texts $T_\alpha$ written by author $\alpha$ and a single
-    text $x$ of unknown authorship, determine if $x \in T_\alpha$.
+    text $t$ of unknown authorship, determine if $t \in T_\alpha$.
 
 \end{definition}
 
@@ -97,10 +155,9 @@ below.
 
 \begin{definition}[Authorship Attribution]
 
-    Given a set of authors $\mathcal{A} = \{ \alpha_1, \alpha_2,...\alpha_N\}$,
-    each with set of text $T_{\alpha_i}$, and a text of unknown authorship
-    \texttt{x}, determine which $\alpha_i \in \mathcal{A}$ is the author of
-    \texttt{x}.
+    Given a set of authors $A = \{\alpha_1, \alpha_2,...\alpha_n\}$, each with
+    set of text $T_{\alpha_i}$, and a text of unknown authorship \texttt{t},
+    determine which $\alpha_i \in A$ is the author of \texttt{t}.
 
 \end{definition}
 
@@ -108,17 +165,16 @@ The problems are closely linked since an answer for authorship attribution
 can be obtained by using authorship verification and an answer for authorship
 verification can be obtained by using authorship attribution. Consider a case
 where we are given an oracle answering the authorship verification problem
-$\mathcal{S}$. $\mathcal{S}$ is a mapping from an author $\alpha$ and text
-$x$ to either true or false. Given an instance of the authorship attribution
-problem with authors $\mathcal{A}$ and text $x$ we solve the problem by using
-$\mathcal{S}$ on each author $\alpha \in \mathcal{A}$. We return the author
-where $\mathcal{S}$ reports true. Now consider a case where we are given a
-solution to the authorship attribution problem $\mathcal{S}'$. $\mathcal{S}'$
-is now a mapping from a set of authors $\mathcal{A}$ and text $x$ to an author
-$\alpha \in \mathcal{A}$. Given an instance of the authorship verification
-problem with author $\alpha_i \in \mathcal{A}$ and text $x$ and a set of texts
-written by different authors $\overline{T}_{\alpha} = \bigcup_{\beta \in A
-\setminus \{\alpha\}} T_\beta$ we solve the verification problem by applying the
-attribution function to the texts $T_{\alpha} \cup \overline{T}_{\alpha}$ and
-the text of unknown authorship $x$. If $x \in T_{\alpha}$ we report true and
-otherwise false.
+$\mathcal{S}$. $\mathcal{S}$ is a mapping from an author $\alpha$ and text $t$
+to either true or false. Given an instance of the authorship attribution problem
+with authors $A$ and text $t$ we solve the problem by using $\mathcal{S}$ on
+each author $\alpha \in A$. We return the author where $\mathcal{S}$ reports
+true. Now consider a case where we are given a solution to the authorship
+attribution problem $\mathcal{S}'$. $\mathcal{S}'$ is now a mapping from a set
+of authors $A$ and text $t$ to an author $\alpha \in A$. Given an instance
+of the authorship verification problem with author $\alpha_i \in A$ and text
+$t$ and a set of texts written by different authors $\overline{T}_{\alpha} =
+\bigcup_{\beta \in A \setminus \{\alpha\}} T_\beta$ we solve the verification
+problem by applying the attribution function to the texts $T_{\alpha} \cup
+\overline{T}_{\alpha}$ and the text of unknown authorship $t$. If $t \in
+T_{\alpha}$ we report true and otherwise false.

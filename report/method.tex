@@ -1425,26 +1425,34 @@ two texts are written by the same author. However in the problem we are trying
 solve defined in Definition \ref{def:authorship_verification} we take several
 texts as input. We therefore need a method of combining the predictions on
 multiple texts to a single prediction on a particular problem instance. We do
-that using a prediction system defined in Definition
-\ref{def:prediction_system}.
+that using a Prediction System. We let the generic Siamese \gls{NN} described
+above be known as a function $f \in \mathcal{F}$.
 
-\begin{definition}[Prediction System]
+\begin{definition}[Text Comparison Function]
+    \label{def:text_comparison_function}
 
-    \label{def:prediction_system}
+    Let $\mathcal{F} \colon \mathcal{T} \times \mathcal{T} \rightarrow [0, 1]$
+    be any function that compares two texts and outputs the probability that the
+    the texts are written by the same author.
 
-    Our prediction system is a function $P:f, w, T, t, \theta \rightarrow \{0,
-    1\}$ where $f$ is a function taking two texts and giving the probability
-    that the texts are written by the same author, $T$ is a set of texts written
-    by a candidate author, $t$ is a text of unknown authorship, $w:T \rightarrow
-    [0,1]$ is a function where $\sum_{t' \in T} w(t') = 1$ and $\theta \in
-    [0,1]$. The prediction system then returns,
+\end{definition}
 
-    \begin{equation}
-        P(f, w, T, t, \theta) = \begin{cases}
-            1 & \text{if } \sum_{t' \in T} w(t') f(t', t) > \theta \\
-            0 & \text{otherwise}.
-        \end{cases}
-    \end{equation}
+Using that fixed $f$ we can define a weighted average based prediction system
+$P_w$. The $w$ in that name denotes the weight function that is used. We will
+define the weight functions later.
+
+\begin{definition}[Weighted Average Prediction System]
+    \label{def:weighted_average_prediction_system}
+
+    Let the weighted average prediction system be,
+
+    \begin{align}
+        &P_w \colon \mathcal{A} \times \mathcal{T} \times [0, 1] \rightarrow
+            \{0, 1\} \\
+        &P_w \colon \alpha \times t \times \theta \mapsto \mathbbm{1}\left[
+                \sum_{t' \in T_\alpha} w(t') f(t, t') > \theta
+            \right].
+    \end{align}
 
 \end{definition}
 
@@ -1452,70 +1460,93 @@ That is the prediction system returns 1 if the weighted average of the
 probability that $t$ is written by the same author as $t'$ for each $t' \in
 T_\alpha$ is greater than the threshold $\theta$ and 0 otherwise.
 
-The $f$ parameter can be anything that takes two texts and returns a
-probability. We are going to present several different networks that can be used
-as $f$ as they will take two texts and end with a softmax layer that outputs a
-probability distribution.
+The $\theta$ parameter in the prediction system determines when we consider an
+unknown text to be written by an author. The natural choice for $\theta$ is 0.5
+since that is what the network use when it computes the loss of each training
+sample. However the $\theta$ parameter can be used to enforce how sure we have
+to be of a decision to accuse an author of not having written an assignment. As
+described earlier MaCom does not want to accuse innocent students of cheating.
+That means that it is very important to MaCom to minimize the number accusation
+error. We can use the $\theta$ parameter to control that error. Hopefully the
+\gls{FN}s generally end up with a value closer to 1 than the \gls{TN}s. If that
+is the case then lowering $\theta$ value will lower the fraction since there
+will be fewer \gls{FN}s. That might lower the overall accuracy of the prediction
+system but will make sure that at few students as possible are falsely accused.
 
 The $w$ parameter in the prediction system can be used to weigh the known texts
 differently. We are going to try several different weight functions that weigh
 texts based on metadata such as the time they were written and the length of
-the texts. The only constraint on a weight function $w$ is that $\sum_{t \in
-T_\alpha} w(t) = 1$. We will ignore that constraint in the following definitions
-of weight functions as any function $w: T_\alpha \rightarrow \mathbb{R}^+$
-that does not follow the constraint can be transformed into a version $w^*:
-T_\alpha \rightarrow [0,1]$ that does follow the constraint where 
+the texts.
+
+\begin{definition}[Weight Function]
+    \label{def:weight_function}
+
+    Let a weight function $\mathcal{W}$ be any function,
+
+    \begin{equation}
+        \mathcal{W} \colon \mathcal{T} \rightarrow [0, 1],
+    \end{equation}
+
+    such that $\forall \alpha \colon \sum_{t \in T_\alpha} w(t) = 1$.
+
+\end{definition}
+
+In the following definition of different weight functions we will ignore the
+constraint that the weight functions has to sum to 1 for each author. We ignore
+that constraint since for any weight function $w \colon \mathcal{T} \rightarrow
+\mathbb{R}$ we can define a new weight function $w* \colon \mathcal{T}
+\rightarrow [0, 1]$ as,
 
 \begin{equation}\label{eq:normalize}
     w^*(t) = \frac{w(t)}{\sum_{t \in T_\alpha} w(t)}.
 \end{equation}
 
 We can therefore define the weight functions $w$ while ignoring the constraint
-but use $w^*$ as the actual weight function in the prediction system.
+but use $w^*$ as the actual weight function in the Weighted Prediction System.
 
 The most obvious weighing scheme is to just use a uniform weighting. That way
 we simply take an average of the predictions of our networks over the different
 texts an author has written.
 
-\begin{definition}[Uniform Weighing]
+\begin{definition}[Uniform Weight]
+    \label{def:uniform_weight}
 
-    The uniform weight function $w_\mathcal{U}: T_\alpha \rightarrow \{1\}$ is
-    defined as,
+    Let the uniform weight function be,
 
-    \begin{equation}
-        w_\mathcal{U}(t) = 1
-    \end{equation}
+    \begin{align}
+        &u \colon \mathcal{T} \rightarrow \{ 1 \} \\
+        &u \colon t \mapsto 1.
+    \end{align}
 
 \end{definition}
 
-The uniform weight function does not use any information we know about the
-texts. We define it as a baseline to make sure we do not make any weight
+The \textit{Uniform Weight} function does not use any information we know about
+the texts. We define it as a baseline to make sure we do not make any weight
 functions that are worse than a simple uniform weighing. Our other weight
-functions makes use of metadata we know about the texts. We start by defining a
-weight function \textit{Exponential Dropoff} that use the time a text was turned
-in to MaCom's servers to weight the texts. We assume that newer texts will
-better reflect the current writing style of a student than older texts. In the
-following let $\tau: T_\alpha \rightarrow \mathbb{N}$ be the function returning
-the number of months between when the newest text $t \in T_\alpha$ and the text
-it is given were turned in where a month is considered 30 days. Then our time
-based weight function are then defined as,
+functions makes use of metadata we know about the texts. We start by defining
+a weight function \textit{Exponential Dropoff Weight} that use the time a text
+was turned in to MaCom's servers to weight the texts. We assume that newer texts
+will better reflect the current writing style of a student than older texts.
+Recall that $\tau$ denotes the function that returns the relative time of a text
+defined in Definition \ref{def:text_relative_time}.
 
-\begin{definition}[Exponential Dropoff]
+\begin{definition}[Exponential Dropoff Weight]
+    \label{def:exponential_dropoff_weight}
 
-    The time based exponential dropoff function $w_e: T_\alpha \rightarrow [0,
-    1]$ is defined as,
+    Let the time based exponential dropoff function be defined as,
 
-    \begin{equation}
-        w_e(t) = e^{-\lambda \tau(t)}
-    \end{equation}
+    \begin{align}
+        &exp_\lambda \colon \mathcal{T} \rightarrow \mathbb{R}^+ \\
+        &exp_\lambda \colon t \mapsto e^{-\lambda \tau(t)}.
+    \end{align}
 
 \end{definition}
 
 The $\lambda$ parameter in that weight function can be used to control how
-important newer texts are. When $\lambda = 0$ the Exponential Dropoff is
-equivalent to the \textit{Uniform Weighing} function and as $\lambda \rightarrow
-\infty$ more weight is given to the latest text. We have shown the weights
-given to different assignments for different $\lambda$ values in Figure
+important newer texts are. When $\lambda = 0$ the \textit{Exponential Dropoff
+Weight} is equivalent to the \textit{Uniform Weight} function and as $\lambda
+\rightarrow \infty$ more weight is given to the latest text. We have shown the
+weights given to different assignments for different $\lambda$ values in Figure
 \ref{fig:weights}.
 
 \begin{figure}
@@ -1538,97 +1569,109 @@ longer texts provide better insight into an authors writing style than shorter
 texts. So we wanted to see if we could obtain better results if we considered
 text length.
 
-\begin{definition}[Length]
+\begin{definition}[Length Weight]
 
-    The length weight function $w_l: T_\alpha \rightarrow \mathbb{N}^+$
-    is defined as,
+    Let the text length based weight function be defined as,
 
-    \begin{equation}
-        w_l(t) = \lceil \frac{|t|}{1000} \rceil
-    \end{equation}
+    \begin{align}
+        &l \colon \mathcal{T} \rightarrow \mathbb{N}^+ \\
+        &l \colon t \mapsto \left\lfloor \frac{|t|}{1000} \right\rceil + 1
+    \end{align}
 
 \end{definition}
 
-In this method $|t|$ denotes the length of the text $t$ measured in characters.
 Thus this weight function gives more weight the longer a text is but where only
 differences on the order of thousands of characters are considered significant.
-We used the \textit{Exponential Dropoff} and \textit{Length} weighing functions
-to implement another weight function that use both text length and time stamps
-to give weights to an assignment. The combined weight function is shown below.
+We used the \textit{Exponential Dropoff Weight} and \textit{Length Weight}
+functions to implement another weight function that use both text length and
+time to give weights to an assignment. The combined weight function is shown
+below.
 
-\begin{definition}[Exponential Dropoff + Length]
+\begin{definition}[Exponential Dropoff and Length Weight]
 
-    The exponential dropoff + length weight function $w_{tl}: T_\alpha
-    \rightarrow [0,2]$ is defined as,
+    Let the combined time and length weight function be defined as,
 
-    \begin{equation}
-        w_{tl} = w^*_e(t) + w^*_l(t)
-    \end{equation}
-
-\end{definition}
-
-Which is as the definition describe, simply the addition of the exponential
-dropoff weight, and the length based weight, after they are both individually
-applied to the text.
-
-Some comparative approach was created as well. These weight methods
-bases themselves on their likeness with the unknown text. This likeness
-is computed using the prediction method chosen, which is denoted by $f$.
-
-\begin{definition}[Maximum]
-
-    The maximum weight function $w_{max}: T_\alpha, t_{unknown}, f \rightarrow \{0,1\}$ is
-    defined as,
-
-    \begin{equation}
-        w_{max}(t) = \begin{cases}
-            1 & \text{if } f(t, t_{unknown}) = \mathbf{max}(\{f(t_{known},
-                t_{unknown}) | t_{known} \in T_\alpha\})\\
-            0 & \text{otherwise}
-    \end{cases}
-    \end{equation}
+    \begin{align}
+        &lexp_\lambda \colon \mathcal{T} \rightarrow [0, 2] \\
+        &lexp_\lambda \colon t \mapsto epx_\lambda(t) + l(t).
+    \end{align}
 
 \end{definition}
 
-\begin{definition}[Minimum]
+Which is simply the addition of the \textit{Exponential Dropoff Weight}, and the
+\textit{Length Weight}, after they are both individually applied to the text.
 
-    The maximum weight function $w_{min}: T_\alpha, t_{unknown}, f \rightarrow \{0,1\}$ is
-    defined as,
+We have also defined some different Prediction Systems that does not use weight
+functions. The first such system is the $P_{max}$ prediction system. The thought
+behind the system is that we wanted to minimize the accusation error. The
+prediction system takes the text $t' \in T_\alpha$ that looks the most like $t$.
+That way if just a single assignment from a candidate author looks sufficiently
+like the text we are comparing with we report that the author matches. That
+should hopefully result in less people being accused of ghost writing.
 
-    \begin{equation}
-        w_{max}(t) = \begin{cases}
-            1 & \text{if } f(t, t_{unknown}) = \mathbf{min}(\{f(t_{known},
-                t_{unknown}) | t_{known} \in T_\alpha\})\\
-            0 & \text{otherwise}
-    \end{cases}
-    \end{equation}
+\begin{definition}[Maximum Prediction System]
+    \label{def:maximum_prediction_system}
+
+    Let the prediction system based only on most similar text be defined as,
+
+    \begin{align}
+        &P_{max} \colon \mathcal{A} \times \mathcal{T} \times [0, 1] \rightarrow
+            \{0, 1\} \\
+        &P_{max} \colon \alpha \times t \times \theta \mapsto \mathbbm{1}\left[
+                \underset{t' \in T_\alpha}{\text{maximize}} f(t, t') > \theta
+            \right].
+    \end{align}
 
 \end{definition}
 
-It can be seen the weight computation is relative, which is the reason for the
-inclusion of the extra arguments. In both of these cases the inclusion of our
-predictive method, and the unknown texts allow us to compute the weight based on
-their similarity with the proposed unknown text. The first one, maximum weight,
-weighs the texts such that is is only the one most alike the unknown text that
-is used for the comparison, thus removing the possible negative influence the
-other texts introduce due their difference from the unknown text. The minimum
-weight on the other hand only uses the text least like the unknown text, thus
-increasing the performance required from the prediction model.
+For completeness we also defined a $P_{min}$ that use only the least similar
+text for the prediction. We expect that such a function will be quick to accuse
+authors of ghost writing since it only looks at the one text that seem to
+indicate ghost writing.
 
+\begin{definition}[Minimum Prediction System]
+    \label{def:minimum_prediction_system}
 
-% TODO: Describe majority vote weight function.
+    Let the prediction system based only on least similar text be defined as,
 
-The $\theta$ parameter in the prediction system determines when we consider an
-unknown text to be written by an author. The natural choice for $\theta$ is 0.5
-since that is what the network use when it computes the loss of each training
-sample. However the $\theta$ parameter can be used to enforce how sure we have
-to be of a decision to accuse an author of not having written an assignment. As
-described earlier MaCom does not want to accuse innocent students of cheating.
-That means that it is very important to MaCom to minimize the number accusation
-error. We can use the $\theta$ parameter to control that error. Hopefully the
-\gls{FN}s generally end up with a value closer to 1 than the \gls{TN}s. If that
-is the case then lowering $\theta$ value will lower the fraction since there
-will be fewer \gls{FN}s. That might lower the overall accuracy of the prediction
-system but will make sure that at few students as possible are falsely accused.
+    \begin{align}
+        &P_{min} \colon \mathcal{A} \times \mathcal{T} \times [0, 1] \rightarrow
+            \{0, 1\} \\
+        &P_{min} \colon \alpha \times t \times \theta \mapsto \mathbbm{1}\left[
+                \underset{t' \in T_\alpha}{\text{minimize}} f(t, t') > \theta
+            \right].
+    \end{align}
+
+\end{definition}
+
+Finally we also defined prediction system that takes a majority vote. The
+majority vote is similar to a uniform weight function. The difference is that
+the majority vote does not use the actual value of a prediction but only how
+many are on each side of a threshold. As an example assume that an author
+$\alpha$ has written three texts $\{t_1, t_2, t_3\} = T_\alpha$ and we are
+comparing to text $t$ with $\theta = 0.5$. Let us then assume that $f(t, t_1) =
+0.0$, $f(t, t_2) = 0.51$ and $f(t, t_3) = 0.51$. Then the uniform weight
+function would compute $\mathbbm{1} \left[ \frac{1}{3} 0.0 + \frac{1}{3} 0.51 +
+\frac{1}{3} 0.51 > 0.5 \right] = 0$. Meaning that the author would be accused of
+using a ghost writer even though two of his assignments are more similar than
+dissimilar. Contrary to that a majority vote would report 1 since more
+texts are greater than $\theta$ than lower.
+
+\begin{definition}[Majority Vote Prediction System]
+    \label{def:majority_vote_prediction_system}
+
+    Let the majority vote based system be defined as,
+
+    \begin{align}
+        &P_{MV} \colon \mathcal{A} \times \mathcal{T} \times [0, 1] \rightarrow
+            \{0, 1\} \\
+        &P_{MV} \colon \alpha \times t \times \theta \mapsto \mathbbm{1}\left[
+                \frac{1}{|T_\alpha|} \sum_{t' \in T_\alpha} \mathbbm{1}\left[
+                    f(t, t') > \theta
+                \right] > \frac{1}{2}
+            \right].
+    \end{align}
+
+\end{definition}
 
 % TODO: Write about error functions.
