@@ -1053,10 +1053,50 @@ $\theta = 0.076101$. That configuration obtained an accusation error of 5.5556
 \% and an accuracy of 96.8750 \%. The configuration had 17 \gls{TN}s, 1998
 \gls{TP}s, 1 \gls{FN}s and 64 \gls{FP}s.
 
+\subsection{\glsdesc{rec-sent-NN}}
+The second network we tuned hyper-parameters for was the network shown
+depicted in \ref{fig:rec-sent-NN}. This network was the one \gls{RNN}
+we attempted to use to solve this problem. As explained, run-time
+was quite the factor for this network, which is the reason it was
+trained on the sentence level of the texts it received.
+
+Applying the prediction system to this network gave the results which
+can be seen in the Figures, \ref{fig:rec-sent-NN-pred-50} and \ref{fig:rec-sent-NN-pred-04}
+
+\begin{figure}
+    \centering
+    \textbf{Prediction System Results for 0.5 Split, Char+Word Level CNN}\par\medskip
+    \includegraphics[scale=0.35]{./pictures/experiments/conv_char_word_nn/prediction_system_50.png}
+    \caption{Results of running the prediction system with the network described
+        in Section \ref{subsubsec:conv_char_word_nn} on a validation dataset
+        with 50\% positive samples and 50\% negative samples. In the upper graph
+        we show the accuracies obtained as a function of $\theta$ for different
+        weights $w$. At the bottom we have shown the accusation error as a
+        function $\theta$ again with one line for each weight. We can see that
+        as the threshold increases and we accuse more people of cheating the
+        accusation error rises.}
+    \label{fig:rec-sent-NN-pred-50}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \textbf{Prediction System Results for 0.04 Split, Char+Word Level CNN}\par\medskip
+    \includegraphics[scale=0.35]{./pictures/experiments/conv_char_word_nn/prediction_system_04.png}
+    \caption{Results of running the prediction system with the network described
+        in Section \ref{subsubsec:conv_char_word_nn} on a validation dataset
+        with 96\% positive samples and 4\% negative samples. In the upper graph
+        we show the accuracies obtained as a function of $\theta$ for different
+        weights $w$. At the bottom we have shown the accusation error as a
+        function $\theta$ again with one line for each weight. We can see that
+        as the threshold increases and we accuse more people of cheating the
+        accusation error rises.}
+    \label{fig:rec-sent-NN-pred-4}
+\end{figure}
+
 
 \subsubsection{\glsdesc{conv-char-word-NN}}
 
-The second network we tuned hyperparameters for were the network presented
+The third network we tuned hyperparameters for was the network presented
 in Figure TODO. The network used convolutions on the character level and
 word level to extract features and used a dense network to decide whether or
 not the texts were written by the same author. We have shown the accuracy
@@ -1103,3 +1143,4 @@ Maximum Weight function and using the threshold $\theta = 0.235470$. That
 configuration obtained an accusation error of 0 \% and an accuracy of 96.9022
 \%. The configuration had 3 \gls{TN}s, 1999 \gls{TP}s, 0 \gls{FN}s and 64
 \gls{FP}s.
+

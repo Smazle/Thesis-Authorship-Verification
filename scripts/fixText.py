@@ -19,11 +19,18 @@ def Convert(x):
         "wasn't": 'was not',
         "weren't": 'were not',
         "won't": 'will not',
-        "wouldn't": 'would not'
+        "wouldn't": 'would not',
+        'data-set': 'dataset',
+        'hyper-parameters': 'hyperparameters'
     }
 
     for key in c:
         x = x.replace(key, c[key])
+
+        cap_key = key[0].upper() + key[1:]
+        cap_val = c[key][0].upper() + c[key][1:]
+
+        x = x.replace(cap_key, cap_val)
 
     return x
 
