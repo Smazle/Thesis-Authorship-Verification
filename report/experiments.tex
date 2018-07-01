@@ -1,5 +1,4 @@
-\section{Experiments} \label{sec:experiments}
-
+\section{Experiments} \label{sec:experiments} 
 In the previous sections we have been going the through the theoretical
 background of the different approaches we were going to make use of to classify
 the provided MaCom data. However from this point the practical aspect will be in
@@ -10,7 +9,6 @@ only that, but each method will be tested against the external validation set
 on the test dataset. Two of these will be the baseline method, and the other
 two will be the best performing recurrent network, and the best performing
 convolutional network.
-
 
 \subsection{Baseline Methods} \label{subsec:baseline}
 
@@ -1034,14 +1032,14 @@ Figure \ref{fig:conv-char-NN-pred-4}.
 \end{figure}
 
 The best configuration for the 0.5 split were using the Exponential Norm Weight
-function with $\lambda = 0.25$ and using the threshold $\theta = 0.395398$.
-That configuration obtained an accusation error of 9.9761\% and an accuracy of
-83.5168 \%. The configuration had 1507 \gls{TN}s, 1832 \gls{TP}s, 167 \gls{FN}s
-and 492 \gls{FP}s. The best configuration for the 0.04 split were using the
-Exponential Norm Weight function with $\lambda = 0.5$ and using the threshold
-$\theta = 0.076101$. That configuration obtained an accusation error of 5.5556
-\% and an accuracy of 96.8750 \%. The configuration had 17 \gls{TN}s, 1998
-\gls{TP}s, 1 \gls{FN}s and 64 \gls{FP}s.
+function with $\lambda = 0.25$, combined with the text length and using the
+threshold $\theta = 0.390$. That configuration obtained an accusation error
+of 0.095 and an accuracy of 0.83167. The configuration had 1482 \gls{TN}s,
+1843 \gls{TP}s, 156 \gls{FN}s and 517 \gls{FP}s. The best configuration for the
+0.04 split were using the Majority Vote weighing function
+and using the threshold $\theta = 0.057$. That configuration obtained an
+accusation error of 0.0 and an accuracy of 0.96444. The configuration
+had 8 \gls{TN}s, 1999 \gls{TP}s, 0 \gls{FN}s and 73 \gls{FP}s.
 
 \subsubsection{\glsdesc{rec-sent-NN}}
 The second network we tuned hyperparameters for was the network shown
@@ -1138,12 +1136,35 @@ negatives in Figure \ref{fig:conv-char-word-NN-pred-4}.
     \label{fig:conv-char-word-NN-pred-4}
 \end{figure}
 
+% TODO: Add updated 
 The best configuration for the 0.5 split were using the Exponential Norm Weight
 function with $\lambda = 0.25$ and using the threshold $\theta = 0.376832$.
 That configuration obtained an accusation error of 9.9766\% and an accuracy of
 75.6878 \%. The configuration had 1155 \gls{TN}s, 1871 \gls{TP}s, 128 \gls{FN}s
 and 844 \gls{FP}s. The best configuration for the 0.04 split were using the
-Maximum Weight function and using the threshold $\theta = 0.235470$. That
-configuration obtained an accusation error of 0 \% and an accuracy of 96.9022
-\%. The configuration had 3 \gls{TN}s, 1999 \gls{TP}s, 0 \gls{FN}s and 64
-\gls{FP}s.
+Exponential Norm Weight function with $\lambda = 0.25$ and using the threshold
+$\theta = 0.127$. That configuration obtained an accusation error of 0.0 and
+an accuracy of 0.96492. The configuration had 9 \gls{TN}s, 1999 \gls{TP}s, 0
+\gls{FN}s and 73 \gls{FP}s.
+
+A summarizing view of the validation performance of the different networks can be seen
+in Table \ref{tab:experi-results}
+
+\begin{table}[]
+\begin{tabular}{|c|c|c|c|c|c|c|c||c|c|}
+\hline
+Split & Network & Weight & $\theta$ & TPS & TNS & FPS & FNS & \textbf{Acc} & \textbf{A-Error} \\ \hline
+\multirow{3}{*}{50/50} & \gls{conv-char-NN} & $P_{lexp_{0.25}}$ & 0.390 & 1843 & 1482 & 517 & 156 & \textbf{0.83167} & \textbf{0.095} \\ \cline{2-10} 
+ & \gls{rec-sent-NN} & $P_{lexp_{0.25}}$ & 0.033 & 1965 & 310 & 1689 & 34 & \textbf{0.56903} & \textbf{0.099} \\ \cline{2-10} 
+ & \gls{conv-char-word-NN} &  &  &  &  &  &  &  &  \\ \hline
+\multirow{3}{*}{96/04} & \gls{conv-char-NN} & $P_{mv}$ & 0.057 & 1999 & 8 & 74 & 0 & \textbf{0.96444} & \textbf{0.000} \\ \cline{2-10} 
+ & \gls{rec-sent-NN} & $P_{lexp_{0.25}}$ & 0.002 & 1999 & 1 & 79 & 0 & \textbf{0.96200} & \textbf{0.000} \\ \cline{2-10} 
+ & \gls{conv-char-word-NN} & $P_{exp_{0.25}}$ & 0.127 & 1999 & 9 & 73 & 0 & \textbf{0.96492} & \textbf{0.000} \\ \hline
+\end{tabular}
+\caption{A summarizing view of the performance of the difference networks on the
+the validation dataset (F).}
+\label{tab:experi-results}
+\end{table}
+
+
+
