@@ -1150,13 +1150,13 @@ an accuracy of 0.96492. The configuration had 9 \gls{TN}s, 1999 \gls{TP}s, 0
 A summarizing view of the validation performance of the different networks can be seen
 in Table \ref{tab:experi-results}
 
-\begin{table}[]
+\begin{table}[h]
 \begin{tabular}{|c|c|c|c|c|c|c|c||c|c|}
 \hline
 Split & Network & Weight & $\theta$ & TPS & TNS & FPS & FNS & \textbf{Acc} & \textbf{A-Error} \\ \hline
 \multirow{3}{*}{50/50} & \gls{conv-char-NN} & $P_{lexp_{0.25}}$ & 0.390 & 1843 & 1482 & 517 & 156 & \textbf{0.83167} & \textbf{0.095} \\ \cline{2-10} 
  & \gls{rec-sent-NN} & $P_{lexp_{0.25}}$ & 0.033 & 1965 & 310 & 1689 & 34 & \textbf{0.56903} & \textbf{0.099} \\ \cline{2-10} 
- & \gls{conv-char-word-NN} &  &  &  &  &  &  &  &  \\ \hline
+ & \gls{conv-char-word-NN} & $P_{lexp_{0.25}}$ & 0.433 & 1856 & 1302 & 697 & 143 & \textbf{0.78989} & \textbf{0.099} \\ \hline
 \multirow{3}{*}{96/04} & \gls{conv-char-NN} & $P_{mv}$ & 0.057 & 1999 & 8 & 74 & 0 & \textbf{0.96444} & \textbf{0.000} \\ \cline{2-10} 
  & \gls{rec-sent-NN} & $P_{lexp_{0.25}}$ & 0.002 & 1999 & 1 & 79 & 0 & \textbf{0.96200} & \textbf{0.000} \\ \cline{2-10} 
  & \gls{conv-char-word-NN} & $P_{exp_{0.25}}$ & 0.127 & 1999 & 9 & 73 & 0 & \textbf{0.96492} & \textbf{0.000} \\ \hline
@@ -1165,6 +1165,5 @@ Split & Network & Weight & $\theta$ & TPS & TNS & FPS & FNS & \textbf{Acc} & \te
 the validation dataset (F).}
 \label{tab:experi-results}
 \end{table}
-
 
 
