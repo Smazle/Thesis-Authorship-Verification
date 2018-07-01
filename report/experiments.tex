@@ -490,9 +490,9 @@ the layers are shown in Table \ref{tab:glossary}.
 \label{subsubsec:conv_char_nn}
 
 The idea behind network \gls{conv-char-NN} is that we wanted to use convolutions
-to look for n-grams in texts. Traditional authorship verification/attribution
-is based on carefully engineered n-grams that are compared between two texts
-\citep{stamatos2009}. Instead of choosing the n-grams ourselves we wanted the
+to look for N-grams in texts. Traditional authorship verification/attribution
+is based on carefully engineered N-grams that are compared between two texts
+\citep{stamatos2009}. Instead of choosing the N-grams ourselves we wanted the
 network to learn which features are important for the authorship verification
 task. The features are learned through convolutions. The convolutions look
 at some number of characters at a time and gives a single output for those
@@ -535,8 +535,8 @@ like "ould ". We have illustrated such a convolutional filter in Figure
         with different sizes. We use both convolutions with a window size of
         8 and convolutions with a window size of 4. We use 700 of size 8 and
         500 of size 4. We used a window size of 8 since \citet{aalykke2016}
-        found that n-grams of size 8 worked the best for Danish texts and we
-        also added 4 so the network could look at smaller n-grams as well.
+        found that N-grams of size 8 worked the best for Danish texts and we
+        also added 4 so the network could look at smaller N-grams as well.
         We used a stride of 1 such that each convolutional filter could
         observe all parts of the texts and give an output for each one. The
         convolutional part of the network also shares weights such that the

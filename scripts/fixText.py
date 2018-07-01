@@ -21,7 +21,9 @@ def Convert(x):
         "won't": 'will not',
         "wouldn't": 'would not',
         'data-set': 'dataset',
-        'hyper-parameters': 'hyperparameters'
+        'hyper-parameters': 'hyperparameters',
+        'n-grams': 'N-grams',
+        'n-gram': 'N-gram'
     }
 
     for key in c:

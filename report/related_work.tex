@@ -52,8 +52,8 @@ The best performing configuration was the CNN-char.
 
 \citet{shrestha2017} experimented with classifying the author of short texts
 such as messages on social media, and emails. Their approach made use of a
-\gls{CNN}. This \gls{CNN} only takes in a sequence of character-n-grams. The
-reasoning for this usage of only char-n-grams was the small amount of text
+\gls{CNN}. This \gls{CNN} only takes in a sequence of character-N-grams. The
+reasoning for this usage of only char-N-grams was the small amount of text
 in each sample. By passing these N-grams through a embedding layer, a 25\%
 dropout layer, 3 convolutional layers and then using max-over-time, they got
 a compact representation of the text. They hypothesized this representation
@@ -69,7 +69,7 @@ and 1000 tweets per author. In the case where either the authors count was
 increased or the number of tweets was decreased, the accuracy quickly worsened.
 In order to extract some sort of meaning from the predictions they made using
 this approach, they made use of the saliency score to determine the impact each
-n-gram had on the final decision.
+N-gram had on the final decision.
 
 The approach proposed by \citet{ding2016} was somewhat more complex. While they
 too made use of a \gls{CNN}, the application of the network was split into four
@@ -168,7 +168,7 @@ applicable to our specific scenario, as they use Danish texts as the basis of
 their authorship-attribution task. \citet{aalykke2016} made use of a distance
 based approach. After extracting a set of features from the text, they made
 use of different distance measured, on which the attribution was based.
-\citet{hansen2014} on the other hand, started by extracting character-n-grams
+\citet{hansen2014} on the other hand, started by extracting character-N-grams
 from the texts and used those as the features. Using these features, some 5-fold
 cross validation, and weighting the features based on the submission date of the
 text, they trained a SVM classifier, which ended up with an accuracy of 84\%
