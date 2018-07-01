@@ -53,14 +53,13 @@ Finding and computing these values for \gls{conv-char-NN},
 using the test dataset D, yielded the results seen in Table \ref{tab:char_CNN_res}
 
 \begin{table}[h]
-\centering
-\begin{tabular}{|c|c|c|c|c|c|c|c||c|c|}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|}
 \hline
-Split & Constraint & Weight & $\theta$ & TP & TN & FP & FN & \textbf{Acc} & \textbf{A-Error} \\ \hline
-\multirow{2}{*}{50/50} & Yes & $P_{lexp_{0.25}}$ & 0.390 & 3392 & 2344 & 1206 & 158 & \textbf{0.80788} & \textbf{0.06314} \\ \cline{2-10} 
- & No & $P_{lexp_{0.25}}$ & 0.486 & 3231 & 2913 & 637 & 319 & \textbf{0.86535} & \textbf{0.09870} \\ \hline
-\multirow{2}{*}{96/04} & Yes & $P_{MV}$ & 0.057 & 3546 & 13 & 140 & 4 & \textbf{0.96111} & \textbf{0.23529} \\ \cline{2-10} 
- & No & $P_{lexp_{0.25}}$ & 0.137 & 3540 & 28 & 135 & 10 & \textbf{0.96354} & \textbf{0.26315} \\ \hline
+Split & Allowed Err & Weight & $\theta$ & TPS & TNS & FPS & FNS & \textbf{Acc} & \textbf{A-Error} \\ \hline
+\multirow{2}{*}{50/50} & 0.1 & $P_{lexp_{0.25}}$ & 0.390 & 3392 & 2344 & 1206 & 158 & \textbf{0.80788} & \textbf{0.0631} \\ \cline{2-10} 
+ & 1.0 & $P_{lexp_{0.25}}$ & 0.486 & 3231 & 2913 & 637 & 319 & \textbf{0.86535} & \textbf{0.0987} \\ \hline
+\multirow{2}{*}{96/04} & 0.1 & $P_{MV}$ & 0.057 & 3546 & 13 & 140 & 4 & \textbf{0.96111} & \textbf{0.2352} \\ \cline{2-10} 
+ & 1.0 & $P_{lexp_{0.25}}$ & 0.137 & 3540 & 28 & 125 & 10 & \textbf{0.96354} & \textbf{0.2631} \\ \hline
 \end{tabular}
 \caption{The result of running the network \gls{conv-char-NN} on the dataset (D). Contraint
 denotes if the hyperparameters, weight and $\theta$ was chosen base on their
@@ -68,4 +67,3 @@ unconstrained accuracy or constrained, making unconstrained results the one for
 comparison with the baseline method. A-Error denotes the accusation error.}
 \label{tab:char_CNN_res}
 \end{table}
-
