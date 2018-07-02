@@ -1,2 +1,0 @@
-Skriv nye pred system resultater ind + Graf
-Skriv TPS i fixText
