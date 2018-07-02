@@ -304,7 +304,7 @@ it. The results of this process can be seen in Table \ref{tab:baseline-val-res}.
 \centering
 \begin{tabular}{|c|c|c|c|c|c|c||c|c|}
 \hline
-Split & Classifier & Params & TPS & TNS & FPS & FNS & \textbf{Accuracy} & \textbf{Accu Err} \\ \hline
+Split & Classifier & Params & TP & TN & FP & FN & \textbf{Accuracy} & \textbf{Accu Err} \\ \hline
 \multirow{2}{*}{50/50} & SVM & \{C:10, $\gamma$:1000\} &  759 & 692 & 308 & 241 & \textbf{0.7255} & \textbf{0.2583} \\ \cline{2-9} 
  & ED & \{K:1, p:1\} & 667 & 583 & 417 & 333 & \textbf{0.625} & \textbf{0.36353} \\ \hline
 \multirow{2}{*}{96/04} & SVM & \{C:10, $\gamma$:1000\} & 762 & 23 & 25 & 238 & \textbf{0.749} & \textbf{0.91187} \\ \cline{2-9} 
@@ -1152,7 +1152,7 @@ in Table \ref{tab:experi-results}
 \begin{table}[h]
 \begin{tabular}{|c|c|c|c|c|c|c|c||c|c|}
 \hline
-Split & Network & Weight & $\theta$ & TPS & TNS & FPS & FNS & \textbf{Acc} & \textbf{A-Error} \\ \hline
+Split & Network & Weight & $\theta$ & TP & TN & FP & FN & \textbf{Acc} & \textbf{A-Error} \\ \hline
 \multirow{3}{*}{50/50} & \gls{conv-char-NN} & $P_{lexp_{0.25}}$ & 0.390 & 1843 & 1482 & 517 & 156 & \textbf{0.83167} & \textbf{0.095} \\ \cline{2-10} 
  & \gls{rec-sent-NN} & $P_{lexp_{0.25}}$ & 0.033 & 1965 & 310 & 1689 & 34 & \textbf{0.56903} & \textbf{0.099} \\ \cline{2-10} 
  & \gls{conv-char-word-NN} & $P_{lexp_{0.25}}$ & 0.433 & 1856 & 1302 & 697 & 143 & \textbf{0.78989} & \textbf{0.099} \\ \hline

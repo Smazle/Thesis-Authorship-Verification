@@ -23,7 +23,11 @@ def Convert(x):
         'data-set': 'dataset',
         'hyper-parameters': 'hyperparameters',
         'n-grams': 'N-grams',
-        'n-gram': 'N-gram'
+        'n-gram': 'N-gram',
+        'TPS': 'TP',
+        'TNS': 'TN',
+        'FNS': 'FN',
+        'FPS': 'FP'
     }
 
     for key in c:
