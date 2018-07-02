@@ -1136,16 +1136,15 @@ negatives in Figure \ref{fig:conv-char-word-NN-pred-4}.
     \label{fig:conv-char-word-NN-pred-4}
 \end{figure}
 
-% TODO: Add updated 
 The best configuration for the 0.5 split were using the Exponential Norm Weight
-function with $\lambda = 0.25$ and using the threshold $\theta = 0.376832$.
-That configuration obtained an accusation error of 9.9766\% and an accuracy of
-75.6878 \%. The configuration had 1155 \gls{TN}s, 1871 \gls{TP}s, 128 \gls{FN}s
-and 844 \gls{FP}s. The best configuration for the 0.04 split were using the
-Exponential Norm Weight function with $\lambda = 0.25$ and using the threshold
-$\theta = 0.127$. That configuration obtained an accusation error of 0.0 and
-an accuracy of 0.96492. The configuration had 9 \gls{TN}s, 1999 \gls{TP}s, 0
-\gls{FN}s and 73 \gls{FP}s.
+function with $\lambda = 0.25$ combined with the text length and using the
+threshold $\theta = 0.433$. That configuration obtained an accusation error of
+0.099 and an accuracy of 0.78989. The configuration had 1302 \gls{TN}s, 1856
+\gls{TP}s, 143 \gls{FN}s and 697 \gls{FP}s. The best configuration for the 0.04
+split were using the Exponential Norm Weight function with $\lambda = 0.25$ and
+using the threshold $\theta = 0.127$. That configuration obtained an accusation
+error of 0.0 and an accuracy of 0.96492. The configuration had 9 \gls{TN}s, 1999
+\gls{TP}s, 0 \gls{FN}s and 73 \gls{FP}s.
 
 A summarizing view of the validation performance of the different networks can be seen
 in Table \ref{tab:experi-results}
