@@ -44,8 +44,12 @@ with open(sys.argv[-1], 'r') as f:
             if a_err == '0.1':
                 limit.append((int(tns), line))
 
+print('w, mapper[w], theta, tps, tns, fps, fns, acc, acc_err')
 for i in sorted(limit, key=lambda x: x[0], reverse=True):
     print(i[1])
 
-for i in sorted(limit, key=lambda x: x[0], reverse=True):
+print()
+print('MAX')
+
+for i in sorted(max_acc, key=lambda x: x[0], reverse=True):
     print(i[1])
