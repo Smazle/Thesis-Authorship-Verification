@@ -98,8 +98,8 @@ def compare_texts(model, reader, linereader, text1, text2, n):
     text2_channels = util.add_dim_start_all(
         reader.read_encoded_line(linereader, text2))
 
-    text1 = read_clean(linereader, text1)
-    text2 = read_clean(linereader, text2)
+    text1 = util.read_clean(linereader, text1)
+    text2 = util.read_clean(linereader, text2)
 
     result = find_difference(model, text1_channels, text2_channels, n)
 
@@ -226,11 +226,6 @@ def get_output_of_layer(model, layer_name):
         model.get_layer(layer_name).get_output_at(0),
         model.get_layer(layer_name).get_output_at(1)
     ])
-
-
-def read_clean(linereader, line):
-    _, _, text = linereader.readline(line).split(';')
-    return util.clean(text)
 
 
 if __name__ == '__main__':

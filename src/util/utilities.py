@@ -40,5 +40,10 @@ def tail(l):
     return l[1:]
 
 
+def read_clean(linereader, line):
+    _, _, text = linereader.readline(line).split(';')
+    return clean(text)
+
+
 if __name__ == '__main__':
     print(clean('Hello, World!$NL$Hello$NAME$, World!'))
