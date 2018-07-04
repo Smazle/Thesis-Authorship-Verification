@@ -6,244 +6,643 @@
 \subsection{Training Data Statistics}\label{sec:B_stats}
 \verbinput{./data/b_stata.txt}
 
-\subsection{Convolution	Filters}
-\begin{table}
-    \centering
-    \textbf{Convolutional Filter 1 of Size 8}\par\medskip
-    \begin{tabular}{c|cc}
-        & \textbf{Filter Max String} & \textbf{Filter Max Value} \\ \hline
-        \textbf{Text 13}  & \verb{', så at '{  & 44.41869 \\
-        \textbf{Text 49}  & \verb{'2 se at '{  & 42.97375 \\
-        \textbf{Text 29}  & \verb{'omas at '{  & 42.86139 \\
-        \textbf{Text 21}  & \verb{'n nå at '{  & 42.27350 \\
-        \textbf{Text 48}  & \verb{'r så at '{  & 41.95458 \\
-        \textbf{Text 20}  & \verb{', nu et '{  & 41.92461 \\
-        \textbf{Text 26}  & \verb{'t se at '{  & 41.03944 \\
-        \textbf{Text 17}  & \verb{'m af at '{  & 40.85154 \\
-        \textbf{Text 10}  & \verb{'mene at '{  & 40.75563 \\
-        \textbf{Text 16}  & \verb{'mene at '{  & 40.75563 \\
-        \textbf{Text 27}  & \verb{' bar at '{  & 40.46385 \\
-        \textbf{Text 6}   & \verb{'r os at '{  & 40.32341 \\
-        \textbf{Text 42}  & \verb{' tid at '{  & 39.77865 \\
-        \textbf{Text 30}  & \verb{'også at '{  & 39.58638 \\
-        \textbf{Text 36}  & \verb{'også at '{  & 39.58638 \\
-        \textbf{Text 40}  & \verb{'r nu et '{  & 39.46050 \\
-        \textbf{Text 9}   & \verb{'n af at '{  & 39.40045 \\
-        \textbf{Text 32}  & \verb{'n af at '{  & 39.40045 \\
-        \textbf{Text 41}  & \verb{'n af at '{  & 39.40045 \\
-        \textbf{Text 46}  & \verb{'n af at '{  & 39.40045 \\
-        \textbf{Text 1}   & \verb{'ådan at '{  & 39.32121 \\
-        \textbf{Text 12}  & \verb{', er et '{  & 39.25355 \\
-        \textbf{Text 43}  & \verb{', er et '{  & 39.25355 \\
-        \textbf{Text 14}  & \verb{'ldes at '{  & 38.98859 \\
-        \textbf{Text 24}  & \verb{'rlag at '{  & 38.83994 \\
-        \textbf{Text 15}  & \verb{'g af at '{  & 38.72359 \\
-        \textbf{Text 38}  & \verb{'” er at '{  & 38.71601 \\
-        \textbf{Text 33}  & \verb{'n på at '{  & 38.57942 \\
-        \textbf{Text 18}  & \verb{'t er at '{  & 38.56930 \\
-        \textbf{Text 34}  & \verb{'r på at '{  & 38.48225 \\
-        \textbf{Text 45}  & \verb{'r på at '{  & 38.48225 \\
-        \textbf{Text 4}   & \verb{'vder at '{  & 38.43643 \\
-        \textbf{Text 5}   & \verb{'vder at '{  & 38.43643 \\
-        \textbf{Text 3}   & \verb{'r vi at '{  & 38.40871 \\
-        \textbf{Text 19}  & \verb{'yder at '{  & 38.40115 \\
-        \textbf{Text 25}  & \verb{'yder at '{  & 38.40115 \\
-        \textbf{Text 37}  & \verb{'nder at '{  & 38.37101 \\
-        \textbf{Text 11}  & \verb{'ømme at '{  & 38.25414 \\
-        \textbf{Text 39}  & \verb{'s af at '{  & 38.21890 \\
-        \textbf{Text 23}  & \verb{' var at '{  & 38.07627 \\
-        \textbf{Text 7}   & \verb{'sted at '{  & 37.97903 \\
-        \textbf{Text 47}  & \verb{'fter at '{  & 37.91461 \\
-        \textbf{Text 28}  & \verb{'gter at '{  & 37.87117 \\
-        \textbf{Text 8}   & \verb{'d af at '{  & 37.70177 \\
-        \textbf{Text 35}  & \verb{' til at '{  & 37.03082 \\
-        \textbf{Text 44}  & \verb{' til at '{  & 37.03082 \\
-        \textbf{Text 22}  & \verb{'n er et '{  & 36.88660 \\
-        \textbf{Text 2}   & \verb{' dag i t'{  & 26.28683 \\
-        \textbf{Text 31}  & \verb{'· Frank\n'{ & 21.83477
-    \end{tabular}
-    \caption{The most important part of the first 50 texts according to
-        convolutional filter 1 of size 8. Sorted by the importance score.}
-    \label{fig:features_convolution_8_1}
-\end{table}
+\subsection{Convolution Filters}
 
-\begin{table}
-    \centering
-    \textbf{Convolutional Filter 5 of Size 8}\par\medskip
-    \begin{tabular}{c|cc}
-        & \textbf{Filter Max String} & \textbf{Filter Max Value} \\ \hline
-        \textbf{Text 3} & \verb{' meget k'{ & 18.73260 \\
-        \textbf{Text 10} & \verb{' meget k'{ & 18.73260 \\
-        \textbf{Text 13} & \verb{' meget k'{ & 18.73260 \\
-        \textbf{Text 15} & \verb{' meget k'{ & 18.73260 \\
-        \textbf{Text 21} & \verb{' meget k'{ & 18.73260 \\
-        \textbf{Text 24} & \verb{' meget k'{ & 18.73260 \\
-        \textbf{Text 29} & \verb{' meget k'{ & 18.73260 \\
-        \textbf{Text 32} & \verb{' meget k'{ & 18.73260 \\
-        \textbf{Text 33} & \verb{' meget k'{ & 18.73260 \\
-        \textbf{Text 9} & \verb{' meget g'{ & 18.71884 \\
-        \textbf{Text 20} & \verb{' meget g'{ & 18.71884 \\
-        \textbf{Text 26} & \verb{' meget g'{ & 18.71884 \\
-        \textbf{Text 17} & \verb{' meget s'{ & 18.39024 \\
-        \textbf{Text 22} & \verb{' meget s'{ & 18.39024 \\
-        \textbf{Text 23} & \verb{' meget s'{ & 18.39024 \\
-        \textbf{Text 27} & \verb{' meget s'{ & 18.39024 \\
-        \textbf{Text 28} & \verb{' meget s'{ & 18.39024 \\
-        \textbf{Text 30} & \verb{' meget s'{ & 18.39024 \\
-        \textbf{Text 42} & \verb{' meget s'{ & 18.39024 \\
-        \textbf{Text 46} & \verb{' meget s'{ & 18.39024 \\
-        \textbf{Text 47} & \verb{' meget s'{ & 18.39024 \\
-        \textbf{Text 36} & \verb{' benytte'{ & 18.37530 \\
-        \textbf{Text 37} & \verb{' benytte'{ & 18.37530 \\
-        \textbf{Text 40} & \verb{' benytte'{ & 18.37530 \\
-        \textbf{Text 8} & \verb{' meget n'{ & 17.72581 \\
-        \textbf{Text 16} & \verb{' meget n'{ & 17.72581 \\
-        \textbf{Text 14} & \verb{' kendt s'{ & 17.69235 \\
-        \textbf{Text 18} & \verb{' kendt s'{ & 17.69235 \\
-        \textbf{Text 7} & \verb{' meget i'{ & 17.64814 \\
-        \textbf{Text 25} & \verb{' taget g'{ & 17.53552 \\
-        \textbf{Text 1} & \verb{' blidt k'{ & 17.45398 \\
-        \textbf{Text 5} & \verb{'rkendt s'{ & 17.40653 \\
-        \textbf{Text 12} & \verb{' meget r'{ & 17.39020 \\
-        \textbf{Text 4} & \verb{' taget s'{ & 17.20692 \\
-        \textbf{Text 48} & \verb{' faldt i'{ & 17.18553 \\
-        \textbf{Text 44} & \verb{'åkaldt k'{ & 16.80688 \\
-        \textbf{Text 38} & \verb{'rne om k'{ & 16.71076 \\
-        \textbf{Text 49} & \verb{' Blod,fr'{ & 16.50881 \\
-        \textbf{Text 39} & \verb{' stolthe'{ & 16.18284 \\
-        \textbf{Text 34} & \verb{'vilket k'{ & 16.07917 \\
-        \textbf{Text 43} & \verb{'vilket k'{ & 16.07917 \\
-        \textbf{Text 41} & \verb{'vilket g'{ & 16.06541 \\
-        \textbf{Text 45} & \verb{' herefte'{ & 15.82326 \\
-        \textbf{Text 35} & \verb{'-oprette'{ & 15.73831 \\
-        \textbf{Text 31} & \verb{'rndommen'{ & 15.38827 \\
-        \textbf{Text 6} & \verb{' sendt i'{ & 15.38613 \\
-        \textbf{Text 11} & \verb{'’opret n'{ & 15.11496 \\
-        \textbf{Text 19} & \verb{'rne om f'{ & 14.34204 \\
-        \textbf{Text 2} & \verb{' betydni'{ & 13.36254 \\
-    \end{tabular}
-    \caption{The most important part of the first 50 texts according to
-        convolutional filter 5 of size 8. Sorted by the importance score.}
-    \label{fig:features_convolution_8_5}
-\end{table}
+\textbf{Convolutional Filter 1 of Size 8}\par\medskip
+\begin{tabular}{c|cc}
+    & \textbf{Filter Max String} & \textbf{Filter Max Value} \\ \hline
+    \textbf{Text 13}  & \verb{', så at '{  & 44.41869 \\
+    \textbf{Text 49}  & \verb{'2 se at '{  & 42.97375 \\
+    \textbf{Text 29}  & \verb{'omas at '{  & 42.86139 \\
+    \textbf{Text 21}  & \verb{'n nå at '{  & 42.27350 \\
+    \textbf{Text 48}  & \verb{'r så at '{  & 41.95458 \\
+    \textbf{Text 20}  & \verb{', nu et '{  & 41.92461 \\
+    \textbf{Text 26}  & \verb{'t se at '{  & 41.03944 \\
+    \textbf{Text 17}  & \verb{'m af at '{  & 40.85154 \\
+    \textbf{Text 10}  & \verb{'mene at '{  & 40.75563 \\
+    \textbf{Text 16}  & \verb{'mene at '{  & 40.75563 \\
+    \textbf{Text 27}  & \verb{' bar at '{  & 40.46385 \\
+    \textbf{Text 6}   & \verb{'r os at '{  & 40.32341 \\
+    \textbf{Text 42}  & \verb{' tid at '{  & 39.77865 \\
+    \textbf{Text 30}  & \verb{'også at '{  & 39.58638 \\
+    \textbf{Text 36}  & \verb{'også at '{  & 39.58638 \\
+    \textbf{Text 40}  & \verb{'r nu et '{  & 39.46050 \\
+    \textbf{Text 9}   & \verb{'n af at '{  & 39.40045 \\
+    \textbf{Text 32}  & \verb{'n af at '{  & 39.40045 \\
+    \textbf{Text 41}  & \verb{'n af at '{  & 39.40045 \\
+    \textbf{Text 46}  & \verb{'n af at '{  & 39.40045 \\
+    \textbf{Text 1}   & \verb{'ådan at '{  & 39.32121 \\
+    \textbf{Text 12}  & \verb{', er et '{  & 39.25355 \\
+    \textbf{Text 43}  & \verb{', er et '{  & 39.25355 \\
+    \textbf{Text 14}  & \verb{'ldes at '{  & 38.98859 \\
+    \textbf{Text 24}  & \verb{'rlag at '{  & 38.83994 \\
+    \textbf{Text 15}  & \verb{'g af at '{  & 38.72359 \\
+    \textbf{Text 38}  & \verb{'” er at '{  & 38.71601 \\
+    \textbf{Text 33}  & \verb{'n på at '{  & 38.57942 \\
+    \textbf{Text 18}  & \verb{'t er at '{  & 38.56930 \\
+    \textbf{Text 34}  & \verb{'r på at '{  & 38.48225 \\
+    \textbf{Text 45}  & \verb{'r på at '{  & 38.48225 \\
+    \textbf{Text 4}   & \verb{'vder at '{  & 38.43643 \\
+    \textbf{Text 5}   & \verb{'vder at '{  & 38.43643 \\
+    \textbf{Text 3}   & \verb{'r vi at '{  & 38.40871 \\
+    \textbf{Text 19}  & \verb{'yder at '{  & 38.40115 \\
+    \textbf{Text 25}  & \verb{'yder at '{  & 38.40115 \\
+    \textbf{Text 37}  & \verb{'nder at '{  & 38.37101 \\
+    \textbf{Text 11}  & \verb{'ømme at '{  & 38.25414 \\
+    \textbf{Text 39}  & \verb{'s af at '{  & 38.21890 \\
+    \textbf{Text 23}  & \verb{' var at '{  & 38.07627 \\
+    \textbf{Text 7}   & \verb{'sted at '{  & 37.97903 \\
+    \textbf{Text 47}  & \verb{'fter at '{  & 37.91461 \\
+    \textbf{Text 28}  & \verb{'gter at '{  & 37.87117 \\
+    \textbf{Text 8}   & \verb{'d af at '{  & 37.70177 \\
+    \textbf{Text 35}  & \verb{' til at '{  & 37.03082 \\
+    \textbf{Text 44}  & \verb{' til at '{  & 37.03082 \\
+    \textbf{Text 22}  & \verb{'n er et '{  & 36.88660 \\
+    \textbf{Text 2}   & \verb{' dag i t'{  & 26.28683 \\
+    \textbf{Text 31}  & \verb{'· Frank\n'{ & 21.83477
+\end{tabular}
 
-\begin{table}
-    \centering
-    \textbf{Convolutional Filter 100 of Size 8}\par\medskip
-    \begin{tabular}{c|cc}
-        & \textbf{Filter Max String} & \textbf{Filter Max Value} \\ \hline
-        \textbf{Text 20} & \verb{', at De '{ & 14.06486 \\
-        \textbf{Text 3} & \verb{', at de '{ & 13.97819 \\
-        \textbf{Text 5} & \verb{', at de '{ & 13.97819 \\
-        \textbf{Text 21} & \verb{', at de '{ & 13.97819 \\
-        \textbf{Text 24} & \verb{', at de '{ & 13.97819 \\
-        \textbf{Text 25} & \verb{', at de '{ & 13.97819 \\
-        \textbf{Text 40} & \verb{'– \nFælle'{ & 13.60728 \\
-        \textbf{Text 27} & \verb{', at der'{ & 13.18669 \\
-        \textbf{Text 32} & \verb{', at der'{ & 13.18669 \\
-        \textbf{Text 43} & \verb{', at der'{ & 13.18669 \\
-        \textbf{Text 39} & \verb{'– ”hele '{ & 12.20550 \\
-        \textbf{Text 1} & \verb{', klædt '{ & 12.14879 \\
-        \textbf{Text 10} & \verb{', havde '{ & 11.90384 \\
-        \textbf{Text 11} & \verb{', havde '{ & 11.90384 \\
-        \textbf{Text 16} & \verb{', burde '{ & 11.81674 \\
-        \textbf{Text 13} & \verb{', at vi '{ & 11.33311 \\
-        \textbf{Text 23} & \verb{', at vi '{ & 11.33311 \\
-        \textbf{Text 30} & \verb{', at vi '{ & 11.33311 \\
-        \textbf{Text 19} & \verb{'– Sorte '{ & 11.28722 \\
-        \textbf{Text 29} & \verb{'– altid '{ & 11.25181 \\
-        \textbf{Text 6} & \verb{', hf og '{ & 11.11696 \\
-        \textbf{Text 17} & \verb{', Fauli '{ & 10.95995 \\
-        \textbf{Text 4} & \verb{', IB og '{ & 10.94379 \\
-        \textbf{Text 33} & \verb{', og de '{ & 10.79599 \\
-        \textbf{Text 35} & \verb{', og de '{ & 10.79599 \\
-        \textbf{Text 48} & \verb{', og de '{ & 10.79599 \\
-        \textbf{Text 26} & \verb{', EF og '{ & 10.68619 \\
-        \textbf{Text 22} & \verb{'– eller '{ & 10.67318 \\
-        \textbf{Text 38} & \verb{'– eller '{ & 10.67318 \\
-        \textbf{Text 15} & \verb{', da de '{ & 10.57667 \\
-        \textbf{Text 9} & \verb{', fordi '{ & 10.42775 \\
-        \textbf{Text 12} & \verb{', fordi '{ & 10.42775 \\
-        \textbf{Text 18} & \verb{', grund;'{ & 10.22946 \\
-        \textbf{Text 8} & \verb{'n at de '{ & 10.03539 \\
-        \textbf{Text 34} & \verb{', at jo '{ & 10.00943 \\
-        \textbf{Text 46} & \verb{'øget og '{ & 9.95325 \\
-        \textbf{Text 28} & \verb{'– en opl'{ & 9.85135 \\
-        \textbf{Text 7} & \verb{'\n\n\nLader'{ & 9.81295 \\
-        \textbf{Text 37} & \verb{', da der'{ & 9.78517 \\
-        \textbf{Text 41} & \verb{'\n\n\nHele '{ & 9.64712 \\
-        \textbf{Text 49} & \verb{'\n\n\nHele '{ & 9.64712 \\
-        \textbf{Text 47} & \verb{', impres'{ & 9.57604 \\
-        \textbf{Text 14} & \verb{'ørte en '{ & 9.50064 \\
-        \textbf{Text 44} & \verb{', Fædrel'{ & 9.32844 \\
-        \textbf{Text 42} & \verb{', at jor'{ & 9.21792 \\
-        \textbf{Text 45} & \verb{'\n\n\n\nDet '{ & 8.97469 \\
-        \textbf{Text 36} & \verb{', og dyr'{ & 8.87270 \\
-        \textbf{Text 2} & \verb{'8/11-201'{ & 6.90774 \\
-        \textbf{Text 31} & \verb{'\n· Indle'{ & 6.84124 \\
-    \end{tabular}
-    \caption{The most important part of the first 50 texts according to
-        convolutional filter 100 of size 8. Sorted by the importance score.}
-    \label{fig:features_convolution_8_100}
-\end{table}
+\textbf{Convolutional Filter 5 of Size 8}\par\medskip
+\begin{tabular}{c|cc}
+    & \textbf{Filter Max String} & \textbf{Filter Max Value} \\ \hline
+    \textbf{Text 3} & \verb{' meget k'{ & 18.73260 \\
+    \textbf{Text 10} & \verb{' meget k'{ & 18.73260 \\
+    \textbf{Text 13} & \verb{' meget k'{ & 18.73260 \\
+    \textbf{Text 15} & \verb{' meget k'{ & 18.73260 \\
+    \textbf{Text 21} & \verb{' meget k'{ & 18.73260 \\
+    \textbf{Text 24} & \verb{' meget k'{ & 18.73260 \\
+    \textbf{Text 29} & \verb{' meget k'{ & 18.73260 \\
+    \textbf{Text 32} & \verb{' meget k'{ & 18.73260 \\
+    \textbf{Text 33} & \verb{' meget k'{ & 18.73260 \\
+    \textbf{Text 9} & \verb{' meget g'{ & 18.71884 \\
+    \textbf{Text 20} & \verb{' meget g'{ & 18.71884 \\
+    \textbf{Text 26} & \verb{' meget g'{ & 18.71884 \\
+    \textbf{Text 17} & \verb{' meget s'{ & 18.39024 \\
+    \textbf{Text 22} & \verb{' meget s'{ & 18.39024 \\
+    \textbf{Text 23} & \verb{' meget s'{ & 18.39024 \\
+    \textbf{Text 27} & \verb{' meget s'{ & 18.39024 \\
+    \textbf{Text 28} & \verb{' meget s'{ & 18.39024 \\
+    \textbf{Text 30} & \verb{' meget s'{ & 18.39024 \\
+    \textbf{Text 42} & \verb{' meget s'{ & 18.39024 \\
+    \textbf{Text 46} & \verb{' meget s'{ & 18.39024 \\
+    \textbf{Text 47} & \verb{' meget s'{ & 18.39024 \\
+    \textbf{Text 36} & \verb{' benytte'{ & 18.37530 \\
+    \textbf{Text 37} & \verb{' benytte'{ & 18.37530 \\
+    \textbf{Text 40} & \verb{' benytte'{ & 18.37530 \\
+    \textbf{Text 8} & \verb{' meget n'{ & 17.72581 \\
+    \textbf{Text 16} & \verb{' meget n'{ & 17.72581 \\
+    \textbf{Text 14} & \verb{' kendt s'{ & 17.69235 \\
+    \textbf{Text 18} & \verb{' kendt s'{ & 17.69235 \\
+    \textbf{Text 7} & \verb{' meget i'{ & 17.64814 \\
+    \textbf{Text 25} & \verb{' taget g'{ & 17.53552 \\
+    \textbf{Text 1} & \verb{' blidt k'{ & 17.45398 \\
+    \textbf{Text 5} & \verb{'rkendt s'{ & 17.40653 \\
+    \textbf{Text 12} & \verb{' meget r'{ & 17.39020 \\
+    \textbf{Text 4} & \verb{' taget s'{ & 17.20692 \\
+    \textbf{Text 48} & \verb{' faldt i'{ & 17.18553 \\
+    \textbf{Text 44} & \verb{'åkaldt k'{ & 16.80688 \\
+    \textbf{Text 38} & \verb{'rne om k'{ & 16.71076 \\
+    \textbf{Text 49} & \verb{' Blod,fr'{ & 16.50881 \\
+    \textbf{Text 39} & \verb{' stolthe'{ & 16.18284 \\
+    \textbf{Text 34} & \verb{'vilket k'{ & 16.07917 \\
+    \textbf{Text 43} & \verb{'vilket k'{ & 16.07917 \\
+    \textbf{Text 41} & \verb{'vilket g'{ & 16.06541 \\
+    \textbf{Text 45} & \verb{' herefte'{ & 15.82326 \\
+    \textbf{Text 35} & \verb{'-oprette'{ & 15.73831 \\
+    \textbf{Text 31} & \verb{'rndommen'{ & 15.38827 \\
+    \textbf{Text 6} & \verb{' sendt i'{ & 15.38613 \\
+    \textbf{Text 11} & \verb{'’opret n'{ & 15.11496 \\
+    \textbf{Text 19} & \verb{'rne om f'{ & 14.34204 \\
+    \textbf{Text 2} & \verb{' betydni'{ & 13.36254 \\
+\end{tabular}
 
-\begin{table}
-    \centering
-    \textbf{Convolutional Filter 100 of Size 4}\par\medskip
-    \begin{tabular}{c|cc}
-        & \textbf{Filter Max String} & \textbf{Filter Max Value} \\ \hline
-        \textbf{Text 26} & \verb{'2.b\n'{ & 21.85127 \\
-        \textbf{Text 21} & \verb{'2.b '{ & 21.71681 \\
-        \textbf{Text 11} & \verb{'1.p\n'{ & 21.67560 \\
-        \textbf{Text 12} & \verb{'1.p\n'{ & 21.67560 \\
-        \textbf{Text 13} & \verb{'1.p\n'{ & 21.67560 \\
-        \textbf{Text 10} & \verb{'1.p '{ & 21.54113 \\
-        \textbf{Text 30} & \verb{'3.b\n'{ & 21.24523 \\
-        \textbf{Text 39} & \verb{'3.b\n'{ & 21.24523 \\
-        \textbf{Text 22} & \verb{'3.b '{ & 21.11076 \\
-        \textbf{Text 24} & \verb{'3.b '{ & 21.11076 \\
-        \textbf{Text 25} & \verb{'3.b '{ & 21.11076 \\
-        \textbf{Text 7} & \verb{'2.q\n'{ & 20.94562 \\
-        \textbf{Text 8} & \verb{'2.q\n'{ & 20.94562 \\
-        \textbf{Text 9} & \verb{'2.q\n'{ & 20.94562 \\
-        \textbf{Text 14} & \verb{'2.P '{ & 20.86743 \\
-        \textbf{Text 15} & \verb{'2.P '{ & 20.86743 \\
-        \textbf{Text 16} & \verb{'2.P '{ & 20.86743 \\
-        \textbf{Text 43} & \verb{'2.p '{ & 20.84712 \\
-        \textbf{Text 45} & \verb{'2.p '{ & 20.84712 \\
-        \textbf{Text 46} & \verb{'2.p '{ & 20.84712 \\
-        \textbf{Text 49} & \verb{' 2p,'{ & 20.06150 \\
-        \textbf{Text 23} & \verb{',.Ha'{ & 19.09561 \\
-        \textbf{Text 20} & \verb{' IB\n'{ & 18.18488 \\
-        \textbf{Text 29} & \verb{' IB\n'{ & 18.18488 \\
-        \textbf{Text 4} & \verb{' IB '{ & 18.05041 \\
-        \textbf{Text 32} & \verb{' IB '{ & 18.05041 \\
-        \textbf{Text 41} & \verb{' Ib '{ & 17.40574 \\
-        \textbf{Text 35} & \verb{' 1_ '{ & 17.25548 \\
-        \textbf{Text 47} & \verb{'2.pD'{ & 16.93160 \\
-        \textbf{Text 40} & \verb{'· H.'{ & 15.78107 \\
-        \textbf{Text 3} & \verb{', i '{ & 15.21258 \\
-        \textbf{Text 17} & \verb{', i '{ & 15.21258 \\
-        \textbf{Text 19} & \verb{', i '{ & 15.21258 \\
-        \textbf{Text 34} & \verb{', i '{ & 15.21258 \\
-        \textbf{Text 36} & \verb{', i '{ & 15.21258 \\
-        \textbf{Text 37} & \verb{', i '{ & 15.21258 \\
-        \textbf{Text 38} & \verb{', i '{ & 15.21258 \\
-        \textbf{Text 6} & \verb{' be '{ & 14.94927 \\
-        \textbf{Text 5} & \verb{'12\n\n'{ & 14.85548 \\
-        \textbf{Text 48} & \verb{'2.\n\n'{ & 14.70277 \\
-        \textbf{Text 18} & \verb{' ”J.'{ & 14.01408 \\
-        \textbf{Text 1} & \verb{'11\n\n'{ & 14.00959 \\
-        \textbf{Text 33} & \verb{', Ho'{ & 13.92996 \\
-        \textbf{Text 42} & \verb{'2 i '{ & 13.92952 \\
-        \textbf{Text 27} & \verb{'10\n\n'{ & 12.84199 \\
-        \textbf{Text 28} & \verb{'10\n\n'{ & 12.84199 \\
-        \textbf{Text 2} & \verb{' 28/'{ & 12.32219 \\
-        \textbf{Text 44} & \verb{' et '{ & 11.57521 \\
-        \textbf{Text 31} & \verb{'· Br'{ & 10.81910 \\
-    \end{tabular}
-    \caption{The most important part of the first 50 texts according to
-        convolutional filter 100 of size 4. Sorted by the importance score.}
-    \label{fig:features_convolution_4_100}
-\end{table}
+\textbf{Convolutional Filter 100 of Size 8}\par\medskip
+\begin{tabular}{c|cc}
+    & \textbf{Filter Max String} & \textbf{Filter Max Value} \\ \hline
+    \textbf{Text 20} & \verb{', at De '{ & 14.06486 \\
+    \textbf{Text 3} & \verb{', at de '{ & 13.97819 \\
+    \textbf{Text 5} & \verb{', at de '{ & 13.97819 \\
+    \textbf{Text 21} & \verb{', at de '{ & 13.97819 \\
+    \textbf{Text 24} & \verb{', at de '{ & 13.97819 \\
+    \textbf{Text 25} & \verb{', at de '{ & 13.97819 \\
+    \textbf{Text 40} & \verb{'– \nFælle'{ & 13.60728 \\
+    \textbf{Text 27} & \verb{', at der'{ & 13.18669 \\
+    \textbf{Text 32} & \verb{', at der'{ & 13.18669 \\
+    \textbf{Text 43} & \verb{', at der'{ & 13.18669 \\
+    \textbf{Text 39} & \verb{'– ”hele '{ & 12.20550 \\
+    \textbf{Text 1} & \verb{', klædt '{ & 12.14879 \\
+    \textbf{Text 10} & \verb{', havde '{ & 11.90384 \\
+    \textbf{Text 11} & \verb{', havde '{ & 11.90384 \\
+    \textbf{Text 16} & \verb{', burde '{ & 11.81674 \\
+    \textbf{Text 13} & \verb{', at vi '{ & 11.33311 \\
+    \textbf{Text 23} & \verb{', at vi '{ & 11.33311 \\
+    \textbf{Text 30} & \verb{', at vi '{ & 11.33311 \\
+    \textbf{Text 19} & \verb{'– Sorte '{ & 11.28722 \\
+    \textbf{Text 29} & \verb{'– altid '{ & 11.25181 \\
+    \textbf{Text 6} & \verb{', hf og '{ & 11.11696 \\
+    \textbf{Text 17} & \verb{', Fauli '{ & 10.95995 \\
+    \textbf{Text 4} & \verb{', IB og '{ & 10.94379 \\
+    \textbf{Text 33} & \verb{', og de '{ & 10.79599 \\
+    \textbf{Text 35} & \verb{', og de '{ & 10.79599 \\
+    \textbf{Text 48} & \verb{', og de '{ & 10.79599 \\
+    \textbf{Text 26} & \verb{', EF og '{ & 10.68619 \\
+    \textbf{Text 22} & \verb{'– eller '{ & 10.67318 \\
+    \textbf{Text 38} & \verb{'– eller '{ & 10.67318 \\
+    \textbf{Text 15} & \verb{', da de '{ & 10.57667 \\
+    \textbf{Text 9} & \verb{', fordi '{ & 10.42775 \\
+    \textbf{Text 12} & \verb{', fordi '{ & 10.42775 \\
+    \textbf{Text 18} & \verb{', grund;'{ & 10.22946 \\
+    \textbf{Text 8} & \verb{'n at de '{ & 10.03539 \\
+    \textbf{Text 34} & \verb{', at jo '{ & 10.00943 \\
+    \textbf{Text 46} & \verb{'øget og '{ & 9.95325 \\
+    \textbf{Text 28} & \verb{'– en opl'{ & 9.85135 \\
+    \textbf{Text 7} & \verb{'\n\n\nLader'{ & 9.81295 \\
+    \textbf{Text 37} & \verb{', da der'{ & 9.78517 \\
+    \textbf{Text 41} & \verb{'\n\n\nHele '{ & 9.64712 \\
+    \textbf{Text 49} & \verb{'\n\n\nHele '{ & 9.64712 \\
+    \textbf{Text 47} & \verb{', impres'{ & 9.57604 \\
+    \textbf{Text 14} & \verb{'ørte en '{ & 9.50064 \\
+    \textbf{Text 44} & \verb{', Fædrel'{ & 9.32844 \\
+    \textbf{Text 42} & \verb{', at jor'{ & 9.21792 \\
+    \textbf{Text 45} & \verb{'\n\n\n\nDet '{ & 8.97469 \\
+    \textbf{Text 36} & \verb{', og dyr'{ & 8.87270 \\
+    \textbf{Text 2} & \verb{'8/11-201'{ & 6.90774 \\
+    \textbf{Text 31} & \verb{'\n· Indle'{ & 6.84124 \\
+\end{tabular}
 
+\textbf{Convolutional Filter 100 of Size 4}\par\medskip
+\begin{tabular}{c|cc}
+    & \textbf{Filter Max String} & \textbf{Filter Max Value} \\ \hline
+    \textbf{Text 26} & \verb{'2.b\n'{ & 21.85127 \\
+    \textbf{Text 21} & \verb{'2.b '{ & 21.71681 \\
+    \textbf{Text 11} & \verb{'1.p\n'{ & 21.67560 \\
+    \textbf{Text 12} & \verb{'1.p\n'{ & 21.67560 \\
+    \textbf{Text 13} & \verb{'1.p\n'{ & 21.67560 \\
+    \textbf{Text 10} & \verb{'1.p '{ & 21.54113 \\
+    \textbf{Text 30} & \verb{'3.b\n'{ & 21.24523 \\
+    \textbf{Text 39} & \verb{'3.b\n'{ & 21.24523 \\
+    \textbf{Text 22} & \verb{'3.b '{ & 21.11076 \\
+    \textbf{Text 24} & \verb{'3.b '{ & 21.11076 \\
+    \textbf{Text 25} & \verb{'3.b '{ & 21.11076 \\
+    \textbf{Text 7} & \verb{'2.q\n'{ & 20.94562 \\
+    \textbf{Text 8} & \verb{'2.q\n'{ & 20.94562 \\
+    \textbf{Text 9} & \verb{'2.q\n'{ & 20.94562 \\
+    \textbf{Text 14} & \verb{'2.P '{ & 20.86743 \\
+    \textbf{Text 15} & \verb{'2.P '{ & 20.86743 \\
+    \textbf{Text 16} & \verb{'2.P '{ & 20.86743 \\
+    \textbf{Text 43} & \verb{'2.p '{ & 20.84712 \\
+    \textbf{Text 45} & \verb{'2.p '{ & 20.84712 \\
+    \textbf{Text 46} & \verb{'2.p '{ & 20.84712 \\
+    \textbf{Text 49} & \verb{' 2p,'{ & 20.06150 \\
+    \textbf{Text 23} & \verb{',.Ha'{ & 19.09561 \\
+    \textbf{Text 20} & \verb{' IB\n'{ & 18.18488 \\
+    \textbf{Text 29} & \verb{' IB\n'{ & 18.18488 \\
+    \textbf{Text 4} & \verb{' IB '{ & 18.05041 \\
+    \textbf{Text 32} & \verb{' IB '{ & 18.05041 \\
+    \textbf{Text 41} & \verb{' Ib '{ & 17.40574 \\
+    \textbf{Text 35} & \verb{' 1_ '{ & 17.25548 \\
+    \textbf{Text 47} & \verb{'2.pD'{ & 16.93160 \\
+    \textbf{Text 40} & \verb{'· H.'{ & 15.78107 \\
+    \textbf{Text 3} & \verb{', i '{ & 15.21258 \\
+    \textbf{Text 17} & \verb{', i '{ & 15.21258 \\
+    \textbf{Text 19} & \verb{', i '{ & 15.21258 \\
+    \textbf{Text 34} & \verb{', i '{ & 15.21258 \\
+    \textbf{Text 36} & \verb{', i '{ & 15.21258 \\
+    \textbf{Text 37} & \verb{', i '{ & 15.21258 \\
+    \textbf{Text 38} & \verb{', i '{ & 15.21258 \\
+    \textbf{Text 6} & \verb{' be '{ & 14.94927 \\
+    \textbf{Text 5} & \verb{'12\n\n'{ & 14.85548 \\
+    \textbf{Text 48} & \verb{'2.\n\n'{ & 14.70277 \\
+    \textbf{Text 18} & \verb{' ”J.'{ & 14.01408 \\
+    \textbf{Text 1} & \verb{'11\n\n'{ & 14.00959 \\
+    \textbf{Text 33} & \verb{', Ho'{ & 13.92996 \\
+    \textbf{Text 42} & \verb{'2 i '{ & 13.92952 \\
+    \textbf{Text 27} & \verb{'10\n\n'{ & 12.84199 \\
+    \textbf{Text 28} & \verb{'10\n\n'{ & 12.84199 \\
+    \textbf{Text 2} & \verb{' 28/'{ & 12.32219 \\
+    \textbf{Text 44} & \verb{' et '{ & 11.57521 \\
+    \textbf{Text 31} & \verb{'· Br'{ & 10.81910 \\
+\end{tabular}
+
+
+\subsection{Teacher Feedback Text Comparisons}
+\label{subsec:teacher_feedback_text_comparisons}
+
+{
+\small
+\begin{verbatim}
+CANDIDATE AUTHORS TEXT 1
+filter 426      text1 '; ”Hvis '        text2 '. Et kla'        value1 2.82     value2 4.57
+filter 71       text1 'dem; Nia'        text2 'der skri'        value1 4.64     value2 3.16
+filter 549      text1 '. Jeg vi'        text2 '. Her is'        value1 2.61     value2 4.02
+filter 288      text1 ' 2 af 2\n'       text2 'og refle'        value1 4.90     value2 3.53
+filter 496      text1 ' udseend'        text2 'vad litt'        value1 2.78     value2 4.12
+filter 33       text1 'et sind.'        text2 'risning,'        value1 3.05     value2 4.36
+filter 460      text1 ' 2 af 2\n'       text2 ' krig og'        value1 3.69     value2 2.43
+filter 514      text1 ', derfor'        text2 ', i forb'        value1 3.82     value2 5.06
+filter 531      text1 ' om, for'        text2 ' om, hva'        value1 4.64     value2 5.84
+filter 458      text1 'Derudove'        text2 'derfor b'        value1 4.31     value2 3.13
+
+filter 261      text1 '.\n\n\n'         text2 '– de'            value1 1.72     value2 2.70
+filter 484      text1 'lv; '            text2 ' dét'            value1 2.02     value2 2.96
+filter 17       text1 'st ”'            text2 'gt; '            value1 2.57     value2 3.45
+filter 145      text1 'ndet'            text2 ' Det'            value1 2.37     value2 3.25
+filter 299      text1 'osse'            text2 '– de'            value1 3.12     value2 3.98
+filter 477      text1 'f 2\n'           text2 'v og'            value1 3.05     value2 2.20
+filter 421      text1 ' 13.'            text2 ' vel'            value1 3.03     value2 2.19
+filter 434      text1 'am; '            text2 ' dét'            value1 1.18     value2 2.00
+filter 27       text1 'n to'            text2 'Dett'            value1 2.20     value2 2.99
+filter 445      text1 ' om,'            text2 ' – S'            value1 2.51     value2 3.27
+
+CANDIDATE AUTHORS TEXT 2
+filter 328      text1 'n. Om de'        text2 ' hvor de'        value1 3.48     value2 4.87
+filter 225      text1 'r 2004, '        text2 'er i fok'        value1 4.43     value2 3.04
+filter 138      text1 'nge one '        text2 '\n\nDette '      value1 3.02     value2 4.37
+filter 231      text1 'oget at '        text2 'il dette'        value1 3.36     value2 4.69
+filter 33       text1 'rostitue'        text2 'risning,'        value1 3.05     value2 4.36
+filter 467      text1 '!\n\nBragt'      text2 '.\n\nNår j'      value1 2.48     value2 3.79
+filter 332      text1 ' sådan n'        text2 ' derfor '        value1 2.73     value2 4.02
+filter 293      text1 'det ikke'        text2 'm. Dette'        value1 3.43     value2 4.71
+filter 524      text1 'istisk, '        text2 '. Denne '        value1 2.70     value2 3.93
+filter 669      text1 'ange, Hv'        text2 'r om, hv'        value1 4.66     value2 5.88
+
+filter 261      text1 'm de'            text2 '– de'            value1 1.64     value2 2.70
+filter 421      text1 ' 20.'            text2 ' vel'            value1 3.24     value2 2.19
+filter 434      text1 ' som'            text2 ' dét'            value1 0.98     value2 2.00
+filter 484      text1 'ne!\n'           text2 ' dét'            value1 1.95     value2 2.96
+filter 283      text1 ' L.O'            text2 ' dét'            value1 1.66     value2 2.61
+filter 301      text1 '!\n\nB'          text2 '; al'            value1 2.18     value2 3.12
+filter 9        text1 '. ek'            text2 '; en'            value1 2.08     value2 3.01
+filter 400      text1 're. '            text2 '"". '            value1 2.08     value2 2.99
+filter 17       text1 'rn!”'            text2 'gt; '            value1 2.59     value2 3.45
+filter 180      text1 'L4\n.'           text2 'blot'            value1 2.02     value2 2.81
+
+CANDIDATE AUTHORS TEXT 3
+filter 531      text1 'ød”, i s'        text2 ' om, hva'        value1 4.39     value2 5.84
+filter 33       text1 'rfaringe'        text2 'risning,'        value1 3.04     value2 4.36
+filter 255      text1 '\n\n\n\nI de'    text2 'es sagde'        value1 3.77     value2 2.48
+filter 426      text1 'l Ekstra'        text2 '. Et kla'        value1 3.30     value2 4.57
+filter 293      text1 'vi måtte'        text2 'm. Dette'        value1 3.50     value2 4.71
+filter 651      text1 'e år. De'        text2 ', men de'        value1 2.66     value2 3.82
+filter 496      text1 'med ondt'        text2 'vad litt'        value1 3.00     value2 4.12
+filter 356      text1 ' lidt bl'        text2 'g, at li'        value1 3.73     value2 4.84
+filter 549      text1 '. Med ha'        text2 '. Her is'        value1 2.91     value2 4.02
+filter 38       text1 '\n.\n\n\n\nI '   text2 '.\n\nOg de'      value1 4.18     value2 3.07
+
+filter 17       text1 'gt r'            text2 'gt; '            value1 2.46     value2 3.45
+filter 326      text1 ' 90’'            text2 ' spæ'            value1 2.44     value2 1.52
+filter 421      text1 ' 18\n'           text2 ' vel'            value1 3.07     value2 2.19
+filter 47       text1 '\n\n”D'          text2 'eg”.'            value1 2.67     value2 1.84
+filter 248      text1 '80’e'            text2 'o - '            value1 2.86     value2 2.09
+filter 400      text1 'le. '            text2 '"". '            value1 2.24     value2 2.99
+filter 261      text1 '– 34'            text2 '– de'            value1 1.95     value2 2.70
+filter 254      text1 'tos;'            text2 'tså.'            value1 2.38     value2 1.65
+filter 134      text1 '.\n\n”'          text2 '.\n\nV'          value1 3.13     value2 3.86
+filter 270      text1 'endt'            text2 '?\n\nL'          value1 2.05     value2 2.76
+
+CANDIDATE AUTHORS TEXT 4
+filter 9        text1 'den. I N'        text2 '. F.eks.'        value1 2.89     value2 4.73
+filter 426      text1 '. Vampyr'        text2 '. Et kla'        value1 2.84     value2 4.57
+filter 504      text1 ', beordr'        text2 ', hvorda'        value1 3.60     value2 4.85
+filter 566      text1 'har her,'        text2 'llerier,'        value1 4.40     value2 3.22
+filter 531      text1 'ede, mos'        text2 ' om, hva'        value1 4.70     value2 5.84
+filter 533      text1 'en, for '        text2 'il, ford'        value1 2.83     value2 3.95
+filter 549      text1 '. Jeg er'        text2 '. Her is'        value1 2.92     value2 4.02
+filter 224      text1 'nden, og'        text2 'ddel, de'        value1 4.03     value2 2.94
+filter 698      text1 'ide 12, '        text2 'iver lit'        value1 4.70     value2 3.64
+filter 562      text1 'eg, derf'        text2 'od, det '        value1 5.22     value2 4.17
+
+filter 301      text1 '? He'            text2 '; al'            value1 1.88     value2 3.12
+filter 421      text1 ' 12,'            text2 ' vel'            value1 3.22     value2 2.19
+filter 17       text1 'gt.\n'           text2 'gt; '            value1 2.61     value2 3.45
+filter 434      text1 'otom'            text2 ' dét'            value1 1.18     value2 2.00
+filter 364      text1 'it –'            text2 'gt; '            value1 1.87     value2 2.66
+filter 121      text1 '– li'            text2 'ét d'            value1 1.74     value2 2.50
+filter 248      text1 'yx’s'            text2 'o - '            value1 2.85     value2 2.09
+filter 283      text1 'og!\n'           text2 ' dét'            value1 1.86     value2 2.61
+filter 315      text1 ' and'            text2 ' - D'            value1 2.43     value2 3.18
+filter 266      text1 ' gen'            text2 ' ""f'            value1 2.26     value2 2.99
+
+CANDIDATE AUTHORS TEXT 5
+filter 649      text1 'r; ” – O'        text2 's; enten'        value1 4.98     value2 3.61
+filter 582      text1 'ed ved h'        text2 ' dem.\n\nV'      value1 2.53     value2 3.89
+filter 467      text1 'ed en fo'        text2 '.\n\nNår j'      value1 2.48     value2 3.79
+filter 577      text1 'ika, da '        text2 'kke, og '        value1 4.95     value2 3.74
+filter 549      text1 '. Jeg ha'        text2 '. Her is'        value1 2.84     value2 4.02
+filter 142      text1 'onen ” –'        text2 'gtet ”Bo'        value1 4.04     value2 2.87
+filter 608      text1 'ka, da d'        text2 'ed, oprø'        value1 5.82     value2 4.66
+filter 496      text1 'synsvink'        text2 'vad litt'        value1 2.96     value2 4.12
+filter 511      text1 ' går han'        text2 'ordi at '        value1 3.07     value2 4.21
+filter 586      text1 ' vi se, '        text2 'nne se, '        value1 4.87     value2 3.73
+
+filter 339      text1 't ’k'            text2 ', væ'            value1 3.49     value2 2.20
+filter 326      text1 'vet’'            text2 ' spæ'            value1 2.52     value2 1.52
+filter 248      text1 't ’k'            text2 'o - '            value1 3.08     value2 2.09
+filter 283      text1 'en; '            text2 ' dét'            value1 1.74     value2 2.61
+filter 270      text1 '? Sp'            text2 '?\n\nL'          value1 1.90     value2 2.76
+filter 421      text1 ' 192'            text2 ' vel'            value1 3.02     value2 2.19
+filter 448      text1 'at ’'            text2 'at s'            value1 4.00     value2 3.17
+filter 86       text1 'medf'            text2 ' udv'            value1 2.06     value2 2.88
+filter 434      text1 'at; '            text2 ' dét'            value1 1.18     value2 2.00
+filter 180      text1 'hedt'            text2 'blot'            value1 2.08     value2 2.81
+
+CANDIDATE AUTHORS TEXT 6
+filter 595      text1 '. [7: De'        text2 'n altså '        value1 4.98     value2 3.15
+filter 85       text1 '\n\nMen fo'      text2 '\n\nNår je'      value1 2.19     value2 3.72
+filter 549      text1 'eller ef'        text2 '. Her is'        value1 2.58     value2 4.02
+filter 426      text1 '. Italie'        text2 '. Et kla'        value1 3.33     value2 4.57
+filter 15       text1 'r sammen'        text2 'e samt e'        value1 3.13     value2 4.37
+filter 667      text1 ' at dere'        text2 'er.\n\nOve'      value1 2.40     value2 3.62
+filter 242      text1 'r som ”R'        text2 ', som st'        value1 3.16     value2 4.36
+filter 130      text1 'f:7]”, h'        text2 'mål?”\n\nJ'      value1 4.37     value2 3.20
+filter 507      text1 're som e'        text2 'r, som b'        value1 3.01     value2 4.17
+filter 19       text1 'rden, og'        text2 'rakt, og'        value1 3.66     value2 4.77
+
+filter 432      text1 '“, d'            text2 '-, n'            value1 3.39     value2 1.82
+filter 301      text1 'r de'            text2 '; al'            value1 1.76     value2 3.12
+filter 421      text1 ' 5,7'            text2 ' vel'            value1 3.24     value2 2.19
+filter 283      text1 'gt. '            text2 ' dét'            value1 1.58     value2 2.61
+filter 434      text1 'ddom'            text2 ' dét'            value1 1.04     value2 2.00
+filter 204      text1 'yn“,'            text2 'od, '            value1 3.05     value2 2.17
+filter 484      text1 'o – '            text2 ' dét'            value1 2.07     value2 2.96
+filter 287      text1 'dt, '            text2 'dage'            value1 1.92     value2 2.78
+filter 17       text1 'gt. '            text2 'gt; '            value1 2.60     value2 3.45
+filter 31       text1 '[7: '            text2 'dlev'            value1 2.55     value2 1.71
+
+CANDIDATE AUTHORS TEXT 7
+filter 9        text1 'ret. Hvo'        text2 '. F.eks.'        value1 3.11     value2 4.73
+filter 531      text1 ' på, at '        text2 ' om, hva'        value1 4.42     value2 5.84
+filter 85       text1 '\n\nTing s'      text2 '\n\nNår je'      value1 2.32     value2 3.72
+filter 156      text1 'fter.\n\nS'      text2 'gøre.\n\nN'      value1 2.77     value2 4.04
+filter 543      text1 'd de and'        text2 't senmod'        value1 4.19     value2 2.94
+filter 452      text1 'e at ele'        text2 ', hvilke'        value1 3.72     value2 4.96
+filter 549      text1 '. besøg '        text2 '. Her is'        value1 2.80     value2 4.02
+filter 695      text1 'opgave, '        text2 'digt er '        value1 2.75     value2 3.95
+filter 577      text1 'yld, da '        text2 'kke, og '        value1 4.92     value2 3.74
+filter 350      text1 'n, som p'        text2 'et som v'        value1 4.70     value2 5.83
+
+filter 301      text1 '? Sp'            text2 '; al'            value1 1.82     value2 3.12
+filter 283      text1 'nd. '            text2 ' dét'            value1 1.50     value2 2.61
+filter 421      text1 ' 2]\n'           text2 ' vel'            value1 3.25     value2 2.19
+filter 17       text1 'fter'            text2 'gt; '            value1 2.44     value2 3.45
+filter 388      text1 'r 1 '            text2 'r ve'            value1 2.84     value2 1.93
+filter 326      text1 '1] ['            text2 ' spæ'            value1 2.28     value2 1.52
+filter 400      text1 'le. '            text2 '"". '            value1 2.24     value2 2.99
+filter 476      text1 'én l'            text2 '; Hv'            value1 2.11     value2 2.86
+filter 2        text1 'l.a.'            text2 'dem.'            value1 2.21     value2 1.47
+filter 9        text1 'e ”D'            text2 '; en'            value1 2.29     value2 3.01
+
+CANDIDATE AUTHORS TEXT 8
+filter 531      text1 ' af, og '        text2 ' om, hva'        value1 4.28     value2 5.84
+filter 545      text1 ' 47\n, og'       text2 'er i, og'        value1 5.82     value2 4.47
+filter 467      text1 'e, for d'        text2 '.\n\nNår j'      value1 2.46     value2 3.79
+filter 239      text1 'er.\n\nDet'      text2 'et.\n\nDet'      value1 3.02     value2 4.34
+filter 549      text1 '. For hv'        text2 '. Her is'        value1 2.74     value2 4.02
+filter 601      text1 ' 5-7\n. H'       text2 ' og en s'        value1 4.02     value2 2.77
+filter 288      text1 ' 1 af 2\n'       text2 'og refle'        value1 4.78     value2 3.53
+filter 656      text1 'o return'        text2 'r altså '        value1 3.37     value2 4.62
+filter 15       text1 'a maatte'        text2 'e samt e'        value1 3.12     value2 4.37
+filter 460      text1 ' 1 af 2\n'       text2 ' krig og'        value1 3.66     value2 2.43
+
+filter 421      text1 ' 20-'            text2 ' vel'            value1 3.40     value2 2.19
+filter 301      text1 '… Og'            text2 '; al'            value1 2.05     value2 3.12
+filter 248      text1 'li’e'            text2 'o - '            value1 3.07     value2 2.09
+filter 17       text1 'st. '            text2 'gt; '            value1 2.50     value2 3.45
+filter 121      text1 '.\n\nD'          text2 'ét d'            value1 1.60     value2 2.50
+filter 477      text1 'f 2\n'           text2 'v og'            value1 3.05     value2 2.20
+filter 458      text1 '-.20'            text2 'g. E'            value1 2.92     value2 2.09
+filter 484      text1 'g – '            text2 ' dét'            value1 2.14     value2 2.96
+filter 434      text1 'rsom'            text2 ' dét'            value1 1.20     value2 2.00
+filter 146      text1 '.\n\nK'          text2 '.\n\nV'          value1 2.80     value2 3.59
+
+CANDIDATE AUTHORS TEXT 9
+filter 426      text1 '. [6: Si'        text2 '. Et kla'        value1 3.25     value2 4.57
+filter 266      text1 ' lånt.\n\n'      text2 ' ufødt”.'        value1 4.50     value2 3.28
+filter 458      text1 'Derudove'        text2 'derfor b'        value1 4.31     value2 3.13
+filter 130      text1 'f:7]”, h'        text2 'mål?”\n\nJ'      value1 4.37     value2 3.20
+filter 288      text1 ' 5 af 6\n'       text2 'og refle'        value1 4.66     value2 3.53
+filter 173      text1 '. Selvom'        text2 'åde, som'        value1 4.08     value2 2.97
+filter 344      text1 'nemlig i'        text2 'merlige '        value1 4.69     value2 3.59
+filter 224      text1 'nden, og'        text2 'ddel, de'        value1 4.03     value2 2.94
+filter 8        text1 '.eks. ro'        text2 'llige fo'        value1 4.77     value2 3.69
+filter 687      text1 'orov’s d'        text2 ' i spænd'        value1 3.92     value2 2.85
+
+filter 127      text1 'rov’'            text2 'idsk'            value1 3.29     value2 1.90
+filter 421      text1 ' 27-'            text2 ' vel'            value1 3.40     value2 2.19
+filter 388      text1 'r 7 '            text2 'r ve'            value1 2.91     value2 1.93
+filter 31       text1 '[7: '            text2 'dlev'            value1 2.55     value2 1.71
+filter 428      text1 '-2 –'            text2 'skri'            value1 2.67     value2 1.88
+filter 477      text1 'f 6\n'           text2 'v og'            value1 2.97     value2 2.20
+filter 95       text1 'hé, '            text2 'på, '            value1 3.99     value2 3.24
+filter 9        text1 'e ”h'            text2 '; en'            value1 2.28     value2 3.01
+filter 248      text1 'ov’s'            text2 'o - '            value1 2.82     value2 2.09
+filter 167      text1 '”sam'            text2 '”\n\nJ'          value1 1.48     value2 2.20
+
+CANDIDATE AUTHORS TEXT 10
+filter 288      text1 ' 2 af 2\n'       text2 'og refle'        value1 4.90     value2 3.53
+filter 426      text1 '. En gæl'        text2 '. Et kla'        value1 3.28     value2 4.57
+filter 460      text1 ' 2 af 2\n'       text2 ' krig og'        value1 3.69     value2 2.43
+filter 156      text1 'ning.\n\nJ'      text2 'gøre.\n\nN'      value1 2.80     value2 4.04
+filter 467      text1 'ens, der'        text2 '.\n\nNår j'      value1 2.56     value2 3.79
+filter 19       text1 'ring, og'        text2 'rakt, og'        value1 3.59     value2 4.77
+filter 314      text1 'kke, for'        text2 'ed.\n\nFor'      value1 2.51     value2 3.69
+filter 293      text1 'ng dette'        text2 'm. Dette'        value1 3.53     value2 4.71
+filter 242      text1 ', som en'        text2 ', som st'        value1 3.25     value2 4.36
+filter 344      text1 'nemlig c'        text2 'merlige '        value1 4.70     value2 3.59
+
+filter 484      text1 'me! '            text2 ' dét'            value1 1.80     value2 2.96
+filter 301      text1 '! De'            text2 '; al'            value1 2.00     value2 3.12
+filter 421      text1 ' 27.'            text2 ' vel'            value1 3.23     value2 2.19
+filter 326      text1 ' FN’'            text2 ' spæ'            value1 2.55     value2 1.52
+filter 283      text1 ' F.e'            text2 ' dét'            value1 1.64     value2 2.61
+filter 261      text1 '. de'            text2 '– de'            value1 1.73     value2 2.70
+filter 17       text1 'st. '            text2 'gt; '            value1 2.50     value2 3.45
+filter 121      text1 '.\n\nD'          text2 'ét d'            value1 1.60     value2 2.50
+filter 477      text1 'f 2\n'           text2 'v og'            value1 3.05     value2 2.20
+filter 77       text1 't la'            text2 '– Sa'            value1 2.04     value2 2.87
+
+CANDIDATE AUTHORS TEXT 11
+filter 577      text1 ' ud, da '        text2 'kke, og '        value1 5.16     value2 3.74
+filter 130      text1 'til ”det'        text2 'mål?”\n\nJ'      value1 4.58     value2 3.20
+filter 460      text1 ' 1 af 1\n'       text2 ' krig og'        value1 3.74     value2 2.43
+filter 259      text1 'Ref:17].'        text2 'm kultur'        value1 4.21     value2 2.95
+filter 288      text1 ' 1 af 1\n'       text2 'og refle'        value1 4.75     value2 3.53
+filter 153      text1 '.\n\nHans '      text2 '.\n\nDette'      value1 4.07     value2 2.91
+filter 186      text1 't?”[foot'        text2 'roblemst'        value1 4.64     value2 3.52
+filter 224      text1 'nden, og'        text2 'ddel, de'        value1 4.03     value2 2.94
+filter 467      text1 'ing, der'        text2 '.\n\nNår j'      value1 2.73     value2 3.79
+filter 546      text1 'Samtidig'        text2 'hvilket '        value1 4.35     value2 3.30
+
+filter 421      text1 ' 2]\n'           text2 ' vel'            value1 3.25     value2 2.19
+filter 301      text1 '! Ej'            text2 '; al'            value1 2.13     value2 3.12
+filter 283      text1 ' s. '            text2 ' dét'            value1 1.71     value2 2.61
+filter 477      text1 'f 1\n'           text2 'v og'            value1 3.08     value2 2.20
+filter 31       text1 '[7: '            text2 'dlev'            value1 2.55     value2 1.71
+filter 77       text1 't la'            text2 '– Sa'            value1 2.04     value2 2.87
+filter 261      text1 '– Kr'            text2 '– de'            value1 1.91     value2 2.70
+filter 280      text1 'e!”,'            text2 'ere,'            value1 3.61     value2 2.83
+filter 434      text1 'ro!”'            text2 ' dét'            value1 1.23     value2 2.00
+filter 326      text1 '1] ['            text2 ' spæ'            value1 2.28     value2 1.52
+
+CANDIDATE AUTHORS TEXT 12
+filter 426      text1 '. [1: Hi'        text2 '. Et kla'        value1 2.84     value2 4.57
+filter 515      text1 'idler\n\nI'      text2 'n, fordi'        value1 2.43     value2 3.89
+filter 19       text1 'elte, og'        text2 'rakt, og'        value1 3.31     value2 4.77
+filter 429      text1 '2\n\n\n\nSid'    text2 'n og lad'        value1 4.72     value2 3.33
+filter 81       text1 ' er mege'        text2 'ser sig,'        value1 3.66     value2 4.96
+filter 370      text1 ':1]. [1:'        text2 'kinen” a'        value1 5.18     value2 3.91
+filter 646      text1 'e\n\n\n\nOs '    text2 ', vores '        value1 4.24     value2 2.98
+filter 288      text1 ' 1 af 2\n'       text2 'og refle'        value1 4.78     value2 3.53
+filter 514      text1 ', derfor'        text2 ', i forb'        value1 3.82     value2 5.06
+filter 460      text1 ' 1 af 2\n'       text2 ' krig og'        value1 3.66     value2 2.43
+
+filter 421      text1 ' 2.t'            text2 ' vel'            value1 3.48     value2 2.19
+filter 248      text1 'ir’ '            text2 'o - '            value1 3.10     value2 2.09
+filter 326      text1 ' ik’'            text2 ' spæ'            value1 2.51     value2 1.52
+filter 403      text1 ' \n7\n'          text2 '\n\nOg'          value1 2.46     value2 1.52
+filter 310      text1 '’\n\nV'          text2 't; B'            value1 3.04     value2 2.11
+filter 91       text1 '2.t '            text2 'n.\n\n'          value1 2.90     value2 1.99
+filter 9        text1 '\n\nVi'          text2 '; en'            value1 2.13     value2 3.01
+filter 261      text1 'ir’ '            text2 '– de'            value1 1.83     value2 2.70
+filter 477      text1 'f 2\n'           text2 'v og'            value1 3.05     value2 2.20
+filter 301      text1 '!\n\nO'          text2 '; al'            value1 2.27     value2 3.12
+
+CANDIDATE AUTHORS TEXT 13
+filter 467      text1 'e, så bå'        text2 '.\n\nNår j'      value1 2.31     value2 3.79
+filter 533      text1 't de ond'        text2 'il, ford'        value1 2.60     value2 3.95
+filter 549      text1 '. Medlem'        text2 '. Her is'        value1 2.68     value2 4.02
+filter 288      text1 ' 1 af 2\n'       text2 'og refle'        value1 4.78     value2 3.53
+filter 359      text1 ', men Da'        text2 '\n\nJeg kø'      value1 2.83     value2 4.08
+filter 371      text1 'lde har '        text2 'etue af '        value1 4.35     value2 5.59
+filter 460      text1 ' 1 af 2\n'       text2 ' krig og'        value1 3.66     value2 2.43
+filter 652      text1 ' tale: ”'        text2 ' hele? –'        value1 4.56     value2 5.79
+filter 452      text1 ' 90’erne'        text2 ', hvilke'        value1 3.75     value2 4.96
+filter 667      text1 'um.\n\n\n\nS'    text2 'er.\n\nOve'      value1 2.41     value2 3.62
+
+filter 301      text1 'r de'            text2 '; al'            value1 1.76     value2 3.12
+filter 421      text1 ' 22-'            text2 ' vel'            value1 3.35     value2 2.19
+filter 17       text1 'fter'            text2 'gt; '            value1 2.44     value2 3.45
+filter 434      text1 'os –'            text2 ' dét'            value1 1.03     value2 2.00
+filter 326      text1 '980’'            text2 ' spæ'            value1 2.47     value2 1.52
+filter 248      text1 '80’ '            text2 'o - '            value1 2.97     value2 2.09
+filter 9        text1 'e ”N'            text2 '; en'            value1 2.15     value2 3.01
+filter 477      text1 'f 2\n'           text2 'v og'            value1 3.05     value2 2.20
+filter 484      text1 's – '            text2 ' dét'            value1 2.10     value2 2.96
+filter 31       text1 '[7: '            text2 'dlev'            value1 2.55     value2 1.71
+
+CANDIDATE AUTHORS TEXT 14
+filter 537      text1 ',22-2,46'        text2 'el på, h'        value1 6.27     value2 4.38
+filter 84       text1 '2011. TV'        text2 'tur – de'        value1 4.89     value2 3.62
+filter 239      text1 ',23-24 s'        text2 'et.\n\nDet'      value1 3.08     value2 4.34
+filter 288      text1 ' 1 af 2\n'       text2 'og refle'        value1 4.78     value2 3.53
+filter 460      text1 ' 1 af 2\n'       text2 ' krig og'        value1 3.66     value2 2.43
+filter 225      text1 '[16: 2,2'        text2 'er i fok'        value1 4.23     value2 3.04
+filter 577      text1 'var, da '        text2 'kke, og '        value1 4.93     value2 3.74
+filter 130      text1 'f:7]”, h'        text2 'mål?”\n\nJ'      value1 4.37     value2 3.20
+filter 173      text1 '. Selvom'        text2 'åde, som'        value1 4.08     value2 2.97
+filter 344      text1 'nemlig i'        text2 'merlige '        value1 4.69     value2 3.59
+
+filter 301      text1 'r de'            text2 '; al'            value1 1.76     value2 3.12
+filter 421      text1 ' 2,2'            text2 ' vel'            value1 3.49     value2 2.19
+filter 127      text1 'is’s'            text2 'idsk'            value1 2.95     value2 1.90
+filter 326      text1 ' SU’'            text2 ' spæ'            value1 2.53     value2 1.52
+filter 248      text1 'is’ '            text2 'o - '            value1 3.05     value2 2.09
+filter 434      text1 ' dok'            text2 ' dét'            value1 1.06     value2 2.00
+filter 388      text1 'TV2 '            text2 'r ve'            value1 2.80     value2 1.93
+filter 477      text1 'f 2\n'           text2 'v og'            value1 3.05     value2 2.20
+filter 17       text1 'gt. '            text2 'gt; '            value1 2.60     value2 3.45
+filter 31       text1 '[7: '            text2 'dlev'            value1 2.55     value2 1.71
+
+CANDIDATE AUTHORS TEXT 15
+filter 277      text1 't”\n\nSide'      text2 'ten vise'        value1 4.72     value2 3.03
+filter 454      text1 '\n\n\n 3.t '     text2 'der udtr'        value1 4.91     value2 3.57
+filter 173      text1 '\n\nSelvom'      text2 'åde, som'        value1 4.31     value2 2.97
+filter 288      text1 ' 4 af 4\n'       text2 'og refle'        value1 4.83     value2 3.53
+filter 577      text1 ' år, da '        text2 'kke, og '        value1 5.05     value2 3.74
+filter 460      text1 ' 2 af 4\n'       text2 ' krig og'        value1 3.70     value2 2.43
+filter 143      text1 'ner” \ns.'       text2 'iver \nme'       value1 4.69     value2 3.41
+filter 543      text1 'd de and'        text2 't senmod'        value1 4.19     value2 2.94
+filter 81       text1 'der, læg'        text2 'ser sig,'        value1 3.83     value2 4.96
+filter 177      text1 's\n\n\n\n 3.'    text2 ' og kult'        value1 4.12     value2 2.99
+
+filter 421      text1 ' 20-'            text2 ' vel'            value1 3.40     value2 2.19
+filter 425      text1 'å.” '            text2 ' På '            value1 2.66     value2 1.66
+filter 248      text1 'rs’ '            text2 'o - '            value1 3.06     value2 2.09
+filter 301      text1 'rs’ '            text2 '; al'            value1 2.16     value2 3.12
+filter 17       text1 'gt. '            text2 'gt; '            value1 2.60     value2 3.45
+filter 400      text1 'ne. '            text2 '"". '            value1 2.15     value2 2.99
+filter 91       text1 '3.t '            text2 'n.\n\n'          value1 2.82     value2 1.99
+filter 477      text1 'f 4\n'           text2 'v og'            value1 3.02     value2 2.20
+filter 149      text1 'te –'            text2 'af i'            value1 3.72     value2 2.95
+filter 9        text1 '\nget'           text2 '; en'            value1 2.29     value2 3.01
+
+CANDIDATE AUTHORS TEXT 16
+filter 646      text1 '.\n\n\n\nEmi'    text2 ', vores '        value1 4.81     value2 2.98
+filter 9        text1 'det, hvo'        text2 '. F.eks.'        value1 3.02     value2 4.73
+filter 426      text1 '.4\n. Læs'       text2 '. Et kla'        value1 3.06     value2 4.57
+filter 429      text1 'n\n\n· Skø'      text2 'n og lad'        value1 4.84     value2 3.33
+filter 460      text1 ' 1 af 1\n'       text2 ' krig og'        value1 3.74     value2 2.43
+filter 549      text1 'løber ud'        text2 '. Her is'        value1 2.78     value2 4.02
+filter 347      text1 'ofe 17: '        text2 'ivielle '        value1 4.90     value2 3.66
+filter 288      text1 ' 1 af 1\n'       text2 'og refle'        value1 4.75     value2 3.53
+filter 15       text1 's samtid'        text2 'e samt e'        value1 3.16     value2 4.37
+filter 81       text1 'ver mege'        text2 'ser sig,'        value1 3.80     value2 4.96
+
+filter 301      text1 'r de'            text2 '; al'            value1 1.76     value2 3.12
+filter 421      text1 ' 2+4'            text2 ' vel'            value1 3.43     value2 2.19
+filter 484      text1 'å\n.\n'          text2 ' dét'            value1 1.85     value2 2.96
+filter 434      text1 ' som'            text2 ' dét'            value1 0.98     value2 2.00
+filter 458      text1 'v.4\n'           text2 'g. E'            value1 3.06     value2 2.09
+filter 445      text1 ' 11:'            text2 ' – S'            value1 2.34     value2 3.27
+filter 261      text1 ' \ns.'           text2 '– de'            value1 1.78     value2 2.70
+filter 77       text1 ': Sk'            text2 '– Sa'            value1 1.95     value2 2.87
+filter 477      text1 'f 1\n'           text2 'v og'            value1 3.08     value2 2.20
+filter 9        text1 '\n\nVi'          text2 '; en'            value1 2.13     value2 3.01
+
+CANDIDATE AUTHORS TEXT 17
+filter 460      text1 ' 1 af 1\n'       text2 ' krig og'        value1 3.74     value2 2.43
+filter 288      text1 ' 1 af 1\n'       text2 'og refle'        value1 4.75     value2 3.53
+filter 213      text1 '”, dette'        text2 'r, genke'        value1 4.78     value2 3.64
+filter 344      text1 'nemlig i'        text2 'merlige '        value1 4.69     value2 3.59
+filter 467      text1 'ing, der'        text2 '.\n\nNår j'      value1 2.73     value2 3.79
+filter 546      text1 'Samtidig'        text2 'hvilket '        value1 4.35     value2 3.30
+filter 543      text1 'g de and'        text2 't senmod'        value1 3.99     value2 2.94
+filter 33       text1 'dig med,'        text2 'risning,'        value1 3.33     value2 4.36
+filter 421      text1 '. Desude'        text2 'e; Hvad '        value1 4.23     value2 3.21
+filter 676      text1 '. Samtid'        text2 '\n\nSamfun'      value1 3.01     value2 4.01
+
+filter 261      text1 '.\n\n\n'         text2 '– de'            value1 1.72     value2 2.70
+filter 421      text1 ' 22\n'           text2 ' vel'            value1 3.17     value2 2.19
+filter 477      text1 'f 1\n'           text2 'v og'            value1 3.08     value2 2.20
+filter 2        text1 'l.a.'            text2 'dem.'            value1 2.21     value2 1.47
+filter 283      text1 ' - K'            text2 ' dét'            value1 1.95     value2 2.61
+filter 270      text1 '.\n\nH'          text2 '?\n\nL'          value1 2.10     value2 2.76
+filter 162      text1 'n, ”'            text2 'n, f'            value1 3.00     value2 2.35
+filter 445      text1 ' én '            text2 ' – S'            value1 2.66     value2 3.27
+filter 134      text1 '. Di'            text2 '.\n\nV'          value1 3.25     value2 3.86
+filter 227      text1 'F.ek'            text2 't"".'            value1 1.96     value2 2.57
+
+CANDIDATE AUTHORS TEXT 18
+filter 288      text1 ' 1 af 2\n'       text2 'og refle'        value1 4.78     value2 3.53
+filter 460      text1 ' 1 af 2\n'       text2 ' krig og'        value1 3.66     value2 2.43
+filter 303      text1 'ter”, ”s'        text2 'bedre fo'        value1 4.79     value2 3.59
+filter 59       text1 ': ”Ford,'        text2 'evelsen,'        value1 5.00     value2 3.83
+filter 344      text1 'nemlig b'        text2 'merlige '        value1 4.70     value2 3.59
+filter 300      text1 'pil. I s'        text2 'sme. Han'        value1 3.57     value2 4.65
+filter 546      text1 'Samtidig'        text2 'hvilket '        value1 4.35     value2 3.30
+filter 543      text1 'g de and'        text2 't senmod'        value1 3.99     value2 2.94
+filter 421      text1 '. Desude'        text2 'e; Hvad '        value1 4.23     value2 3.21
+filter 533      text1 'l de død'        text2 'il, ford'        value1 2.93     value2 3.95
+
+filter 301      text1 '! Du'            text2 '; al'            value1 1.89     value2 3.12
+filter 421      text1 ' 2\n,'           text2 ' vel'            value1 3.42     value2 2.19
+filter 50       text1 '...”'            text2 'nen”'            value1 3.47     value2 2.38
+filter 283      text1 'gt. '            text2 ' dét'            value1 1.58     value2 2.61
+filter 206      text1 'e...'            text2 'F.ek'            value1 2.78     value2 1.76
+filter 477      text1 'f 2\n'           text2 'v og'            value1 3.05     value2 2.20
+filter 17       text1 'gt. '            text2 'gt; '            value1 2.60     value2 3.45
+filter 9        text1 '\n Fo'           text2 '; en'            value1 2.24     value2 3.01
+filter 315      text1 ' Orm'            text2 ' - D'            value1 2.46     value2 3.18
+filter 219      text1 's: ”'            text2 'de ”'            value1 2.63     value2 1.92
+\end{verbatim}
+}
