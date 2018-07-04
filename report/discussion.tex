@@ -147,3 +147,43 @@ the text is the least characteristic of an authors writing style and we can give
 feedback on why the network thinks that. Of course a teacher will still have to
 make the ultimate decision but can use the output of the network to underpin his
 or her accusation.
+
+
+\subsection{Applicability of Method}
+
+In this section we will discuss how applicable our approach will be to real
+world situations. We have created our solutions in a lab setting which
+simplifies the problem quite a bit. We discuss here how our results can be
+applied to find real ghost writers.
+
+The biggest problem with our approach is that we had no actual ghost written
+assignments available. We were given a dataset of authors where each author had
+written a set of assignments. To create ghost written assignments we used
+assignments turned in by other authors. It would of course have been better if
+we had had a dataset of authors where each author had a set of assignments known
+to be written by him/her and a set of assignments known to have been written by
+a ghost writer hired by that author. That was not possible however since MaCom
+did not have that data. In a real ghost writer setting the ghost writer might
+try to mimic the writing style of a student and in that way might trick our
+algorithm into classifying a \gls{FP}.
+
+We have discussed another problem with our dataset during the experiments we
+performed. We observed multiple times that the network were reacting strongly
+to strings looking like Danish names and school class identifiers. On our
+artificially constructed dataset all of an authors texts will have the correct
+name and most generated ghost written texts will have a different name.
+Therefore names are an excellent feature to look at due to the way our dataset
+was constructed. In a real ghost writer setting however the names attached to an
+assignment is a useless feature as a ghost writer will always put the students
+name on the assignment. We have tried to work against these deficiencies of our
+dataset by removing as many names as possible and as much other information as
+possible.
+
+We know that we removed a significant amount of information from the texts since
+we observed the training and validation accuracy falling after the change. We
+also saw less of the filters looking at text metadata suggesting that it is not
+as important to the networks.
+
+It is hard to predict exactly how well the network will perform on ghost written
+assignments when we had no such assignments available during testing. However we
+believe we have handled the deficiencies in the dataset as well as possible.
