@@ -32,7 +32,7 @@ Split & Classifier & Params & TP & TN & FP & FN & \textbf{Acc} & \textbf{A-Error
 \end{tabular}
 \caption{The results of running our baseline methods on the test dataset (D), with the optimal hyper
 parameters, on both a 50/50 dataset and 96/04 one}
-\label{tag:baseline-res}
+\label{tab:baseline-res}
 \end{table}
 
 With this we have our baseline to beat. As briefly mentioned in Section
@@ -41,19 +41,29 @@ task. Since they both provide binary results denoting a students innocence, or
 lack thereof, it is not possible to apply any kind of thresholding to force
 our models under the 10\% accusation error goal. They always perform at their
 maximum capacity. For this reason we had to alter they way we compare the deep
-learning approaches with our baselines. This was done by determining the beast
-performing $\theta$ and weight function for our neural network with
-regard to accuracy, and with no regard to the accusation error, as both
-our baselines do not focus on that either. Thus we compared the
-results of our base lines on the 50/50 dataset and the 96/04 dataset
-with the highest unconstrained accuracy our deep learning methods could
-muster.
+learning approaches with our baselines. This was done by determining the best
+performing $\theta$ and weight function for our neural network with regard to
+accuracy, and with no regard to the accusation error, as both our baselines do
+not focus on that either. Thus we compared the results of our base lines on the
+50/50 dataset and the 96/04 dataset with the highest unconstrained accuracy our
+deep learning methods could muster.
 
-Finding and computing these values for \gls{conv-char-NN},
-using the test dataset D, yielded the results seen in Table \ref{tab:char_CNN_res}
+The computation of these values results were done in very much the same way as
+was done during our experimentation. After determining the best networks using
+the dataset (E) in conjunction with dataset (F), we proceeded to train the three
+networks on the entire dataset (B) using dataset (C) as the validation set used
+throughout the training. Doing this, was all the sake of providing more
+data for the final models before applying them to the (D) test dataset.
+
+Having now trained the models we can determine the accuracy and accusation
+error of our different networks, both with and without the 10\% accusation error
+constraint.
+
+Doing this for the network \gls{conv-char-NN}, using the test dataset D, yielded
+the results seen in Table \ref{tab:char_CNN_res}
 
 \begin{table}[h]
-\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|}
+\begin{tabular}{|c|c|c|c|c|c|c|c||c|c|}
 \hline
 Split & Allowed Err & Weight & $\theta$ & TP & TN & FP & FN & \textbf{Acc} & \textbf{A-Error} \\ \hline
 \multirow{2}{*}{50/50} & 0.1 & $P_{lexp_{0.25}}$ & 0.390 & 3392 & 2344 & 1206 & 158 & \textbf{0.80788} & \textbf{0.0631} \\ \cline{2-10} 
@@ -61,9 +71,22 @@ Split & Allowed Err & Weight & $\theta$ & TP & TN & FP & FN & \textbf{Acc} & \te
 \multirow{2}{*}{96/04} & 0.1 & $P_{MV}$ & 0.057 & 3546 & 13 & 140 & 4 & \textbf{0.96111} & \textbf{0.2352} \\ \cline{2-10} 
  & 1.0 & $P_{lexp_{0.25}}$ & 0.137 & 3540 & 28 & 125 & 10 & \textbf{0.96354} & \textbf{0.2631} \\ \hline
 \end{tabular}
-\caption{The result of running the network \gls{conv-char-NN} on the dataset (D). Contraint
-denotes if the hyperparameters, weight and $\theta$ was chosen base on their
-unconstrained accuracy or constrained, making unconstrained results the one for 
-comparison with the baseline method. A-Error denotes the accusation error.}
+\caption{The result of running the network \gls{conv-char-NN} on the dataset
+(D). Split denotes the split between negative and positive samples in the
+generated test sample set. Allowed Err, denotes if the parameters, weight
+method, and $\theta$ was selected based on their ability accusation error under
+0.1 or just their accuracy. A-Error denotes the accusation error.}
 \label{tab:char_CNN_res}
 \end{table}
+
+We also used that same approach for the other two networks, resulting in what
+can be seen in Table \ref{tab:char_word_CNN_res}, which is the test results of
+\gls{conv-char-word-NN}, and in Table \ref{tab:RNN_res}, which contains the
+results from \gls{rec-sent-NN}.
+
+
+
+
+
+
+
