@@ -187,3 +187,47 @@ as important to the networks.
 It is hard to predict exactly how well the network will perform on ghost written
 assignments when we had no such assignments available during testing. However we
 believe we have handled the deficiencies in the dataset as well as possible.
+
+
+\subsection{Weight Functions}
+
+As described in Section \ref{subsec:prediction_system} we use several weight
+functions to weight which of an authors texts are most important. Looking
+at the graphs in Section \ref{subsubsec:prediction_system_conv-char-NN},
+\ref{subsubsec:prediction_system_rec-sent-NN} and
+\ref{subsubsec:prediction_system_conv-char-word-NN} we can get an idea of the
+relative strengths of the weight methods. Using those graphs we want to discuss
+a couple of the weight functions.
+
+\begin{description}
+
+    \item[$P_\mathrm{U}$]
+
+        The uniform weight function generally has a lower accuracy and higher
+        accusation error than the other weight functions. The only weight
+        function that performs worse than the uniform weight is the $P_{min}$
+        weight function. We had expected that the uniform weighing would perform
+        worse than the other since it doesn't use any metadata about the texts
+        to make its predictions. It only use the raw predictions on the texts of
+        the networks and simply takes an average of that.
+
+    \item[$P_{exp_\lambda}$]
+
+        The exponential dropoff weight function used the turn in time of an
+        assignment to determine the most important text. Recall that as $\lambda
+        \rightarrow \infty$ the more weight is placed on the newest assignment.
+        We assumed that an authors writing style would change over time and the
+        newest text would therefore be a better predictor of current writing
+        style than the oldest text. Since all time based weight functions
+        performed better than uniform weights our assumption must have been
+        correct.
+
+        When looking at the performance over the different $\gamma$ values we
+        tried we observe that at the extremes of the graphs (near 0 and 1)
+        better accuracy is obtained as $\gamma$ increases. But similarly we
+        have a higher accusation error as $\gamma$ increases. However at the
+        peak of the graph better accuracy is obtained using the lowest $\gamma$
+        value and the best accusation error is also obtained using the lowest
+        $\gamma$ value. We have illustrated the effect in Figure \ref{fig:todo}.
+
+\end{description}

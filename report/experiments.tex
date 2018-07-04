@@ -992,6 +992,7 @@ with a 4\% chance.
 
 
 \subsubsection{\glsdesc{conv-char-NN}}
+\label{subsubsec:prediction_system_conv-char-NN}
 
 The first network we tuned hyperparameters for were the network presented
 in Figure \ref{fig:conv-char-NN}. The network used only convolutions on the
@@ -1041,7 +1042,10 @@ and using the threshold $\theta = 0.057$. That configuration obtained an
 accusation error of 0.0 and an accuracy of 0.96444. The configuration
 had 8 \gls{TN}s, 1999 \gls{TP}s, 0 \gls{FN}s and 73 \gls{FP}s.
 
+
 \subsubsection{\glsdesc{rec-sent-NN}}
+\label{subsubsec:prediction_system_rec-sent-NN}
+
 The second network we tuned hyperparameters for was the network shown
 depicted in \ref{fig:rec-sent-NN}. This network was the one \gls{RNN}
 we attempted to use to solve this problem. As explained, run-time
@@ -1097,6 +1101,7 @@ network does.
 
 
 \subsubsection{\glsdesc{conv-char-word-NN}}
+\label{subsubsec:prediction_system_conv-char-word-NN}
 
 The third network we tuned hyperparameters for was the network presented
 in Figure TODO. The network used convolutions on the character level and
