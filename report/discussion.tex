@@ -117,3 +117,33 @@ a truncated output in Table \ref{tab:teacher_feedback_output}.
         activation are shown and the actual activations are shown to the right.}
     \label{tab:teacher_feedback_output}
 \end{table}
+
+We also looked at whether or not we could say something about which parts of an
+assignment are the most likely to be ghost written. That would allow a teacher
+that is suspicious of a student to identify the part of the assignment that were
+least likely to be written by him and look closely at that. To do that we wrote
+a script that splits a text into paragraphs and use \gls{conv-char-NN} to get a
+score for each paragraph. We can then report which of the paragraphs of the text
+are the most likely to be ghost written. To test our script we chose an author
+$\alpha$ from the validation dataset C with $|T_\alpha| = 19$. We also chose a
+random text $t \in \overbar{T_\alpha}$. We took out one of the texts $t' \in
+T_\alpha$ and let $T = T_\alpha \setminus \{t'\}$. We then combined $t$ and $t'$
+into $t''$ such that $t''$ consist of all of the text $t'$ followed by a random
+paragraph from the text $t$. That is we constructed a text $t''$ that consisted
+of a text in $T_\alpha$ followed by a single paragraph not from $T_\alpha$. We
+then used our script to predict which part of $t''$ was most likely written by
+a ghost writer. We would expect that the last paragraph in $t''$ would be the
+most likely. The output of the script was a vector of the probability of each
+paragraph having been written by a ghost writer.
+
+\begin{equation}
+    (0.66320, 0.60432, 0.54737, 0.47438, 0.30528)^T
+\end{equation}
+
+As expected the last paragraph is the least similar and therefore most likely to
+be written by someone else. We are now able to give a teacher an idea of why our
+network makes the predictions it does. We can give feedback on which parts of
+the text is the least characteristic of an authors writing style and we can give
+feedback on why the network thinks that. Of course a teacher will still have to
+make the ultimate decision but can use the output of the network to underpin his
+or her accusation.
