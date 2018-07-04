@@ -213,21 +213,38 @@ a couple of the weight functions.
 
     \item[$P_{exp_\lambda}$]
 
-        The exponential dropoff weight function used the turn in time of an
-        assignment to determine the most important text. Recall that as $\lambda
-        \rightarrow \infty$ the more weight is placed on the newest assignment.
-        We assumed that an authors writing style would change over time and the
+        The exponential dropoff weight function used the time of an assignment
+        to determine the most important text. Recall that as $\lambda
+        \rightarrow \infty$ more weight is placed on the newest assignment. We
+        assumed that an authors writing style would change over time and the
         newest text would therefore be a better predictor of current writing
         style than the oldest text. Since all time based weight functions
         performed better than uniform weights our assumption must have been
         correct.
 
         When looking at the performance over the different $\gamma$ values we
-        tried we observe that at the extremes of the graphs (near 0 and 1)
-        better accuracy is obtained as $\gamma$ increases. But similarly we
-        have a higher accusation error as $\gamma$ increases. However at the
-        peak of the graph better accuracy is obtained using the lowest $\gamma$
-        value and the best accusation error is also obtained using the lowest
-        $\gamma$ value. We have illustrated the effect in Figure \ref{fig:todo}.
+        tried, we observed that the accuracy tends to increase at the extremes
+        of the graphs as $\gamma$ increases while it falls around the peak of
+        the graphs as $\gamma$ increases. The accusation error tends to be
+        highest in the beginning for high $\gamma$'s and lowest in the end for
+        high $\gamma$'s.
+
+        The accusation error at the end of the $\theta$ spectrum is irrelevant
+        for this assignment as the accusation error is too high for all weight
+        functions at that point. However it is very important that the
+        accusation error is low in the beginning. As we lower $\gamma$ nearing a
+        uniform weight we get a lower accusation error in the beginning of the
+        graph at the cost of some accuracy.
+
+        \begin{figure}
+            \centering
+            \textbf{TITLE}\par\medskip
+            \includegraphics[width=0.7\textwidth]{./pictures/discussion/conv_char_nn_prediction_zoom.png}
+            \caption{Illustrate important intervals for our different
+            $P_{exp_\lambda}$ prediction systems. On the left we have shown the
+            beginning of the curves, in the middle we have shown the top
+            accuracy and to the right we have shown the end of the curves.}
+            \label{fig:conv_char_prediction_zoom}
+        \end{figure}
 
 \end{description}
