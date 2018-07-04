@@ -1004,7 +1004,7 @@ Figure \ref{fig:conv-char-NN-pred-4}.
 \begin{figure}
     \centering
     \textbf{Prediction System Results for 0.5 Split, \glsdesc{conv-char-NN}}\par\medskip
-    \includegraphics[scale=0.35]{./pictures/experiments/conv_char_nn/prediction_system_50.png}
+    \includegraphics[scale=0.33]{./pictures/experiments/conv_char_nn/prediction_system_50.png}
     \caption{Results of running the prediction system with the network described
         in Section \ref{subsubsec:conv_char_nn} on a validation dataset with
         50\% positive samples and 50\% negative samples. In the upper graph we
@@ -1019,7 +1019,7 @@ Figure \ref{fig:conv-char-NN-pred-4}.
 \begin{figure}
     \centering
     \textbf{Prediction System Results for 0.04 Split, \glsdesc{conv-char-NN}}\par\medskip
-    \includegraphics[scale=0.35]{./pictures/experiments/conv_char_nn/prediction_system_04.png}
+    \includegraphics[scale=0.33]{./pictures/experiments/conv_char_nn/prediction_system_04.png}
     \caption{Results of running the prediction system with the network described
         in Section \ref{subsubsec:conv_char_nn} on a validation dataset with
         96\% positive samples and 4\% negative samples. In the upper graph we
@@ -1054,7 +1054,7 @@ can be seen in the Figures, \ref{fig:rec-sent-NN-pred-50} and \ref{fig:rec-sent-
 \begin{figure}
     \centering
     \textbf{Prediction System Results for 0.5 Split, \glsdesc{rec-sent-NN}}\par\medskip
-    \includegraphics[scale=0.35]{./pictures/experiments/rec_sent_nn/prediction_system_50.png}
+    \includegraphics[scale=0.33]{./pictures/experiments/rec_sent_nn/prediction_system_50.png}
     \caption{Results of running the prediction system with the network described
         in Section \ref{subsubsec:rec_sent_nn} on a validation dataset
         with 50\% positive samples and 50\% negative samples. In the upper graph
@@ -1069,7 +1069,7 @@ can be seen in the Figures, \ref{fig:rec-sent-NN-pred-50} and \ref{fig:rec-sent-
 \begin{figure}
     \centering
     \textbf{Prediction System Results for 0.04 Split, \glsdesc{rec-sent-NN}}\par\medskip
-    \includegraphics[scale=0.35]{./pictures/experiments/rec_sent_nn/prediction_system_04.png}
+    \includegraphics[scale=0.33]{./pictures/experiments/rec_sent_nn/prediction_system_04.png}
     \caption{Results of running the prediction system with the network described
         in Section \ref{subsubsec:rec_sent_nn} on a validation dataset
         with 96\% positive samples and 4\% negative samples. In the upper graph
@@ -1109,7 +1109,7 @@ negatives in Figure \ref{fig:conv-char-word-NN-pred-4}.
 \begin{figure}
     \centering
     \textbf{Prediction System Results for 0.5 Split, \glsdesc{conv-char-word-NN}}\par\medskip
-    \includegraphics[scale=0.35]{./pictures/experiments/conv_char_word_nn/prediction_system_50.png}
+    \includegraphics[scale=0.33]{./pictures/experiments/conv_char_word_nn/prediction_system_50.png}
     \caption{Results of running the prediction system with the network described
         in Section \ref{subsubsec:conv_char_word_nn} on a validation dataset
         with 50\% positive samples and 50\% negative samples. In the upper graph
@@ -1124,7 +1124,7 @@ negatives in Figure \ref{fig:conv-char-word-NN-pred-4}.
 \begin{figure}
     \centering
     \textbf{Prediction System Results for 0.04 Split, \glsdesc{conv-char-word-NN}}\par\medskip
-    \includegraphics[scale=0.35]{./pictures/experiments/conv_char_word_nn/prediction_system_04.png}
+    \includegraphics[scale=0.33]{./pictures/experiments/conv_char_word_nn/prediction_system_04.png}
     \caption{Results of running the prediction system with the network described
         in Section \ref{subsubsec:conv_char_word_nn} on a validation dataset
         with 96\% positive samples and 4\% negative samples. In the upper graph
@@ -1144,7 +1144,7 @@ threshold $\theta = 0.433$. That configuration obtained an accusation error of
 split were using the Exponential Norm Weight function with $\lambda = 0.25$ and
 using the threshold $\theta = 0.127$. That configuration obtained an accusation
 error of 0.0 and an accuracy of 0.96492. The configuration had 9 \gls{TN}s, 1999
-\gls{TP}s, 0 \gls{FN}s and 73 \gls{FP}s.
+\gls{TP}s, 0 \gls{FN}s and 73 \gls{FP}s.\\
 
 A summarizing view of the validation performance of the different networks can be seen
 in Table \ref{tab:experi-results}
@@ -1153,14 +1153,14 @@ in Table \ref{tab:experi-results}
 \begin{tabular}{|c|c|c|c|c|c|c|c||c|c|}
 \hline
 Split & Network & Weight & $\theta$ & TP & TN & FP & FN & \textbf{Acc} & \textbf{A-Error} \\ \hline
-\multirow{3}{*}{50/50} & \gls{conv-char-NN} & $P_{lexp_{0.25}}$ & 0.390 & 1843 & 1482 & 517 & 156 & \textbf{0.83167} & \textbf{0.095} \\ \cline{2-10} 
- & \gls{rec-sent-NN} & $P_{lexp_{0.25}}$ & 0.033 & 1965 & 310 & 1689 & 34 & \textbf{0.56903} & \textbf{0.099} \\ \cline{2-10} 
- & \gls{conv-char-word-NN} & $P_{lexp_{0.25}}$ & 0.433 & 1856 & 1302 & 697 & 143 & \textbf{0.78989} & \textbf{0.099} \\ \hline
-\multirow{3}{*}{96/04} & \gls{conv-char-NN} & $P_{mv}$ & 0.057 & 1999 & 8 & 74 & 0 & \textbf{0.96444} & \textbf{0.000} \\ \cline{2-10} 
- & \gls{rec-sent-NN} & $P_{lexp_{0.25}}$ & 0.002 & 1999 & 1 & 79 & 0 & \textbf{0.96200} & \textbf{0.000} \\ \cline{2-10} 
- & \gls{conv-char-word-NN} & $P_{exp_{0.25}}$ & 0.127 & 1999 & 9 & 73 & 0 & \textbf{0.96492} & \textbf{0.000} \\ \hline
+\multirow{3}{*}{50/50} & \gls{conv-char-NN} & $P_{lexp_{0.25}}$ & 0.390 & 1843 & 1482 & 517 & 156 & \textbf{0.8316} & \textbf{0.095} \\ \cline{2-10} 
+ & \gls{rec-sent-NN} & $P_{lexp_{0.25}}$ & 0.033 & 1965 & 310 & 1689 & 34 & \textbf{0.5690} & \textbf{0.099} \\ \cline{2-10} 
+ & \gls{conv-char-word-NN} & $P_{lexp_{0.25}}$ & 0.433 & 1856 & 1302 & 697 & 143 & \textbf{0.7898} & \textbf{0.099} \\ \hline
+\multirow{3}{*}{96/04} & \gls{conv-char-NN} & $P_{mv}$ & 0.057 & 1999 & 8 & 74 & 0 & \textbf{0.9644} & \textbf{0.000} \\ \cline{2-10} 
+ & \gls{rec-sent-NN} & $P_{lexp_{0.25}}$ & 0.002 & 1999 & 1 & 79 & 0 & \textbf{0.9620} & \textbf{0.000} \\ \cline{2-10} 
+ & \gls{conv-char-word-NN} & $P_{exp_{0.25}}$ & 0.127 & 1999 & 9 & 73 & 0 & \textbf{0.9649} & \textbf{0.000} \\ \hline
 \end{tabular}
-\caption{A summarizing view of the performance of the difference networks on the
+\caption{A summarizing view of the performance of the different networks on the
 the validation dataset (F).}
 \label{tab:experi-results}
 \end{table}
