@@ -15,6 +15,20 @@
         We had no texts written by actual ghost writers so we have no idea how
         our networks would perform on such texts.
 
+    \item
+
+        Discuss how different weight functions performed compared to other
+        weight functions and describe why we think that is the case.
+
+    \item
+
+        Generate AUROC curves for our networks and discuss the output.
+
+    \item
+
+        Discuss that we beat our baselines but were not able to beat the MaCom's
+        restrictions.
+
 \end{itemize}
 
 \label{sec:discussion} Looking at the results presented in \ref{sec:results},
@@ -62,8 +76,6 @@ significantly different for $t$ and $t'$.
         "p\aa " (on) and therefore reacts about the same to both texts.}
     \label{fig:feature_extraction_output_example}
 \end{figure}
-
-% TODO: Maybe the figure here (fig:feature_extraction_output_example)?
 
 It is hard to know exactly what the following layers does with the absolute
 difference but we feel that it is a fair assumption that the largest filter
@@ -114,5 +126,133 @@ a truncated output in Table \ref{tab:teacher_feedback_output}.
     \label{tab:teacher_feedback_output}
 \end{table}
 
+We also looked at whether or not we could say something about which parts of an
+assignment are the most likely to be ghost written. That would allow a teacher
+that is suspicious of a student to identify the part of the assignment that were
+least likely to be written by him and look closely at that. To do that we wrote
+a script that splits a text into paragraphs and use \gls{conv-char-NN} to get a
+score for each paragraph. We can then report which of the paragraphs of the text
+are the most likely to be ghost written. To test our script we chose an author
+$\alpha$ from the validation dataset C with $|T_\alpha| = 19$. We also chose a
+random text $t \in \overline{T_\alpha}$. We took out one of the texts $t' \in
+T_\alpha$ and let $T = T_\alpha \setminus \{t'\}$. We then combined $t$ and $t'$
+into $t''$ such that $t''$ consist of all of the text $t'$ followed by a random
+paragraph from the text $t$. That is we constructed a text $t''$ that consisted
+of a text in $T_\alpha$ followed by a single paragraph not from $T_\alpha$. We
+then used our script to predict which part of $t''$ was most likely written by
+a ghost writer. We would expect that the last paragraph in $t''$ would be the
+most likely. The output of the script was a vector of the probability of each
+paragraph having been written by a ghost writer.
+
+\begin{equation}
+    (0.66320, 0.60432, 0.54737, 0.47438, 0.30528)^T
+\end{equation}
+
+As expected the last paragraph is the least similar and therefore most likely to
+be written by someone else. We are now able to give a teacher an idea of why our
+network makes the predictions it does. We can give feedback on which parts of
+the text is the least characteristic of an authors writing style and we can give
+feedback on why the network thinks that. Of course a teacher will still have to
+make the ultimate decision but can use the output of the network to underpin his
+or her accusation.
 
 
+\subsection{Applicability of Method}
+
+In this section we will discuss how applicable our approach will be to real
+world situations. We have created our solutions in a lab setting which
+simplifies the problem quite a bit. We discuss here how our results can be
+applied to find real ghost writers.
+
+The biggest problem with our approach is that we had no actual ghost written
+assignments available. We were given a dataset of authors where each author had
+written a set of assignments. To create ghost written assignments we used
+assignments turned in by other authors. It would of course have been better if
+we had had a dataset of authors where each author had a set of assignments known
+to be written by him/her and a set of assignments known to have been written by
+a ghost writer hired by that author. That was not possible however since MaCom
+did not have that data. In a real ghost writer setting the ghost writer might
+try to mimic the writing style of a student and in that way might trick our
+algorithm into classifying a \gls{FP}.
+
+We have discussed another problem with our dataset during the experiments we
+performed. We observed multiple times that the network were reacting strongly
+to strings looking like Danish names and school class identifiers. On our
+artificially constructed dataset all of an authors texts will have the correct
+name and most generated ghost written texts will have a different name.
+Therefore names are an excellent feature to look at due to the way our dataset
+was constructed. In a real ghost writer setting however the names attached to an
+assignment is a useless feature as a ghost writer will always put the students
+name on the assignment. We have tried to work against these deficiencies of our
+dataset by removing as many names as possible and as much other information as
+possible.
+
+We know that we removed a significant amount of information from the texts since
+we observed the training and validation accuracy falling after the change. We
+also saw less of the filters looking at text metadata suggesting that it is not
+as important to the networks.
+
+It is hard to predict exactly how well the network will perform on ghost written
+assignments when we had no such assignments available during testing. However we
+believe we have handled the deficiencies in the dataset as well as possible.
+
+
+\subsection{Weight Functions}
+
+As described in Section \ref{subsec:prediction_system} we use several weight
+functions to weight which of an authors texts are most important. Looking
+at the graphs in Section \ref{subsubsec:prediction_system_conv-char-NN},
+\ref{subsubsec:prediction_system_rec-sent-NN} and
+\ref{subsubsec:prediction_system_conv-char-word-NN} we can get an idea of the
+relative strengths of the weight methods. Using those graphs we want to discuss
+a couple of the weight functions.
+
+\begin{description}
+
+    \item[$P_\mathrm{U}$]
+
+        The uniform weight function generally has a lower accuracy and higher
+        accusation error than the other weight functions. The only weight
+        function that performs worse than the uniform weight is the $P_{min}$
+        weight function. We had expected that the uniform weighing would perform
+        worse than the other since it doesn't use any metadata about the texts
+        to make its predictions. It only use the raw predictions on the texts of
+        the networks and simply takes an average of that.
+
+    \item[$P_{exp_\lambda}$]
+
+        The exponential dropoff weight function used the time of an assignment
+        to determine the most important text. Recall that as $\lambda
+        \rightarrow \infty$ more weight is placed on the newest assignment. We
+        assumed that an authors writing style would change over time and the
+        newest text would therefore be a better predictor of current writing
+        style than the oldest text. Since all time based weight functions
+        performed better than uniform weights our assumption must have been
+        correct.
+
+        When looking at the performance over the different $\gamma$ values we
+        tried, we observed that the accuracy tends to increase at the extremes
+        of the graphs as $\gamma$ increases while it falls around the peak of
+        the graphs as $\gamma$ increases. The accusation error tends to be
+        highest in the beginning for high $\gamma$'s and lowest in the end for
+        high $\gamma$'s.
+
+        The accusation error at the end of the $\theta$ spectrum is irrelevant
+        for this assignment as the accusation error is too high for all weight
+        functions at that point. However it is very important that the
+        accusation error is low in the beginning. As we lower $\gamma$ nearing a
+        uniform weight we get a lower accusation error in the beginning of the
+        graph at the cost of some accuracy.
+
+        \begin{figure}
+            \centering
+            \textbf{TITLE}\par\medskip
+            \includegraphics[width=0.7\textwidth]{./pictures/discussion/conv_char_nn_prediction_zoom.png}
+            \caption{Illustrate important intervals for our different
+            $P_{exp_\lambda}$ prediction systems. On the left we have shown the
+            beginning of the curves, in the middle we have shown the top
+            accuracy and to the right we have shown the end of the curves.}
+            \label{fig:conv_char_prediction_zoom}
+        \end{figure}
+
+\end{description}
