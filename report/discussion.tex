@@ -430,4 +430,28 @@ a couple of the weight functions.
         to look at text length as part of our prediction systems. We have not
         shown the results of the 0.04 split as the same is the case there.
 
+    \item[$P_{lepx_{0.25}}$]
+
+        This prediction system were a combination of the time based and text
+        length based prediction systems. Multiple different networks had this
+        configuration as the configuration that maximized accuracy. We have
+        already concluded that both $P_l$ and $P_{exp_\lambda}$ was better
+        weightings than $P_\mathcal{U}$. So the interesting thing about this
+        weight is not whether or not it beats $P_\mathcal{U}$, but rather
+        whether or not it is better than $P_l$ and $P_{exp_\lambda}$. In Figure
+        \ref{fig:conv_char_prediction_zoom_50_time_and_length} we have shown the
+        performance of the prediction systems in question.
+
+        \begin{figure}
+            \centering
+            \textbf{\glsdesc{conv-char-NN} Prediction System 0.04 Split}\par\medskip
+            \includegraphics[width=0.7\textwidth]{./pictures/discussion/conv_char_nn_prediction_zoom_50_text_length.png}
+            \caption{Illustrate important intervals for our $P_l$ prediction
+                systems for the \gls{conv-char-NN} network on the 0.5 split
+                dataset. On the left we have shown the beginning of the curves,
+                in the middle we have shown the top accuracy and to the right we
+                have shown the end of the curves.}
+            \label{fig:conv_char_prediction_zoom_50_text_length}
+        \end{figure}
+
 \end{description}
