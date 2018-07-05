@@ -56,10 +56,12 @@ fns = data.as_matrix(columns=['fns'])
 # Generate graph.
 f, axarr = plt.subplots(2, 3)
 ax = f.add_subplot(111, frameon=False)
-plt.tick_params(labelcolor='none', top='off', bottom='off', left='off', right='off')
+plt.tick_params(
+    labelcolor='none', top='off', bottom='off', left='off', right='off')
 
 for weight in np.sort(np.unique(weights)):
-    if weight not in ['Exp λ=0.25', 'Exp λ=0.5', 'Exp λ=0.75', 'Exp λ=1.0', 'Exp λ=0.0']:
+    if weight not in ['Exp λ=0.25', 'Exp λ=0.5', 'Exp λ=0.75',
+                      'Exp λ=1.0', 'Exp λ=0.0']:
         continue
     weight_name = get_weight_report_name(weight)
 
@@ -73,11 +75,11 @@ for weight in np.sort(np.unique(weights)):
 
     # Between 0.4 and 0.6.
     accs = accuracies[np.logical_and(weights == weight,
-        np.logical_and(thetas >= 0.4, thetas <= 0.6))]
+                      np.logical_and(thetas >= 0.4, thetas <= 0.6))]
     errs = accusation_errors[np.logical_and(weights == weight,
-        np.logical_and(thetas >= 0.4, thetas <= 0.6))]
+                             np.logical_and(thetas >= 0.4, thetas <= 0.6))]
     thresholds = thetas[np.logical_and(weights == weight,
-        np.logical_and(thetas >= 0.4, thetas <= 0.6))]
+                        np.logical_and(thetas >= 0.4, thetas <= 0.6))]
 
     axarr[0, 1].plot(thresholds, accs, label=weight_name)
     axarr[1, 1].plot(thresholds, errs, label=weight_name)
@@ -98,7 +100,9 @@ axarr[0, 2].grid(True)
 axarr[1, 2].grid(True)
 
 ax.set_xlabel('θ (Threshold)')
-ax.set_ylabel('Accuracy')
+# ax.set_ylabel('Accuracy')
+axarr[0, 0].set_ylabel('Accuracy')
+axarr[1, 0].set_ylabel('Accusation Error')
 
 lgd = axarr[0, 0].legend(
     bbox_to_anchor=(-0.1, -1.41), loc='upper left', ncol=5)
