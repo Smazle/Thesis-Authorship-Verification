@@ -30,47 +30,47 @@
 
 \end{itemize}
 
-Looking at the results presented in \ref{sec:results}, is apparent that we've
-hit at several points of the spectrum. While none of our methods did achieve
-the sub 10\% accusation error on the test set, that MaCom required, we believe
-that some of the methods does in fact show promise within the \gls{NLP} field.
-While all the networks we applied to the data beat our initially computed
-baselines, best performing network that we've tested, is without a doubt the
-\ref{conv-char-NN} neural network. This network had an accusation error closest
-to to the one required, in addition to having the highest overall accuracy
-in all the categories we tested it on. While this network was in fact the
-best, it was closely followed by network \ref{conv-word-char-NN}, while the
-\gls{RNN} we also tested had sub-par performance, lending credence to the
-applicability of \gls{CNN}s to \gls{NLP} problems. It is however worth noting
-that this could very well be due to the infeasibility of running any of our
-\gls{RNN}s on the character level of the texts supplied to it. Looking at the
-performance of the two \gls{CNN}s, it becomes obvious that the character level
-is of great importance when it comes to determining the author of a text. The
-sentence level is simply to high of a level when it comes to \gls{RNN}s. We
-hypothesize that applying it to a lower level, such as the word level would
-greatly increase its performance, as \gls{RNN}s would be able learn based on
-the words' relation to one another, and open the door to a more grammar based
-learning approach. Looking at \gls{conv-char-NN}, and \gls{conv-word-char-NN},
-it would seem that focusing on the word level of the texts seem to actually
-hurt the model a bit. We are a bit uncertain as to the reason for this, we do
-however have some theories. The reason might be likened with the problem the
-\gls{RNN}, \ref{rec-sent-NN} had. The level might actually be a bit to high
-for our convolutional networks, the image-equivalent of having a to large
-convolutional window, thus ignoring all the small details that are needed
-in order to properly determine the author. This also highlight a potential
-reason behind the differing performance of networks \ref{conv-char-NN} and
-\ref{conv-word-char-NN}. \ref{conv-char-NN} looked had a lot of different size
-filter on the character level of the text, whereas \ref{conv-word-char-NN}
-traded out some of those character level filter with some filter on the word
-level. This might very well have led to \ref{conv-word-char-NN} to missing some
-relevant person-specific traits on the character level, such as typos, dots,
-commas and the like. It wouldn't even be able to find such traits on the word
-level, as the usage of a pre-trained embedding layer means that only correctly
-spelled word were even considered.
+
+\subsection{Results}
+
+Looking at the results presented in Section \ref{sec:results} it is apparent
+that we have not achieved less the than 10\% accusation error on the test
+set that MaCom required We believe however that some of the methods show
+promising results. While all the networks we applied to the the test set beat
+our baselines the best performing network was the \gls{conv-char-NN}. This
+network had an accusation error closest to to the one required in addition to
+having the highest overall accuracy in all the categories we tested it on.
+While this network was in fact the best, it was closely followed by network
+\gls{conv-char-word-NN}, while the \gls{rec-sent-NN} we also tested had sub-par
+performance, lending credence to the applicability of \gls{CNN}s to \gls{NLP}
+problems. It is however worth noting that this could very well be due to the
+infeasibility of running any of our \gls{RNN}s on the character level of the
+texts supplied to it. Looking at the performance of the two \gls{CNN}s, it
+becomes obvious that the character level is of great importance when it comes
+to determining the author of a text. The sentence level is simply to high of
+a linguistic level. At least in the way we applied it. We hypothesize that
+applying it to a lower level, such as the word level would greatly increase its
+performance, as \gls{RNN}s would be able learn based on the words relation to
+one another, and therefore use a more grammar based learning approach. Looking
+at \gls{conv-char-NN}, and \gls{conv-char-word-NN}, it would seem that focusing
+on the word level of the texts seem to actually hurt the model a bit. We are a
+bit uncertain as to the reason for this, we do however have some theories. The
+reason might be similar to the problem \gls{rec-sent-NN} had. The level might
+actually be a bit to high for our convolutional networks, the image-equivalent
+of having a to large convolutional window, thus ignoring all the small details
+that are needed in order to properly determine the author. This also highlight a
+potential reason behind the differing performance of networks \gls{conv-char-NN}
+and \gls{conv-char-word-NN}. \gls{conv-char-NN} had many filters on the
+character level of the text, whereas \gls{conv-char-word-NN} had more filters on
+the word level. This might very well have led to \gls{conv-char-word-NN} missing
+some relevant person-specific traits on the character level such as typos, dot
+position, comma positions and the like. It wouldn't even be able to find such
+traits on the word level, as the usage of a pre-trained embedding layer means
+that only correctly spelled word were even considered.
 
 Another \gls{NLP} advantage \gls{CNN}s has in this context, is the fact that
 we are able to more accurately determine what part of the text contributed to
-final classification.
+final classification as can be seen in the following section.
 
 \subsection{Teacher Feedback}
 
@@ -370,7 +370,7 @@ a couple of the weight functions.
 
         This whole discussion has been based on the picture presented
         for the dataset of 50\% positives and 50\% negatives. In Figure
-        \ref{fig:conv_char_nn_prediction_zoom_04} we see a slightly different
+        \ref{fig:conv_char_prediction_zoom_04} we see a slightly different
         picture. When there is less negatives available $\lambda = 1.0$ does
         not lead to the best results in the interval $\theta \in (0, 0.2)$.
         Instead $\lambda = 0.25$ or $\lambda = 0.5$ seem to give the best
@@ -460,6 +460,5 @@ a couple of the weight functions.
 \begin{figure}
 \centering
 \includegraphics[width=\textwidth]{./Figure_2.png}
-\caption{ROC Curve for \ref{conv-word-char-NN}, 50/50 split}
+\caption{ROC Curve for \gls{conv-char-word-NN}, 50/50 split}
 \end{figure}
-
