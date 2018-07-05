@@ -400,4 +400,34 @@ a couple of the weight functions.
         writing style changes over time and it is therefore a good idea to use
         some sort of time based weight function.
 
+    \item[$P_l$]
+
+        The idea behind the length based weight function was that longer
+        texts would better reflect the writing style of an author. Some
+        of the texts in the dataset are only a few hundred characters
+        long which means that only few of the n-grams the networks
+        are looking for will be present in those texts. In Figure
+        \ref{fig:conv_char_prediction_zoom_50_text_length} we have shown a
+        comparison between $P_\mathcal{U}$ and $P_l$. It can be seen there that
+        it is always better to weight based on text length than it is to just
+        use uniform weights. The curves follow each other closely but $P_l$
+        have slightly higher accuracy and slightly lower accusation error than
+        $P_\mathcal{U}$.
+
+        \begin{figure}
+            \centering
+            \textbf{\glsdesc{conv-char-NN} Prediction System 0.04 Split}\par\medskip
+            \includegraphics[width=0.7\textwidth]{./pictures/discussion/conv_char_nn_prediction_zoom_50_text_length.png}
+            \caption{Illustrate important intervals for our $P_l$ prediction
+                systems for the \gls{conv-char-NN} network on the 0.5 split
+                dataset. On the left we have shown the beginning of the curves,
+                in the middle we have shown the top accuracy and to the right we
+                have shown the end of the curves.}
+            \label{fig:conv_char_prediction_zoom_50_text_length}
+        \end{figure}
+
+        That is exactly the result we expected and shows that it was a good idea
+        to look at text length as part of our prediction systems. We have not
+        shown the results of the 0.04 split as the same is the case there.
+
 \end{description}
