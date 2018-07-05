@@ -175,8 +175,8 @@ paragraph from the text $t$. That is we constructed a text $t''$ that consisted
 of a text in $T_\alpha$ followed by a single paragraph not from $T_\alpha$. We
 then used our script to predict which part of $t''$ was most likely written by
 a ghost writer. We would expect that the last paragraph in $t''$ would be the
-most likely. The output of the script was a vector of the probability of each
-paragraph having been written by a ghost writer.
+most likely. The output of the script was a vector of the probabilities that
+each paragraph was written by the candidate author.
 
 \begin{equation}
     (0.66320, 0.60432, 0.54737, 0.47438, 0.30528)^T
@@ -255,38 +255,149 @@ a couple of the weight functions.
 
     \item[$P_{exp_\lambda}$]
 
-        The exponential dropoff weight function used the time of an assignment
-        to determine the most important text. Recall that as $\lambda
-        \rightarrow \infty$ more weight is placed on the newest assignment. We
-        assumed that an authors writing style would change over time and the
-        newest text would therefore be a better predictor of current writing
-        style than the oldest text. Since all time based weight functions
-        performed better than uniform weights our assumption must have been
-        correct.
-
-        When looking at the performance over the different $\gamma$ values we
-        tried, we observed that the accuracy tends to increase at the extremes
-        of the graphs as $\gamma$ increases while it falls around the peak of
-        the graphs as $\gamma$ increases. The accusation error tends to be
-        highest in the beginning for high $\gamma$'s and lowest in the end for
-        high $\gamma$'s.
-
-        The accusation error at the end of the $\theta$ spectrum is irrelevant
-        for this assignment as the accusation error is too high for all weight
-        functions at that point. However it is very important that the
-        accusation error is low in the beginning. As we lower $\gamma$ nearing a
-        uniform weight we get a lower accusation error in the beginning of the
-        graph at the cost of some accuracy.
+        The exponential dropoff weight function used the time of an
+        assignment to determine the most important text. Recall that
+        as $\lambda \rightarrow \infty$ more weight is placed on the
+        newest assignment. We assumed that an authors writing style
+        would change over time and the newest text would therefore be
+        a better predictor of current writing style than the oldest
+        text. In Figure \ref{fig:conv_char_prediction_zoom_50} and
+        \ref{fig:conv_char_prediction_zoom_04} we have shown a plot of the
+        $P_{exp_\lambda}$ and $P_\mathcal{U}$ prediction system accuracies and
+        accusation error with important intervals highlighted. The important
+        intervals is when $\theta \approx 0$, when $\theta \approx 1$ and when
+        the accuracy is maximized around $\theta \approx 0.5$. In both Figures
+        we observe that the accuracy is lower and accusation error higher in
+        $P_\mathcal{U}$ than all $P_{exp_\lambda}$. We can therefore conclude
+        that as expected the newest text is more indicative of the writing style
+        of a student than the older texts.
 
         \begin{figure}
             \centering
-            \textbf{TITLE}\par\medskip
-            \includegraphics[width=0.7\textwidth]{./pictures/discussion/conv_char_nn_prediction_zoom.png}
+            \textbf{\glsdesc{conv-char-NN} Prediction System 0.5 Split}\par\medskip
+            \includegraphics[width=0.7\textwidth]{./pictures/discussion/conv_char_nn_prediction_zoom_50.png}
             \caption{Illustrate important intervals for our different
-            $P_{exp_\lambda}$ prediction systems. On the left we have shown the
-            beginning of the curves, in the middle we have shown the top
-            accuracy and to the right we have shown the end of the curves.}
-            \label{fig:conv_char_prediction_zoom}
+                $P_{exp_\lambda}$ prediction systems for the \gls{conv-char-NN}
+                network on the 0.5 split dataset. On the left we have shown the
+                beginning of the curves, in the middle we have shown the top
+                accuracy and to the right we have shown the end of the curves.}
+            \label{fig:conv_char_prediction_zoom_50}
         \end{figure}
+
+        \begin{figure}
+            \centering
+            \textbf{\glsdesc{conv-char-NN} Prediction System 0.04 Split}\par\medskip
+            \includegraphics[width=0.7\textwidth]{./pictures/discussion/conv_char_nn_prediction_zoom_04.png}
+            \caption{Illustrate important intervals for our different
+                $P_{exp_\lambda}$ prediction systems for the \gls{conv-char-NN}
+                network on the 0.04 split dataset. On the left we have shown the
+                beginning of the curves, in the middle we have shown the top
+                accuracy and to the right we have shown the end of the curves.}
+            \label{fig:conv_char_prediction_zoom_04}
+        \end{figure}
+
+        It is hard to say which $\lambda$ produce the best results when looking
+        at the Figures. Let us focus on the 0.5 case as that gives a clearer
+        picture. For low $\theta$'s we have that $\lambda = 1.0$ gives the
+        highest accuracy but with highest accusation error while $\lambda =
+        0.25$ gives the lowest accuracy with the lowest accusation error. We see
+        a similar picture for high $\theta$'s. There we get the highest accuracy
+        but lowest accusation error when $\lambda = 1.0$ and the lowest accuracy
+        and highest accusation error when $\lambda = 0.25$. At both extremes we
+        have that the highest accuracy is obtained when $\lambda = 1.0$. In the
+        middle of the graph however we observe that the highest accuracy AND
+        lowest is accusation error is obtained when $\lambda = 0.25$. It seems
+        as if the best $\lambda$ value changes depending on what threshold is
+        chosen. We will now discuss the three threshold intervals.
+
+        When $\theta \in (0, 0.2)$ higher accuracy is obtained as $\lambda
+        \rightarrow 1$ however it is clear that there is diminishing returns
+        for increasing $\lambda$. There is a large difference in accuracy
+        between $\lambda = 0.25$ and $\lambda = 0.5$, a smaller difference
+        between $\lambda = 0.5$ and $\lambda = 0.75$ and an even smaller
+        difference between $\lambda = 0.75$ and $\lambda = 1.0$. At the same
+        time the accusation error increases as $\lambda \rightarrow 1$ but it
+        does not seem that it increases with diminishing returns. The best
+        weight function in this interval is therefore a tradeoff between the
+        accusation error and accuracy obtained. You can increase your accuracy
+        by increasing $\lambda$ but at the same time the accusation error will
+        also rise. We solved that problem by maximizing the accuracy while
+        keeping the accusation error under a threshold which seems to have been
+        the right thing to do. When looking at the Figure it seems to us as if
+        the best weighing for time is either $\lambda = 0.25$ or $\lambda = 0.5$
+        as those have low accusation error coupled with fine accuracy. Let us
+        consider the reason that the accuracy rises when we give more weight
+        to the first assignment. In this interval $\theta$ is low. That means
+        that we will get almost all positive cases correct. The accuracy above
+        0.5 must consist of those negative cases where the assignment is most
+        clearly written by someone else than a candidate author. When we predict
+        that negative text against all of a candidate authors texts it has to
+        be extremely different for it to get very low scores for all of that
+        authors texts. However there is a good chance that it will be different
+        from one of the texts i.e. the newest text. Therefore higher $\lambda$
+        values has a higher chance of reporting a negative meaning that they
+        will obtain a higher accuracy on this part of the graph but also a
+        higher accusation error. Similarly lower $\lambda$ values will have a
+        lower chance of reporting a negative giving a lower accuracy but also a
+        lower accusation error.
+
+        When $\theta \in (0.4, 0.6)$ higher accuracy is obtained as $\lambda
+        \rightarrow 0.25$. At the same time the lowest accusation error is also
+        obtained when $\lambda$ is low. It is therefore clear that the best
+        configuration in this interval is low $\lambda$ values. But it is also
+        clear that $\lambda$ should be greater than 0 (not uniform) as the
+        uniform weights is clearly worse than all the other. Lets consider why
+        that might be the case. Here in the middle of the graph we don't require
+        extreme values to produce either negatives or positives. Therefore a
+        weigh that is closer to uniform is likely to produce better results
+        since it better use information from all texts available.
+
+        When $\theta \in (0.8, 1.0)$ higher accuracy is obtained as $\lambda
+        \rightarrow 1.0$. As in the first interval the accuracy is obtained with
+        diminishing returns. Unlike the first interval the accusation error is
+        now lowest for higher $\lambda$. It is therefore clear that the best
+        $\lambda$ value in this interval is $\lambda = 1.0$. Again we have that
+        the reason for obtaining greater accuracy when $\lambda$ increases in
+        is that at this extreme we will get almost all negative cases correct
+        but only a small subset of the positives will be correct. Therefore the
+        further away from uniform weights we get we will report more positives
+        giving us higher accuracy. In this case however that does not lead
+        to higher accusation error since almost all problems is reported as
+        negative and the few we move to positive will reduce the accusation
+        error. The best $\lambda$ in this case is irrelevant since we would
+        never choose a $\theta$ in this range. Such a $\theta$ would lead to way
+        to many false accusation.
+
+        This whole discussion has been based on the picture presented
+        for the dataset of 50\% positives and 50\% negatives. In Figure
+        \ref{fig:conv_char_nn_prediction_zoom_04} we see a slightly different
+        picture. When there is less negatives available $\lambda = 1.0$ does
+        not lead to the best results in the interval $\theta \in (0, 0.2)$.
+        Instead $\lambda = 0.25$ or $\lambda = 0.5$ seem to give the best
+        results. Since it is now more risky to report a negative it makes sense
+        that weights closer to uniform performs better since more is required
+        to make them report a negative in this interval. It is still clear that
+        $P_\mathcal{U}$ is the worst weight function so we can still conclude
+        that the newest assignment is more indicative of writing style than the
+        oldest.
+
+        To get a better idea of weighing based on time we created looped through
+        the authors in the test set D. We created a positive sample for each
+        of the authors and used \gls{conv-char-NN} to predict each of the
+        authors texts. We then computed the average score of the newest text,
+        the average score of the second newest text, and so on. If the students
+        writing style changes over time we would expect higher scores in the
+        beginning and lower scores at the end. The output of the experiment
+        resulted in,
+
+        \begin{equation}
+            (0.78884, 0.76248, 0.74841, 0.70693, 0.69037, 0.66954, 0.65441,
+            0.64049, 0.62651, 0.61295, \dots)^T
+        \end{equation}
+
+        where the average score of the newest text is shown first and the
+        average score of the oldest text last. That vector clearly shows that
+        writing style changes over time and it is therefore a good idea to use
+        some sort of time based weight function.
 
 \end{description}
