@@ -3,8 +3,7 @@ In the previous sections we have been going the through the theoretical
 background of the different approaches we were going to make use of to classify
 the provided MaCom data. However from this point the practical aspect will be in
 focus. The following sections address what went into implementing the different
-methods, and why their final structure and parameters are what they are. Not
-only that, but each method will be tested against the external validation set
+methods, and why their final structure and parameters are what they are. Not only that, but each method will be tested against the external validation set
 (C). This will leave us with a final set of candidate methods which is to be run
 on the test dataset. Two of these will be the baseline method, and the other
 two will be the best performing recurrent network, and the best performing
@@ -188,7 +187,7 @@ selection.
 The results of both the SVM and the Extended Delta method feature selection can
 be seen in Figure \ref{fig:fs_results}. We got that the best number of selected
 feature were 220 for the SVM and 4 for the Extended Delta Method, scoring an
-accuracy of [TODO:Res] and [TODO:Res] respectively.
+accuracy of 0.697 and 0.672 respectively.
 
 \begin{figure}
     \centering
@@ -582,8 +581,23 @@ by \citet{DBLP:journals/corr/KingmaB14}. We did that as we had problems with
 neurons dying during the training of the network otherwise. Other than the
 learning rate we used the parameters suggested in the article. That is, the
 remembering rates were set to $\gamma_1 = 0.9$ and $\gamma_2 = 0.999$. As the
-error function we used the Categorical Crossentropy function described in
-Section TODO. When we trained the network we were able to obtain a validation
+error function we used the binary cross-entropy function described whose definition
+can be seen in Equation \ref{eq:binary_ce}.
+
+\begin{definition}[Binary Cross-Entropy]
+    The loss function Binary Cross entropy is defined as such
+
+    \begin{equation}\label{eq:binary_ce}
+    L(y, p) = -(y \cdot \log(p) + (1- y)\cdot\log(1 - p))
+    \end{equation}
+
+    Where y is a label $y : \{0,1\}$ and p is a predicted probability $p \in
+    [0,1]$.
+
+\end{definition}
+
+
+ When we trained the network we were able to obtain a validation
 accuracy of 0.71773 in epoch 6. The training accuracy continued rising but we
 used early stopping since the validation accuracy had stopped improving. We
 have shown a graph of the training and validation accuracies during training in
@@ -721,9 +735,7 @@ was performed on the same data as the convolutional networks, and the
 \textit{Embedding}, \textit{Feature Extraction}, \textit{Combining} and
 \textit{Comparing} structure was used as for each of them too, and the best
 model used can be seen depicted in figure \ref{fig:rec-sent-NN}. After
-10 epochs this network peaked with a validation accuracy of
-0.657. When applied to the external validation set (C), it got a accuracy
-of [TODO:ACC].
+10 epochs this network peaked with a validation accuracy of 0.657. 
 
 \begin{figure}
     \centering
@@ -848,8 +860,7 @@ included an extra bidirectional \gls{LSTM} layer, and the 0.3 dropout for extra
 generalization.
 
 As mentioned this final network yielded the accuracy initially described,
-0.657 after 10 epochs. The validation and training accuracy progression can be
-seen in figure [TODO: Figure].
+0.657 after 10 epochs. 
 
 \subsubsection{\glsdesc{conv-char-word-NN}}
 \label{subsubsec:conv_char_word_nn}
