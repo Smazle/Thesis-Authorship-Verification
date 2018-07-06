@@ -64,6 +64,7 @@ weights = data.as_matrix(columns=['weight'])
 for weight in np.sort(np.unique(weights)):
     roc = plt.figure(2)
     ax = plt.subplot(111)
+
     plots_X = []
     plots_Y = []
 
