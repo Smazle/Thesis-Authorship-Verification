@@ -24,14 +24,14 @@ layer, that focuses on things such as publishing/delivery date, and file format.
 The features available to pick from in this case are:
 
 \begin{itemize}
-    \item Word-N-grams,
-    \item Character-N-grams,
+    \item Word-n-grams,
+    \item Character-n-grams,
     \item Word Frequencies (word-1-grams),
-    \item \gls{POS}-tag-N-grams, and
-    \item Special-Character-N-grams,
+    \item \gls{POS}-tag-n-grams, and
+    \item Special-Character-n-grams,
 \end{itemize}
 
-Where an N-gram describes the combinations of sequential elements of size n. In
+Where an n-gram describes the combinations of sequential elements of size n. In
 the case where that element is characters, and n is 3, the string "hello" would
 produce the character-3-grams "hel", "ell" and "llo". This also means that a
 feature such as word frequencies can be considered word-1-grams.
@@ -89,8 +89,8 @@ The corpus used had the following quantities of the different features.
 
 The quantities here are of course very large due to the size of the corpus,
 and will continue to rise as N increases. Rather than extracting all
-of those feature from our texts, we chose to focus on the N-grams
-with highest frequency, as we would reach a point where a specific N-gram
+of those feature from our texts, we chose to focus on the n-grams
+with highest frequency, as we would reach a point where a specific n-gram
 determined to be in the corpus, would be unique that same corpus, making it
 irrelevant for new texts, not associated with the corpus.
 
@@ -99,22 +99,22 @@ features was produced, containing
 
 \begin{itemize}
     \item The 500 most frequent words,
-    \item The 500 most frequent word-N-grams for $N \in \{2,3,4\}$,
-    \item The 300 most frequent character-N-grams for $N \in \{2,...,10\}$,
-    \item The 50 most frequent \gls{POS}-tag-N-grams for $N \in \{3,4\}$, and
-    \item The 50 most frequent special-character-N-grams for $N \in \{2,3,4\}$.
+    \item The 500 most frequent word-n-grams for $N \in \{2,3,4\}$,
+    \item The 300 most frequent character-n-grams for $N \in \{2,...,10\}$,
+    \item The 50 most frequent \gls{POS}-tag-n-grams for $N \in \{3,4\}$, and
+    \item The 50 most frequent special-character-n-grams for $N \in \{2,3,4\}$.
 \end{itemize}
 
 The selection the quantities, was based on the number available in the corpus,
-listed earlier. The number of different character N-grams we extracted was based
+listed earlier. The number of different character n-grams we extracted was based
 on the amount used in \citet{aalykke2016}. They found out that char-8-grams
 worked very well on MaComs data, which is the reason why we chose to include
-char-N-grams with a N spanning the values from 1 to 10. Looking at the results
-from \citet{US}, revealed that the N in word-N-grams reach a value of 4,
+char-n-grams with a N spanning the values from 1 to 10. Looking at the results
+from \citet{US}, revealed that the N in word-n-grams reach a value of 4,
 the probability of that sequence actually occurring drastically reduced,
 and with it its' overall impact. A similar thing could be seen with the
-special-character-N-grams, where an increase in N, would not contribute
-anything. The reason for the small amount of \gls{POS}-tag-N-grams was that
+special-character-n-grams, where an increase in N, would not contribute
+anything. The reason for the small amount of \gls{POS}-tag-n-grams was that
 they were a really big burden computationally, as such a reduction in possible
 N-values had to be made.
 
@@ -490,9 +490,9 @@ the layers are shown in Table \ref{tab:glossary}.
 \label{subsubsec:conv_char_nn}
 
 The idea behind network \gls{conv-char-NN} is that we wanted to use convolutions
-to look for N-grams in texts. Traditional authorship verification/attribution
-is based on carefully engineered N-grams that are compared between two texts
-\citep{stamatos2009}. Instead of choosing the N-grams ourselves we wanted the
+to look for n-grams in texts. Traditional authorship verification/attribution
+is based on carefully engineered n-grams that are compared between two texts
+\citep{stamatos2009}. Instead of choosing the n-grams ourselves we wanted the
 network to learn which features are important for the authorship verification
 task. The features are learned through convolutions. The convolutions look
 at some number of characters at a time and gives a single output for those
@@ -535,8 +535,8 @@ like "ould ". We have illustrated such a convolutional filter in Figure
         with different sizes. We use both convolutions with a window size of
         8 and convolutions with a window size of 4. We use 700 of size 8 and
         500 of size 4. We used a window size of 8 since \citet{aalykke2016}
-        found that N-grams of size 8 worked the best for Danish texts and we
-        also added 4 so the network could look at smaller N-grams as well.
+        found that n-grams of size 8 worked the best for Danish texts and we
+        also added 4 so the network could look at smaller n-grams as well.
         We used a stride of 1 such that each convolutional filter could
         observe all parts of the texts and give an output for each one. The
         convolutional part of the network also shares weights such that the

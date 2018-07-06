@@ -1392,11 +1392,11 @@ The network will take two inputs, a text $t_k \in T_\alpha$ and a text $t_u
 \in T_\beta$. The network will then try to figure out whether $\alpha =
 \beta$. The convolutions in the network will look at $n$ characters at a
 time and give an output. Therefore the convolutional layers will be able to
-learn important N-grams and extract a representation of $t_k$ and $t_u$. This
+learn important n-grams and extract a representation of $t_k$ and $t_u$. This
 representation will be given to some dense layers which will learn how to
 compare the feature-sets extracted. The Siamese part of the network is the
 convolutional part of the network which will share weights when extracting
-N-grams from the two texts.
+n-grams from the two texts.
 
 \citet{DBLP:journals/corr/0001KYS17} presented a comparative study of
 \gls{CNN}'s and \gls{RNN}'s in common \gls{NLP} tasks. They found that
