@@ -5,7 +5,7 @@ import argparse
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import sys
+from sklearn.metrics import auc
 
 
 def get_weight_report_name(previous_name):
@@ -40,74 +40,75 @@ parser.add_argument(
     '--image-out',
     help='Where to save the graph showing accuracies and errors.')
 
+parser.add_argument(
+    'smalldata',
+    help='96/04 split data file, produed by pred system',
+    type=str)
+
+parser.add_argument(
+    'bigdata', help='50/50 split data file, produed by pred system', type=str)
+
 args = parser.parse_args()
 
-data = pd.read_csv(sys.stdin)
+# 96/04 data
+small_data = pd.read_csv(args.smalldata)
+
+# 50/50 data
+big_data = pd.read_csv(args.bigdata)
+
+data = small_data
 
 weights = data.as_matrix(columns=['weight'])
-thetas = data.as_matrix(columns=['threshold'])
-accuracies = data.as_matrix(columns=['accuracy'])
-accusation_errors = data.as_matrix(columns=['accusation_error'])
 
 # Generate graph.
 for weight in np.sort(np.unique(weights)):
-    tps = data.as_matrix(columns=['tps'])
-    tns = data.as_matrix(columns=['tns'])
-    fps = data.as_matrix(columns=['fps'])
-    fns = data.as_matrix(columns=['fns'])
-    accs = accuracies[weights == weight]
-    errs = accusation_errors[weights == weight]
-    thresholds = thetas[weights == weight]
-
-    tps = tps[weights == weight]
-    tns = tns[weights == weight]
-    fps = fps[weights == weight]
-    fns = fns[weights == weight]
-
-    tpr = np.array([x / (x + fn) for x, fn in zip(tps, fns)])
-    fpr = np.array([x / (x + tn) for x, tn in zip(fps, tns)])
-
-    s = np.argsort(fpr)
-    tpr = tpr[s]
-    fpr = fpr[s]
-
-    tpr, fpr = zip(*np.unique(list(zip(tpr, fpr)), axis=0))
-
     roc = plt.figure(2)
     ax = plt.subplot(111)
+    plots_X = []
+    plots_Y = []
+
+    for i in range(2):
+        accuracies = data.as_matrix(columns=['accuracy'])
+        tps = data.as_matrix(columns=['tps'])
+        tns = data.as_matrix(columns=['tns'])
+        fps = data.as_matrix(columns=['fps'])
+        fns = data.as_matrix(columns=['fns'])
+
+        tps = tps[weights == weight]
+        tns = tns[weights == weight]
+        fps = fps[weights == weight]
+        fns = fns[weights == weight]
+
+        tpr = np.array([x / (x + fn) for x, fn in zip(tps, fns)])
+        fpr = np.array([x / (x + tn) for x, tn in zip(fps, tns)])
+
+        s = np.argsort(fpr)
+        tpr = tpr[s]
+        fpr = fpr[s]
+
+        tpr, fpr = zip(*np.unique(list(zip(tpr, fpr)), axis=0))
+
+        plots_X.append(fpr)
+        plots_Y.append(tpr)
+
+        data = big_data
+
+    plot_1, = ax.plot(
+        plots_X[0],
+        plots_Y[0],
+        label='96/04 AUC {}'.format(auc(plots_X[0], plots_Y[0])))
+    plot_2, = ax.plot(
+        plots_X[1],
+        plots_Y[1],
+        label='50/50 AUC {}'.format(auc(plots_X[1], plots_Y[1])))
+
+    ax.plot([0.0, 1.0], [0.0, 1.0], '--')
+    ax.set_title(weight)
+    ax.legend(handles=[plot_1, plot_2])
     ax.set_xlim((0, 1))
     ax.set_ylim((0, 1))
-    ax.plot([0.0, 1.0], [0.0, 1.0], '--')
-    ax.plot(fpr, tpr)
-    ax.set_title(weight)
+    ax.set_xlabel('False Positive Rate')
+    ax.set_ylabel('True Positive Rate')
     plt.show()
     roc.clf()
-
-if args.image_out is None:
-    plt.show()
-else:
-    roc.savefig(args.image_out, dpi=128)
-
-# Find the best configuration for each weight.
-print('{:^15}{:^13}{:^10}{:^10}{:^18}{:^8}{:^8}{:^8}{:^8}'.format(
-    'weight', 'allowed_error', 'theta', 'accuracy', 'accusation_error', 'tps',
-    'tns', 'fps', 'fns'))
-for weight in np.sort(np.unique(weights)):
-    for allowed_error in np.linspace(0.1, 0.9, num=9):
-        accs = accuracies[weights == weight]
-        errs = accusation_errors[weights == weight]
-
-        best_index = np.argmax(accs * (errs < allowed_error))
-
-        tp = tps[weights == weight][best_index]
-        tn = tns[weights == weight][best_index]
-        fp = fps[weights == weight][best_index]
-        fn = fns[weights == weight][best_index]
-        theta = thetas[weights == weight][best_index]
-
-        p_weight = weight.replace('+ Text Length', '+')
-        print('{:^15}{:^13.1f}{:^10.3f}{:^10.5f}{:^18.3f}{:^8}{:^8}{:^8}{:^8}'
-              .format(p_weight, allowed_error, theta, accs[best_index],
-                      errs[best_index], tp, tn, fp, fn))
-
-    print()
+    data = small_data
