@@ -99,3 +99,22 @@ method, and $\theta$ was selected based on their ability accusation error under
 0.1 or just their accuracy. A-Error denotes the accusation error.}
 \label{tab:char_word_CNN_res}
 \end{table}
+
+\begin{table}[]
+\begin{tabular}{|c|c|c|c|c|c|c|c||c|c|}
+\hline
+Split & Allowed Err & Weight & $\theta$ & TPS & TNS & FPS & FNS & \textbf{Acc} & \textbf{A-Error} \\ \hline
+\multirow{2}{*}{50/50} & 0.1 & $P_{lexp_{0.25}}$ & 0.033 & 3182 & 1470 & 2080 & 368 & \textbf{0.65521} & \textbf{0.2002} \\ \cline{2-10} 
+ & 1.0 & $P_{lexp_{0.25}}$ & 0.267 & 1795 & 3076 & 474 & 1755 & \textbf{0.68605} & \textbf{0.3632} \\ \hline
+\multirow{2}{*}{96/04} & 0.1 & $P_{lexp_{0.25}}$ & 0.002 & 3505 & 18 & 130 & 45 & \textbf{0.95267} & \textbf{0.7142} \\ \cline{2-10} 
+ & 1.0 & $P_{lexp_{0.25}}$ & 0.002 & 3505 & 18 & 130 & 45 & \textbf{0.95267} & \textbf{0.7142} \\ \hline
+\end{tabular}
+\caption{The result of running the network \gls{rec-sent-NN} on the
+dataset (D). Split denotes the split between negative and positive samples in
+the generated test sample set. Allowed Err, denotes if the parameters, weight
+method, and $\theta$ was selected based on their ability accusation error under
+0.1 or just their accuracy. A-Error denotes the accusation error.}
+\label{tab:RNN_res}
+\end{table}
+
+
