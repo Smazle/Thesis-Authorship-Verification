@@ -4,11 +4,11 @@ In this Section we will describe the method we have used to solve the Authorship
 Verification problem presented in Definition \ref{def:authorship_verification}.
 In general there are two methods of representing each author. There is the
 instance based approach and the profile based approach. In the instance based
-approach each author is represented by a set of texts they have written while
-in the profile based approach they are represented by the sum of the set of
-texts they have written. The instance based approach is illustrated in Figure
-\ref{fig:instance_based} and the profile based approach is illustrated in Figure
-\ref{fig:profile_based}.
+approach each author $\alpha \in \mathcal{A}$ is represented by a set of texts
+they have written $T_\alpha$, while in the profile based approach they are
+represented by the sum of the set of texts they have written. The instance based
+approach is illustrated in Figure \ref{fig:instance_based} and the profile based
+approach is illustrated in Figure \ref{fig:profile_based}.
 
 \begin{figure}[htb]
     \centering
@@ -35,32 +35,49 @@ texts they have written. The instance based approach is illustrated in Figure
     \label{fig:profile_based}
 \end{figure}
 
+An example of a profile-based authorship attribution approach, which is highly
+regarded by \citet{stamatos2009}, make use of a compression. This works, not
+by having represented each author library as a set of features, but rather
+makes use of compression to do so. In the initial scenario, we have a set of
+author-profiles, which is the concatenation of all their individual work.
+When a new text is then introduced the authorship is determined by looping
+through each author, adding it library (their concatenated profile). The
+profile is then compressed, both with and without the new text included in its
+library. The bit-wise difference is then computed, by subtracting them from
+one another, resulting in what is essentially the cross-entropy between the
+two sets. The author with the lowest cross-entropy is then considered to be
+the author of this new text. Different methods of comprehension can be used as
+the base for this model, each giving different results. In the instance that
+\citet{stamatos2009} describes, RAR compression yielded the best results, but
+this of cause depends on the scenario one finds oneself in.
+
 We will generally use the instance based approach. The reason we use an instance
-based approach is that it allows us to use extra information from each single
-text. For example writing style may change over time especially for secondary
-school pupils that evolve very much in a short amount of time. Since we use an
-instance based approach we are able to weight similarity to newer texts higher
-than similarity to older texts.
+based approach is that it allows us to use more individual text information
+rather than subjugating it to averaging over a set of texts, For example writing
+style may change over time especially for secondary school pupils that evolve
+very much in a short amount of time. Since we use an instance based approach
+we are able to weight similarity to newer texts higher than similarity to
+older texts. The practical application of this, will be explained in Section
+\ref{subsec:prediction_system}.
 
 There are also another split between methods that we consider. There are
 generalizing and author specific models. In a generalizing model only a single
 model is trained on data from multiple authors and are able to make predictions
 about previously unseen authors. In the author specific model a separate model
 has to be trained for each author and is not able to make predictions for
-previously unseen authors. The generalizing model has several advantages, it
-only has to be trained once and after that it can be used for everyone and
-it can make use of big data since it can use data from several authors for
-training. The author specific model has the advantage that it can better fit
+previously unseen authors. The generalizing models main advantage is that it
+only has to be trained once and after that it can be used for everyone and it
+can make use of a large amount data since it can use data from several authors
+for training. The author specific model has the advantage that it can better fit
 to the specific quirks of a particular author since it is trained separately
 for each author. The downside of the author specific approach is that a new
 model has to be trained for each new author. We will focus on the generalizing
 approach since it is easier to implement for MaCom as they only have to train a
 model once.
 
-As a unit of measuring the quality of our models, and how well they adhere to
-95\% specificity constraint, we will also compute the number of \gls{TP}s,
-\gls{TN}s, \gls{FP}s and \gls{FN}s, as seen in \citet{US}. In these problems we
-get,
+As a unit of measuring the quality of our models, we will also compute the
+number of \gls{TP}s, \gls{TN}s, \gls{FP}s and \gls{FN}s, as seen in \citet{US}.
+In these problems we get,
 
 \begin{itemize}
     \item a \gls{TP} whenever we answer \textit{True} and the texts are written
@@ -136,6 +153,19 @@ to accommodate this constraint we can take certain actions, which depends
 on the model used. Details about these actions will be addressed in Section
 \ref{subsec:prediction_system}.
 
+In addition to the constraint on the accusation rate, Macom has also expressed
+an interest in getting the specificity of our trained under 95\%. Specificity is
+defined as,
+
+\begin{equation}
+        \text{Specificity} = \frac{TN}{(TN + FP)}
+\end{equation}
+
+This constraint is however a bit out of our hands, is a very direct measure of 
+overall quality of the model. Specificity describes the performance
+of a model, but only with respect to the negative samples. This is a property
+that is not easily enforced. For this reason out action in getting towards
+this goal, will simply be to find the best model possible.
 
 \subsection{Baseline Methods}
 
@@ -146,6 +176,18 @@ was only concerned with English texts provided by the \citet{pan:2015}, and
 \citet{pan:2014} text forensics tasks, we hypothesize that the performance of
 these approaches will perform just as well on Danish texts when being tuned for
 the Danish language.
+
+It should be noted that the work done in \citet{US} was done on English
+texts rather than Danish as is the case in this paper. While there there is
+a discernible between the languages the overall difference is not actually
+that far. This is a point also made in \citet{konstantin:2000}, where
+using a lexical distance equation he computed the distance between all
+the European languages. A upgraded figure of his finding can be found
+here\footnote{\url{https://bit.ly/1BOMe9l}}. This model reveal
+that Danish end English are in fact not so lexical different, which makes sense
+as the both derive from the germanic branch of the indo-European language
+family.
+
 
 
 \subsubsection{Extended Delta Method}
