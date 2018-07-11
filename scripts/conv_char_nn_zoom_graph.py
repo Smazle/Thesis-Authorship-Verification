@@ -60,8 +60,9 @@ plt.tick_params(
     labelcolor='none', top='off', bottom='off', left='off', right='off')
 
 for weight in np.sort(np.unique(weights)):
-    if weight not in ['Exp λ=0.25', 'Exp λ=0.5', 'Exp λ=0.75',
-                      'Exp λ=1.0', 'Exp λ=0.0']:
+    if weight not in [
+            'Exp λ=0.25', 'Exp λ=0.5', 'Exp λ=0.75', 'Exp λ=1.0', 'Exp λ=0.0'
+    ]:
         continue
     weight_name = get_weight_report_name(weight)
 
@@ -74,12 +75,12 @@ for weight in np.sort(np.unique(weights)):
     axarr[1, 0].plot(thresholds, errs, label=weight_name)
 
     # Between 0.4 and 0.6.
-    accs = accuracies[np.logical_and(weights == weight,
-                      np.logical_and(thetas >= 0.4, thetas <= 0.6))]
-    errs = accusation_errors[np.logical_and(weights == weight,
-                             np.logical_and(thetas >= 0.4, thetas <= 0.6))]
-    thresholds = thetas[np.logical_and(weights == weight,
-                        np.logical_and(thetas >= 0.4, thetas <= 0.6))]
+    accs = accuracies[np.logical_and(
+        weights == weight, np.logical_and(thetas >= 0.4, thetas <= 0.6))]
+    errs = accusation_errors[np.logical_and(
+        weights == weight, np.logical_and(thetas >= 0.4, thetas <= 0.6))]
+    thresholds = thetas[np.logical_and(
+        weights == weight, np.logical_and(thetas >= 0.4, thetas <= 0.6))]
 
     axarr[0, 1].plot(thresholds, accs, label=weight_name)
     axarr[1, 1].plot(thresholds, errs, label=weight_name)
@@ -114,4 +115,4 @@ else:
         args.image_out,
         bbox_extra_artists=(lgd, ),
         bbox_inches='tight',
-        dpi=128)
+        format='pdf')

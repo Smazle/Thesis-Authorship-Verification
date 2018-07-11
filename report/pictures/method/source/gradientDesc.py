@@ -42,7 +42,7 @@ theta = [np.array((0, 0))]
 J = [cost_func(*theta[0])[0]]
 for j in range(N - 1):
     last_theta = theta[-1]
-    this_theta = np.empty((2,))
+    this_theta = np.empty((2, ))
     this_theta[0] = last_theta[0] - alpha / m * np.sum(
         (hypothesis(x, *last_theta) - y))
     this_theta[1] = last_theta[1] - alpha / m * np.sum(
@@ -50,15 +50,22 @@ for j in range(N - 1):
     theta.append(this_theta)
     J.append(cost_func(*this_theta))
 
-
 # Annotate the cost function plot with coloured points indicating the
 # parameters chosen and red arrows indicating the steps down the gradient.
 # Also plot the fit function on the LHS data plot in a matching colour.
 colors = ['b', 'g', 'm', 'c', 'orange']
 for j in range(1, N):
-    plt.annotate('', xy=theta[j], xytext=theta[j - 1],
-                 arrowprops={'arrowstyle': '->', 'color': 'r', 'lw': 1},
-                 va='center', ha='center')
+    plt.annotate(
+        '',
+        xy=theta[j],
+        xytext=theta[j - 1],
+        arrowprops={
+            'arrowstyle': '->',
+            'color': 'r',
+            'lw': 1
+        },
+        va='center',
+        ha='center')
 plt.scatter(*zip(*theta), c=colors, s=40, lw=0)
 
-plt.savefig('GradientDesc.png')
+plt.savefig('GradientDesc.pdf', format='pdf')

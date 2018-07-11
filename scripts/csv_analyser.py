@@ -228,7 +228,7 @@ line1 = plt.semilogy(X, frequencies, color='blue', label='Frequency')
 line2 = plt.plot(X, [1.0 / 100000.0] * len(X), color='red', label='Threshold')
 plt.legend(handles=[line1[0], line2[0]])
 
-plt.savefig('Frequencies.png')
+plt.savefig('Frequencies.pdf', format='pdf')
 plt.clf()
 
 plt.title('Character Counts and Thresholds')
@@ -244,7 +244,7 @@ line3 = plt.plot(
 
 plt.legend(handles=[line1[0], line2[0], line3[0]])
 
-plt.savefig('CharacterCount.png')
+plt.savefig('CharacterCount.pdf', format='pdf')
 
 plt.clf()
 
@@ -258,4 +258,4 @@ line2 = plt.plot(X, [sent] * len(lengths), color='red', label='Threshold')
 
 plt.legend(handles=[line1[0], line2[0]])
 
-plt.savefig('SentenceCount.png')
+plt.savefig('SentenceCount.pdf', format='pdf')
