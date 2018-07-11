@@ -1,202 +1,209 @@
 \section{Experiments} \label{sec:experiments} 
-In the previous sections we have been going the through the theoretical
-background of the different approaches we were going to make use of to classify
-the provided MaCom data. However from this point the practical aspect will be in
-focus. The following sections address what went into implementing the different
-methods, and why their final structure and parameters are what they are. Not only that, but each method will be tested against the external validation set
-(C). This will leave us with a final set of candidate methods which is to be run
-on the test dataset. Two of these will be the baseline method, and the other
-two will be the best performing recurrent network, and the best performing
-convolutional network.
 
-\subsection{Baseline Methods} \label{subsec:baseline}
+In the previous sections we have gone through the theoretical background of
+the different approaches we were going to make use of to classify the provided
+MaCom data. However from this point the practical aspect will be in focus. The
+following sections address what went into implementing the different methods and
+why their final structure and parameters were chosen. Not only that, but each
+method will be tested against the external validation set \gls{C}. This will
+leave us with a final set of candidate methods which is to be run on the test
+dataset. Two of these will be the baseline method, and the others will be the
+neural networks we train during our experimentation.
+
+
+\subsection{Baseline Methods} \label{subsec:baseline_methods}
 
 In this section we will go through the experiments performed in order to get
 our baseline results. While many different features can be used when performing
-\gls{NLP}, we chose the same features, as was used in \citet{US}, since they
-span several several of the different linguistic layers. The linguistic layers
-are different areas which all serve to describe a certain text. An example this
-could be the character level layer, which as the name implies, focuses on the
-individual characters used in a specific text. Other examples of this, could
-be the sentence layer, that focuses on the sentences of the text, and the meta
-layer, that focuses on things such as publishing/delivery date, and file format.
-The features available to pick from in this case are:
+\gls{NLP} we chose the same features as was used by \citet{US} since they span
+several several of the different linguistic layers. An example of a linguistic
+layer could be the character layer. As the name implies the character layer
+focuses on the individual characters used in a specific text. Other examples of
+linguistic layers could be the sentence layer that focuses on the sentences of
+the text, and the meta layer that focuses on things such as publishing/delivery
+date, and file format. The features that were used by \citet{US} and we
+also chose to use were, Word-n-grams, Character-n-grams, Word Frequencies
+(word-1-grams), \gls{POS}-tag-n-grams, and Special-Character-n-grams. An n-gram
+describes the combinations of sequential elements of size n. In the case where
+that element is characters, and n is 3, the string "hello" would produce the
+character-3-grams "hel", "ell" and "llo". This also means that a feature such as
+word frequencies can be considered word-1-grams.
+
+\gls{POS} tags refer to the grammatical class a certain words belongs to such
+as nouns or adjectives. In order to extract these we made use of a POS-tag
+extractor provided by \citet{polyglot}.
+
+Special-character-n-grams refers to character n-grams that are created by first
+removing all normal alphanumeric and space characters. Left are only dots,
+commas, colons and so on. These n-grams were shown to be very important in
+authorship verification by \citep{US}.
+
+The implementation of both the \gls{SVM} and the Extended Delta method closely
+resembles the implementation used by \citet{US}. There is however a big
+difference with the application of the delta method. Contrary to the scenario
+in \citet{US} where PAN data was used there is not an instance where we only
+have 1 text per author. As such the original version of the delta method can be
+used as described by \citet{evert2015towards}. This is the method where when
+given a new text $t$ supposedly written by an author $\alpha \in \mathcal{A}$
+his texts $T_\alpha$ are extracted and so is a set of texts not written by
+him $\hat{T}_\alpha$ where $|\hat{T}_\alpha| = |T_\alpha|$. The text $t$ is
+given to a \gls{KNN} classifier which determines if $t \in T_\alpha$ or $t \in
+\hat{T}_\alpha$.
+
+
+\subsubsection{Feature Selection}
+
+The experiments performed on our baseline methods was centered around parameter
+tuning. Not only parameters as the K in the extended delta method but also the
+set of features supplied to the methods. Other methods such as random forest
+has a built in filter for bad and noisy features. This is not the case for both
+the \gls{SVM} and extended delta method who does performs any kind of quality
+analysis of the feature they are given. It is worst for the extended delta
+method as that is just a distance metric that has no way of weighing features.
+Therefore we chose to perform a feature selection for them rather than just
+having them use the entire set available to them. Contrary to our previous
+work made in \citep{US} this process did not consist of trying out some random
+selection of features but rather a more systematic approach was used.
+
+We started by generating a set of features. The feature set is simply a set of
+n-grams. In order for us to find as good a feature set as possible we created a
+large initial feature set to increase the feature search space. To generate the
+features we used a corpus of text. Specifically we used the \gls{B} dataset as a
+corpus. From the corpus we enumerated all the different n-grams in the different
+categories and computed the frequency of each n-gram. The corpus had,
 
 \begin{itemize}
-    \item Word-n-grams,
-    \item Character-n-grams,
-    \item Word Frequencies (word-1-grams),
-    \item \gls{POS}-tag-n-grams, and
-    \item Special-Character-n-grams,
+    \item 188,472 different word-2-grams,
+    \item 2,178 different character-2-grams,
+    \item 27,535 different word frequencies,
+    \item 219 different \gls{POS}-tag-2-grams, and
+    \item 524 special-character-2-grams.
 \end{itemize}
 
-Where an n-gram describes the combinations of sequential elements of size n. In
-the case where that element is characters, and n is 3, the string "hello" would
-produce the character-3-grams "hel", "ell" and "llo". This also means that a
-feature such as word frequencies can be considered word-1-grams.
-
-\gls{POS} tags, refer to the grammatical class a certain words belongs to, such
-as nouns and adjectives. In order to extract these we made use of a POS-tag
-extractor, provided by \citet{polyglot}.
-
-For all of these experiments a Danish third party corpus, provided by
-\texttt{NLTK}\footnote{\url{http://www.nltk.org/index.html}}, was used as the
-basis for all the feature extraction, as was done in \citet{US} as well. This
-corpus consists of 22,476 sentences, and 563,358 words.
-
-The actual implementation of both the \gls{SVM} and the Extended Delta method,
-very closely resembles the implementation used in \citet{US}. There is however a
-very big difference, with the actual application of the delta method. Contrary
-to the scenario in \citet{US}, where PAN data was used, there is not an instance
-where we only have 1 text per author. As such the original version of the
-delta method can be used \citep{evert2015towards}. This is where, when given a
-new text $x$ supposedly written by an author $\alpha \in \mathcal{A}$, his
-texts $T_\alpha$ are extracted, and so is a set of texts no written by him
-$\overline{T}_\alpha$ where $|\overline{T}_\alpha| = |T_\alpha|$. The text,
-along with a negative sample text $z$, we know now to be written by $\alpha$ is
-given to a \gls{KNN} classifier, which determine if $x \in T_\alpha$ and $z \in
-\overline{T}_\alpha$.
-
-\subsubsection{Feature Selection *Under Reconstruction*}
-
-The larger part of the experiments performed using the baseline methods, was
-centered around parameter tuning. Not only parameter as the K in the extended
-delta method, but also the feature supplied to the method. Other methods such
-as random forest has a built in filter for bad and noisy feature. This is not
-the case for both the \gls{SVM} and extended delta method, who does performs any
-kind of quality analysis of the feature they are given, making them susceptible
-to the negative influences these features include. It is for this reason that
-we chose to select the features for them, rather than just having them use the
-entire set available to them.
-
-Contrary to our previous work made in \citet{US}, this process did not
-consist of trying out some random selection of features, but rather
-a more systematic approach was used.
-
-However, before starting to do that, a feature set had to be created
-first. In order for us to find the very best set of features, we wanted
-to create a very large initial feature set, so as to increase our search space.
-The corpus used had the following quantities of the different features.
+The quantities here are large due to the size of the corpus and will continue
+to rise as n increases. Rather than extracting all of those features from our
+texts we chose to focus on the n-grams with highest frequency as those are
+probably the most important features. Specifically consider a case where a very
+infrequent feature were chosen. That feature might only exist in the corpus and
+in none of the texts in the test set. That feature would therefore be useless
+in determining the authorship of those texts. Using the quantities listed above
+as inspiration we generated a candidate feature set of 4950 features. The set
+consisted of,
 
 \begin{itemize}
-    \item Word-2-grams - 188,472
-    \item Character-2-grams - 2,178
-    \item Word Frequencies - 27,535
-    \item \gls{POS}-tag-2-grams - 219
-    \item Special-character-2-grams - 524
+    \item
+
+        The frequencies of the 500 most frequent words,
+
+    \item
+
+        The frequencies of the 500 most frequent word-n-grams for $n \in \{2, 3,
+        4\}$,
+
+    \item
+
+        The frequencies of the 300 most frequent character-n-grams for $n \in
+        \{2, 3, ..., 10\}$,
+
+    \item
+
+        The frequencies of the 50 most frequent \gls{POS}-tag-n-grams for $n \in
+        \{3, 4\}$, and
+
+    \item
+
+        The frequencies of the 50 most frequent special-character-n-grams for $n
+        \in \{2, 3, 4\}$.
+
 \end{itemize}
 
-The quantities here are of course very large due to the size of the corpus,
-and will continue to rise as N increases. Rather than extracting all
-of those feature from our texts, we chose to focus on the n-grams
-with highest frequency, as we would reach a point where a specific n-gram
-determined to be in the corpus, would be unique that same corpus, making it
-irrelevant for new texts, not associated with the corpus.
-
-Using the quantities listed above as inspiration, a feature set of 4950
-features was produced, containing
-
-\begin{itemize}
-    \item The 500 most frequent words,
-    \item The 500 most frequent word-n-grams for $N \in \{2,3,4\}$,
-    \item The 300 most frequent character-n-grams for $N \in \{2,...,10\}$,
-    \item The 50 most frequent \gls{POS}-tag-n-grams for $N \in \{3,4\}$, and
-    \item The 50 most frequent special-character-n-grams for $N \in \{2,3,4\}$.
-\end{itemize}
-
-The selection the quantities, was based on the number available in the corpus,
-listed earlier. The number of different character n-grams we extracted was based
-on the amount used in \citet{aalykke2016}. They found out that char-8-grams
-worked very well on MaComs data, which is the reason why we chose to include
-char-n-grams with a N spanning the values from 1 to 10. Looking at the results
-from \citet{US}, revealed that the N in word-n-grams reach a value of 4,
-the probability of that sequence actually occurring drastically reduced,
-and with it its' overall impact. A similar thing could be seen with the
-special-character-n-grams, where an increase in N, would not contribute
+The quantities extracted reflects the inherent number of different n-grams of
+that type. Since there are many more different words than characters there will
+also be many more different word-n-grams than character-n-grams of the same
+size. We therefore also use more of the most frequent word-n-grams. The sizes
+of the different character n-grams we extracted was based on the amount used by
+\citet{aalykke2016}. They found that character n-grams of size 8 worked very
+well on MaComs data which is the reason why we chose to include char-n-grams
+with n spanning the values from 1 to 10. \citet{US} showed that the when $n$
+in word-n-grams reach a value of 4, the probability of that sequence actually
+occurring in any given text is drastically reduced. A similar thing can be seen
+with the special-character-n-grams where an increase in n would not contribute
 anything. The reason for the small amount of \gls{POS}-tag-n-grams was that
 they were a really big burden computationally, as such a reduction in possible
-N-values had to be made.
+n-values had to be made.
 
-These features were extracted from the dataset (I) described in Section
-\ref{sec:data}. The distribution of the texts over authors in this dataset is
-not very evenly spread. As such, the random selection of random opposing authors
-has a certain amount of bias towards the authors with a large amount of texts
-compared to the test.
+Having the features we could start doing our feature selection. The process
+proved very computationally expensive. Having to check every combination of 4950
+different features simply was not feasible. Therefore we implemented a greedy
+algorithm instead in combination with using only a small dataset \gls{I} for the
+feature selection.
 
-Having the features, we could start doing our feature selection. This whole
-process proved very expensive computationally. Having to check every combination
-of 5000 features, simply was not feasible. It was for that reason we opted for a
-greedy algorithm in combination with the drastically small dataset (I) instead.
-
-The greedy algorithm works as described by \citet{kanDeng}, which is a simple
-forward feature selection. Having out previously created feature set, we loop
-through each single feature, validating its' accuracy when applied to each
-$\alpha \in \mathcal{A}$, where in this case $\mathcal{A}$ is the dataset
-(I). As eluded to earlier, this consists of fetching $T_{\alpha}$ and a set
-$\hat{T}^{(I)}_{\alpha}$, where $|\overline{T}_\alpha| = |T_\alpha|$. Using
-this set of positive and negative cases, we make use k-fold cross validation
-to determine the performance of the feature for that author. This is done for
-all authors, and when averaged we have the performance of that single feature.
-This process is then repeated for all features. The best performing feature is
-then added to out candidate set of features. The next iteration we loop through
-all the feature again, but we validate against each feature in combination with
+The greedy algorithm as described by \citet{kanDeng} is a simple forward feature
+selection. Having our previously created feature set we loop through each single
+feature validating its accuracy when applied to each $\alpha \in \mathcal{A}$,
+where $\mathcal{A}$ is the dataset \gls{I}. The validation on each author
+$\alpha$ consists of fetching $T_{\alpha}$ and a set $\hat{T}_{\alpha} \subset
+\overline{T}_\alpha$, where $|\hat{T}_\alpha| = |T_\alpha|$. Using these sets
+of positive and negative cases we use k-fold cross validation to determine
+the performance of the feature for that author $\alpha$. This is done for all
+authors and when averaged we have the performance of that single feature. This
+process is then repeated for all features. The best performing feature is then
+added to a set of candidate features. In the next iteration we loop through all
+the features again but we validate against each feature in combination with
 the already selected features. This process is repeated until a set number of
-features are selected. At this point we determine at which point we had the best
-candidate set, and use that hence fourth.
+features are selected. At that point the feature set that generated the highest
+score is chosen.
 
-Even this greedy approach proved to be very time consuming. As such, we only did
-as described and found the best features, but left out the hyperparameters C,
-and $\gamma$ for the SVM, and K and the distance metric for the extended delta
-method. These hyperparameters were selected through a separate process
-which will be described in a later section.
-
-Due to the increased run-time when using leave one out cross validation, we had
-to make use of some other model selection approach. Under normal circumstances,
-normal X-fold cross validation would work out fine, but a complication arose
-when doing this with the extended delta method, which yielded normal cross
-validation unfit for that specific classifier. The reason for this was that
-there was a scenario where an unlucky split of folds would cause a lot of error.
-A generic example of this would be if we had the 2 class training set consisting
-of 6 value, evenly split between the 2 classes. In the case where we split those
-6 values into 3 folds, there is a chance that a fold contains two value of the
-same class, which means that if $K = 3$ in our case, both of those wont ever be
-able to classified correctly as there is only 1 of that class in the training
-set. As such, stratified K fold cross validation is used instead, as it uphold
-the class distribution in its' folds. While this problem would not plague the
-SVM classifier, we also opted the stratified K fold cross, so we would more
-directly compare the feature selection of the two models.
+Due to the increased run-time when using leave one out cross validation we had
+to make use of some other model selection approach. Under normal circumstances
+normal X-fold cross validation would work out fine but a complication arose when
+doing this with the extended delta method. The reason for this was that there
+was a scenario where an unlucky split of folds would cause a lot of error. A
+generic example of this would be if we had a 2 class training set consisting
+of 6 values evenly split between the 2 classes. In the case where we split
+those 6 values into 3 folds there is a chance that a fold contains two values
+of the same class which means that if $K = 3$ both of those wont ever be able
+to classified correctly as there is only 1 of that class in the training set.
+As such, stratified K fold cross validation is used instead as it uphold the
+class distribution in its folds. While this is not a proglem for the \gls{SVM}
+classifier we also opted the stratified K fold cross so we would more directly
+compare the feature selection of the two models.
 
 For both the \gls{SVM} and Extended Delta method, we ran this algorithm
-until 450 features were selected. The SVM performed its' feature
-selection using the default RBF kernel, a C with value 1, and $\gamma =
+until 450 features were selected. The \gls{SVM} performed its feature selection
+using the default RBF kernel, a C with value of 1, and $\gamma =
 \frac{1}{\text{n\_features}}$. Due to some authors having below 3 texts,
 the default K value of \gls{KNN}s K parameter was set to 3 for the feature
 selection.
 
 The results of both the SVM and the Extended Delta method feature selection can
-be seen in Figure \ref{fig:fs_results}. We got that the best number of selected
-feature were 220 for the SVM and 4 for the Extended Delta Method, scoring an
-accuracy of 0.697 and 0.672 respectively.
+be seen in Figure \ref{fig:fs_results}. The best number of selected feature were
+220 for the SVM and 4 for the Extended Delta Method, scoring an accuracy of
+0.697 and 0.672 respectively.
 
 \begin{figure}
     \centering
-    \textbf{Accuracy of baseline methods during feature selection}
-    \includegraphics[scale=0.8]{./pictures/experiments/feature_selection}
-    \caption{The process of the greedy feature selection of the SVM and the Extended Delta Method}
+    \textbf{Greedy Feature Selection}\par\medskip
+    \includegraphics[scale=0.6]{./pictures/experiments/feature_selection}
+    \caption{The process of the greedy feature selection of the SVM and the
+        Extended Delta Method. The x axis shows the number of selected features
+        so far in the search and the y axis the average accuracy when using that
+        feature set for each author. The extended delta method peaks with a very
+        small feature set while the \gls{SVM} needed more features to maximize
+        accuracy.
+    }
     \label{fig:fs_results}
 \end{figure}
 
 
 \subsubsection{Hyper Parameter Selection}\label{sec:hyp_select}
 
-As mentioned in the previous section, due to computational time, we were unable
-to do the hyper parameter selection parallel with the feature selection.
-For that reason we chose to split it up, selecting our features first, and the
-fine tuning our parameters based on those selected features.
-
-This means that our implementation very closely mimics the one used in the
-previous example. On both cases we start out with two lists of possible hyper
-parameter values:
+As mentioned in the previous section due to time constraints we were unable to
+do the hyper parameter selection in parallel with the feature selection. For
+that reason we chose to split it up selecting our features first and then tuning
+the parameters based on those selected features. As before where we searched
+for features in a set of features we now search for parameters in a set of
+parameters. We search for parameters in a grid search with the parameters,
 
 \begin{align}
     \text{SVM} &:
@@ -211,7 +218,7 @@ parameter values:
     \end{array}
 \end{align}
 
-The one parameter yet to be explained i $p$, which refers to the p in the
+The one parameter yet to be explained is $p$, which refers to the $p$ in the
 minkowski distance,
 
 \begin{equation}
@@ -220,95 +227,94 @@ minkowski distance,
 
 where $p=1$ and $p=2$ is the manhattan and eucledian distance respectively.
 
-The following was perform on the dataset (J) as this, contrary to the feature
-selection is more computationally efficient.
-
 We perform a grid search over all these parameters. For each variation of the
 hyper parameters we average the performance of the method over all unique
-authors in the training set, in a manner very similar to the feature selection.
-We make use of the same 3-fold stratified cross validation, and arrange each
-authors with set of opposing set of text, amounting to the same number he has
-written himself. The accuracy of each parameter configuration can be seen
-in Table \ref{table:KNN} for \gls{KNN}, and Table \ref{table:SVM} for
-\gls{SVM}.
+authors in the training set in a manner very similar to the feature selection.
+We make use of the same 3-fold stratified cross validation and arrange each
+author with set of opposing set of texts. The accuracy of each parameter
+configuration can be seen in Table \ref{table:KNN} for \gls{KNN}, and Table
+\ref{table:SVM} for \gls{SVM}. The parameter search was performed on the \gls{J}
+dataset.
 
 \begin{table}[h]
     \centering
-    \caption{The results from performing a grid search of the p and K parameter
-        of the \gls{KNN} algorithm}
-    \label{table:KNN}
+    \textbf{\gls{KNN} Cross Validation Results}\par\medskip
     \begin{tabular}{|c|ccccc|}
         \hline
         \backslashbox{$K$}{$p$} & 1 & 2 & 3 & 4 & 5 \\\hline
         1 & \textbf{0.630} & 0.603 & 0.588 & 0.577 & 0.570\\
-        3 & 0.628 & 0.589 & 0.572 & 0.565 & 0.555        \\
-        5 & 0.621 & 0.576 & 0.559 & 0.549 & 0.545        \\
-        7 & 0.612 & 0.564 & 0.546 & 0.537 & 0.533        \\
-        9 & 0.600 & 0.554 & 0.537 & 0.527 & 0.524        \\
-        11 & 0.587 & 0.542 & 0.527 & 0.520 & 0.517       \\
-        13 & 0.581 & 0.537 & 0.524 & 0.517 & 0.514       \\
-        15 & 0.571 & 0.532 & 0.519 & 0.514 & 0.512      \\\hline
+        3 & 0.628 & 0.589 & 0.572 & 0.565 & 0.555 \\
+        5 & 0.621 & 0.576 & 0.559 & 0.549 & 0.545 \\
+        7 & 0.612 & 0.564 & 0.546 & 0.537 & 0.533 \\
+        9 & 0.600 & 0.554 & 0.537 & 0.527 & 0.524 \\
+        11 & 0.587 & 0.542 & 0.527 & 0.520 & 0.517 \\
+        13 & 0.581 & 0.537 & 0.524 & 0.517 & 0.514 \\
+        15 & 0.571 & 0.532 & 0.519 & 0.514 & 0.512 \\\hline
     \end{tabular}
+    \caption{The results from performing a grid search of the $p$ and $K$
+        parameters of the \gls{KNN} algorithm.}
+    \label{table:KNN}
 \end{table}
 
 \begin{table}[h]
     \centering
-    \caption{The results from performing a grid search for C and $\gamma$, of the
-        \gls{SVM} algorithm}
-    \label{table:SVM}
+    \textbf{\gls{SVM} Cross Validation Results}\par\medskip
     \begin{tabular}{|c|cccccc|}
         \hline
         \backslashbox{$C$}{$\gamma$} & $10^{-3}$ & $10^{-1}$ & $10^{1}$ & $10^{3}$ & $10^{5}$ & $10^{7}$ \\\hline
-         $10^{-3}$ & 0.626 & 0.626 & 0.626 & 0.641 & 0.558 & 0.500\\ 
-         $10^{-1}$ & 0.626 & 0.626 & 0.626 & 0.641 & 0.558 & 0.500\\ 
-         $10^{1}$  & 0.626 & 0.626 & 0.626 & \textbf{0.689} & 0.576 & 0.501\\ 
-         $10^{3}$  & 0.626 & 0.626 & 0.681 & 0.687 & 0.576 & 0.501\\ 
-         $10^{5}$  & 0.626 & 0.680 & 0.678 & 0.687 & 0.576 & 0.501\\ 
+         $10^{-3}$ & 0.626 & 0.626 & 0.626 & 0.641 & 0.558 & 0.500 \\
+         $10^{-1}$ & 0.626 & 0.626 & 0.626 & 0.641 & 0.558 & 0.500 \\
+         $10^{1}$  & 0.626 & 0.626 & 0.626 & \textbf{0.689} & 0.576 & 0.501 \\
+         $10^{3}$  & 0.626 & 0.626 & 0.681 & 0.687 & 0.576 & 0.501 \\
+         $10^{5}$  & 0.626 & 0.680 & 0.678 & 0.687 & 0.576 & 0.501 \\
          $10^{7}$  & 0.674 & 0.678 & 0.678 & 0.687 & 0.576 & 0.501 \\\hline
     \end{tabular}
+    \caption{The results from performing a grid search for $C$ and $\gamma$ of
+        the \gls{SVM} algorithm}
+    \label{table:SVM}
 \end{table}
 
-It is at this point we grab the dataset (C), our external validation set. While
-applying these finely tuned methods to a validation set wont change anything in
-terms of the parameters we have selected, it will give us the ability to gauge
-the accuracy of our methods when applied to a new, never before seen, test-set
-(D). Using this untouched data set as the base, the validation determines what
-text from each author is the newest one, ending up with a set of samples of
-the form $(t, \alpha)$, where $t$ is a text, and $\alpha$ is an author. For
-each of these samples $T'_\alpha = T_\alpha \setminus \{t\}$ is extracted
-from (C). Additonally another randomly sampled set $\hat{T}_\alpha \subset
+We performed a validation of the methods on the \gls{C} dataset. While
+applying these methods to a validation set wont change anything in terms of
+the parameters we have selected. It will give us the ability to gauge the
+accuracy of our methods when applied to a new never before seen test-set.
+Using this untouched data set as the base the validation determines what text
+from each author is the newest one ending up with a set of samples of the
+form $(t, \alpha)$ where $t$ is a text and $\alpha$ is an author. For each
+of these samples $T'_\alpha = T_\alpha \setminus \{t\}$ is extracted from
+\gls{C}. Additionally another randomly sampled set $\hat{T}_\alpha \subset
 \overline{T}_\alpha$ is extracted where $|\hat{T}_\alpha| = |T'_\alpha|$. Using
 the combined set $T'_\alpha \cup \hat{T}_\alpha$, we can train the model in
-question, having provided it with both positive and negative examples of author
-$\alpha$s writing style. To include samples that depict a student that used a
-ghost writer, we change up which text we do our prediction on. For each sample
-there is a preset chance that the sample will be regarded as negative. If
-that is the case we pick out a random $t'$ where $t' \in (\overline{T}_\alpha
-\setminus \hat{T}_\alpha )$, and predict on that, where a correct prediction
-would be the model say he did not write it. In the positive case, we simply
-predict on $t$ and a correct prediction would be the model saying he did write
-it. The results of this process can be seen in Table \ref{tab:baseline-val-res}.
+question having provided it with both positive and negative examples of author
+$\alpha$'s writing style. To include samples that depict a student that used a
+ghost writer we change the text we do our prediction on. For each sample there
+is a probability that the sample will be regarded as negative. If that is the
+case we pick out a random $t'$ where $t' \in (\overline{T}_\alpha \setminus
+\hat{T}_\alpha)$ and predict on that where a correct prediction would be the
+model say he did not write it. In the positive case we simply predict on $t$ and
+a correct prediction would be the model saying he did write it. The results of
+this process can be seen in Table \ref{tab:baseline-val-res}.
 
 \begin{table}[h]
-\centering
-\begin{tabular}{|c|c|c|c|c|c|c||c|c|}
-\hline
-Split & Classifier & Params & TP & TN & FP & FN & \textbf{Accuracy} & \textbf{Accu Err} \\ \hline
-\multirow{2}{*}{50/50} & SVM & \{C:10, $\gamma$:1000\} &  759 & 692 & 308 & 241 & \textbf{0.7255} & \textbf{0.2583} \\ \cline{2-9} 
- & ED & \{K:1, p:1\} & 667 & 583 & 417 & 333 & \textbf{0.625} & \textbf{0.36353} \\ \hline
-\multirow{2}{*}{96/04} & SVM & \{C:10, $\gamma$:1000\} & 762 & 23 & 25 & 238 & \textbf{0.749} & \textbf{0.91187} \\ \cline{2-9} 
- & ED & \{K:1, p:1\} & 680 & 23 & 23 & 320 & \textbf{0.67208} & \textbf{0.93294} \\ \hline
-\end{tabular}
-\caption{The results of running our two baseline methods, SVM and Extended Delta
-(ED), on the dataset (C), the validation set. }
-\label{tab:baseline-val-res}
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|c||c|c|}
+        \hline
+        Split & Classifier & Params & TP & TN & FP & FN & \textbf{Accuracy} & \textbf{Accu Err} \\ \hline
+        \multirow{2}{*}{50/50} & SVM & \{C:10, $\gamma$:1000\} &  759 & 692 & 308 & 241 & \textbf{0.7255} & \textbf{0.2583} \\ \cline{2-9} 
+        & ED & \{K:1, p:1\} & 667 & 583 & 417 & 333 & \textbf{0.625} & \textbf{0.36353} \\ \hline
+        \multirow{2}{*}{96/04} & SVM & \{C:10, $\gamma$:1000\} & 762 & 23 & 25 & 238 & \textbf{0.749} & \textbf{0.91187} \\ \cline{2-9} 
+        & ED & \{K:1, p:1\} & 680 & 23 & 23 & 320 & \textbf{0.67208} & \textbf{0.93294} \\ \hline
+    \end{tabular}
+    \caption{The results of running our two baseline methods the \gls{SVM} and
+        Extended Delta method, on the dataset \gls{C} the validation set.}
+    \label{tab:baseline-val-res}
 \end{table}
 
-Unfortunately both of these methods aren't suitable for the prediction system
-described earlier, and thus a fine tuning to get it below the allowed accusation
-error was not possible. While this is not ideal for comparative purposes, it
-does lend credence to the applicability of neural networks to this specific
-scenario.
+Unfortunately both of these methods are not suitable for the prediction system
+described earlier and thus a to get it below the allowed accusation error was
+not possible. While this is not ideal for comparative purposes it does lend
+credence to the applicability of neural networks to this specific scenario.
+
 
 \subsection{Deep Learning}
 
