@@ -85,7 +85,7 @@ else:
         args.image_out,
         bbox_extra_artists=(lgd, ),
         bbox_inches='tight',
-        dpi=128)
+        format='pdf')
 
 # Find the best configuration for each weight.
 print('{:^15}{:^13}{:^10}{:^10}{:^18}{:^8}{:^8}{:^8}{:^8}'.format(

@@ -345,7 +345,7 @@ probability of each class in a classification problem.
 \end{figure}
 
 Exceptions to usage of the \gls{ReLu} activation function can be found when
-we make use LSTM layers during our experimentation. It makes use of the
+we make use \gls{LSTM} layers during our experimentation. It makes use of the
 tanh activation function,
 
 \begin{equation}\label{eq:tanh}
@@ -610,7 +610,7 @@ different layers.
         \begin{figure}
             \centering
             \textbf{Illustration of an \gls{RNN} Layer}\par\medskip
-            \includegraphics[width=\textwidth]{./pictures/method/RNN_figure.png}
+            \includegraphics[width=\textwidth]{./pictures/method/RNN_figure}
             \caption{Illustrates the structure of an \gls{RNN}. The \gls{RNN}
                 consist of three layers, an input layer, a hidden layer and an
                 output layer. The \gls{RNN} shown consist of $I$ input units,
@@ -905,7 +905,7 @@ of a function. It can be used for describing the slope of a function at a
 certain value. Not only that, but its most desired property for our purposes is
 the fact that contrary to the derivative it a vector, and this vector points
 to the direction of greatest increase in value for the function at a specific
-point. As such, we can apply Gradient Descent to our network, which is simply
+point. As such, we can apply gradient descent to our network, which is simply
 the act of changing our loss function arguments, so we step in the negative
 direction of the gradient, which would be the direction of greatest decrease
 in value, that is, it point towards the local minimum of the error function. A
@@ -914,7 +914,7 @@ model illustrating this process can be seen in Figure \ref{fig:grad}
 \begin{figure}
     \centering
     \includegraphics[width=0.8\textwidth]{./pictures/method/GradientDesc.png}
-    \caption{An illustration of how Gradient Descent works. Each iteration steps
+    \caption{An illustration of how gradient descent works. Each iteration steps
         in the direction of the global minimum of the specific function used,
         which in this case is signified by a black ring. The Figure is generated
         using code from
@@ -933,7 +933,7 @@ E_n(W) &= \frac{1}{2}(\hat{y}_n - y_n)^2
 Where N is the number of training samples, $\hat{y}_n$ is the predicted results,
 and $y_n$ is the target, and W is a set of weights. The goal is minimize this
 function. In order to do so, we need to have a independent variable we can
-tweak using Gradient Descent as per the above description. In the case of
+tweak using gradient descent as per the above description. In the case of
 neural networks we can view this variable as being the weights and the biases,
 which are defined used as described in Section \ref{sec:neurons}. In other
 words we want to update each weight vector by doing the following operation
@@ -944,7 +944,7 @@ repeatedly.
 \end{equation}
 
 Where $\mathbf{w}$ is a singular weight value, and t refers to a specific step,
-in the chain of steps performed by Gradient Descent.
+in the chain of steps performed by gradient descent.
 
 \begin{equation}
     \Delta \mathbf{w}^{(t)} = -\nabla E|_{\mathbf{w}^{(t)}}
@@ -967,7 +967,7 @@ function with respect to all the weights in our network.
 
 After performing step 1(Feed forward), which entails running a training sample
 through the network, we want to determine by how much we have to tweak each
-weights using Gradient Descent. Due to the hidden nature of the entire network,
+weights using gradient descent. Due to the hidden nature of the entire network,
 the natural starting point for this process is at the output node. If we for
 simplicity's sake focus on only a single training sample, we can compute the
 loss as follows
@@ -1126,7 +1126,7 @@ convergence \citep{Bishop}.
 
 \subsubsection{Optimizers}\label{sec:optimizers}
 
-Optimizations of the Gradient Descent algorithm in the training of a neural
+Optimizations of the gradient descent algorithm in the training of a neural
 network are referred to as an optimizer function. The optimizer functions
 responsibility is to minimize the error function $E$ as fast as possible
 without overstepping the "valleys" in the function. The easiest way to use
