@@ -230,7 +230,7 @@ assignments when we had no such assignments available during testing. However we
 believe we have handled the deficiencies in the dataset as well as possible.
 
 
-\subsection{Weight Functions}
+\subsection{Prediction Systems}
 
 As described in Section \ref{subsec:prediction_system} we use several weight
 functions to weight which of an authors texts are most important. Looking
@@ -238,23 +238,23 @@ at the graphs in Section \ref{subsubsec:prediction_system_conv-char-NN},
 \ref{subsubsec:prediction_system_rec-sent-NN} and
 \ref{subsubsec:prediction_system_conv-char-word-NN} we can get an idea of the
 relative strengths of the weight methods. Using those graphs we want to discuss
-a couple of the weight functions.
+a couple of the prediction systems.
 
 \begin{description}
 
     \item[$P_\mathrm{U}$]
 
-        The uniform weight function generally has a lower accuracy and higher
-        accusation error than the other weight functions. The only weight
-        function that performs worse than the uniform weight is the $P_{min}$
-        weight function. We had expected that the uniform weighing would perform
+        The uniform prediction system $P_\mathcal{U}$ generally has a lower
+        accuracy and higher accusation error than the other prediction systems.
+        The only prediction system that performs worse than the uniform weight
+        is $P_{min}$. We had expected that the uniform weighing would perform
         worse than the other since it doesn't use any metadata about the texts
         to make its predictions. It only use the raw predictions on the texts of
         the networks and simply takes an average of that.
 
     \item[$P_{exp_\lambda}$]
 
-        The exponential dropoff weight function used the time of an
+        The exponential dropoff prediction system used the time of an
         assignment to determine the most important text. Recall that
         as $\lambda \rightarrow \infty$ more weight is placed on the
         newest assignment. We assumed that an authors writing style
@@ -274,7 +274,7 @@ a couple of the weight functions.
         \begin{figure}
             \centering
             \textbf{\glsdesc{conv-char-NN} Prediction System 0.5 Split}\par\medskip
-            \includegraphics[width=0.7\textwidth]{./pictures/discussion/conv_char_nn_prediction_zoom_50.png}
+            \includegraphics[width=0.7\textwidth]{./pictures/discussion/conv_char_nn_prediction_zoom_50_time.png}
             \caption{Illustrate important intervals for our different
                 $P_{exp_\lambda}$ prediction systems for the \gls{conv-char-NN}
                 network on the 0.5 split dataset. On the left we have shown the
@@ -286,7 +286,7 @@ a couple of the weight functions.
         \begin{figure}
             \centering
             \textbf{\glsdesc{conv-char-NN} Prediction System 0.04 Split}\par\medskip
-            \includegraphics[width=0.7\textwidth]{./pictures/discussion/conv_char_nn_prediction_zoom_04.png}
+            \includegraphics[width=0.7\textwidth]{./pictures/discussion/conv_char_nn_prediction_zoom_04_time.png}
             \caption{Illustrate important intervals for our different
                 $P_{exp_\lambda}$ prediction systems for the \gls{conv-char-NN}
                 network on the 0.04 split dataset. On the left we have shown the
@@ -317,7 +317,7 @@ a couple of the weight functions.
         difference between $\lambda = 0.75$ and $\lambda = 1.0$. At the same
         time the accusation error increases as $\lambda \rightarrow 1$ but it
         does not seem that it increases with diminishing returns. The best
-        weight function in this interval is therefore a tradeoff between the
+        prediction system in this interval is therefore a tradeoff between the
         accusation error and accuracy obtained. You can increase your accuracy
         by increasing $\lambda$ but at the same time the accusation error will
         also rise. We solved that problem by maximizing the accuracy while
@@ -376,7 +376,7 @@ a couple of the weight functions.
         results. Since it is now more risky to report a negative it makes sense
         that weights closer to uniform performs better since more is required
         to make them report a negative in this interval. It is still clear that
-        $P_\mathcal{U}$ is the worst weight function so we can still conclude
+        $P_\mathcal{U}$ is the worst prediction system so we can still conclude
         that the newest assignment is more indicative of writing style than the
         oldest.
 
@@ -397,11 +397,11 @@ a couple of the weight functions.
         where the average score of the newest text is shown first and the
         average score of the oldest text last. That vector clearly shows that
         writing style changes over time and it is therefore a good idea to use
-        some sort of time based weight function.
+        some sort of time based prediction system.
 
     \item[$P_l$]
 
-        The idea behind the length based weight function was that longer
+        The idea behind the length based prediction system was that longer
         texts would better reflect the writing style of an author. Some
         of the texts in the dataset are only a few hundred characters
         long which means that only few of the n-grams the networks
@@ -439,7 +439,7 @@ a couple of the weight functions.
         weight is not whether or not it beats $P_\mathcal{U}$, but rather
         whether or not it is better than $P_l$ and $P_{exp_\lambda}$. In Figure
         \ref{fig:conv_char_prediction_zoom_50_time_and_length} we have shown the
-        performance of the prediction systems in question.
+        performance of $P_{lexp_\lambda}$.
 
         \begin{figure}
             \centering
@@ -452,6 +452,19 @@ a couple of the weight functions.
                 have shown the end of the curves.}
             \label{fig:conv_char_prediction_zoom_50_text_length}
         \end{figure}
+
+        In that Figure we see that $P_{exp_{0.25}}$ has generally better
+        performance than $P_{lexp_{0.25}}$ except right at the maximum accuracy.
+        At the maximum accuracy $P_{lexp_{0.25}}$ is able to just barely beat
+        $P_{exp_{0.25}}$. Almost all the networks used the $P_{lexp_{0.25}}$
+        prediction system as the best prediction system and it must be this
+        small difference that causes that.
+
+        It is interesting that the performance of $P_{lexp_{0.25}}$ is only best
+        right at the maximum accuracy. Maybe that is due to something similar to
+        the effect we saw with $P_{exp_{\lambda}}$ where higher $\lambda$ values
+        was best at the extremes and lower $\lambda$ values were better in the
+        middle of the graphs.
 
 \end{description}
 
