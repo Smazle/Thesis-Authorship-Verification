@@ -1,191 +1,248 @@
 \section{Data} \label{sec:data}
 
-As described earlier we use data from the Danish company MaCom. The dataset
-provided by MaCom is a file consisting of set of texts in Danish where each text
-is associated with an author ID. Throughout the development process we've been
-given several data extract. The final extract used for experiments consisted of
-a set of 10.250 authors, where a maximum of 100 authors were extracted from each
-school. In total, this is 133749 texts. Before running any kind of experiments,
-this data was split up into several parts, each part severing a different
-purpose in our experimentation. The splitting of the data can be seen in Figure
-\ref{fig:data_split}. The purpose of the sets are the following:
+In this section we will describe the dataset we have worked with, how we
+partitioned the dataset into pieces (train, validation, test), the preprocessing
+steps we applied to the dataset, the reasons behind those preprocessing steps,
+and how we generated problem instances to train our neural networks on.
+
+
+\subsection{Data Split}
+
+Our dataset is provided by the Danish company MaCom. The dataset is a file
+consisting of a set of texts written in Danish where each text is associated
+with an author ID. Throughout the development process we have been given
+several data extracts. We will only discuss the last dataset as the other are
+irrelevant. The texts in the dataset is extracted from pdf files meaning that
+sometimes the texts are not valid texts. The final extract consisted of a set of
+10,058 authors where a maximum of 100 authors were extracted from each school.
+In total the dataset contains 133,749 texts. We needed to split the dataset into
+pieces as we needed several different datasets for different purposes in our
+experiments. The split is illustrated in Figure \ref{fig:data_split}. Each split
+is performed on the author level such that if a single text $t \in T_\alpha$ is
+in a particular dataset then all $t' \in T_\alpha$ is in that same dataset. We
+have named our datasets as upper case characters. The different datasets we use
+are,
 
 \begin{figure}
     \centering
-    \textbf{Illustration of Datasets}\par\medskip
-    \includegraphics[width=.8\textwidth]{./pictures/data/Data.png}
+    \textbf{Dataset Partition}\par\medskip
+    \includegraphics[width=.6\textwidth]{./pictures/data/data_split.png}
     \caption{Shows how we have split the dataset we are given. The splits are
         performed on the number of authors in each set. That means that all of
         an authors texts are contained in the same dataset. In particular that
         means that the test dataset contains completely unseen authors that has
-        not been used in any training/hyper-parameter selection.}
+        not been used in any training and hyper-parameter selection.}
     \label{fig:data_split}
 \end{figure}
 
+\begin{description}
+
+    \item[\gls{A}]
+
+        Consists of 10,058 authors and 133,749 texts. This is the original
+        dataset we were given by MaCom. The dataset is extracted from high
+        school students spanning several different schools.
+
+    \item[\gls{B}]
+
+        Consists of 5,500 authors and 71,451 texts. This dataset is used in
+        the training process of the \gls{NN}s, in the hyperparameter selection
+        in the baseline methods and as a corpus for extracting statistical
+        information about texts and authors.
+
+    \item[\gls{C}]
+
+        Consists of 1,000 authors and 13,130 texts. This dataset is used for
+        selecting the best networks we train during the experiments and to give
+        an unbiased estimate of network performance on the test dataset.
+
+    \item[\gls{D}]
+
+        Consists of 3,558 authors and 45,824 texts. This dataset is used to
+        give an unbiased estimate of the performance of our methods in the real
+        world.
+
+    \item[\gls{E}]
+
+        Consists of 3500 authors and 45,251 texts. This dataset is used for
+        training our neural networks.
+
+    \item[\gls{F}]
+
+        Consists of 2,000 authors and 26,198 texts. This dataset is used to
+        choose hyperparameters for the prediction system.
+
+    \item[\gls{G}]
+
+        Consists of 3,000 authors and 38,773 texts. This is the dataset that are
+        used to generate the actual data the networks are trained on. In Section
+        \ref{subsec:problem_generation} we describe how we generate individual
+        samples to the networks.
+
+    \item[\gls{H}]
+
+        Consists of 500 authors and 6,478 texts. This dataset is used to perform
+        early stopping during the training of our neural networks.
+
+    \item[\gls{I}]
+
+        Consists of 100 authors and 1,384 texts. This dataset is used to perform
+        feature selection for the \gls{SVM} and Extended Delta method. We will
+        describe the feature selection process in Section \ref{subsec:baseline}.
+
+    \item[\gls{J}]
+
+        Consists of 5,400 authors and 70,067 texts. This dataset is used to find
+        hyperparameters for our baseline methods. We describe the hyperparameter
+        selection in Section \ref{subsec:baseline}.
+
+\end{description}
+
+
+\subsection{Preprocessing}
+
+We apply several preprocessing steps to the dataset. We mainly exclude texts
+that are to long or to short or texts that seem like they do not contain valid
+text. We base our preprocessing decisions on statistical information extracted
+from the B dataset. In the B dataset,
+
 \begin{itemize}
 
-    \item[- (A).]
+    \item
 
-        The entire set of extracted data. This consists of text written by,
-        10.058 different danish high school students, spanning different schools
-        throughout the country.
+        Each author has written an average of 13 texts with a standard deviation
+        of 4.2. The maximum number of texts per author is 42 and the minimum is
+        2,
 
-    \item[- (B).]
+    \item
 
-        Consisting of the texts written by 5.500 different authors, this set
-        if used in the training process for the \gls{NN}s where it is used for
-        training/validation and the prediction system. It is also used for the
-        baseline methods, where this entire set is used as the corpus.
+        The average character count in a text is 5,517 with a standard deviation
+        of 4134 characters. The maximum character count in a text is 338,315 and
+        the minimum is 0,
 
-    \item[- (C).]
+    \item
 
-        Being untouched throughout the training process, this set is used for
-        unbiased validation, and selection of networks to be used on the test
-        set (D). Contrary to the training set (B), this is only used for the
-        final selection of our best models during the training process.
+        The average length of a sentence is 20 words with a standard deviation
+        of 25 words. The maximum number of words in a sentence is 6327 and the
+        minimum is 0,
 
-    \item[- (D).]
+    \item
 
-        The test set, which as the name implies, is used to test the performance
-        of our final models.
+        The average number of sentences per text is 50 sentences with a standard
+        deviation of 40 sentences. The maximum number of sentences in a text is
+        4401 and the minimum is 0,
 
-    \item[- (E).]
+    \item
 
-        As mentioned (B) is used for training both the baselines and the
-        \gls{NN}s. In both circumstances, and different split of (B) is
-        performed. (E) is the data used for the actual training of the
-        \gls{NN}s.
+        The average number of unique characters used in a text is 55 with a
+        standard deviation of 12. The text with the most unique characters used
+        has 219 characters and the minimum is 0,
 
-    \item[- (F).]
+    \item
 
-        This set is used as the basis of the prediction system described in the
-        earlier sections of this paper.
-
-    \item[- (G).]
-
-        The training data which is given to our \gls{NN}s.
-
-    \item[- (H).]
-
-        A separate validation set, where no authors overlap with (H), which is
-        used to determine the accuracy of our the model on an independent set
-        of authors during training. This allows us to stop the training when we
-        reach the desired generalization and accuracy.
-
-    \item[- (I).]
-
-        This is an alternate split of (B), used on the baseline methods together
-        with set (J). It is used perform the feature selection for both the SVM
-        and the Extended Delta method. The specifics of this process will be
-        described in Section \ref{subsec:baseline}.
-
-    \item[- (J).]
-
-        This set is used to tune the baseline methods. (J) is used to determine
-        the best hyperparameters for the baseline methods. This would be K and
-        p in the case of the Extended Delta Method, and C and Gamma for the SVM.
-        Like with (I), the specifics of this parameter selection will be covered
-        in Section \ref{subsec:baseline}.
+        The average number of unique words used in a text is 379 words with a
+        standard deviation of 684 words. The maximum unique words used is 375
+        and the minimum is 0.
 
 \end{itemize}
 
-The training set (B), consists of a total of 73311 texts written in the same
-class, split over the 5.500 authors, from different schools. Each authors has
-written in average 13 texts, with the standard deviation being 4.2. We initially
-removed the first 200 characters of each text, as the beginning of each text
-contains a lot of authorship identifying information, such as name, school, and
-specifics class. The removal of these characters also make sure that no garbage
-texts are included. The texts vary a lot in both structure and length, spanning
-from poems to essays. It is for this reason that this sets character count has
-a standard deviation of 4133 even though the average character count of 5516.
-The full statistics of the training set (B) can be seen in the appendix, Section
-\ref{sec:B_stats}.
+It does not make sense to train networks on texts that contains 0 characters
+or texts with a sentence consisting of 6327 words. The text of 0 characters
+is clearly a blank turn in and the text with a very long sentence is probably
+garbage extracted from a corrupted pdf file. Furthermore some of our methods
+require us to hold a text in memory and perform operations on it. Some of the
+very long texts caused our programs to crash so we also had to restrict the
+length of the texts.
 
-Due this to this disparity in terms of the contents of the data, some
-constraints had to be applied to the data. The reason for this is ,in most
-cases, that the non-existence of the constraints would result in either some
-computational inefficiency accompanied by a minor increase in data-quality, or
-simply just a computational impossibility such as a single text consuming all
-memory causing our models to crash. Another purpose of these constraints is to
-make the dataset generalize better by removing the outliers.
+We initially removed the first 200 characters of each text as the beginning
+of each text contains much metadata such as author name, school of origin,
+and author class. We did not discover that we needed to remove the first 200
+characters based on the statistics above. Rather we discovered during our
+experiments that the networks were using the metadata to make decisions.
+The reasons behind the preprocessing decision will be described in a later
+section. In addition to the 200 characters we removed initially we also
+removed texts that had below 200 characters left after the removal. We did
+that as we believe they do not provide enough information about that specific
+author to be useful. The application of that constraint resulted in 2.49\%
+of the texts being removed. After that we applied a upper character count
+constraint for computational reasons. We found that limiting the number of
+characters to 30.000 gave good results by removing the troublesome, without
+affecting the data-quality too much. That constraint resulted in the removal of
+0.16\% of the texts being removed. We have illustrated the cutoffs in Figure
+\ref{fig:cutoff_thresholds}. There it can be seen that the cutoff points removes
+only the outliers and leaves the vast majority of texts.
 
-As can be seen in the statistics in Section \ref{sec:B_stats}, the text
-containing the smallest consists of 0 characters, and does obviously not
-contain any valuable information. In addition to the 200 characters we removed
-initially, we also removed texts that have below 200 characters left after
-the removal, as they do not provide enough information about that specific
-author, and would work properly with our baseline methods due to the size. The
-application of this constraint, resulted in 1.823 of the 73.311 texts being
-removed. After which we applied a upper constraint, in terms of the total number
-of characters. The reason for this, was a mentioned earlier, that there are some
-texts eating up all the available memory, such as the largest text in (B), which
-consists of 338.315 characters. We found that limiting the number of characters
-to 30.000 gave good results, by removing the crash-inducing texts, without
-affecting the overall data-quality too much, as this only removed 119 texts from
-(B).
+Since we also used some sentence level networks as well we also chose to limit
+the maximum number of sentences. The text with the most sentences also caused
+memory problems giving us another reason to limit the number of sentences in a
+text. We chose to impose an upper limit of 500 sentences which is well above the
+average sentence count. In Figure \ref{fig:cutoff_thresholds} we have shown the
+fraction of texts removed by this upper limit. It can be seen that almost no
+texts are removed. Specifically 0.35 \textperthousand of the texts were removed.
 
-Since we also perform some sentence level networks as well, we also chose to
-limit the max number of sentences, for the same reason as with the characters.
-The text with the largest amount of sentences, contains 4401 sentences. With
-an average sentence count of 49 and a standard deviation of 39, this text is
-obviously an outlier, and doesn't generalize the data set very well. A such we
-impose a upper limit of 500 sentences per text, which removes another 26 texts
-from (B).
+The last constraint regards the number unique characters in each text. Looking
+at the statistics we can see that there is a text containing 219 unique
+characters. Such a high unique character count implies that a non-Danish
+alphabet might have been used and for that reason that text is not useful for
+our purposes. We dealt with the many different unique characters by replacing
+all characters with a frequency less than $10^{-5}$ with a special garbage
+character. Our neural networks were then supposed to learn that that garbage
+character should be ignored. We chose the threshold based on the frequencies
+of the Danish characters æ, ø, å, Æ, Ø and Å. We believe that those
+characters are important to determining authorship as form example some people
+replace the character å with aa and others do not. The frequency of those
+characters lie just above the $10^{-5}$ threshold we chose. Additionally we can
+see in Figure \ref{fig:cutoff_thresholds} that after the threshold the overall
+of frequency of the characters drops dramatically. Which suggests that we chose
+a correct threshold.
 
-The last constraint regards the unique characters in each text. Look at the
-stats we can see that there is a text containing 219 unique characters, greatly
-exceeding the average of 57. A unique character count like this, implies that a
-non-danish alphabet might have been used, and for that reason texts like these
-do not add to the generalization we strive towards. This is combatted creating a
-list of characters based on the data used for training, each character in this
-list is mapped to a replacement character if ever encountered in either the
-training or the validation set. The characters are placed in this list if they
-occur with a frequency smaller than $10^{-5}$. This threshold was determined
-by looking at the danish characters Æ,Ø and Å. In the set (B) they have
-a frequency just above $10^{-5}$. We want these included, as we hypothesize
-that they generalize danish student well. Additionally we can see in Figure
-\ref{fig:character_frequencies}, along with the other thresholds, that after
-the character frequency threshold, the overall of frequency of the specific
-characters drops dramatically.
-
-After applying all of the constraints, and taking into account overlap between
-them, 1.944 texts were removed from the total 73.311 in (B), which is a
-negligible amount compared to the computational and generalization advantages it
-includes. In the end this leaves set (B) with 71.367 texts.
-
-The aforementioned constraints were not all applied to entirety (A) in the same
-manner. Both (C) and (D) are used in a testing context, for that reason removing
-the first 200 characters wont make sense as we only did that to prevent the
-training process in latching on to author specific meta-data in the text. We
-still apply the lower constraint of 200, as this system was intended for usage
-of the large SRP assignment the students make at the end of their last year,
-this this constraints scrubs away potential garbage texts. The upper limit
-is removed, as this was only a step to prevent our methods from crashing. By
-applying the methods on a students assignment in a singular fashion rather than
-a batch one, we will not have the same problem.
+After applying all of the constraints and taking into account overlap between
+them only 2.65 \% of the texts were removed. The amount is negligible amount
+compared to the computational and generalization advantages it gives. We also
+applied the preprocessing steps to the other datasets meaning that from now on
+all datasets has been preprocessed.
 
 \begin{figure}[htb]
     \begin{minipage}{.5\linewidth}
         \centering
-        \subfloat[]{\label{main:a}\includegraphics[scale=.5]{./pictures/data/Frequencies.png}}
+        \subfloat[]{
+            \label{subfig:character_frequencies}
+            \includegraphics[scale=.5]{./pictures/data/frequencies.png}
+        }
     \end{minipage}%
     \begin{minipage}{.5\linewidth}
         \centering
-        \subfloat[]{\label{main:b}\includegraphics[scale=.5]{./pictures/data/SentenceCount.png}}
+        \subfloat[]{
+            \label{subfig:sentence_count}
+            \includegraphics[scale=.5]{./pictures/data/sentence_count.png}
+        }
     \end{minipage}\par\medskip
     \centering
-    \subfloat[]{\label{main:c}\includegraphics[scale=.5]{./pictures/data/CharacterCount.png}}
+    \subfloat[]{
+        \label{subfig:character_count}
+        \includegraphics[scale=.5]{./pictures/data/character_count.png}
+    }
 
-    \caption{The different thresholds applied to the during preprocessing.}
-    \label{fig:character_frequencies}
+    \caption{The different thresholds applied to the during preprocessing. In
+        Figure \ref{subfig:character_frequencies} we have shown the thresholds
+        we applied to remove the very infrequent characters from the texts. In
+        Figure \ref{subfig:sentence_count} we have shown the upper limit we
+        placed on sentences. In Figure \ref{subfig:character_count} we have
+        shown the upper and lower thresholds we placed on the character count in
+        each text.
+    }
+    \label{fig:cutoff_thresholds}
 \end{figure}
 
-All of the neural networks we train are Siamese Neural Networks. They all
-work by comparing two texts at a time. We therefore had to generate problem
-instances that contained two texts from either the same or different authors and
-a class that reflected that. For each author $\alpha$ in the training dataset
-$G$ we generate all possible combinations of two of the texts in $T_\alpha$
-as positive samples. We also generate the same number of negative samples by
+
+\subsection{Neural Network Sample Generation}
+
+All of the neural networks we train are Siamese Neural Networks that
+compares two texts. We therefore had to generate problem instances that
+contained two texts from either the same or different authors and a class
+that reflected that. For each author $\alpha$ in the training dataset \gls{G}
+we generate all possible combinations of two of the texts in $T_\alpha$ as
+positive samples. We also generate the same number of negative samples by
 taking a random text in $T_\alpha$ and a random text in $\overline{T_\alpha}$.
 That means that in total the number of problems we generate for each
 author is $2\frac{\left|T_\alpha\right|!}{2!(\left|T_\alpha\right|-2)!}
