@@ -27,7 +27,8 @@ def Convert(x):
         'TPS': 'TP',
         'TNS': 'TN',
         'FNS': 'FN',
-        'FPS': 'FP'
+        'FPS': 'FP',
+        'Gradient Descent': 'gradient descent'
     }
 
     for key in c:

@@ -25,3 +25,5 @@
 /*.egg
 
 **/.ropeproject
+
+!/report/pictures/*.pdf
