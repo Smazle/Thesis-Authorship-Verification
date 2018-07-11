@@ -12,8 +12,8 @@
 
 In this thesis we work on the problem of authorship verification using texts
 written by Danish secondary school pupils. Authorship verification and
-authorship attribution is the ability to distinguish between authors of texts
-based on a set of extracted textual features. The automation of authorship
+authorship attribution describe the ability to distinguish between authors of
+texts based on a set of extracted textual features. The automation of authorship
 attribution/verification has been a lively branch of research ever since the
 beginning of the digital age, giving birth to online digital text forensics
 tasks, such as the work by \citet{pan:2015}. Initial attempts at quantifying
@@ -64,7 +64,7 @@ company \texttt{DR} has written an article describing the ghost writer problem
 eksamen}}. The article describes that when asking 2000 student, 58\% got help
 from friends or family, and around 15\% knew someone who had their assignment
 written by someone else. In this thesis we setup a system for detecting ghost
-writing based on machine learning methods. The system is meant to help teachers
+writing using machine learning methods. The system is meant to help teachers
 make decisions about whether or not an assignment turned in by a student is
 written by someone else. It is not important that the system catches 100\% of
 the assignments written by someone else. If the system only catches a fraction
@@ -75,14 +75,14 @@ we think a particular assignment is written by someone else. Such evidence could
 for example be that the frequency of particular words is significantly different
 in the new assignment than in all previously handed in by the student. Evidence
 for why we think an assignment is written by someone else will help a teacher if
-he/she wants to accuse a student of using a ghost writer.
-
+he/she wants to accuse a student of using a ghost writer, as the product should
+work in a supplementary manner.
 
 \subsection{Notation}
 
 We will work with several different kinds of objects. The main ones are texts
 and authors. We will generally call texts $t$ and authors $\alpha$. If multiple
-texts or authors is used we will generally call them $t'$ and $\beta$. A text
+texts or authors are used we will generally call them $t'$ and $\beta$. A text
 consists of a sequence of characters. When we are working with multiple texts in
 a set we will generally call such sets $T$. We denote the universe of all texts
 as $\mathcal{T}$.

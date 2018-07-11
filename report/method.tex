@@ -188,8 +188,6 @@ that Danish end English are in fact not so lexical different, which makes sense
 as the both derive from the germanic branch of the indo-European language
 family.
 
-
-
 \subsubsection{Extended Delta Method}
 
 One of the best performing methods of \citet{US} was the extended delta method.
@@ -228,11 +226,10 @@ learning methods \citep{Schmidhuber:2015}.
 With the inner workings of the brain used as the basis, a standard simple
 \gls{NN} consists of a set interconnected processors, called neurons. Each of
 these neurons has a real-valued activation associated with it, which activates
-differently depending on the specific neuron. The input neurons activate through
-perceiving the environment, or in other words, when it is fed data externally.
-Other neurons are simply activated through the weighted activation of previous
-neurons. More details regarding these weights will be presented later in the
-paper \citep{DBLP:journals/corr/Schmidhuber14}.
+differently depending on the specific neuron. The input neurons activate
+through perceiving the environment, or in other words, when they are fed data
+externally. Other neurons are simply activated through the weighted activation
+of previous neurons. \citep{DBLP:journals/corr/Schmidhuber14}.
 
 \gls{NN}'s have been around since the 1940's. However, back then they
 were merely variations of the linear regressors used at the time, and
@@ -246,14 +243,14 @@ of the modern \gls{NN}, actually getting the network to learn was still a
 problem, as the tweaking of individual weights attributed to each neuron in the
 network was not trivial. Little did they know, research to solve that problem
 was already in progress. The basics of continuous \gls{BP} was initially
-described in 1960, in \citet{Kelley1960}, quickly followed by a simpler
-approach which used only the chain rule in 1962, \citet{DREYFUS196230}. It
-was not until 1970 that the modern version of \gls{BP} was described, using
-automatic differentiation as its basis. With this, the increase in research of
-usages of \gls{BP} increased the following decades. As the computational power
-increased several 1000 folds in the 90's and 2000's, so did the practical usage
-of \gls{BP}, and \gls{NN} in general\citet{Schmidhuber:2015}. The real life
-application of \gls{BP}, will be described in Section \ref{sec:BP}.
+described in 1960, in \citet{Kelley1960}, quickly followed by a simpler approach
+which used only the chain rule in 1962, \citet{DREYFUS196230}. It was not
+until 1970 that the modern version of \gls{BP} was described, using automatic
+differentiation as its basis. This prompted an increase in \gls{BP} related
+research the following decades. As the computational power increased several
+1000 folds in the 90's and 2000's, so did the practical usage of \gls{BP},
+and \gls{NN} in general \citet{Schmidhuber:2015}. The real life application of
+\gls{BP}, will be described in Section \ref{sec:BP}.
 
 Like with the history of authorship attribution, research in this area of
 science picked up more interest, as we entered the modern computational
@@ -263,7 +260,7 @@ cats and monkeys visual cortexes contain a set of neurons, each individually
 responding to a receptive field, or area, of their field of view. Neighboring
 receptive fields all have a certain amount of overlap, however in the end
 a cohesive view is created. This is what paved the way for neocognition in
-1980 \citet{Fukushima1980}, the basis of \gls{CNN}'s, which works in a very
+1980 \cite{Fukushima1980}, the basis of \gls{CNN}'s, which works in a very
 similar manner, looking at overlapping subsections of data. These convolutional
 neurons however were rarely used alone, but together with a down-sampling neuron
 such as Max Pooling introduced in 1993 \citep{Schmidhuber:2015}.
@@ -275,10 +272,10 @@ As mentioned previously a \gls{NN} consists of a collection of neurons. Each
 neuron is a simplified mathematical model, which behaves much like neurons
 in the brain would, receiving, processing and transmitting data/information.
 Each neuron has a set of inputs called $x_{ij}$ and a single output called
-$z_i$, where $i$ refers to the neuron, and $j$ refers to the specific input. The
-neurons compute a weighted sum of its inputs and applies an activation function
-$h$ to the weighted sum. The weights are called $w_{ij}$, and the bias $w_{i0}$.
-The function each neuron computes is then,
+$z_i$, where $i$ refers to the neuron, and $j$ refers to the specific input to
+that neuron. The neurons compute a weighted sum of its inputs and applies an
+activation function $h$ to the weighted sum. The weights are called $w_{ij}$,
+and the bias $w_{i0}$. The function each neuron computes is then,
 
 \begin{equation}\label{eq:neuron}
     z_i = h(a_i) = h\left(
@@ -313,7 +310,7 @@ present in the data.
 \subsubsection{Activation Functions} \label{subsubsec:activation_functions}
 
 The activation function $h$, used at each neuron, defines the output of the
-node given a certain input. A simple example of this would be computer chip
+neuron given a certain input. A simple example of this would be computer chip
 circuit, which can be seen as a series of activation functions outputting 0 or
 1 depending on their input. This activation function would be a linear one.
 When applying activation functions to neurons in \gls{NN}s, they are usually
@@ -333,38 +330,38 @@ as they allow for the universal function approximation, a point also made by
 \end{figure}
 
 Each activation function has its pros and cons. We mainly made use of the
-\gls{ReLu} activation function in the hidden layers of our networks. The
-reason for this selection is its general purpose use. When selecting an
-activation function for your neurons, the best function would be the one which
-best approximates the underlying function. Without a good idea as to what
+\gls{ReLu} activation function in the hidden layers of our networks. The reason
+for this selection is its general purpose use. When selecting an activation
+function for your neurons, the best function would be the one which best
+approximates the underlying data relationship. Without a good idea as to what
 that function might be, \gls{ReLu} is a good starting point. Its simplicity
-provides a quick computation time, and its below zero limitation means that a
-large portion of the network will not be activating, resulting in an even smaller
-computation time. In addition to that, the derivative of the function is 1
-in the case of a positive input, resulting in the \gls{BP} loss having equal
-influence throughout the network. In the case of other activation functions,
-this might not be the case, resulting in an altering of the error as we
-propagate backwards through the network. This could lead to a big error in the
-deeper layers not reaching the shallow layers of the network. This property of
-the \gls{ReLu} activation function, does however not come without its costs.
-If the learning rate of the network is not configured correctly, a \gls{ReLu}
-activated neuron might be blasted with a gradient so large, that it never
-reaches a point of activation again. In other words, the neuron "dies". As such,
-one can risk a network containing a lot of dead non-activation neurons, thus
-greatly decreasing its quality. On the other hand the sigmoid function, doesn't
-allow its neurons to die. It can become victim to saturation. In the case of
-weight being too small or too high, the output values will be placed at the far
-ends of the sigmoid range of values. At this point the gradient is incredibly
-small, meaning that the contribution that neuron now has is negligible. This
-neuron is now only a strain on the network, slowing it down through its
-activation, but contribution nothing, a problem \gls{ReLu} does not have. Its
-based on these considerations we chose the \gls{ReLu} activation function,
-leaving us the task of properly selecting our learning rate \citep{JiYan,
-AndrejKarpathy, AvinashSharmaV}.
+provides a quick computation time, and its below zero limitation means that
+a large portion of the network will not be activating, resulting in an even
+smaller computation time. In addition to that, the derivative of the function
+is 1 in the case of a positive input, resulting in the \gls{BP} loss having
+equal influence throughout the network. In the case of other activation
+functions, this might not be the case, resulting in an altering of the error
+as we propagate backwards through the network. This could lead to a big error
+in the deeper layers not reaching the shallow layers of the network. This
+property of the \gls{ReLu} activation function, does however not come without
+its costs. If the learning rate of the network is not configured correctly, a
+\gls{ReLu} activated neuron might be blasted with a gradient so large, that it
+never reaches a point of activation again. In other words, the neuron "dies". As
+such, one can risk a network containing a lot of dead non-activation neurons,
+thus greatly decreasing its learning quality. On the other hand the sigmoid
+function, doesn't allow its neurons to die. It can become victim to saturation.
+In the case of weight being too small or too high, the output values will
+be placed at the far ends of the sigmoid range of values. At this point the
+gradient is incredibly small, meaning that the contribution that neuron now
+has is negligible. This neuron is now only a strain on the network, slowing it
+down through its activation, but contribution nothing, a problem \gls{ReLu}
+does not have. Its based on these considerations we chose the \gls{ReLu}
+activation function, leaving us the task of properly selecting our learning rate
+\citep{JiYan, AndrejKarpathy, AvinashSharmaV}.
 
-As the activation function of our output neurons we have generally
-used the softmax function. The softmax function is shown in Figure
-\ref{fig:softmax_activation}. The function is defined as
+As the activation function of our output neurons we have used the softmax
+function. The softmax function is shown in Figure \ref{fig:softmax_activation}.
+The function is defined as
 
 \begin{equation}
     h(x_i) = \frac{e^{x_i}}{\sum_{k=1}^n e^{x_k}}, \text{for $i = 1 \dots n$}.
@@ -373,10 +370,7 @@ used the softmax function. The softmax function is shown in Figure
 The softmax function takes any vector $x \in \mathbb{R}^n$ and returns a
 vector $y \in (0, 1)^n$. Where the sum of the output vectors elements will
 be equal to 1. The function is therefore great at constructing a probability
-distribution based on an input vector. Each individual value in the vector get
-a high probability if the value is high and a low probability if the value is
-low. Therefore the function is often used at the end of networks to get the
-probability of each class in a classification problem.
+distribution based on an input vector. 
 
 \begin{figure}
     \centering
@@ -400,20 +394,19 @@ and the hard sigmoid activation function
 h(x) = \max(0, \min(1, x \cdot 0.2 + 0.5))
 \end{equation}
 
-The specific usage of these two activation function will be elaborated upon in 
-in the relevant sections.
-
+These both serve as the default activations functions when using the Keras deep
+learning library. \cite{chollet2015keras}
 
 \subsubsection{Layers} \label{subsubsec:layers}
 
 \gls{NN}'s are organized in layers. The first layer is called the input layer
 and is connected directly to the input to the model and the last layer is called
 the output layer and gives the output of the model. All layers in between are
-called hidden layers. The input layer could for example be a layer of neurons
-where each neuron is connected to a pixel in an input image. And the output
-layer could consist of a single neuron that computes the probability that
-the picture contained a cat. An example layered \gls{NN} are shown in Figure
-\ref{fig:example_nn}.
+called hidden layers. A practical example could be where the input layer was
+was layer of neurons where each neuron is connected to a pixel in an input
+image. And the output layer could consist of a single neuron that computes the
+probability that the picture contained a cat. An example layered \gls{NN} are
+shown in Figure \ref{fig:example_nn}.
 
 \begin{figure}
     \centering
@@ -639,9 +632,9 @@ different layers.
 
     \item[\gls{RNN} Layer:]
 
-        An RNN network is a normal feed forward neural network except that
-        it allows circular connections \citep{DBLP:series/sci/2012-385}. The
-        circular connections can be used to remember previous inputs and an
+        An RNN network resembles a normal feed forward neural network except
+        that it allows circular connections \citep{DBLP:series/sci/2012-385}.
+        The circular connections can be used to remember previous inputs and an
         \gls{RNN} therefore has a sense of history of previous input and output.
         Classical feed forward neural networks can be viewed as mappings from
         and to vectors while \gls{RNN}'s can be viewed as mappings from and to
@@ -677,8 +670,8 @@ different layers.
         \end{equation}
 
         where $\psi_h$ is the activation function of the hidden unit, $I$ is the
-        number of input units, $H$ is the number of hidden units and $w_{ij}$ is
-        the weight between neuron $i$ and $j$'th input for that neuron $i$. That
+        number of input units, $H$ is the number of hidden units and $w_{hj}$ is
+        the weight between neuron $h$ and $j$'th input for that neuron $h$. That
         is the activation of the hidden units is an activation function applied
         to a weighted sum of the current inputs and the activation of all hidden
         units in the previous timestep \citep{DBLP:series/sci/2012-385}. The
@@ -755,10 +748,10 @@ different layers.
         receives the output from the previous timesteps. From bottom to top in
         the Figure the networks are.
 
-        First a network combining the current input and the previous output into
+        First: A network combining the current input and the previous output into
         an activation in the current timestep.
 
-        Second a network combining the current input and the previous output to
+        Second: A network combining the current input and the previous output to
         compute which part of the activation of the first network to keep. The
         output of the second network is combined with the first network with an
         elementwise multiplication. That means that if the second network output
@@ -766,7 +759,7 @@ different layers.
         will disappear from the output of the first network. The \gls{LSTM}
         therefore learns which part of the output to ignore.
 
-        Third a network combining the current input and the previous output
+        Third: A network combining the current input and the previous output
         to decide what to forget. The output of the network is combined with
         the current memory with an elementwise multiplication. So again if the
         network outputs a small value it can choose to forget a certain item.
@@ -777,7 +770,7 @@ different layers.
         added output and memory are transferred through an activation function
         that makes sure that nothing blows up and we get numerical instability.
 
-        Fourth a network combining the current input and the previous output
+        Fourth: A network combining the current input and the previous output
         to choose which values of the current output to select as the actual
         output. The output of the fourth network will be combined with the
         current model with an elementwise multiplication. So again the network
@@ -815,7 +808,7 @@ different layers.
             \label{fig:embeddings}
         \end{figure}
 
-        In Figure \ref{fig:embeddings} we have shown an embedding one of our
+        In Figure \ref{fig:embeddings} we have shown an embedding of one of our
         networks produces. The characters are embedded in 5 dimensions so the
         plot shows the first two principal components only. We can see that
         several lower and upper case letters have ended up close to each other.
@@ -840,23 +833,23 @@ different layers.
         smaller chance of over-fitting.
 
         Working in similar fashion as the convolutional layer, the max pooling
-        layer it too uses a sliding window. This sliding window of a certain
-        dimensionality, is moved over the data given to it. The max value inside
-        that window is then extracted, and determined to be the output for that
-        specific placement of the window. The window then moved a specified
-        stride size, and the process is repeated. The result is a dataset which
-        is down-sampled in proportion with the sliding windows dimensions, and
-        the stride. An example of this max pooling process can be seen in Figure
-        \ref{fig:max_pool}.
+        layer also uses a sliding window. This sliding window of a certain
+        dimensionality, is moved over the data given to it. The maximum value
+        inside that window is then extracted, and determined to be the output
+        for that specific placement of the window. The window then moved a
+        specified stride size, and the process is repeated. The result is a
+        dataset which is down-sampled in proportion with the sliding windows
+        dimensions, and the stride. An example of this max pooling process can
+        be seen in Figure \ref{fig:max_pool}.
 
         Pooling layers are however, not restricted to only the Max Pooling
-        layer. The average pooling layers, works in a very similar fashion, but
-        instead of extracting the max value, it simply averages values currently
-        in the window. The L2-Norm Pooling computes the L2 norm of the contents
-        of the sliding window. The Global Max Pooling Layer, which we use quite
-        frequently in our networks does not use a window like the other ones
-        described, but instead simply extracts the maximum value across the
-        data-samples the layer is provided.
+        layer. The average pooling layers, works in a very similar fashion,
+        but instead of extracting the max value, it simply averages values
+        currently in the window. The Global Max Pooling Layer, which we use
+        quite frequently in our networks does not use a window like the other
+        ones described, but instead simply extracts the maximum value across
+        the data the layer is provided, thus eliminating the need for a sliding
+        window.
 
     \begin{figure}
     \centering
@@ -893,22 +886,21 @@ different layers.
 
     \item[Dropout Layer:]
 
-        This layer is used for the intent of regularizing and in turn,
-        generalize a network. Given enough training time, and a good optimizer
-        a network will slowly fit more and more on the training data it is
-        provided. This might seem like a bad thing at first, but if the
-        validation error follows the training error as the network get more
-        and more fit on the training data, then the network has successfully
-        learning some general commonality that can be used to describe both the
-        data sets, which is the goal. It is when these two error do not follow
-        on another, that one has to be alarmed, as network doesn't generalize
-        properly. This is where the Dropout layer is useful. By deactivating a
-        certain amount of randomly selected neurons in a particular layer, the
-        network is forced to learn from a larger sparse set of neurons, rather
-        than focusing on a small amount of very informative one, resulting in
-        a potential better understanding of the data as a whole, rather than
-        small amount of key features. An example of this can be seen in Figure
-        \ref{fig:dropout}.
+        This layer is used for the intent of regularizing a network. A good
+        optimizer a network will slowly fit more and more on the training data
+        it is provided, when given enough training time. This might seem like
+        a bad thing at first, but if the validation error follows the training
+        error as the network get more and more fit on the training data, then
+        the network is successfully learning some general commonality that can
+        be used to describe both the data sets, which is the goal. It is when
+        these two error do not follow on another, that one has to be alarmed, as
+        network doesn't generalize properly. This is where the Dropout layer is
+        useful. By deactivating a certain amount of randomly selected neurons
+        in a particular layer, the network is forced to learn from a larger
+        sparse set of neurons, rather than focusing on a small amount of very
+        informative ones, resulting in a potential better understanding of the
+        data as a whole, rather than small amount of key features. An example of
+        this can be seen in Figure \ref{fig:dropout}.
 
         \begin{figure}
         \centering
@@ -918,12 +910,13 @@ different layers.
         \label{fig:dropout}
         \end{figure}
 
-        \citet{JMLR:v15:srivastava14a} investigated the use of dropout layers
-        in different problem settings. They found that dropout layers reduced
-        overfitting in all problems they looked at. In particular they found
-        that document classification which is similar to what we are doing were
-        also improved. The main drawback of a dropout layer is that it increase
-        the run time of training the networks \citep{JMLR:v15:srivastava14a}.
+        \citet{JMLR:v15:srivastava14a} investigated the use of dropout
+        layers in different problem settings. They found that dropout layers
+        reduced overfitting in all problems they looked at. In particular
+        they found that document classification which is similar to what we
+        are doing were also improved. The main drawback of a dropout layer
+        is that it increase the training-time of the networks its used on
+        \citep{JMLR:v15:srivastava14a}.
 
 \end{description}
 
@@ -931,7 +924,7 @@ different layers.
 \subsubsection{Back-Propagation}\label{sec:BP}
 
 The neural network learns by updating the weights in the network. The weights
-are updated using \gls{BP}. The process can be split into three distinct steps
+are updated using \gls{BP}. This process can be split into three distinct steps
 which are continuously repeated:
 
 \begin{enumerate}
@@ -941,17 +934,17 @@ which are continuously repeated:
 \end{enumerate}
 
 The goal of these three steps is to minimize the overall cost of the network.
-The cost refers to the loss we end up with. In order to do so, we take look at
+The cost refers to the loss we end up with. In order to do this, we take look at
 the gradient. The gradient is a multi-variable generalization of the derivative
 of a function. It can be used for describing the slope of a function at a
-certain value. Not only that, but its most desired property for our purposes is
-the fact that contrary to the derivative it a vector, and this vector points
-to the direction of greatest increase in value for the function at a specific
-point. As such, we can apply gradient descent to our network, which is simply
-the act of changing our loss function arguments, so we step in the negative
-direction of the gradient, which would be the direction of greatest decrease
-in value, that is, it point towards the local minimum of the error function. A
-model illustrating this process can be seen in Figure \ref{fig:grad}
+certain point. Not only that, but its most desired property for our purposes is
+that it is vector, and this vector points to the direction of greatest increase
+in value for the function at a specific point. As such, we can apply gradient
+descent to our network, which is simply the act of changing our loss function
+arguments, so we step in the negative direction of the gradient, which would
+be the direction of greatest decrease in value, that is, it points towards the
+local minimum of the error function. A model illustrating this process can be
+seen in Figure \ref{fig:grad}
 
 \begin{figure}
     \centering
@@ -974,26 +967,25 @@ E_n(W) &= \frac{1}{2}(\hat{y}_n - y_n)^2
 
 Where N is the number of training samples, $\hat{y}_n$ is the predicted results,
 and $y_n$ is the target, and W is a set of weights. The goal is minimize this
-function. In order to do so, we need to have a independent variable we can
-tweak using gradient descent as per the above description. In the case of
-neural networks we can view this variable as being the weights and the biases,
-which are defined used as described in Section \ref{sec:neurons}. In other
-words we want to update each weight vector by doing the following operation
-repeatedly.
+function. In order to do so, we need to have a independent variable we can tweak
+using gradient descent as per the above description. In the case of neural
+networks we can view this variable as being the weights and the biases, which
+are defined in Section \ref{sec:neurons}. We want to update each weight vector
+by repeating the following operation.
 
 \begin{equation}\label{eq:update}
     \mathbf{w}^{(t+1)} = \mathbf{w}^{(t)} + \Delta \mathbf{w}^{(t)}
 \end{equation}
 
-Where $\mathbf{w}$ is a singular weight value, and t refers to a specific step,
-in the chain of steps performed by gradient descent.
+Where $\mathbf{w}$ is a singular weight value, and t refers to a specific time
+step, in the chain of time steps performed by gradient descent.
 
 \begin{equation}
     \Delta \mathbf{w}^{(t)} = -\nabla E|_{\mathbf{w}^{(t)}}
 \end{equation}
 
-$\nabla E|_{\mathbf{w}^{(t)}}$ refers to the gradient of the
-error function relative to that specific weight vector, or rewritten.
+$\nabla E|_{\mathbf{w}^{(t)}}$ refers to the gradient of the error function
+relative to the specific weight vector $\mathbf{w}^{(t)}$, or rewritten.
 
 $$
 \nabla E|_{\mathbf{w}^{(t)}} = \frac{\partial E}{\partial \mathbf{w}^{(t)}}
@@ -1004,10 +996,10 @@ rate will be introduced to this equality, but for now for the specifics of
 Back-Propagation, we can omit it for now. This is the function we attempting to
 solve, not for one weight, but for all of them. Not only that, we also want to
 do this for every training sample, averaging $\Delta \mathbf{w}^{(t)}$ for over all
-of them. As such, the goal is clear, we want to find the gradient of our error
+of them. The goal is clear, we want to find the gradient of our error
 function with respect to all the weights in our network.
 
-After performing step 1(Feed forward), which entails running a training sample
+After performing step 1(Feed Forward), which entails running training samples
 through the network, we want to determine by how much we have to tweak each
 weights using gradient descent. Due to the hidden nature of the entire network,
 the natural starting point for this process is at the output node. If we for
@@ -1041,7 +1033,7 @@ forward neural networks, computes weighted sum of its inputs as per $a_i$ in
 call of $a_i$, and it is for that reason what we can apply the chain rule to get
 the following:
 
-\begin{equation}
+\begin{equation}\ref{eq:bp_start}
 \frac{\partial E}{\partial \mathbf{w}_{ij}} = \frac{\partial E}{\partial a_i}
 \frac{\partial a_i}{\partial \mathbf{w}_{ij}}
 \end{equation}
@@ -1063,16 +1055,16 @@ From \eqref{eq:neuron} we get that
 &= x_j
 \end{align}
 
-Which when combined gives us
+Which when combined with \ref{eq:bp_start} gives us
 
 \begin{equation}
 \label{eq:deriv}
 \frac{\partial E}{\partial \mathbf{w}_{ij}} = \delta_i x_j
 \end{equation}
 
-Revealing the fact that the derivative of the cost function with respect to the
+Revealing that the derivative of the cost function with respect to the
 weight $\mathbf{w}_{ij}$ is simply the value of $\delta$ for the neuron at the
-output end of that specific end, and $x$ for the input end of the weight for
+output end of that specific neuron, and $x$ for the input end of the weight for
 that same neuron. This leaves us with calculating $\delta_i$ for the hidden
 units, and the output units of the network. We already know that for output
 units, $\delta$ is computes as follows:
@@ -1109,10 +1101,10 @@ This can be rewritten using the prior established equalities and the chain rule,
 &= \sum_k \delta_k h'(a_i) \mathbf{w}_{ki} \\
 \end{align}
 
-This highlights the fact that changes in $a_i$ only influences
-the error-function, through variations of the variables $a_k$. The leaves us
-with the fact that we can compute the $\delta$ for a particular hidden unit by
-backpropagating the $\delta$ value back from higher up in the network.
+This highlights that changes in $a_i$ only influences the error-function,
+through variations of the variables $a_k$. We can compute the $\delta$ for a
+particular hidden unit by backpropagating the $\delta$ value back from higher up
+in the network.
 
 As such, we can summarize the backpropagation algorithm like this.
 
@@ -1151,19 +1143,20 @@ where $N$ is the number of training samples. Additionally, if one trains over
 several epochs, this run-time becomes even more inflated $O(\mathcal{E}\cdot
 N\cdot W)$ iteration having do be computed, where $\mathcal{E}$ is the number
 of epochs run during training. For that reason this run-time might not seem
-very disable at first, and is indeed the reason why neural networks need such
-a long training time. However an alternative described by \citet{Bishop}, which
+very disable at first, and is indeed the reason why neural networks need such a
+long training time. However an alternative described by \citet{Bishop}, which
 involves perturbing each weight instead, and approximating the derivatives.
 This method does however run in $O(W^2)$ time, making the run-time of $O(W)$
 back-propagation provides the desired choice. However, in order to improve
 on those that $O(W)$ time-complexity a method called batching is used. This
 method, shuffles and split the training dataset up into smaller batches.
 These batches are then run through the network one at a time, performing
-back-propagation after each run-through. This results in the gradient not
-being as accurate after each batch, but this introduced inaccuracy is
-negligible compared to the computational time won, by reducing the amount of
-$\mathcal{E}$ in $O(\mathcal{E}\cdot N\cdot W)$ needed for the same amount of
-convergence \citep{Bishop}.
+back-propagation after each run-through. This results in the gradient not being
+as accurate after each batch, but this introduced inaccuracy is negligible
+compared to the computational time won, by reducing the amount of $\mathcal{E}$
+in $O(\mathcal{E}\cdot N\cdot W)$ needed for the same amount of convergence.
+A mote detailed description of this process can be found in the next Section.
+\citep{Bishop}.
 
 
 \subsubsection{Optimizers}\label{sec:optimizers}
@@ -1443,14 +1436,14 @@ n-grams from the two texts.
 \citet{DBLP:journals/corr/0001KYS17} presented a comparative study of
 \gls{CNN}'s and \gls{RNN}'s in common \gls{NLP} tasks. They found that
 \gls{RNN}'s generally performed better in tasks where understanding the whole
-text was important while \gls{CNN}'s performed better when understanding were
-secondary and it was mainly about finding key phrases or statistical information
-from a text. In authorship verification the understanding of the text is
-generally irrelevant since we do not have to say anything about what a text is
-about but only whether or not it is written by the same author as some other
-text. Furthermore classical authorship verification methods have relied on
-statistical information from the texts and not on an actual understanding of the
-texts. We have therefore chosen to start out with using convolutional neural
+text was important while \gls{CNN}'s performed better when understanding was
+secondary and the goal was mainly about finding key phrases or statistical
+information from a text. In authorship verification the understanding of the
+text is generally irrelevant since we do not have to say anything about what a
+text is about but only whether or not it is written by the same author as some
+other text. Furthermore classical authorship verification methods have relied
+on statistical information from the texts and not on an actual understanding of
+the texts. We have therefore chosen to start out with using convolutional neural
 networks.
 
 The final output of the network will be a probability that $\alpha = \beta$.
