@@ -1,7 +1,9 @@
 \section{Related Work} \label{sec:related_work}
 
-In this section we will describe previous work in authorship verification and
-authorship attribution with a special focus on methods that use deep learning.
+In this section we will describe some previous work which served as sources
+of inspiration for this paper. It describes the work done on the subject of
+authorship verification and authorship attribution with a special focus on
+methods that use deep learning.
 
 
 \subsection{Neural Network Based Authorship Verification/Attribution}
@@ -72,34 +74,34 @@ this approach, they made use of the saliency score to determine the impact each
 n-gram had on the final decision.
 
 The approach proposed by \citet{ding2016} was somewhat more complex. While they
-too made use of a \gls{CNN}, the application of the network was split into four
-different modalities. They describe their approach as \textit{Mining stylometric
-representations for authorship analysis}. They did it by using 4 different
-\gls{CNN}s, each one focusing on 1-2 stylometric levels of the text. The point
-of splitting it up, was so they could pick and choose which modality they wanted
-to use on the specific example. The first network looks at the word level,
-and topical modalities of the text. In doing so it makes use of 3 different
-author word biases. The topical bias describes a texts tendency towards words
-that are specific to the topic of the entire text. The local contextual bias
-describes the texts tendency towards specific words based on the topic of a
-specific part of the text, as the overall topic is rarely consistent throughout
-the text. Finally there is the lexical bias, which describes the bias the
-author has towards words that have a similar meaning, such as "nice day" vs
-"wonderfull day". Using these thee biases, where the local contextual bias is
-derived from a numerical representation of a sequence of words, the network
-predicts the word most likely to fit into the local context. The second network
-looks at the character modality, and works in a somewhat similar fashion,
-but on the character level. It represents each word in the text as a set of
+too made use of a \gls{CNN}, the application of the network was split into
+four different modalities. They described their approach as \textit{Mining
+stylometric representations for authorship analysis}. They did it by using 4
+different \gls{CNN}s, each one focusing on 1-2 stylometric levels of the text.
+The point of splitting it up, was so they could pick and choose which modality
+they wanted to use on the specific example. The first network looked at the
+word level, and topical modalities of the text. In doing so it made use of
+3 different author word biases. The topical bias described a texts tendency
+towards words that were specific to the topic of the entire text. The local
+contextual bias described the texts tendency towards specific words based on the
+topic of a specific part of the text, as the overall topic was rarely consistent
+throughout the text. Finally there is the lexical bias, which described the bias
+the author had towards words that have a similar meaning, such as "nice day"
+vs "wonderfull day". Using these thee biases, where the local contextual bias
+is derived from a numerical representation of a sequence of words, the network
+predicted the word most likely to fit into the local context. The second network
+looked at the character modality, and worked in a somewhat similar fashion,
+but on the character level. It represented each word in the text as a set of
 character bigrams. After converting each of these bigrams to the numerical
-representation, it is fed through a fully connected sigmoid layer, establishing
+representation, it was fed through a fully connected sigmoid layer, establishing
 the relation between the bigrams and the word they come together to represent.
-The third and last network addresses the syntactic modality. This focuses on
+The third and last network addressed the syntactic modality. This focused on
 the \gls{POS}-tags of the text. By looking at the N neighboring \gls{POS}-tag
-bigrams, the network determines the most likely \gls{POS} of that word. All
-these three modality-network attempts to optimize the forward log probability of
-their prediction. After training each of these models on the texts of a specific
-author, they are applied in turn to two texts. The similarity of each of these
-two texts, is then computed using a simple cosine distance. When applying this
+bigrams, the network determined the most likely \gls{POS} of that word. All
+these three modality-network attempted to optimize the forward log probability
+of their prediction. After training each of these models on the texts of a
+specific author, they were applied to two texts. The similarity of each of these
+two texts, were then computed using a simple cosine distance. When applying this
 to a set of set of long English novels and essays, they got the best results
 using only the combined lexical topical network, which produced an average
 accuracy of 0.7950.
