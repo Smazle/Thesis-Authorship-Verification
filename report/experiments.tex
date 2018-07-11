@@ -180,7 +180,8 @@ accuracy of 0.697 and 0.672 respectively.
 
 \begin{figure}
     \centering
-    \includegraphics[scale=0.8]{./pictures/experiments/feature_selection.png}
+    \textbf{Accuracy of baseline methods during feature selection}
+    \includegraphics[scale=0.8]{./pictures/experiments/feature_selection}
     \caption{The process of the greedy feature selection of the SVM and the Extended Delta Method}
     \label{fig:fs_results}
 \end{figure}
@@ -493,7 +494,7 @@ like "ould ". We have illustrated such a convolutional filter in Figure
 \begin{figure}
     \centering
     \textbf{Convolutions for Text Feature Extraction}\par\medskip
-    \includegraphics[width=\textwidth]{./pictures/experiments/convolution_example.png}
+    \includegraphics[width=\textwidth]{./pictures/experiments/convolution_example}
     \caption{Illustration of character level convolutions using a filter that
         looks for the character sequence "ould ". Notice that high values are
         produced when the characters the filter looks at match the characters it
@@ -599,7 +600,7 @@ accuracies during training in Figure \ref{fig:conv-char-NN-accuracies}.
 
 \begin{figure}
     \centering
-    \includegraphics[width=\textwidth]{./pictures/experiments/conv_char_nn/model.png}
+    \includegraphics[width=\textwidth]{./pictures/experiments/conv_char_nn/model}
     \caption{The structure of network \gls{conv-char-NN}. Weights are
         shared by the embedding layers and the convolutional layers as shown by
         the blue box. The input to the network is at the top and the output is
@@ -728,7 +729,7 @@ model used can be seen depicted in figure \ref{fig:rec-sent-NN}. After
 
 \begin{figure}
     \centering
-    \includegraphics[width=\textwidth]{./pictures/experiments/rec_sent_nn/model.png}
+    \includegraphics[width=\textwidth]{./pictures/experiments/rec_sent_nn/model}
     \caption{The structure of network \gls{rec-sent-NN}. The weights are shared
         from from the embedding layer all the way down to right before the two
         paths merge. The lambda layer takes each sentence and averages along
@@ -1005,7 +1006,7 @@ Figure \ref{fig:conv-char-NN-pred-4}.
 \begin{figure}
     \centering
     \textbf{Prediction System Results for 0.5 Split, \glsdesc{conv-char-NN}}\par\medskip
-    \includegraphics[scale=0.33]{./pictures/experiments/conv_char_nn/prediction_system_50.png}
+    \includegraphics[scale=0.33]{./pictures/experiments/conv_char_nn/prediction_system_50}
     \caption{Results of running the prediction system with the network described
         in Section \ref{subsubsec:conv_char_nn} on a validation dataset with
         50\% positive samples and 50\% negative samples. In the upper graph we
@@ -1020,7 +1021,7 @@ Figure \ref{fig:conv-char-NN-pred-4}.
 \begin{figure}
     \centering
     \textbf{Prediction System Results for 0.04 Split, \glsdesc{conv-char-NN}}\par\medskip
-    \includegraphics[scale=0.33]{./pictures/experiments/conv_char_nn/prediction_system_04.png}
+    \includegraphics[scale=0.33]{./pictures/experiments/conv_char_nn/prediction_system_04}
     \caption{Results of running the prediction system with the network described
         in Section \ref{subsubsec:conv_char_nn} on a validation dataset with
         96\% positive samples and 4\% negative samples. In the upper graph we
@@ -1058,7 +1059,7 @@ can be seen in the Figures, \ref{fig:rec-sent-NN-pred-50} and \ref{fig:rec-sent-
 \begin{figure}
     \centering
     \textbf{Prediction System Results for 0.5 Split, \glsdesc{rec-sent-NN}}\par\medskip
-    \includegraphics[scale=0.33]{./pictures/experiments/rec_sent_nn/prediction_system_50.png}
+    \includegraphics[scale=0.33]{./pictures/experiments/rec_sent_nn/prediction_system_50}
     \caption{Results of running the prediction system with the network described
         in Section \ref{subsubsec:rec_sent_nn} on a validation dataset
         with 50\% positive samples and 50\% negative samples. In the upper graph
@@ -1073,7 +1074,7 @@ can be seen in the Figures, \ref{fig:rec-sent-NN-pred-50} and \ref{fig:rec-sent-
 \begin{figure}
     \centering
     \textbf{Prediction System Results for 0.04 Split, \glsdesc{rec-sent-NN}}\par\medskip
-    \includegraphics[scale=0.33]{./pictures/experiments/rec_sent_nn/prediction_system_04.png}
+    \includegraphics[scale=0.33]{./pictures/experiments/rec_sent_nn/prediction_system_04}
     \caption{Results of running the prediction system with the network described
         in Section \ref{subsubsec:rec_sent_nn} on a validation dataset
         with 96\% positive samples and 4\% negative samples. In the upper graph
@@ -1114,7 +1115,7 @@ negatives in Figure \ref{fig:conv-char-word-NN-pred-4}.
 \begin{figure}
     \centering
     \textbf{Prediction System Results for 0.5 Split, \glsdesc{conv-char-word-NN}}\par\medskip
-    \includegraphics[scale=0.33]{./pictures/experiments/conv_char_word_nn/prediction_system_50.png}
+    \includegraphics[scale=0.33]{./pictures/experiments/conv_char_word_nn/prediction_system_50}
     \caption{Results of running the prediction system with the network described
         in Section \ref{subsubsec:conv_char_word_nn} on a validation dataset
         with 50\% positive samples and 50\% negative samples. In the upper graph
@@ -1129,7 +1130,7 @@ negatives in Figure \ref{fig:conv-char-word-NN-pred-4}.
 \begin{figure}
     \centering
     \textbf{Prediction System Results for 0.04 Split, \glsdesc{conv-char-word-NN}}\par\medskip
-    \includegraphics[scale=0.33]{./pictures/experiments/conv_char_word_nn/prediction_system_04.png}
+    \includegraphics[scale=0.33]{./pictures/experiments/conv_char_word_nn/prediction_system_04}
     \caption{Results of running the prediction system with the network described
         in Section \ref{subsubsec:conv_char_word_nn} on a validation dataset
         with 96\% positive samples and 4\% negative samples. In the upper graph

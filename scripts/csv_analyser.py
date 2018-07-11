@@ -214,7 +214,6 @@ characters = list(map(lambda x: fix_space(x[0]), charset))
 frequencies = list(map(lambda x: x[1] / charcount, charset))
 X = range(len(characters))
 
-plt.title('Character Frequencies and Threshold')
 plt.xlabel('Character')
 plt.ylabel('Frequency')
 
@@ -231,7 +230,6 @@ plt.legend(handles=[line1[0], line2[0]])
 plt.savefig('Frequencies.pdf', format='pdf')
 plt.clf()
 
-plt.title('Character Counts and Thresholds')
 plt.xlabel('Text Number')
 plt.ylabel('Character Count')
 
@@ -248,7 +246,6 @@ plt.savefig('CharacterCount.pdf', format='pdf')
 
 plt.clf()
 
-plt.title('Sentence Count and Thesholds')
 plt.ylabel('Sentence Count')
 plt.xlabel('Text Number')
 

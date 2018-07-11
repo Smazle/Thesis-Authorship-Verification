@@ -30,7 +30,6 @@ accuracy2, = plt.plot(
     X, data2[:, -1], label='Extended Delta Accuracy', c='green')
 m = plt.scatter(m, y, label='Peak', c='red')
 
-plt.title('Feature Selection Accuracy')
 plt.xlabel('Number of features')
 plt.ylabel('Validation Accuracy')
 plt.legend(handles=[accuracy1, accuracy2, m])
