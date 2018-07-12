@@ -294,6 +294,9 @@ alphanumeric characters but none of reactions on the two texts we are comparing
 looks anything like what gives the highest numbers. Instead the filter seem to
 also pick up on the start of sentences.
 
+
+\subsubsection{Locating Ghost Written Areas}
+
 We also looked at whether or not we could say something about which parts of an
 assignment are the most likely to be ghost written. That would allow a teacher
 that is suspicious of a student to identify the part of the assignment that were
@@ -323,6 +326,43 @@ the text is the least characteristic of an authors writing style and we can give
 feedback on why the network thinks that. Of course a teacher will still have to
 make the ultimate decision but can use the output of the network to underpin his
 or her accusation.
+
+
+\subsubsection{Applying Other Machine Learning Methods}
+
+We have also considered using other machine learning methods to give feedback to
+teachers. Simpler machine learning models has the advantage that it is much
+easier to interpret their results compared to neural networks. Consider for
+example logistic regression as described by \citet{Abu-Mostafa:2012:LD:2207825}.
+The input to the logistic regression is a vector of features and the output is a
+probability,
+
+\begin{equation}
+    h(\mathbf{x}) = \theta(\mathbf{w}^Tx)
+\end{equation}
+
+where $\mathbf{w}$ is the weights of the model and $\theta$ is the sigmoid
+function. Here the importance of each individual feature is easily
+found as it can be read directly from the weights vector. The downside
+to logistic regression models is that they are "only" linear models
+\citet{Abu-Mostafa:2012:LD:2207825}. They are therefore not able to model
+arbitrary functions. But we could still apply logistic regression to the output
+of the feature extraction layer. If we did that we could get an idea of which
+features are the most important extracted by the network. We could then use that
+information to report to teachers which of the filters they should be most
+attentive of.
+
+In a previous project \citep{US} we used the random forest method in an
+authorship verification task. The random forest has a build in notion of feature
+importance as it relates to the number of times trees split on a particular
+feature. Random Forests are not normally applied to raw data as we do with our
+networks but to a set of features like logistic regression or our baseline
+methods. Again it is much easier to get information from a random forest about
+which features are the most important and furthermore the forest is able to
+model non-linear data. We could therefore also try applying a random forest to
+the features extracted by the neural network. From that we would be able to
+conclude which of the filters are the most important for this authorship
+verification task.
 
 
 \subsection{Applicability of Method}
