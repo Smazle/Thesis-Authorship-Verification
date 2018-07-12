@@ -325,7 +325,7 @@ make the ultimate decision but can use the output of the network to underpin his
 or her accusation.
 
 
-\subsection{Applicability of Method}
+\subsection{Applicability of Method}\label{sec:app_of_method}
 
 In this section we will discuss how applicable our approach will be to real
 world situations. We have created our solutions in a lab setting which
@@ -354,6 +354,43 @@ assignment is a useless feature as a ghost writer will always put the students
 name on the assignment. We have tried to work against these deficiencies of our
 dataset by removing as many names as possible and as much other information as
 possible.
+
+Another thing to be discussed it our methods applicability to other school
+subject. We know that the what we have currently produced works well on provided
+data. The assignments provided to us, for the development of this paper was
+solely focused on danish class. For this reason the out models might very well
+only produce the results they did due to the course the assignment was attached
+to. Thus a certain bias towards the specific course is to be expected. It would
+stand to reason, that assignments made in the danish course are more focused
+on the higher linguistic levels such as POS-tags and words, while course such
+as math would focus more on the individual characters used, such as "=", "?"
+and number. One could take this even further and apply similar methods to
+code, which suddenly introduces a lot of formatting specific quirks. Thus the
+applicability of our current methods has a very large bias towards the texts
+from danish class, and maybe even the specific skill level of a high school
+student. It wouldn't be too inconceivable that due to all the training being
+focused on high school student, our methods have a bias towards that as well.
+Student at that age might very well have a general tendency towards some quirks
+that student on a higher level of education haven't. This could result in
+specific network design decision working better on one group than another.
+In order to verify how generalizing our methods are, further experimentation
+into these areas would be needed.
+
+The runtime our methods is also a factor. As mentioned in the beginning of
+this papers, running time was a focus during development. If we had chosen an
+author specific approach, we would have to each of our methods no the texts
+of each individual author. This would introduce several problems. The methods
+would have to be trained for each author individually, before performing any
+kind of prediction. This would also lead to both varying quality of model, as
+the quantity of samples would very. This would also mean that we wouldn't be
+able to apply them to new student, as they have no assignments associated with
+them. The generalizing approach was used instead. This mean that we only have
+to train the \gls{NN}s once, and then it can be applied text even written by
+new student. Most of our networks reached their max potential with the first
+10 epochs, meaning that max training time would be around 1 day or continuous
+training. This is the most time consuming part, as the actual prediction time is
+negligible. Of course the networks might need retraining some-time, to keep up
+with an evolving education system.
 
 We know that we removed a significant amount of information from the texts since
 we observed the training and validation accuracy falling after the change. We
