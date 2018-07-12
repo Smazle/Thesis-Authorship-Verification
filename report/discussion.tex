@@ -79,8 +79,25 @@ arena under curve (AUC) of the receiver operating characteristic (ROC) of a
 model, better known as AUROC. A ROC curve is the \gls{FPR} plotted against the
 \gls{TPR}, both of which are defined in Section \ref{sec:method}. AUROC is a
 measure of discrimination, or a measure of the amount of certainty our model has
-when it makes its decisions.
+when it makes its decisions. A rough grouping of different AUROC intervals would be \footnote{\url{http://gim.unmc.edu/dxtests/roc3.htm}}
+\begin{itemize}
+\item ]0.5-0.6] - Fail
+\item ]0.6-0.7] - Poor
+\item ]0.7-0.8] - Fair
+\item ]0.8-0.9] - Good
+\item ]0.9-1.0] - Excellent
+\end{itemize}
 
+The ROC curves and AUROC results for the different networks we produced, can
+be seen in Figure \ref{fig:AUROC}. These figures reinforce the relationship
+between the networks already expressed. \gls{conv-char-NN} is still performs
+best. It is however very closely followed \gls{conv-char-word-NN}, to the
+point of certain overlaps in the ROC-Curve in the 96/04 split constrained
+configuration. While \gls{rec-sent-NN} does have the worst AUROC score, it is
+higher than we anticipated when looking back at the results presented in Section
+\ref{sec:results}. This might be attributed to the model being working good in
+general but not adapting very well go threshold, as is evident when looking at
+the ROC-Curve.
 
 \begin{figure}
 \centering
