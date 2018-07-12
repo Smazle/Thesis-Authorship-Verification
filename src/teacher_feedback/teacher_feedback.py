@@ -5,8 +5,14 @@ from keras import backend as K
 import jsonpickle
 import keras.models as M
 import numpy as np
+import pandas as pd
 import src.preprocessing.macomreader as Macom
 import src.util.utilities as util
+
+
+# Mapping from a filter number to what the filter is looking at. Initialized in
+# initialize_globals.
+filter_mapping = {}
 
 
 # Represent the n largest differences in filters between two texts.
@@ -27,6 +33,15 @@ class FeatureMaxDifference:
         self.text1_value = text1_value
         self.text2_value = text2_value
         self.size = size
+
+        if self.size == 4:
+            self.filter_string = list(map(lambda x: filter_mapping[x + 700],
+                                      filter_number))
+        elif self.size == 8:
+            self.filter_string = list(map(lambda x: filter_mapping[x],
+                                      filter_number))
+        else:
+            raise Exception('Should never happen')
 
 
 # Showable result class. Used to prettyprint FeatureMaxDifference by providing
@@ -50,16 +65,15 @@ class Result:
         for ind1, ind2 in zip(text1_max_index, text2_max_index):
             self.text1_char_n_grams.append(text1[ind1:ind1 + size])
             self.text2_char_n_grams.append(text2[ind2:ind2 + size])
-            # self.text1_value.append(featurehjmcclhj)
 
     def __str__(self):
-        filter_inds = self.feature_max_difference.filter_number
+        filter_strings = self.feature_max_difference.filter_string
         text1s = self.text1_char_n_grams
         text2s = self.text2_char_n_grams
         value1s = self.text1_value
         value2s = self.text2_value
 
-        zipped = zip(filter_inds, text1s, text2s, value1s, value2s)
+        zipped = zip(filter_strings, text1s, text2s, value1s, value2s)
 
         string = ''
         for filter_ind, text1, text2, value1, value2 in zipped:
@@ -72,6 +86,7 @@ class Result:
 def main():
     args = parse_arguments()
     model = M.load_model(args.model)
+    initialize_globals(args)
     with open(args.reader, mode='r') as reader_in:
         reader = jsonpickle.decode(reader_in.read())
         # Our reader should use the datafile we are given.
@@ -206,6 +221,11 @@ def parse_arguments():
         help='The line number of the text we are verifying authorship of.'
     )
     parser.add_argument(
+        'filter_output',
+        type=str,
+        help='Filepath to the output of src.analyze.illustrate_filters.'
+    )
+    parser.add_argument(
         '--n-most',
         type=int,
         default=1,
@@ -226,6 +246,21 @@ def get_output_of_layer(model, layer_name):
         model.get_layer(layer_name).get_output_at(0),
         model.get_layer(layer_name).get_output_at(1)
     ])
+
+
+def initialize_globals(args):
+    data = pd.read_csv(args.filter_output, delimiter=',', quotechar='"',
+                       escapechar='\\')
+    filters = data.as_matrix(columns=['filter']).flatten()
+    activation_strings = data.as_matrix(columns=['activation_string']).flatten()
+    activation_values = data.as_matrix(columns=['activation_value']).flatten()
+
+    for f in np.unique(filters):
+        strings = activation_strings[filters == f]
+        values = activation_values[filters == f]
+
+        max_ind = np.argmax(values)
+        filter_mapping[f] = strings[max_ind]
 
 
 if __name__ == '__main__':
