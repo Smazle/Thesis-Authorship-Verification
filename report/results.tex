@@ -35,17 +35,17 @@ parameters, on both a 50/50 dataset and 96/04 one.}
 \end{table}
 
 With this we have our baseline to beat. As briefly mentioned in Section
-\ref{subsec:baseline}, these method are not very well suited for this particular
-task. Since they both provide binary results denoting a students innocence, or
-lack thereof, it is not possible to apply any kind of thresholding to force
-our models under the 10\% accusation error goal. They always perform at their
-maximum capacity. For this reason we had to alter they way we compare the deep
-learning approaches with our baselines. This was done by determining the best
-performing $\theta$ and weight function for our neural network with regard to
-accuracy, and with no regard to the accusation error, as both our baselines do
-not focus on that either. Thus we compared the results of our base lines on the
-50/50 dataset and the 96/04 dataset with the highest unconstrained accuracy our
-deep learning methods could muster.
+\ref{subsec:baseline_methods}, these method are not very well suited for this
+particular task. Since they both provide binary results denoting a students
+innocence, or lack thereof, it is not possible to apply any kind of thresholding
+to force our models under the 10\% accusation error goal. They always perform at
+their maximum capacity. For this reason we had to alter they way we compare the
+deep learning approaches with our baselines. This was done by determining the
+best performing $\theta$ and weight function for our neural network with regard
+to accuracy, and with no regard to the accusation error, as both our baselines
+do not focus on that either. Thus we compared the results of our base lines on
+the 50/50 dataset and the 96/04 dataset with the highest unconstrained accuracy
+our deep learning methods could muster.
 
 The computation of these values results were done in very much the same way as
 was done during our experimentation. After determining the best networks using
