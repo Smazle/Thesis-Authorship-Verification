@@ -55,7 +55,8 @@ parser.add_argument(
     '--order',
     nargs='+',
     type=str,
-    default=['CNN3_50', 'CNN3_04', 'CNN6_50', 'CNN6_04', 'RNN_50', 'RNN_04'])
+    default=['CNN3_50', 'CNN3_04', 'CNN6_50', 'CNN6_04', 'RNN_50', 'RNN_04'],
+    help='The order of the networks, that the other arguments rely on')
 
 parser.add_argument(
     '-l',
@@ -65,7 +66,26 @@ parser.add_argument(
     default=[
         'char_CNN 50/50', 'char_CNN 96/04', 'char_word_CNN 50/50',
         'char_word_CNN 96/04', 'sent_RNN 50/50', 'sent_RNN 96/04'
-    ])
+    ],
+    help='The legend gettings printed on the graph, order matters\
+    relative to other arguments')
+
+parser.add_argument(
+    '-w',
+    '--weight-idx',
+    nargs='+',
+    type=int,
+    help="The index of the weights used for each plot from list of weights \n\
+            0: 'Exp λ=0.0'\n\
+            1: 'Exp λ=0.25'\n\
+            2: 'Exp λ=0.25 +\n\
+            3: 'Exp λ=0.5'\n\
+            4: 'Exp λ=0.75'\n\
+            5: 'Exp λ=1.0'\n\
+            6: 'Majority Vote'\n\
+            7: 'Maximum'\n\
+            8: 'Minimum'\n\
+            9: 'Text Length'")
 
 args = parser.parse_args()
 
@@ -75,6 +95,7 @@ data_dict = {
 }
 
 weights = data_dict[args.order[0]].as_matrix(columns=['weight'])
+unique_weights = np.unique(weights)
 
 roc = plt.figure(2, figsize=(10, 8))
 ax = plt.subplot(111)
@@ -88,40 +109,37 @@ ax.set_ylabel('True Positive Rate')
 plots = []
 
 for idx, key in enumerate(args.order):
-    plots_X = 0
-    plots_Y = 0
-
-    prev = 0
-    w = 0
     data = data_dict[key]
-    for weight in np.sort(np.unique(weights)):
+    weight = unique_weights[args.weight_idx[idx]]
 
-        accuracies = data.as_matrix(columns=['accuracy'])
-        tps = data.as_matrix(columns=['tps'])
-        tns = data.as_matrix(columns=['tns'])
-        fps = data.as_matrix(columns=['fps'])
-        fns = data.as_matrix(columns=['fns'])
+    accuracies = data.as_matrix(columns=['accuracy'])
+    tps = data.as_matrix(columns=['tps'])
+    tns = data.as_matrix(columns=['tns'])
+    fps = data.as_matrix(columns=['fps'])
+    fns = data.as_matrix(columns=['fns'])
 
-        tps = tps[weights == weight]
-        tns = tns[weights == weight]
-        fps = fps[weights == weight]
-        fns = fns[weights == weight]
+    tps = tps[weights == weight]
+    tns = tns[weights == weight]
+    fps = fps[weights == weight]
+    fns = fns[weights == weight]
 
-        tpr = np.array([x / (x + fn) for x, fn in zip(tps, fns)])
-        fpr = np.array([x / (x + tn) for x, tn in zip(fps, tns)])
+    tpr = np.array([x / (x + fn) for x, fn in zip(tps, fns)])
+    fpr = np.array([x / (x + tn) for x, tn in zip(fps, tns)])
 
-        s = np.argsort(fpr)
-        tpr = tpr[s]
-        fpr = fpr[s]
+    #   tnr = np.array([x / (x + fp) for x, fp in zip(tns, fps)])
+    #   fnr = np.array([x / (x + tp) for x, tp in zip(fns, tps)])
+    #   tpr = tnr
+    #   fpr = fnr
 
-        tpr, fpr = zip(*np.unique(list(zip(tpr, fpr)), axis=0))
+    s = np.argsort(fpr)
+    tpr = tpr[s]
+    fpr = fpr[s]
 
-        new = auc(fpr, tpr)
-        if new > prev:
-            plots_X = fpr
-            plots_Y = tpr
-            w = get_weight_report_name(weight)
-            prev = new
+    tpr, fpr = zip(*np.unique(list(zip(tpr, fpr)), axis=0))
+
+    plots_X = fpr
+    plots_Y = tpr
+    w = get_weight_report_name(weight)
 
     if idx % 2 == 0:
         plot, = ax.plot(
@@ -139,7 +157,8 @@ for idx, key in enumerate(args.order):
             label='{}, {}, AUC: {:^.3f}'.format(args.legend[idx], w,
                                                 auc(plots_X, plots_Y)))
 
-ax.legend(loc=4)
+ax.legend(loc=4, prop={'size': 14})
+ax.grid(True)
 if args.image_out is not None:
     plt.savefig(args.image_out, format='pdf')
 else:
