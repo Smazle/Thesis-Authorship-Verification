@@ -82,58 +82,18 @@ work in a supplementary manner.
 
 We will work with several different kinds of objects. The main ones are texts
 and authors. We will generally call texts $t$ and authors $\alpha$. If multiple
-texts or authors are used we will generally call them $t'$ and $\beta$. A text
-consists of a sequence of characters. When we are working with multiple texts in
-a set we will generally call such sets $T$. We denote the universe of all texts
-as $\mathcal{T}$.
-
-\begin{definition}[Text Universe]
-    \label{def:text_universe}
-
-    Let the universe of all texts be $\mathcal{T} = \{t_1, t_2, \dots\}$.
-
-\end{definition}
-
-An author is a subset of $\mathcal{T}$. A special set of texts $T_\alpha$
-corresponds to all the $t \in \mathcal{T}$ which is written by author $\alpha$.
-We denote the set of all authors as $\mathcal{A}$.
-
-\begin{definition}[Author Universe]
-    \label{def:author_universe}
-
-    Let the universe of all authors,
-
-    \begin{equation}
-        \mathcal{A} = \left\{\{T_{\alpha_1}, T_{\alpha_2}, \dots,
-            T_{\alpha_{|T_\alpha|}}\} \{T_{\beta_1}, T_{\beta_2},
-            \dots, T_{\beta_{|T_\beta|}}\}, \dots\right\},
-    \end{equation}
-
-    be a partition of $\mathcal{T}$ such that $\bigcup_{\alpha \in \mathcal{A}}
-    T_\alpha = \mathcal{T}$ and for any author $\alpha \in \mathcal{A}$ and
-    $\beta \in \mathcal{A}$, $T_\alpha \cap T_\beta = \emptyset$.
-
-\end{definition}
-
-We also use a couple of functions that work on texts.
-
-\begin{definition}[Text Length]
-    \label{def:text_length}
-
-    Let $|t| \colon \mathcal{T} \rightarrow \mathbb{N}^+$ denote the length of a
-    text in the number of characters.
-
-\end{definition}
-
-\begin{definition}[Text Relative Time]
-    \label{def:text_relative_time}
-
-    Let $\tau \colon \mathcal{T} \rightarrow \mathbb{N}^+$ denote the relative
-    time of a text. The relative time is the number of months between the turn
-    in of text $t$ and the turn in of the newest $t' \in T_\alpha$ where $t \in
-    T_\alpha$.
-
-\end{definition}
+texts or authors are used we will generally call them $t'$ and $\beta$. Let
+$\mathcal{A} = {\alpha_1, \alpha_2, \dots, \alpha_n}$ denote out set of authors,
+where $T_\alpha$ denotes the set of texts written by $\alpha$. Let $\mathcal{T}
+= \bigcup_{\alpha \in \mathcal{A}} T_\alpha$ subject to $T_{\alpha} \cap T_\beta
+= \emptyset$ for all $\alpha \neq \beta$. Additionally let $\overline{T_\alpha}
+= \mathcal{T} \setminus T_\alpha$ denote the set of texts which are note written
+by author $\alpha$. A text consists of a sequence of characters, leading to the
+notation $|t|$ meaning the total character count of the text $t$, for all $t \in
+\mathcal{T}$. Each text also has a point of time where it was written. This
+time is represented used the function $\tau \colon \mathcal{T} \rightarrow
+\mathbb{N}^+$, which returns the time, in months, relative to the earliest
+submitted $t \in \mathcal{T}$.
 
 % Introduce the main ideas that stem from your topic/title and the order in
 % which you will discuss them?
@@ -171,10 +131,9 @@ with authors $A$ and text $t$ we solve the problem by using $\mathcal{S}$ on
 each author $\alpha \in A$. We return the author where $\mathcal{S}$ reports
 true. Now consider a case where we are given a solution to the authorship
 attribution problem $\mathcal{S}'$. $\mathcal{S}'$ is now a mapping from a set
-of authors $A$ and text $t$ to an author $\alpha \in A$. Given an instance
-of the authorship verification problem with author $\alpha_i \in A$ and text
-$t$ and a set of texts written by different authors $\overline{T}_{\alpha} =
-\bigcup_{\beta \in A \setminus \{\alpha\}} T_\beta$ we solve the verification
-problem by applying the attribution function to the texts $T_{\alpha} \cup
-\overline{T}_{\alpha}$ and the text of unknown authorship $t$. If $t \in
-T_{\alpha}$ we report true and otherwise false.
+of authors $A$ and text $t$ to an author $\alpha \in A$. Given an instance of
+the authorship verification problem with author $\alpha_i \in A$ and text $t$
+and a set of texts written by different authors $\overline{T}_{\alpha}$ we solve
+the verification problem by applying the attribution function to the texts
+$T_{\alpha} \cup \overline{T}_{\alpha}$ and the text of unknown authorship $t$.
+If $t \in T_{\alpha}$ we report true and otherwise false.
