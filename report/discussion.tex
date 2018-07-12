@@ -485,7 +485,7 @@ a couple of the prediction systems.
         \begin{figure}
             \centering
             \textbf{\glsdesc{conv-char-NN} Prediction System 0.5 Split}\par\medskip
-            \includegraphics[width=0.7\textwidth]{./pictures/discussion/conv_char_nn_prediction_zoom_50_time.png}
+            \includegraphics[width=0.7\textwidth]{./pictures/discussion/conv_char_nn_prediction_zoom_50_time}
             \caption{Illustrate important intervals for our different
                 $P_{exp_\lambda}$ prediction systems for the \gls{conv-char-NN}
                 network on the 0.5 split dataset. On the left we have shown the
@@ -497,7 +497,7 @@ a couple of the prediction systems.
         \begin{figure}
             \centering
             \textbf{\glsdesc{conv-char-NN} Prediction System 0.04 Split}\par\medskip
-            \includegraphics[width=0.7\textwidth]{./pictures/discussion/conv_char_nn_prediction_zoom_04_time.png}
+            \includegraphics[width=0.7\textwidth]{./pictures/discussion/conv_char_nn_prediction_zoom_04_time}
             \caption{Illustrate important intervals for our different
                 $P_{exp_\lambda}$ prediction systems for the \gls{conv-char-NN}
                 network on the 0.04 split dataset. On the left we have shown the
@@ -591,25 +591,6 @@ a couple of the prediction systems.
         that the newest assignment is more indicative of writing style than the
         oldest.
 
-        To get a better idea of weighing based on time we created looped through
-        the authors in the test set D. We created a positive sample for each
-        of the authors and used \gls{conv-char-NN} to predict each of the
-        authors texts. We then computed the average score of the newest text,
-        the average score of the second newest text, and so on. If the students
-        writing style changes over time we would expect higher scores in the
-        beginning and lower scores at the end. The output of the experiment
-        resulted in,
-
-        \begin{equation}
-            (0.78884, 0.76248, 0.74841, 0.70693, 0.69037, 0.66954, 0.65441,
-            0.64049, 0.62651, 0.61295, \dots)^T
-        \end{equation}
-
-        where the average score of the newest text is shown first and the
-        average score of the oldest text last. That vector clearly shows that
-        writing style changes over time and it is therefore a good idea to use
-        some sort of time based prediction system.
-
     \item[$P_l$]
 
         The idea behind the length based prediction system was that longer
@@ -626,8 +607,8 @@ a couple of the prediction systems.
 
         \begin{figure}
             \centering
-            \textbf{\glsdesc{conv-char-NN} Prediction System 0.04 Split}\par\medskip
-            \includegraphics[width=0.7\textwidth]{./pictures/discussion/conv_char_nn_prediction_zoom_50_text_length.png}
+            \textbf{\glsdesc{conv-char-NN} Prediction System 0.5 Split}\par\medskip
+            \includegraphics[width=0.7\textwidth]{./pictures/discussion/conv_char_nn_prediction_zoom_50_text_length}
             \caption{Illustrate important intervals for our $P_l$ prediction
                 systems for the \gls{conv-char-NN} network on the 0.5 split
                 dataset. On the left we have shown the beginning of the curves,
@@ -649,19 +630,19 @@ a couple of the prediction systems.
         weightings than $P_\mathcal{U}$. So the interesting thing about this
         weight is not whether or not it beats $P_\mathcal{U}$, but rather
         whether or not it is better than $P_l$ and $P_{exp_\lambda}$. In Figure
-        \ref{fig:conv_char_prediction_zoom_50_time_and_length} we have shown the
-        performance of $P_{lexp_\lambda}$.
+        \ref{fig:conv_char_prediction_zoom_50_text_length_and_time} we have
+        shown the performance of $P_{lexp_\lambda}$.
 
         \begin{figure}
             \centering
-            \textbf{\glsdesc{conv-char-NN} Prediction System 0.04 Split}\par\medskip
-            \includegraphics[width=0.7\textwidth]{./pictures/discussion/conv_char_nn_prediction_zoom_50_text_length.png}
+            \textbf{\glsdesc{conv-char-NN} Prediction System 0.5 Split}\par\medskip
+            \includegraphics[width=0.7\textwidth]{./pictures/discussion/conv_char_nn_prediction_zoom_50_text_length_and_time}
             \caption{Illustrate important intervals for our $P_l$ prediction
                 systems for the \gls{conv-char-NN} network on the 0.5 split
                 dataset. On the left we have shown the beginning of the curves,
                 in the middle we have shown the top accuracy and to the right we
                 have shown the end of the curves.}
-            \label{fig:conv_char_prediction_zoom_50_text_length}
+            \label{fig:conv_char_prediction_zoom_50_text_length_and_time}
         \end{figure}
 
         In that Figure we see that $P_{exp_{0.25}}$ has generally better
@@ -678,3 +659,51 @@ a couple of the prediction systems.
         middle of the graphs.
 
 \end{description}
+
+
+\subsection{Writing Style Changes}
+
+In this section we discuss how a high school students writing style changes
+during his/her school years. We observed that time based weights worked well
+when doing authorship verification. That suggests that there is some development
+in students writing style which would also be expected. High school is probably
+one of the time periods writing style changes the most.
+
+To get an idea of how much the writing style of a student changes over time
+we created a script. The script loops through each author in the \gls{D}
+dataset. We created a positive and a negative sample for each of the authors
+and used \gls{conv-char-NN} to predict each of the authors texts against
+the positive and negative sample. We then computed the average score of the
+newest text, the average score of the second newest text, and so on for both
+positives and negatives. If the students writing style changes over time we
+would expect the newest text having an higher average score than the oldest
+texts for the positive samples. We also expect that the negative samples are to
+have an average of less then 0.5 but about the same for each text. In Figure
+\ref{fig:writing_style_changes} we have illustrated the average positive and
+negative predictions produced by our network. We only predict the newest 20
+texts as very few authors in the dataset has more than that. So the averages of
+the texts above 20 vary wildly.
+
+\begin{figure}
+    \centering
+    \textbf{Writing Style Changes}\par\medskip
+    \includegraphics[width=0.7\textwidth]{./pictures/discussion/writing_style_change}
+    \caption{Average predictions of newest to oldest texts for positive samples
+        and negative samples by \gls{conv-char-NN}. The newest text is shown to
+        the left and the oldest to the right. We have also shown a plot of the
+        different time based weight functions we tried using.}
+    \label{fig:writing_style_changes}
+\end{figure}
+
+In that figure it is very clear that writing style does change over time. The
+positive samples fall from 80\% prediction on the newest assignment to just
+over 50\% on the oldest assignment. That is a very large drop that suggests
+that after only 20 turn ins the writing style has changed so drastically that
+our network almost believes it is someone else. It is very interesting that the
+drop in accuracy seem to follow closely our $P_{exp_{0.25}}$ prediction system
+weights. That is probably the reason why that particular $\lambda$ value so
+often gave the best results.
+
+The negative curve is a bit weird. We expected it to stay flat below 50\% but it
+seems to be rising towards 50\%. The curve is clearly more flat than the
+positive curve but there does still seem to be a trend towards 50\%.
