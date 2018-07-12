@@ -259,8 +259,14 @@ def initialize_globals(args):
         strings = activation_strings[filters == f]
         values = activation_values[filters == f]
 
-        max_ind = np.argmax(values)
-        filter_mapping[f] = strings[max_ind]
+        sort = np.argsort(values)
+        three_greatest = strings[sort][-3:]
+
+        string = '['
+        for x in three_greatest:
+            string += '"' + x + '", '
+
+        filter_mapping[f] = string
 
 
 if __name__ == '__main__':
