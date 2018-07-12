@@ -99,13 +99,13 @@ def representation(string):
         if char == '"':
             out += '\\"'
         elif char == '\n':
-            out += '\\\n'
+            out += '\\\\n'
         elif char == '\r':
-            out += '\\\r'
+            out += '\\\\r'
         elif char == '\t':
-            out += '\\\t'
+            out += '\\\\t'
         elif char == '\\':
-            out += '\\'
+            out += '\\\\'
         elif char == ' ':
             out += char
         elif char.isspace():
