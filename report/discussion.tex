@@ -74,6 +74,16 @@ position, comma positions and the like. It would not even be able to find such
 traits on the word level, as the usage of a pre-trained embedding layer means
 that only correctly spelled word were even considered.
 
+Compared to the results produced during validation, which can be seen in
+Tabele\ref{tab:experi-results}, we can clearly see a difference. The results
+from the validation is of course under the required accusation error threshold
+as that was the dataset on which we actually found the theta and the weight
+function to get under that threshold. Because of that, it stands to reason that
+the models would have a somewhat lower performance when applied to a fresh
+untouched test dataset. This lowered performance takes the form of an increased
+accusation error, and a decreased accuracy, which in general is the case in
+machine learning tasks.
+
 A more general description of a models performance can be computed using the
 arena under curve (AUC) of the receiver operating characteristic (ROC) of a
 model, better known as AUROC. A ROC curve is the \gls{FPR} plotted against the
