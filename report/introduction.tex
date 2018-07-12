@@ -80,20 +80,20 @@ work in a supplementary manner.
 
 \subsection{Notation}
 
-We will work with several different kinds of objects. The main ones are texts
-and authors. We will generally call texts $t$ and authors $\alpha$. If multiple
-texts or authors are used we will generally call them $t'$ and $\beta$. Let
-$\mathcal{A} = {\alpha_1, \alpha_2, \dots, \alpha_n}$ denote out set of authors,
-where $T_\alpha$ denotes the set of texts written by $\alpha$. Let $\mathcal{T}
-= \bigcup_{\alpha \in \mathcal{A}} T_\alpha$ subject to $T_{\alpha} \cap T_\beta
-= \emptyset$ for all $\alpha \neq \beta$. Additionally let $\overline{T_\alpha}
-= \mathcal{T} \setminus T_\alpha$ denote the set of texts which are note written
-by author $\alpha$. A text consists of a sequence of characters, leading to the
-notation $|t|$ meaning the total character count of the text $t$, for all $t \in
-\mathcal{T}$. Each text also has a point of time where it was written. This
-time is represented used the function $\tau \colon \mathcal{T} \rightarrow
-\mathbb{N}^+$, which returns the time, in months, relative to the earliest
-submitted $t \in \mathcal{T}$.
+We will work with several different kinds of objects. The main ones are
+texts and authors. We will generally call texts $t$ and authors $\alpha$.
+If multiple texts or authors are used we will generally call them $t'$ and
+$\beta$. Let $\mathcal{A} = {\alpha_1, \alpha_2, \dots, \alpha_n}$ denote the
+set of all authors, where $T_\alpha$ denotes the set of texts written by the
+author $\alpha$. Let $\mathcal{T} = \bigcup_{\alpha \in \mathcal{A}} T_\alpha$
+subject to $T_{\alpha} \cap T_\beta = \emptyset$ for all $\alpha \neq \beta$.
+Additionally let $\overline{T_\alpha} = \mathcal{T} \setminus T_\alpha$ denote
+the set of texts which are note written by author $\alpha$. A text consists
+of a sequence of characters, leading to the notation $|t|$ meaning the total
+character count of the text $t$, for all $t \in \mathcal{T}$. Each text also has
+a point of time where it was written. This time is represented used the function
+$\tau \colon \mathcal{T} \rightarrow \mathbb{N}^+$, which returns the time, in
+months, relative to the earliest submitted $t \in \mathcal{T}$.
 
 % Introduce the main ideas that stem from your topic/title and the order in
 % which you will discuss them?
