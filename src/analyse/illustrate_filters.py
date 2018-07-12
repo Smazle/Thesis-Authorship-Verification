@@ -8,6 +8,7 @@ import argparse
 import jsonpickle
 from ..preprocessing import LineReader
 from ..util import utilities as util
+import sys
 
 # Parse arguments.
 parser = argparse.ArgumentParser(
@@ -52,13 +53,16 @@ with open(args.reader, 'r') as macomreader_in:
 output = []
 with LineReader(args.datafile, encoding='utf-8') as linereader:
     opposition = reader.read_encoded_line(linereader, 1)
-    for i in range(1, len(linereader.line_offsets)):
+    lines = len(linereader.line_offsets)
+    for i in range(1, lines):
+        print('Handling text {} of {}'.format(i, lines), file=sys.stderr)
+
         text1 = reader.read_encoded_line(linereader, i)
 
-        text1 = np.expand_dims(text1, axis=0)
-        text2 = np.expand_dims(opposition, axis=0)
+        text1 = list(map(lambda x: np.expand_dims(x, axis=0), text1))
+        text2 = list(map(lambda x: np.expand_dims(x, axis=0), opposition))
 
-        layer_output = get_output([text1, text2, 0])[0]
+        layer_output = get_output(text1 + text2 + [0])[0]
 
         _filter = layer_output[0, :, args.filter]
         max_ind = np.argmax(_filter)
@@ -68,7 +72,6 @@ with LineReader(args.datafile, encoding='utf-8') as linereader:
         text = util.clean(text)
 
         max_text = repr(text[max_ind:max_ind + args.convolution_size])
-        print(max_text, max_val)
 
         output.append((i, max_text, max_val))
 
