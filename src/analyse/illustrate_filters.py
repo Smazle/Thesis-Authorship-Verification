@@ -61,10 +61,10 @@ def handle_4(input_texts, text, text_number):
         _filter = layer_output[0, :, i]
         max_ind = np.argmax(_filter)
         max_val = np.max(_filter)
-        max_text = repr(text[max_ind:max_ind + 4])
+        max_text = representation(text[max_ind:max_ind + 4])
 
-        print('{},{},{},{},{}'.format(text_number, index, max_ind, max_text,
-                                      max_val), end='\r\n')
+        print('{},{},{},{}'.format(text_number, index, max_text, max_val),
+              end='\r\n')
 
 
 def handle_8(input_texts, text, text_number):
@@ -76,10 +76,10 @@ def handle_8(input_texts, text, text_number):
         _filter = layer_output_1[0, :, i]
         max_ind = np.argmax(_filter)
         max_val = np.max(_filter)
-        max_text = repr(text[max_ind:max_ind + 8])
+        max_text = representation(text[max_ind:max_ind + 8])
 
-        print('{},{},{},{},{}'.format(text_number, i, max_ind, max_text,
-                                      max_val), end='\r\n')
+        print('{},{},{},{}'.format(text_number, i, max_text, max_val),
+              end='\r\n')
 
     # Go through the 200 filters in convolutional_8_2.
     for i in range(200):
@@ -87,10 +87,33 @@ def handle_8(input_texts, text, text_number):
         _filter = layer_output_2[0, :, i]
         max_ind = np.argmax(_filter)
         max_val = np.max(_filter)
-        max_text = repr(text[max_ind:max_ind + 8])
+        max_text = representation(text[max_ind:max_ind + 8])
 
-        print('{},{},{},{},{}'.format(text_number, index, max_ind, max_text,
-                                      max_val), end='\r\n')
+        print('{},{},{},{}'.format(text_number, index, max_text, max_val),
+              end='\r\n')
+
+
+def representation(string):
+    out = '"'
+    for char in string:
+        if char == '"':
+            out += '\\"'
+        elif char == '\n':
+            out += '\\\n'
+        elif char == '\r':
+            out += '\\\r'
+        elif char == '\t':
+            out += '\\\t'
+        elif char == '\\':
+            out += '\\'
+        elif char == ' ':
+            out += char
+        elif char.isspace():
+            raise Exception('Unknown whitespace {}'.format(repr(char)))
+        else:
+            out += char
+
+    return out + '"'
 
 
 def parse_args():
