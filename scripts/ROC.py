@@ -6,6 +6,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from sklearn.metrics import auc
+from matplotlib import colors as mcolors
+
+colors = list(mcolors.BASE_COLORS.keys())
 
 
 def get_weight_report_name(previous_name):
@@ -41,34 +44,58 @@ parser.add_argument(
     help='Where to save the graph showing accuracies and errors.')
 
 parser.add_argument(
-    'smalldata',
-    help='96/04 split data file, produed by pred system',
-    type=str)
+    'datafiles',
+    nargs='+',
+    type=str,
+    help='Path to prediction system files, order of which is\
+        determined by order argument')
 
 parser.add_argument(
-    'bigdata', help='50/50 split data file, produed by pred system', type=str)
+    '-o',
+    '--order',
+    nargs='+',
+    type=str,
+    default=['CNN3_50', 'CNN3_04', 'CNN6_50', 'CNN6_04', 'RNN_50', 'RNN_04'])
+
+parser.add_argument(
+    '-l',
+    '--legend',
+    nargs='+',
+    type=str,
+    default=[
+        'char_CNN 50/50', 'char_CNN 96/04', 'char_word_CNN 50/50',
+        'char_word_CNN 96/04', 'sent_RNN 50/50', 'sent_RNN 96/04'
+    ])
 
 args = parser.parse_args()
 
-# 96/04 data
-small_data = pd.read_csv(args.smalldata)
+data_dict = {
+    key: pd.read_csv(value)
+    for key, value in zip(args.order, args.datafiles)
+}
 
-# 50/50 data
-big_data = pd.read_csv(args.bigdata)
+weights = data_dict[args.order[0]].as_matrix(columns=['weight'])
 
-data = small_data
+roc = plt.figure(2, figsize=(10, 8))
+ax = plt.subplot(111)
 
-weights = data.as_matrix(columns=['weight'])
+ax.plot([0.0, 1.0], [0.0, 1.0], '--')
+ax.set_xlim((0, 1))
+ax.set_ylim((0, 1))
+ax.set_xlabel('False Positive Rate')
+ax.set_ylabel('True Positive Rate')
 
-# Generate graph.
-for weight in np.sort(np.unique(weights)):
-    roc = plt.figure(2)
-    ax = plt.subplot(111)
+plots = []
 
-    plots_X = []
-    plots_Y = []
+for idx, key in enumerate(args.order):
+    plots_X = 0
+    plots_Y = 0
 
-    for i in range(2):
+    prev = 0
+    w = 0
+    data = data_dict[key]
+    for weight in np.sort(np.unique(weights)):
+
         accuracies = data.as_matrix(columns=['accuracy'])
         tps = data.as_matrix(columns=['tps'])
         tns = data.as_matrix(columns=['tns'])
@@ -89,27 +116,31 @@ for weight in np.sort(np.unique(weights)):
 
         tpr, fpr = zip(*np.unique(list(zip(tpr, fpr)), axis=0))
 
-        plots_X.append(fpr)
-        plots_Y.append(tpr)
+        new = auc(fpr, tpr)
+        if new > prev:
+            plots_X = fpr
+            plots_Y = tpr
+            w = get_weight_report_name(weight)
+            prev = new
 
-        data = big_data
+    if idx % 2 == 0:
+        plot, = ax.plot(
+            plots_X,
+            plots_Y,
+            c=colors[int(idx / 2)],
+            label='{}, {}, AUC: {:^.3f}'.format(args.legend[idx], w,
+                                                auc(plots_X, plots_Y)))
+    else:
+        plot, = ax.plot(
+            plots_X,
+            plots_Y,
+            linestyle='dashed',
+            c=colors[int(idx / 2)],
+            label='{}, {}, AUC: {:^.3f}'.format(args.legend[idx], w,
+                                                auc(plots_X, plots_Y)))
 
-    plot_1, = ax.plot(
-        plots_X[0],
-        plots_Y[0],
-        label='96/04 AUC {}'.format(auc(plots_X[0], plots_Y[0])))
-    plot_2, = ax.plot(
-        plots_X[1],
-        plots_Y[1],
-        label='50/50 AUC {}'.format(auc(plots_X[1], plots_Y[1])))
-
-    ax.plot([0.0, 1.0], [0.0, 1.0], '--')
-    ax.set_title(weight)
-    ax.legend(handles=[plot_1, plot_2])
-    ax.set_xlim((0, 1))
-    ax.set_ylim((0, 1))
-    ax.set_xlabel('False Positive Rate')
-    ax.set_ylabel('True Positive Rate')
+ax.legend(loc=4)
+if args.image_out is not None:
+    plt.savefig(args.image_out, format='pdf')
+else:
     plt.show()
-    roc.clf()
-    data = small_data
