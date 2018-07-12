@@ -74,10 +74,36 @@ position, comma positions and the like. It would not even be able to find such
 traits on the word level, as the usage of a pre-trained embedding layer means
 that only correctly spelled word were even considered.
 
+A more general description of a models performance can be computed using the
+arena under curve (AUC) of the receiver operating characteristic (ROC) of a
+model, better known as AUROC. A ROC curve is the \gls{FPR} plotted against the
+\gls{TPR}, both of which are defined in Section \ref{sec:method}. AUROC is a
+measure of discrimination, or a measure of the amount of certainty our model has
+when it makes its decisions.
+
+
+\begin{figure}
+\centering
+\begin{minipage}{.5\textwidth}
+  \centering
+    \textbf{Constrained ROC-Curve and AUROC for each network}
+  \includegraphics[width=1\linewidth]{./pictures/discussion/AUROC_Constrained}
+\end{minipage}%
+\begin{minipage}{.5\textwidth}
+  \centering
+    \textbf{Unconstrained ROC-Curve and AUROC for each network}
+  \includegraphics[width=1\linewidth]{./pictures/discussion/AUROC_Unconstrained}
+\end{minipage}
+\caption{The ROC-Curve for the three networks produced, plotted for both of the
+possible data sample splits. The curves shown based on the weight functions that
+produced the best possible values produced with that weight on the validation
+set (C). }
+\label{fig:AUROC}
+\end{figure}
+
 Another \gls{NLP} advantage \gls{CNN}s has in this context, is the fact that
 we are able to more accurately determine what part of the text contributed to
 final classification as can be seen in the following section.
-
 
 \subsection{Teacher Feedback}
 
@@ -477,20 +503,3 @@ a couple of the prediction systems.
 \end{description}
 
 
-\begin{figure}
-    \centering
-    \includegraphics[width=\textwidth]{./pictures/discussion/ROC_Network6.png}
-    \caption{\gls{ROC} Curve, and AUROC for \gls{conv-char-word-NN}}
-\end{figure}
-
-\begin{figure}
-    \centering
-    \includegraphics[width=\textwidth]{./pictures/discussion/ROC_Network3.png}
-    \caption{\gls{ROC} Curve, and AUROC for \gls{conv-char-NN}}
-\end{figure}
-
-\begin{figure}
-    \centering
-    \includegraphics[width=\textwidth]{./pictures/discussion/ROC_RNN.png}
-    \caption{\gls{ROC} Curve, and AUROC for \gls{rec-sent-NN}}
-\end{figure}
