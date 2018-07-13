@@ -108,10 +108,11 @@ class MacomReader(object):
 
         for channel in channels:
             if channel not in [
-                    ChannelType.CHAR, ChannelType.WORD, ChannelType.SENTENCE
+                    ChannelType.CHAR, ChannelType.WORD, ChannelType.SENTENCE,
+                    ChannelType.POS_TAGS
             ]:
                 raise ValueError(
-                    'Only char, word or sentence channels allowed')
+                    'Only char, word, sentence or pos_tag channels allowed')
 
         if len(vocabulary_frequency_cutoff) != len(channels):
             raise ValueError('Number of vocabulary frequency cutoffs have ' +

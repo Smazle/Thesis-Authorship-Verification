@@ -6,6 +6,7 @@ from collections import Counter
 import numpy as np
 from ..util import utilities as util
 import nltk
+from polyglot.text import Text
 
 
 class ChannelType(Enum):
@@ -13,6 +14,7 @@ class ChannelType(Enum):
     WORD = 'word'
     SENTENCE = 'sentence'
     WORD_LOWER = 'word-lower'
+    POS_TAGS = 'pos-tags'
 
 
 class Vocabulary:
@@ -64,11 +66,12 @@ class Vocabulary:
 
     def encode(self, txt):
         sequence = self.split_to_sequence(txt)
-        return np.array(
-            list(
-                map(
-                    lambda x: self.vocabulary_map[x] if x in self.vocabulary_map else self.garbage,
-                    sequence)))
+
+        def enc(x):
+            return self.vocabulary_map[
+                x] if x in self.vocabulary_map else self.garbage
+
+        return np.array(list(map(enc, sequence)))
 
     def split_to_sequence(self, txt):
         raise NotImplementedError('Subclasses should implement this.')
@@ -87,6 +90,12 @@ class WordVocabulary(Vocabulary):
 class LowercaseWordVocabulary(Vocabulary):
     def split_to_sequence(self, txt):
         return util.wordProcess(txt.lower())
+
+
+class PostagVocabulary(Vocabulary):
+    def split_to_sequence(self, txt):
+        posTags = Text(txt, hint_language_code='da')
+        return [x[-1].encode('utf-8') for x in posTags.pos_tags]
 
 
 class SentenceVocabulary:
@@ -129,5 +138,7 @@ def vocabulary_factory(channeltype,
         return SentenceVocabulary(strgen, sentence_len)
     elif channeltype == ChannelType.WORD_LOWER:
         return LowercaseWordVocabulary(vocabulary_frequency_cutoff, strgen)
+    elif channeltype == ChannelType.POS_TAGS:
+        return PostagVocabulary(vocabulary_frequency_cutoff, strgen)
     else:
         raise Exception('Illegal state, unknown channel.')
