@@ -19,14 +19,12 @@ def model(reader):
     known_emb = embedding(known_in)
     unknown_emb = embedding(unknown_in)
 
-    feature_extractor1 = L.Bidirectional(L.LSTM(50, return_sequences=True))
-    feature_extractor2 = L.Bidirectional(L.LSTM(100, return_sequences=True))
+    feature_extractor1 = L.Bidirectional(L.LSTM(100, return_sequences=True))
 
     pool = L.GlobalAvgPool1D()
 
-    features_known = pool(feature_extractor2(feature_extractor1(known_emb)))
-    features_unknown = pool(
-        feature_extractor2(feature_extractor1(unknown_emb)))
+    features_known = pool(feature_extractor1(known_emb))
+    features_unknown = pool(feature_extractor1(unknown_emb))
 
     abs_diff = L.merge(
         inputs=[features_known, features_unknown],
@@ -35,13 +33,13 @@ def model(reader):
         name='absolute_difference')
 
     # Dense network.
-    pruned1 = L.Dropout(0.2)(abs_diff)
-    dense1 = L.Dense(500)(pruned1)
-    pruned2 = L.Dropout(0.2)(dense1)
-    dense2 = L.Dense(300)(pruned2)
-    pruned3 = L.Dropout(0.2)(dense2)
-    dense3 = L.Dense(100)(pruned3)
-    output = L.Dense(2, activation='softmax', name='output')(dense3)
+    dense1 = L.Dense(500)(abs_diff)
+    dense2 = L.Dense(300)(dense1)
+    dense3 = L.Dense(100)(dense2)
+    output1 = L.Dense(2, activation='softmax')(dense1)
+    output2 = L.Dense(2, activation='softmax')(dense2)
+    output3 = L.Dense(2, activation='softmax')(dense3)
+    output = L.Average()([output1, output2, output3])
 
     model = Model(inputs=[known_in, unknown_in], outputs=output)
 
