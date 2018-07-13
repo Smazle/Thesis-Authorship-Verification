@@ -96,7 +96,10 @@ def find_negative_paragraph(macomreader, linereader, author):
 
     paragraphs = read_paragraphs(linereader, negative)
 
-    return random.choice(paragraphs)
+    if len(paragraphs) == 0:
+        return find_negative_paragraph(macomreader, linereader, author)
+    else:
+        return random.choice(paragraphs)
 
 
 # Read text and return all paragraphs longer than minimum_length.
