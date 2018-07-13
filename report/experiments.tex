@@ -863,7 +863,64 @@ As mentioned this final network yielded the accuracy initially described,
 \subsubsection{\glsdesc{conv-char-word-NN}}
 \label{subsubsec:conv_char_word_nn}
 
-TODO - Something similar to the other networks.
+The last network we produced, is what we call \gls{conv-char-word-NN}.
+This network is very reminiscent of \gls{conv-char-NN}, mostly due to
+its convolutional nature. This network was an attempt at expanding
+on the successful architecture of \gls{conv-char-NN}. Applied to the 
+same data as the previous networks, we got a maximum accuracy of 0.697
+on the second epoch. The design of the network in the different parts was
+as follows
+
+\begin{description}
+
+    \item[Embedding:]
+
+    Like in \gls{conv-char-NN} the embedding layers takes in a stream text as a
+    stream of characters, where they are then mapped to a 5 dimensional vector
+    space. There isn't a very big difference here. In addition to that however,
+    we also added the word channel used in \ref{rec-sent-NN}. This works in
+    exactly the same way. It uses the pre-trained embeddings mentioned to map
+    each word of the text in addition to mapping the characters. This is the
+    basic idea of this network, a multi-channeled convolutional approach. Thus
+    the network doesn't only take 2 inputs, in the form of two texts. It takes 4
+    inputs, a character input for each each and a word input for each text. Both
+    of these channels have their own path through the network. Which for ease of
+    understanding can be seen as two different siamese networks.
+
+    \item[Feature Extraction:]
+
+    The feature extraction done in this network differs between the character
+    network and the word network. Like previously, we make use of two different
+    convolutional layers in the character network. They have a sliding windows
+    size of 8 and 4, and a filter size of 200. This combination of window sizes
+    had proven to work quite in the \gls{conv-char-NN}. It was because of this
+    we saw no reason to actually change it, as the creation of this network was
+    done in an additive manner. The addition can of course be found in the word
+    network. The embedded stream of words are given to its own convolutional
+    layer with a sliding window size of 8, and a filter size of 100.
+
+    \item[Combining:]
+
+    Due to the addition of the extra word network, the combining of step is
+    has an additional step. The network initially combine the output of both
+    the word and the character sub-networks. This is done by concatenating
+    the output of the two convolutional layers in the character network, and
+    the single convolutional layer in the word network. This results in two
+    concatenated sets, one for each of the two texts. The elementwise absolute
+    difference of the two sets are then computed, and passed along to the
+    decision part of the network.
+
+    \item[Decision:]
+
+    The decision part of this network is simply 2, 500 unit fully connected
+    layers followed by a 0.3 Dropout layer. The output of that dropout layer
+    is then given the 2 unit soft-max layer, for the final decision.
+
+
+\end{description}
+    
+
+
 
 
 \subsection{Prediction System}
