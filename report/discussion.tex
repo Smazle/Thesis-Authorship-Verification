@@ -484,7 +484,7 @@ a couple of the prediction systems.
 
         \begin{figure}
             \centering
-            \textbf{\glsdesc{conv-char-NN} Prediction System 0.5 Split}\par\medskip
+            \textbf{$P_{exp_\lambda}$ 0.5 Split}\par\medskip
             \includegraphics[width=0.7\textwidth]{./pictures/discussion/conv_char_nn_prediction_zoom_50_time}
             \caption{Illustrate important intervals for our different
                 $P_{exp_\lambda}$ prediction systems for the \gls{conv-char-NN}
@@ -496,7 +496,7 @@ a couple of the prediction systems.
 
         \begin{figure}
             \centering
-            \textbf{\glsdesc{conv-char-NN} Prediction System 0.04 Split}\par\medskip
+            \textbf{$P_{exp_\lambda}$ 0.04 Split}\par\medskip
             \includegraphics[width=0.7\textwidth]{./pictures/discussion/conv_char_nn_prediction_zoom_04_time}
             \caption{Illustrate important intervals for our different
                 $P_{exp_\lambda}$ prediction systems for the \gls{conv-char-NN}
@@ -593,11 +593,11 @@ a couple of the prediction systems.
 
     \item[$P_l$]
 
-        The idea behind the length based prediction system was that longer
-        texts would better reflect the writing style of an author. Some
-        of the texts in the dataset are only a few hundred characters
-        long which means that only few of the n-grams the networks
-        are looking for will be present in those texts. In Figure
+        The idea behind the length based prediction system was that
+        longer texts would better reflect the writing style of an
+        author. Some of the texts in the dataset are only a few hundred
+        characters long which means that only few of the n-grams the
+        networks are looking for will be present in those texts. In Figure
         \ref{fig:conv_char_prediction_zoom_50_text_length} we have shown a
         comparison between $P_\mathcal{U}$ and $P_l$. It can be seen there that
         it is always better to weight based on text length than it is to just
@@ -607,7 +607,7 @@ a couple of the prediction systems.
 
         \begin{figure}
             \centering
-            \textbf{\glsdesc{conv-char-NN} Prediction System 0.5 Split}\par\medskip
+            \textbf{$P_l$ 0.5 Split}\par\medskip
             \includegraphics[width=0.7\textwidth]{./pictures/discussion/conv_char_nn_prediction_zoom_50_text_length}
             \caption{Illustrate important intervals for our $P_l$ prediction
                 systems for the \gls{conv-char-NN} network on the 0.5 split
@@ -635,7 +635,7 @@ a couple of the prediction systems.
 
         \begin{figure}
             \centering
-            \textbf{\glsdesc{conv-char-NN} Prediction System 0.5 Split}\par\medskip
+            \textbf{$P_{lexp_{0.25}}$ 0.5 Split}\par\medskip
             \includegraphics[width=0.7\textwidth]{./pictures/discussion/conv_char_nn_prediction_zoom_50_text_length_and_time}
             \caption{Illustrate important intervals for our $P_l$ prediction
                 systems for the \gls{conv-char-NN} network on the 0.5 split
@@ -657,6 +657,31 @@ a couple of the prediction systems.
         the effect we saw with $P_{exp_{\lambda}}$ where higher $\lambda$ values
         was best at the extremes and lower $\lambda$ values were better in the
         middle of the graphs.
+
+    \item[$P_{MV}$]
+
+        The majority vote prediction $P_{MV}$ system is similar to the
+        uniform prediction system $P_{\mathcal{U}}$. We therefore expect
+        about similar performance. What can actually be seen in Figure
+        \ref{fig:conv_char_prediction_zoom_50_majority_vote} is that in the
+        beginning $P_{MV}$ has substantially higher accuracy and accusation
+        error. The picture is similar to the $P_{exp_{1.0}}$ prediction system.
+        In the middle the uniform weight function is clearly better than the
+        majority vote and the accusation error curves cross. At the end of the
+        graph the majority vote again has the highest accuracy but now has the
+        lowest accusation error.
+
+        \begin{figure}
+            \centering
+            \textbf{$P_{MV}$ 0.5 Split}\par\medskip
+            \includegraphics[width=0.7\textwidth]{./pictures/discussion/conv_char_nn_prediction_zoom_50_majority_vote}
+            \caption{Illustrate important intervals for our $P_{MV}$ prediction
+                systems for the \gls{conv-char-NN} network on the 0.5 split
+                dataset. On the left we have shown the beginning of the curves,
+                in the middle we have shown the top accuracy and to the right we
+                have shown the end of the curves.}
+            \label{fig:conv_char_prediction_zoom_50_majority_vote}
+        \end{figure}
 
 \end{description}
 
