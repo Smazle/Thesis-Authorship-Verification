@@ -33,8 +33,8 @@ def model(reader):
         name='absolute_difference')
 
     # Dense network.
-    dense1 = L.Dense(500)(abs_diff)
-    dense2 = L.Dense(300)(dense1)
+    dense1 = L.Dense(300)(abs_diff)
+    dense2 = L.Dense(200)(dense1)
     dense3 = L.Dense(100)(dense2)
     output1 = L.Dense(2, activation='softmax')(dense1)
     output2 = L.Dense(2, activation='softmax')(dense2)
