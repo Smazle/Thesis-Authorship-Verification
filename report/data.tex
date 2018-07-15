@@ -142,38 +142,37 @@ from the B dataset. In the B dataset,
     \item
 
         The average number of unique words used in a text is 379 words with a
-        standard deviation of 684 words. The maximum unique words used is 375
+        standard deviation of 207 words. The maximum unique words used is 13950
         and the minimum is 0.
 
 \end{itemize}
 
-It does not make sense to train networks on texts that contains 0 characters
-or texts with a sentence consisting of 6327 words. The text of 0 characters
-is clearly a blank turn in and the text with a very long sentence is probably
+It does not make sense to train networks on a text that contain 0 characters
+or a text with a sentence consisting of 6327 words. The text of 0 characters
+is clearly a blank hand in and the text with a very long sentence is probably
 garbage extracted from a corrupted pdf file. Furthermore some of our methods
 require us to hold a text in memory and perform operations on it. Some of the
 very long texts caused our programs to crash so we also had to restrict the
 length of the texts.
 
-We initially removed the first 200 characters of each text as the beginning
-of each text contains much metadata such as author name, school of origin,
-and author class. We did not discover that we needed to remove the first 200
-characters based on the statistics above. Rather we discovered during our
-experiments that the networks were using the metadata to make decisions.
-The reasons behind the preprocessing decision will be described in a later
-section. In addition to the 200 characters we removed initially we also
-removed texts that had below 200 characters left after the removal. We did
-that as we believe they do not provide enough information about that specific
-author to be useful. The application of that constraint resulted in 2.49\%
-of the texts being removed. After that we applied a upper character count
-constraint for computational reasons. We found that limiting the number of
-characters to 30.000 gave good results by removing the troublesome, without
-affecting the data-quality too much. That constraint resulted in the removal of
+We initially removed the first 200 characters of each text as the beginning of
+each text contains metadata such as author name, school of origin, and author
+class. We did not discover that we needed to remove the first 200 characters
+based on the statistics above. Rather we discovered during our experiments that
+the networks were using the metadata to make decisions as described later in
+Section \ref{subsec:conv-char-NN}. In addition to the 200 characters we removed
+initially we also removed texts that had below 200 characters left after the
+removal. We did that as we believe they do not provide enough information about
+that specific author to be useful. This constraint resulted
+in 2.49\% of the texts being removed. Furthermore we applied an upper character
+count constraint for computational reasons. We found that limiting the number
+of characters to 30.000 gave good results by removing the troublesome, without
+affecting the data-quality too much. This constraint resulted in the removal of
 0.16\% of the texts being removed. We have illustrated the cutoffs in Figure
 \ref{fig:cutoff_thresholds}. There it can be seen that the cutoff points removes
 only the outliers and leaves the vast majority of texts.
 
-Since we also used some sentence level networks as well we also chose to limit
+Since we used some sentence level networks as well, we also chose to limit
 the maximum number of sentences. The text with the most sentences also caused
 memory problems giving us another reason to limit the number of sentences in a
 text. We chose to impose an upper limit of 500 sentences which is well above the
@@ -190,7 +189,7 @@ all characters with a frequency less than $10^{-5}$ with a special garbage
 character. Our neural networks were then supposed to learn that that garbage
 character should be ignored. We chose the threshold based on the frequencies
 of the Danish characters æ, ø, å, Æ, Ø and Å. We believe that those
-characters are important to determining authorship as form example some people
+characters are important to determining authorship as for example some people
 replace the character å with aa and others do not. The frequency of those
 characters lie just above the $10^{-5}$ threshold we chose. Additionally we can
 see in Figure \ref{fig:cutoff_thresholds} that after the threshold the overall
@@ -240,16 +239,16 @@ all datasets has been preprocessed.
 
 \subsection{Neural Network Sample Generation}
 
-All of the neural networks we train are Siamese Neural Networks that
-compares two texts. We therefore had to generate problem instances that
+All of the neural networks we trained were Siamese Neural Networks that
+compared two texts. We therefore had to generate problem instances that
 contained two texts from either the same or different authors and a class
 that reflected that. For each author $\alpha$ in the training dataset \gls{G}
 we generate all possible combinations of two of the texts in $T_\alpha$ as
 positive samples. We also generate the same number of negative samples by
 taking a random text in $T_\alpha$ and a random text in $\overline{T_\alpha}$.
-That means that in total the number of problems we generate for each
+This the total number of problems we generate for each
 author is $2\frac{\left|T_\alpha\right|!}{2!(\left|T_\alpha\right|-2)!}
 = \frac{\left|T_\alpha\right|!}{(\left|T_\alpha\right|-2)!} =
-(\left|T_\alpha\right| - 0) \cdot (\left|T_\alpha\right| - 1) $. The neural
-networks are trained on these problem instances. We generate problems in the
+\left|T_\alpha\right| \cdot (\left|T_\alpha\right| - 1) $. The neural
+networks were trained on these problem instances. We generated problems in the
 same way for the network training validation dataset $H$.
