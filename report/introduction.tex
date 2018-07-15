@@ -78,6 +78,7 @@ for why we think an assignment is written by someone else will help a teacher if
 he/she wants to accuse a student of using a ghost writer, as the product should
 work in a supplementary manner.
 
+
 \subsection{Notation}
 
 We will work with several different kinds of objects. The main ones are
@@ -137,3 +138,38 @@ and a set of texts written by different authors $\overline{T}_{\alpha}$ we solve
 the verification problem by applying the attribution function to the texts
 $T_{\alpha} \cup \overline{T}_{\alpha}$ and the text of unknown authorship $t$.
 If $t \in T_{\alpha}$ we report true and otherwise false.
+
+
+\subsection{Roadmap}
+
+In Section \ref{sec:related_work} we will go through previous work in authorship
+verification/attribution and previous work performed on MaCom's dataset. We will
+specifically focus on neural network based methods as we want to expand on those
+methods.
+
+In Section \ref{sec:method} we describe the theory behind the methods we are
+working with. We start out by briefly describing our baseline methods after
+which we describe the method that we are going to be working with. Specifically
+we describe the theoretical foundations of \textit{Siamese neural networks} that
+we have focused on.
+
+In Section \ref{sec:data} we describe the dataset we have been working with. We
+present statistics about average number of texts and the number of authors and
+so on. We also describe the preprocessing steps we performed on the dataset.
+
+In Section \ref{sec:experiments} we go through the different network
+architectures we used. We present the results we obtained on a validation
+dataset and how we reached the final architectures we settled on.
+
+In Section \ref{sec:results} we presents our baseline performance on the testset
+and the performance of our neural network based methods performance.
+
+In Section \ref{sec:discussion} we discuss the results we presented in the
+previous section. We discuss the applicability of the method we developed to the
+real world and we discuss how the system can be used if implemented.
+
+In Section \ref{sec:conclusion} we present our conclusion based on the results
+and discussion sections.
+
+In Section \ref{sec:future_work} we go through what we would like to do in the
+future and what we did not get to do in our project.
