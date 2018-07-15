@@ -286,7 +286,7 @@ of these samples $T'_\alpha = T_\alpha \setminus \{t\}$ is extracted from
 \overline{T}_\alpha$ is extracted where $|\hat{T}_\alpha| = |T'_\alpha|$. Using
 the combined set $T'_\alpha \cup \hat{T}_\alpha$, we can train the model in
 question having provided it with both positive and negative examples of author
-$\alpha$'s writing style. To include samples that depict a student that used a
+$\alpha$s writing style. To include samples that depict a student that used a
 ghost writer we change the text we do our prediction on. For each sample there
 is a probability that the sample will be regarded as negative. If that is the
 case we pick out a random $t'$ where $t' \in (\overline{T}_\alpha \setminus
@@ -875,17 +875,17 @@ as follows
 
     \item[Embedding:]
 
-    Like in \gls{conv-char-NN} the embedding layers takes in a stream text as a
-    stream of characters, where they are then mapped to a 5 dimensional vector
-    space. There isn't a very big difference here. In addition to that however,
-    we also added the word channel used in \ref{rec-sent-NN}. This works in
-    exactly the same way. It uses the pre-trained embeddings mentioned to map
-    each word of the text in addition to mapping the characters. This is the
-    basic idea of this network, a multi-channeled convolutional approach. Thus
-    the network doesn't only take 2 inputs, in the form of two texts. It takes 4
-    inputs, a character input for each each and a word input for each text. Both
-    of these channels have their own path through the network. Which for ease of
-    understanding can be seen as two different siamese networks.
+    Like in \gls{conv-char-NN} the embedding layers takes in a stream text
+    as a stream of characters, where they are then mapped to a 5 dimensional
+    vector space. There are not a very big difference here. In addition to that
+    however, we also added the word channel used in \ref{rec-sent-NN}. This
+    works in exactly the same way. It uses the pre-trained embeddings mentioned
+    to map each word of the text in addition to mapping the characters. This is
+    the basic idea of this network, a multi-channeled convolutional approach.
+    Thus the network does not only take 2 inputs, in the form of two texts. It
+    takes 4 inputs, a character input for each each and a word input for each
+    text. Both of these channels have their own path through the network. Which
+    for ease of understanding can be seen as two different siamese networks.
 
     \item[Feature Extraction:]
 

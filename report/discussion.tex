@@ -407,25 +407,25 @@ to. Thus a certain bias towards the specific course is to be expected. It would
 stand to reason, that assignments made in the danish course are more focused
 on the higher linguistic levels such as POS-tags and words. Meanwhile courses
 such as math would focus more on the individual characters used, such as "=",
-"?" and numbers. One could take this even further and apply similar methods to
-code, which suddenly introduces a lot of formatting specific quirks. Thus the
-applicability of our current methods has a very large bias towards the texts
-from danish class, and maybe even the specific skill level of a secondary school
-student. It wouldn't be too inconceivable that due to all the training being
+"?" and numbers. One could take this even further and apply similar methods
+to code, which suddenly introduces a lot of formatting specific quirks. Thus
+the applicability of our current methods has a very large bias towards the
+texts from danish class, and maybe even the specific skill level of a secondary
+school student. It would not be inconceivable that due to all the training being
 focused on secondary school student, our methods have a bias towards that as
 well. Student at that age might very well have a general tendency towards some
-quirks that student on a higher level of education haven't. This could result in
-specific network design decision working better on one group than another. In
+quirks that student on a higher level of education have not. This could result
+in specific network design decision working better on one group than another. In
 order to verify how generalizing our methods are, further experimentation into
 these areas would be needed.
 
-The runtime our methods is also a factor. As mentioned in the beginning of
-this papers, running time was a focus during development. If we had chosen an
-author specific approach, we would have to train each of our methods on the texts
-of each individual author. This would introduce several problems. The methods
+The runtime our methods is also a factor. As mentioned in the beginning of this
+papers, running time was a focus during development. If we had chosen an author
+specific approach, we would have to train each of our methods on the texts of
+each individual author. This would introduce several problems. The methods
 would have to be trained for each author individually, before performing any
 kind of prediction. This would also lead to both varying quality of model, as
-the quantity of samples would very. This would also mean that we wouldn't be
+the quantity of samples would very. This would also mean that we would not be
 able to apply them to new student, as they have no assignments associated with
 them. The generalizing approach was used instead. This mean that we only have
 to train the \gls{NN}s once, and then it can be applied text even written by
@@ -463,7 +463,7 @@ a couple of the prediction systems.
         accuracy and higher accusation error than the other prediction systems.
         The only prediction system that performs worse than the uniform weight
         is $P_{min}$. We had expected that the uniform weighing would perform
-        worse than the other since it doesn't use any metadata about the texts
+        worse than the other since it does not use any metadata about the texts
         to make its predictions. It only use the raw predictions on the texts of
         the networks and simply takes an average of that.
 
@@ -512,10 +512,10 @@ a couple of the prediction systems.
 
         It is hard to say which $\lambda$ produce the best results when looking
         at the Figures. Let us focus on the 0.5 case as that gives a clearer
-        picture. For low $\theta$'s we have that $\lambda = 1.0$ gives the
+        picture. For low $\theta$s we have that $\lambda = 1.0$ gives the
         highest accuracy but with highest accusation error while $\lambda =
         0.25$ gives the lowest accuracy with the lowest accusation error. We see
-        a similar picture for high $\theta$'s. There we get the highest accuracy
+        a similar picture for high $\theta$s. There we get the highest accuracy
         but lowest accusation error when $\lambda = 1.0$ and the lowest accuracy
         and highest accusation error when $\lambda = 0.25$. At both extremes we
         have that the highest accuracy is obtained when $\lambda = 1.0$. In the
