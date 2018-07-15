@@ -219,8 +219,8 @@ of this new text as well.
 
 In this paper we will approach the authorship verification problem using
 deep-learning. The term deep learning, was first introduced to machine machine
-learning in 1989, and afterward to \gls{NN}'s in 2000. The terms quickly became
-synonymous with \gls{NN}'s due to them being some of the more efficient deep
+learning in 1989, and afterward to \gls{NN}s in 2000. The terms quickly became
+synonymous with \gls{NN}s due to them being some of the more efficient deep
 learning methods \citep{Schmidhuber:2015}.
 
 With the inner workings of the brain used as the basis, a standard simple
@@ -231,10 +231,10 @@ through perceiving the environment, or in other words, when they are fed data
 externally. Other neurons are simply activated through the weighted activation
 of previous neurons. \citep{DBLP:journals/corr/Schmidhuber14}.
 
-\gls{NN}'s have been around since the 1940's. However, back then they
+\gls{NN}s have been around since the 1940s. However, back then they
 were merely variations of the linear regressors used at the time, and
 was not very reminiscent of the Networks on can see today. It was not
-until the late 1960's, early 70's, that networks comparable to the more
+until the late 1960s, early 70s, that networks comparable to the more
 modern approaches surfaced. Examples of such early works, are the two
 publications \citet{ivakhnenko1973cybernetic} and \citet{4308320}, which
 describe multi-layered feed-forward supervised neural network architectures.
@@ -248,7 +248,7 @@ which used only the chain rule in 1962, \citet{DREYFUS196230}. It was not
 until 1970 that the modern version of \gls{BP} was described, using automatic
 differentiation as its basis. This prompted an increase in \gls{BP} related
 research the following decades. As the computational power increased several
-1000 folds in the 90's and 2000's, so did the practical usage of \gls{BP},
+1000 folds in the 90s and 2000s, so did the practical usage of \gls{BP},
 and \gls{NN} in general \citet{Schmidhuber:2015}. The real life application of
 \gls{BP}, will be described in Section \ref{sec:BP}.
 
@@ -260,7 +260,7 @@ cats and monkeys visual cortexes contain a set of neurons, each individually
 responding to a receptive field, or area, of their field of view. Neighboring
 receptive fields all have a certain amount of overlap, however in the end
 a cohesive view is created. This is what paved the way for neocognition in
-1980 \cite{Fukushima1980}, the basis of \gls{CNN}'s, which works in a very
+1980 \cite{Fukushima1980}, the basis of \gls{CNN}s, which works in a very
 similar manner, looking at overlapping subsections of data. These convolutional
 neurons however were rarely used alone, but together with a down-sampling neuron
 such as Max Pooling introduced in 1993 \citep{Schmidhuber:2015}.
@@ -399,7 +399,7 @@ learning library. \cite{chollet2015keras}
 
 \subsubsection{Layers} \label{subsubsec:layers}
 
-\gls{NN}'s are organized in layers. The first layer is called the input layer
+\gls{NN}s are organized in layers. The first layer is called the input layer
 and is connected directly to the input to the model and the last layer is called
 the output layer and gives the output of the model. All layers in between are
 called hidden layers. A practical example could be where the input layer was
@@ -637,7 +637,7 @@ different layers.
         The circular connections can be used to remember previous inputs and an
         \gls{RNN} therefore has a sense of history of previous input and output.
         Classical feed forward neural networks can be viewed as mappings from
-        and to vectors while \gls{RNN}'s can be viewed as mappings from and to
+        and to vectors while \gls{RNN}s can be viewed as mappings from and to
         sequences. An \gls{RNN} does not view its input as a vector but as a
         sequence of inputs in different timesteps. We have shown an example of
         an \gls{RNN} network in Figure \ref{fig:rnn_illustration}.
@@ -693,7 +693,7 @@ different layers.
         An \gls{RNN} network are normally optimized using the backpropagation
         through time algorithm. For data where a sense of time does not make
         sense and where the context from both sides of each timesteps is usefull
-        such as for text it is normal to use bidirectional \gls{RNN}'s. Then
+        such as for text it is normal to use bidirectional \gls{RNN}s. Then
         both a forwards and a backwards pass is made through the sequence. The
         output of each network at each time step can then depend both on the
         context before and after the input.
@@ -701,7 +701,7 @@ different layers.
     \item[\gls{LSTM} Layer:]
         \label{layer:LSTM}
 
-        As described the main benefit of \gls{RNN}'s are their ability to use
+        As described the main benefit of \gls{RNN}s are their ability to use
         previous context to make predictions. Unfortunately the \gls{RNN}
         architecture described above in practise does not allow context from
         far away to influence current output. The problem is known as the
@@ -780,7 +780,7 @@ different layers.
         be output.
 
         % TODO: cite http://www.bioinf.jku.at/publications/older/2604.pdf
-        % Which is the original article for LSTM's.
+        % Which is the original article for LSTMs.
         % Also cite http://www.cs.toronto.edu/~graves/preprint.pdf.
 
     \item[Embedding:]
@@ -1434,9 +1434,9 @@ convolutional part of the network which will share weights when extracting
 n-grams from the two texts.
 
 \citet{DBLP:journals/corr/0001KYS17} presented a comparative study of
-\gls{CNN}'s and \gls{RNN}'s in common \gls{NLP} tasks. They found that
-\gls{RNN}'s generally performed better in tasks where understanding the whole
-text was important while \gls{CNN}'s performed better when understanding was
+\gls{CNN}s and \gls{RNN}s in common \gls{NLP} tasks. They found that
+\gls{RNN}s generally performed better in tasks where understanding the whole
+text was important while \gls{CNN}s performed better when understanding was
 secondary and the goal was mainly about finding key phrases or statistical
 information from a text. In authorship verification the understanding of the
 text is generally irrelevant since we do not have to say anything about what a
@@ -1561,7 +1561,7 @@ the texts. We define it as a baseline to make sure we do not make any weight
 functions that are worse than a simple uniform weighing. Our other weight
 functions makes use of metadata we know about the texts. We start by defining
 a weight function \textit{Exponential Dropoff Weight} that use the time a text
-was turned in to MaCom's servers to weight the texts. We assume that newer texts
+was turned in to MaComs servers to weight the texts. We assume that newer texts
 will better reflect the current writing style of a student than older texts.
 Recall that $\tau$ denotes the function that returns the relative time of a text
 defined in Definition \ref{def:text_relative_time}.
