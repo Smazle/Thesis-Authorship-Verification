@@ -56,7 +56,7 @@ def predict_paragraphs(model, macomreader, linereader, author, text):
     encoded_neg_paragraph = macomreader.channels[0].encode(neg_paragraph)
     encoded_neg_paragraph = util.add_dim_start(encoded_neg_paragraph)
 
-    # Take the first 5 paragraphs.
+    # Take the first 5 positive paragraphs.
     paragraphs = read_paragraphs(linereader, text)
     encoded_paragraphs = list(map(lambda x: macomreader.channels[0].encode(x),
                               paragraphs))[0:5]

@@ -208,11 +208,11 @@ Another algorithm used in \citet{US}. Heavily inspired by \citet{hansen2014}
 starts out by fetching all texts known to be written by a specific author and an
 equal number of texts known not to be written by that same author. It is upon
 the feature-set extracted from these texts that a \gls{SVM} is trained, allowing
-it to learn the specific author's writing style from the known texts supplied
-and in contrast what the writing style of someone not him is. When a new text,
-with disputed authorship is presented the hope is that the trained \gls{SVM}
-will be able to determine if the author it was trained on, is in fact the author
-of this new text as well.
+it to learn the specific authors writing style from the known texts supplied and
+in contrast what the writing style of someone not him is. When a new text, with
+disputed authorship is presented the hope is that the trained \gls{SVM} will be
+able to determine if the author it was trained on, is in fact the author of this
+new text as well.
 
 
 \subsection{Deep Learning}
@@ -349,7 +349,7 @@ its costs. If the learning rate of the network is not configured correctly, a
 never reaches a point of activation again. In other words, the neuron "dies". As
 such, one can risk a network containing a lot of dead non-activation neurons,
 thus greatly decreasing its learning quality. On the other hand the sigmoid
-function, doesn't allow its neurons to die. It can become victim to saturation.
+function, does not allow its neurons to die. It can become victim to saturation.
 In the case of weight being too small or too high, the output values will
 be placed at the far ends of the sigmoid range of values. At this point the
 gradient is incredibly small, meaning that the contribution that neuron now
@@ -632,15 +632,16 @@ different layers.
 
     \item[\gls{RNN} Layer:]
 
-        An RNN network resembles a normal feed forward neural network except
-        that it allows circular connections \citep{DBLP:series/sci/2012-385}.
-        The circular connections can be used to remember previous inputs and an
-        \gls{RNN} therefore has a sense of history of previous input and output.
-        Classical feed forward neural networks can be viewed as mappings from
-        and to vectors while \gls{RNN}s can be viewed as mappings from and to
-        sequences. An \gls{RNN} does not view its input as a vector but as a
-        sequence of inputs in different timesteps. We have shown an example of
-        an \gls{RNN} network in Figure \ref{fig:rnn_illustration}.
+        An \gls{RNN} network resembles a normal feed forward
+        neural network except that it allows circular connections
+        \citep{DBLP:series/sci/2012-385}. The circular connections can be used
+        to remember previous inputs and an \gls{RNN} therefore has a sense of
+        history of previous input and output. Classical feed forward neural
+        networks can be viewed as mappings from and to vectors while \gls{RNN}s
+        can be viewed as mappings from and to sequences. An \gls{RNN} does not
+        view its input as a vector but as a sequence of inputs in different
+        timesteps. We have shown an example of an \gls{RNN} network in Figure
+        \ref{fig:rnn_illustration}.
 
         \begin{figure}
             \centering
@@ -894,7 +895,7 @@ different layers.
         the network is successfully learning some general commonality that can
         be used to describe both the data sets, which is the goal. It is when
         these two error do not follow on another, that one has to be alarmed, as
-        network doesn't generalize properly. This is where the Dropout layer is
+        network does not generalize properly. This is where the Dropout layer is
         useful. By deactivating a certain amount of randomly selected neurons
         in a particular layer, the network is forced to learn from a larger
         sparse set of neurons, rather than focusing on a small amount of very
@@ -1003,7 +1004,7 @@ After performing step 1(Feed Forward), which entails running training samples
 through the network, we want to determine by how much we have to tweak each
 weights using gradient descent. Due to the hidden nature of the entire network,
 the natural starting point for this process is at the output node. If we for
-simplicity's sake focus on only a single training sample, we can compute the
+simplicities sake focus on only a single training sample, we can compute the
 loss as follows
 
 $$
@@ -1184,8 +1185,8 @@ datasets. Stochastic Gradient Descend is an attempt at estimating the gradient
 of all datapoints using only a single datapoint. That means that in Stochastic
 Gradient Descend weights are updated much more often and is updated on a noisy
 target \citep{Bishop}. The advantage of Stochastic Gradient Descend is that
-convergence to a local minimum might be much quicker since the algorithm doesn't
-have to go through all training samples for each weight update. The weight
+convergence to a local minimum might be much quicker since the algorithm does
+not have to go through all training samples for each weight update. The weight
 updating for Stochastic Gradient Descend is computed as,
 
 \begin{equation}
@@ -1592,10 +1593,10 @@ weights given to different assignments for different $\lambda$ values in Figure
     \includegraphics[width=0.49\textwidth]{./pictures/method/weights_normalized.png}
     \caption{Illustrate the Exponential Dropoff weight function for different
         values of $\lambda$. We apply the weight function to the numbers $0, 1,
-        \dots, 35$ since a typical student will attend high school for 3 years
-        (36 months). On the left the pure output of the weight function $w_e$ is
-        shown and on the right the normalized weights $w_e^*$. We wary $\lambda$
-        from 0 to 1 with step size 0.05.}
+        \dots, 35$ since a typical student will attend secondary school for 3
+        years (36 months). On the left the pure output of the weight function
+        $w_e$ is shown and on the right the normalized weights $w_e^*$. We wary
+        $\lambda$ from 0 to 1 with step size 0.05.}
     \label{fig:weights}
 \end{figure}
 

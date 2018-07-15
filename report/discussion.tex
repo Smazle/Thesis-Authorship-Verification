@@ -103,7 +103,7 @@ A more general description of a models performance can be computed using the
 A \gls{ROC} curve is the \gls{FPR} plotted against the \gls{TPR}, both of
 which are defined in Section \ref{sec:method}. \gls{AUROC} is a measure of
 discrimination, or a measure of the amount of certainty our model has when it
-makes its decisions. 
+makes a decisions. 
 
 The ROC curves and AUROC results for the different networks we produced, can
 be seen in Figure \ref{fig:AUROC}. These figures reinforce the relationship
@@ -420,29 +420,30 @@ such as math would focus more on the individual characters used, such as "=",
 "?" and numbers. One could take this even further and apply similar methods
 to code, which suddenly introduces a lot of formatting specific quirks. Thus
 the applicability of our current methods has a very large bias towards the
-texts from Danish class, and maybe even the specific skill level of a high
-school student. It would not be too inconceivable that due to all the training
-being focused on high school student; our methods have a bias towards that as
+texts from danish class, and maybe even the specific skill level of a secondary
+school student. It would not be inconceivable that due to all the training being
+focused on secondary school student, our methods have a bias towards that as
 well. Student at that age might very well have a general tendency towards some
-quirks that student on a higher level of education have not. This could result in
-specific network design decision working better on one group than another. In
+quirks that student on a higher level of education have not. This could result
+in specific network design decision working better on one group than another. In
 order to verify how generalizing our methods are, further experimentation into
 these areas would be needed.
 
-The runtime our methods is also a factor. As mentioned in the beginning of
-this papers, running time was a focus during development. If we had chosen an
-author specific approach, we would have to train each of our methods on the
-texts of each individual author. This would introduce several problems. The
-methods would have to be trained for each author individually, before performing
-any kind of prediction. This would also lead to both varying quality of each
-individually trained model, as the quantity of samples associated with each
-student would vary. This would also mean that we would not be able to apply them
-to new student, as they have no assignments associated with them. For these
-reasons the generalizing approach was used instead. Most of our networks reached
-their max potential with the first 10 epochs, meaning that max training time
-would be around 1 day of continuous training. This is the most time consuming
-part, as the actual prediction time is negligible. Of course the networks might
-need retraining some-time, to keep up with an evolving education system.
+The runtime our methods is also a factor. As mentioned in the beginning of this
+papers, running time was a focus during development. If we had chosen an author
+specific approach, we would have to train each of our methods on the texts of
+each individual author. This would introduce several problems. The methods
+would have to be trained for each author individually, before performing any
+kind of prediction. This would also lead to both varying quality of model, as
+the quantity of samples would very. This would also mean that we would not be
+able to apply them to new student, as they have no assignments associated with
+them. The generalizing approach was used instead. This mean that we only have
+to train the \gls{NN}s once, and then it can be applied text even written by
+new student. Most of our networks reached their max potential with the first
+10 epochs, meaning that max training time would be around 1 day or continuous
+training. This is the most time consuming part, as the actual prediction time is
+negligible. Of course the networks might need retraining some-time, to keep up
+with an evolving education system.
 
 We know that we removed a significant amount of information from the texts since
 we observed the training and validation accuracy falling after the change. We
@@ -472,7 +473,7 @@ a couple of the prediction systems.
         accuracy and higher accusation error than the other prediction systems.
         The only prediction system that performs worse than the uniform weight
         is $P_{min}$. We had expected that the uniform weighing would perform
-        worse than the other since it doesn't use any metadata about the texts
+        worse than the other since it does not use any metadata about the texts
         to make its predictions. It only use the raw predictions on the texts of
         the networks and simply takes an average of that.
 
@@ -565,15 +566,15 @@ a couple of the prediction systems.
         lower accusation error.
 
         When $\theta \in (0.4, 0.6)$ higher accuracy is obtained as $\lambda
-        \rightarrow 0.25$. At the same time the lowest accusation error is also
-        obtained when $\lambda$ is low. It is therefore clear that the best
-        configuration in this interval is low $\lambda$ values. But it is also
-        clear that $\lambda$ should be greater than 0 (not uniform) as the
-        uniform weights is clearly worse than all the other. Lets consider why
-        that might be the case. Here in the middle of the graph we don't require
-        extreme values to produce either negatives or positives. Therefore a
-        weigh that is closer to uniform is likely to produce better results
-        since it better use information from all texts available.
+        \rightarrow 0.25$. At the same time the lowest accusation error is
+        also obtained when $\lambda$ is low. It is therefore clear that the
+        best configuration in this interval is low $\lambda$ values. But it is
+        also clear that $\lambda$ should be greater than 0 (not uniform) as
+        the uniform weights is clearly worse than all the other. Lets consider
+        why that might be the case. Here in the middle of the graph we do
+        not require extreme values to produce either negatives or positives.
+        Therefore a weigh that is closer to uniform is likely to produce better
+        results since it better use information from all texts available.
 
         When $\theta \in (0.8, 1.0)$ higher accuracy is obtained as $\lambda
         \rightarrow 1.0$. As in the first interval the accuracy is obtained with
@@ -701,11 +702,11 @@ a couple of the prediction systems.
 
 \subsection{Writing Style Changes}
 
-In this section we discuss how a high school students writing style changes
+In this section we discuss how a secondary school students writing style changes
 during his/her school years. We observed that time based weights worked well
 when doing authorship verification. That suggests that there is some development
-in students writing style which would also be expected. High school is probably
-one of the time periods writing style changes the most.
+in students writing style which would also be expected. Secondary school is
+probably one of the time periods writing style changes the most.
 
 To get an idea of how much the writing style of a student changes over time we
 looped through each author in the \gls{D} dataset. We created a positive and a
