@@ -12,30 +12,30 @@
 
 In this thesis we work on the problem of authorship verification using texts
 written by Danish secondary school pupils. Authorship verification and
-authorship attribution describe the ability to distinguish between authors of
-texts based on a set of extracted textual features. The automation of authorship
-attribution/verification has been a lively branch of research ever since the
-beginning of the digital age, giving birth to online digital text forensics
-tasks, such as the work by \citet{pan:2015}. Initial attempts at quantifying
-writing style can be seen in \citet{Mendenhall237}, who attempted to determine
-the authorship of several of Shakespeares texts. There is a theory that
-Shakespeare did not write some or all of his texts, or that he was a synonym
-for one of more more unknown authors. \citet{Mendenhall237} attempted this
+authorship attribution describe the ability to distinguish between authors
+of texts based on a set of extracted textual features. The automation of
+authorship attribution/verification has been a active branch of research ever
+since the beginning of the digital age, giving birth to online digital text
+forensics tasks such as the work by \citet{pan:2015}. Initial attempts at
+quantifying writing style can be seen in \citet{Mendenhall237}, who attempted
+to determine the authorship of several of Shakespeares texts. There is a theory
+that Shakespeare did not write some or all of his texts, or that he was a
+synonym for one of more unknown authors. \citet{Mendenhall237} attempted this
 classification using the frequency distribution of words of different lengths.
 Throughout the years the approaches to this problem have changed quite a bit.
-When authorship attribution started to interest researchers the approaches were
-Stylometric i.e. they were based on the linguistic style of authors. In addition
-to that, fully automated systems were rare and was mostly used in a supporting
-manner. It was during the 1990s that fully automated systems became more
-prevalent. The main reason for this was the Internet. Before the Internet, the
-data available simply was not suitable for authorship attribution tasks. Books
-were too big, resulting in a lack in homogeneity, and the amount of authors and
-bench-marking data was too small. The Internet paved the way for insurmountable
-amounts of data and variations of that data, impacting areas such as information
-retrieval, machine learning and \gls{NLP}.
+When authorship attribution started to interest researchers, the approaches were
+\textit{Stylometric} i.e. they were based on the linguistic style of authors.
+In addition to that, fully automated systems were rare and were mostly used
+in a supporting manner. It was during the 1990s that fully automated systems
+became more prevalent. The main reason for this was the Internet. Before the
+Internet, the data available simply was not suitable for authorship attribution
+tasks. Books were too big resulting in a lack of homogeneity, and the amount of
+authors and bench-marking data was too small. The Internet paved the way for
+insurmountable amounts of data and variations of that data, impacting areas such
+as information retrieval, machine learning and \gls{NLP}.
 
-In order for any fully automatic authorship verification to work, stylometric
-features describing the text has to be automatically extracted. These features
+In order for any fully automatic authorship verification to work, Stylometric
+features describing the text have to be automatically extracted. These features
 span multiple linguistic layers, ranging from the low level character n-grams
 to the high level application specific features such as text creation date and
 number of edits. Many of the current day state-of-the-art approaches are based
@@ -44,20 +44,21 @@ on these features.
 % The reason for writing about this topic:
 
 We want to experiment with and solve an authorship verification task for the
-Danish company \texttt{MaCom A/S} \footnote{\url{http://www.macom.dk/}}.
-MaCom is the company behind the product \texttt{Lectio}
-\footnote{\url{https://www.lectio.dk/}}, which is a website that allows for
-student administration, communication, and digital teaching aid. Lectio is used
-in schools all over Denmark. A service the website offers is the submission
-and handling of assignments written by students throughout their enrollment.
-MaCom has shown interest in determining whether or not these assignment
-were written by someone other than the student (a ``ghost writer''). Ghost
-writing is especially a problem on the \gls{SRP} assignment. \gls{SRP} is
-an interdisciplinary assignment all Danish secondary school students turn
+Danish company MaCom \footnote{\url{http://www.macom.dk/}}. MaCom is the company
+behind the product Lectio \footnote{\url{https://www.lectio.dk/}} which is a
+website that allows for student administration, communication, and digital
+teaching aid. Lectio is used in more than 90 \% of Danish secondary schools
+\footnote{\url{https://www.business.dk/digital/df-ordforer-om-pivabent-lectio-de
+t-kan-vaere-farligt-hvis-man-taenker}}. A service the website offers is the
+submission and handling of assignments written by students throughout their
+enrollment. MaCom has shown interest in determining whether or not these
+assignment were written by someone other than the student (a ``ghost writer'').
+Ghost writing is especially a problem on the \gls{SRP} assignment. \gls{SRP}
+is an interdisciplinary assignment all Danish secondary school students turn
 in at the end of their third year. There is no oral examination for the
 assignment and the grade obtained is part of the students final results from
-the secondary school. The combination of the importance of the assignment
-and no oral examination leads to students turning in assignments written by
+the secondary school. The combination of the importance of the assignment and
+no oral examination leads to some students turning in assignments written by
 ghost writers. The Danish state owned public service radio and television
 company \texttt{DR} has written an article describing the ghost writer problem
 \footnote{\url{https://www.dr.dk/nyheder/indland/elever-bruger-ghostwritere-til-
@@ -69,32 +70,38 @@ make decisions about whether or not an assignment turned in by a student is
 written by someone else. It is not important that the system catches 100\% of
 the assignments written by someone else. If the system only catches a fraction
 of the cheaters, it will deter other students from cheating. What is most
-important is that the system does not accuse anyone of cheating who has turned
-in their own assignment. The system should also be able to give evidence for why
-we think a particular assignment is written by someone else. Such evidence could
-for example be that the frequency of particular words is significantly different
-in the new assignment than in all previously handed in by the student. Evidence
-for why we think an assignment is written by someone else will help a teacher if
-he/she wants to accuse a student of using a ghost writer, as the product should
-work in a supplementary manner.
+important is that the system limits the number of false accusations. The system
+should also be able to give evidence for why we think a particular assignment is
+written by someone else. Such evidence could for example be that the frequency
+of particular words is significantly different in the new assignment than in all
+previously handed in by the student. Evidence for why we think an assignment is
+written by someone else will help a teacher if he/she wants to accuse a student
+of using a ghost writer, as the product should work in a supplementary manner.
 
 
 \subsection{Notation}
 
-We will work with several different kinds of objects. The main ones are
-texts and authors. We will generally call texts $t$ and authors $\alpha$.
-If multiple texts or authors are used we will generally call them $t'$ and
-$\beta$. Let $\mathcal{A} = {\alpha_1, \alpha_2, \dots, \alpha_n}$ denote the
-set of all authors, where $T_\alpha$ denotes the set of texts written by the
-author $\alpha$. Let $\mathcal{T} = \bigcup_{\alpha \in \mathcal{A}} T_\alpha$
-subject to $T_{\alpha} \cap T_\beta = \emptyset$ for all $\alpha \neq \beta$.
-Additionally let $\overline{T_\alpha} = \mathcal{T} \setminus T_\alpha$ denote
-the set of texts which are note written by author $\alpha$. A text consists
-of a sequence of characters, leading to the notation $|t|$ meaning the total
-character count of the text $t$, for all $t \in \mathcal{T}$. Each text also has
-a point of time where it was written. This time is represented used the function
-$\tau \colon \mathcal{T} \rightarrow \mathbb{N}^+$, which returns the time, in
-months, relative to the earliest submitted $t \in \mathcal{T}$.
+We will work with several different kinds of objects. The main ones are texts
+and authors. We will generally name texts $t$ and authors $\alpha$. If multiple
+texts or authors are used we will generally call them $t'$ and $\alpha'$ or
+$t_n$ and $\alpha_n$ if many texts or authors are needed. Let $\mathcal{A} =
+{\alpha_1, \alpha_2, \dots, \alpha_n}$ denote the set of all authors, where
+$T_\alpha$ denotes the set of texts written by the author $\alpha$. Let
+$\mathcal{T} = \bigcup_{\alpha \in \mathcal{A}} T_\alpha$ subject to $T_{\alpha}
+\cap T_{\alpha'} = \emptyset$ for all $\alpha \neq \alpha'$. Additionally
+let $\overline{T_\alpha} = \mathcal{T} \setminus T_\alpha$ denote the set of
+texts which are not written by author $\alpha$. Texts will be represented by a
+sequence of characters. We denote the length of that sequence $|t|$. Each text
+also has a point of time where it was written. This time is represented used the
+function $\tau \colon \mathcal{T} \rightarrow \mathbb{N}^+$, which returns the
+time in months relative to the earliest submitted $t \in \mathcal{T_\alpha}$.
+
+For vectors we will use the standard notation of naming them in lower case bold
+letters as $\mathbf{x}$. Matrices will be named upper case non bold letters.
+We let elementwise multiplication of both vectors and matrices be denoted with
+$\otimes$ and elementwise summation as $\oplus$. We will denote submatrices as
+$X[a,b;c,d]$ which means the submatrix of $X$ that consist of rows $a$ to $b$
+and columns $c$ to $d$.
 
 % Introduce the main ideas that stem from your topic/title and the order in
 % which you will discuss them?
@@ -105,8 +112,8 @@ authorship verification which is defined below.
 \begin{definition}[Authorship Verification]
     \label{def:authorship_verification}
 
-    Given a set of texts $T_\alpha$ written by author $\alpha$ and a single
-    text $t$ of unknown authorship, determine if $t \in T_\alpha$.
+    Given a set of texts $T_\alpha$ written by author $\alpha$ and a single text
+    $t$ of unknown authorship, determine if $\alpha$ is the author of $t$.
 
 \end{definition}
 

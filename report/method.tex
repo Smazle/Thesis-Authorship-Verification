@@ -1425,8 +1425,8 @@ convolution extracted. An example of this architecture can be seen in Figure
 \end{figure}
 
 The network will take two inputs, a text $t_k \in T_\alpha$ and a text $t_u
-\in T_\beta$. The network will then try to figure out whether $\alpha =
-\beta$. The convolutions in the network will look at $n$ characters at a
+\in T_{\alpha'}$. The network will then try to figure out whether $\alpha =
+\alpha'$. The convolutions in the network will look at $n$ characters at a
 time and give an output. Therefore the convolutional layers will be able to
 learn important n-grams and extract a representation of $t_k$ and $t_u$. This
 representation will be given to some dense layers which will learn how to
@@ -1447,7 +1447,7 @@ on statistical information from the texts and not on an actual understanding of
 the texts. We have therefore chosen to start out with using convolutional neural
 networks.
 
-The final output of the network will be a probability that $\alpha = \beta$.
+The final output of the network will be a probability that $\alpha = \alpha'$.
 Since the MaCom dataset consist of multiple known texts per author and this
 network architecture only compares two texts we define a separate system for
 making the final prediction.
