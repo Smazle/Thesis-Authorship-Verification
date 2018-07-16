@@ -2,7 +2,7 @@
 *.bbl
 *.log
 *.out
-*.pdf
+./*.pdf
 *.toc
 *.blg
 *.glo
