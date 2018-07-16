@@ -1,5 +1,6 @@
 PNGS = $(shell find ./pictures -type f -name "*.png")
 JPGS = $(shell find ./pictures -type f -name "*.jpg")
+PDFS = $(shell find ./pictures -type f -name "*.pdf")
 TEXFILES = $(shell ls *.tex)
 
 .PHONY: clean
@@ -10,7 +11,7 @@ report.blg: literature.bib
 	pdflatex report.tex -halt-on-error -draftmode
 	bibtex report.aux
 
-report.pdf: report.blg makefile $(TEXFILES) $(PNGS) $(JPGS)
+report.pdf: report.blg makefile $(TEXFILES) $(PNGS) $(JPGS) $(PDFS)
 	pdflatex report.tex -halt-on-error -draftmode
 	pdflatex report.tex -halt-on-error
 	find ./ -name '*.pdf' -exec sh -c 'pdftotext "{}" - | grep -n --with-filename --label="{}" --color "??"' \;

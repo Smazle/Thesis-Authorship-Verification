@@ -3,17 +3,18 @@
 In this Section we will describe the method we have used to solve the Authorship
 Verification problem presented in Definition \ref{def:authorship_verification}.
 In general there are two methods of representing each author. There is the
-instance based approach and the profile based approach. In the instance based
-approach each author $\alpha \in \mathcal{A}$ is represented by a set of texts
-they have written $T_\alpha$, while in the profile based approach they are
-represented by the sum of the set of texts they have written. The instance based
-approach is illustrated in Figure \ref{fig:instance_based} and the profile based
-approach is illustrated in Figure \ref{fig:profile_based}.
+\textit{instance based approach} and the \textit{profile based approach}. In
+the instance based approach each author $\alpha \in \mathcal{A}$ is represented
+by a set of texts they have written $T_\alpha$. In the profile based approach
+texts of $T_\alpha$ are combined in some way, resulting in a single (typically
+smaller) ``profile'' representing the author. The instance based approach is
+illustrated in Figure \ref{fig:instance_based} and the profile based approach is
+illustrated in Figure \ref{fig:profile_based}.
 
 \begin{figure}[htb]
     \centering
     \textbf{Instance Based Authorship Verification or Authorship Attribution}\par\medskip
-    \includegraphics[scale=0.5]{./pictures/method/InstanceBased}
+    \includegraphics[scale=0.5]{./pictures/method/instance_based}
     \caption{Illustrate the typical instance based Authorship Verification or
         Authorship Attribution solution setup. Inspired by \citet{stamatos2009}
         a set of authors are given as input each with a set of texts. Some
@@ -25,7 +26,7 @@ approach is illustrated in Figure \ref{fig:profile_based}.
 \begin{figure}[htb]
     \centering
     \textbf{Profile Based Authorship Verification or Authorship Attribution}\par\medskip
-    \includegraphics[scale=0.5]{./pictures/method/ProfileBased}
+    \includegraphics[scale=0.5]{./pictures/method/profile_based}
     \caption{Illustrate the typical profile based Authorship Verification or
         Authorship Attribution setup. Inspired by \citet{stamatos2009} the texts
         of each author are combined using some combination function such as an
@@ -289,11 +290,11 @@ A more intuitive model of such a neuron can be seen in Figure \ref{fig:neuron}.
 \begin{figure}[!tbp]
   \centering
   \begin{minipage}[b]{0.45\textwidth}
-    \includegraphics[width=\textwidth]{./pictures/method/Neuron.png}
+    \includegraphics[width=\textwidth]{./pictures/method/neuron.png}
   \end{minipage}
   \hfill
   \begin{minipage}[b]{0.45\textwidth}
-    \includegraphics[width=\textwidth]{./pictures/method/NeuronBias.png}
+    \includegraphics[width=\textwidth]{./pictures/method/neuron_bias.png}
   \end{minipage}
     \caption{The inner workings of a neuron, with and without an implicit
         bias \citep{Igel}.}
@@ -539,11 +540,12 @@ different layers.
             \end{pmatrix}.
         \end{equation}
 
-        A vizualization of this process can be seen in Figure \ref{fig:ConvGen}.
+        A visualization of this process can be seen in Figure
+        \ref{fig:convolution_visualization}.
 
         \begin{figure}
         \centering
-        \includegraphics[width=0.6\textwidth]{./pictures/method/ConvGeneral.png}
+        \includegraphics[width=0.6\textwidth]{./pictures/method/convolution_visualization.png}
         \caption{An example of 2D convolution, using a 2x2 kernel/sliding window
             size and a step size of 1 \citep{Goodfellow-et-al-2016}.}
         \label{fig:ConvGen}
@@ -646,7 +648,7 @@ different layers.
         \begin{figure}
             \centering
             \textbf{Illustration of an \gls{RNN} Layer}\par\medskip
-            \includegraphics[width=\textwidth]{./pictures/method/RNN_figure}
+            \includegraphics[width=\textwidth]{./pictures/method/RNN}
             \caption{Illustrates the structure of an \gls{RNN}. The \gls{RNN}
                 consist of three layers, an input layer, a hidden layer and an
                 output layer. The \gls{RNN} shown consist of $I$ input units,
@@ -905,7 +907,7 @@ different layers.
 
         \begin{figure}
         \centering
-        \includegraphics[width=0.5\textwidth]{./pictures/method/Dropout}
+        \includegraphics[width=0.5\textwidth]{./pictures/method/dropout}
         \caption{An example of the application of a dropouts being performed
             on different layers}
         \label{fig:dropout}
@@ -949,7 +951,7 @@ seen in Figure \ref{fig:grad}
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.8\textwidth]{./pictures/method/GradientDesc}
+    \includegraphics[width=0.8\textwidth]{./pictures/method/gradient_descend}
     \caption{An illustration of how gradient descent works. Each iteration steps
         in the direction of the global minimum of the specific function used,
         which in this case is signified by a black ring. The Figure is generated
