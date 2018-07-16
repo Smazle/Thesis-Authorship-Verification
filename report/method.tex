@@ -37,29 +37,28 @@ illustrated in Figure \ref{fig:profile_based}.
 \end{figure}
 
 An example of a profile-based authorship attribution approach, which is highly
-regarded by \citet{stamatos2009}, make use of a compression. This works, not
-by having represented each author library as a set of features, but rather
-makes use of compression to do so. In the initial scenario, we have a set of
-author-profiles, which is the concatenation of all their individual work.
-When a new text is then introduced the authorship is determined by looping
-through each author, adding it library (their concatenated profile). The
-profile is then compressed, both with and without the new text included in its
-library. The bit-wise difference is then computed, by subtracting them from
-one another, resulting in what is essentially the cross-entropy between the
-two sets. The author with the lowest cross-entropy is then considered to be
-the author of this new text. Different methods of comprehension can be used as
-the base for this model, each giving different results. In the instance that
-\citet{stamatos2009} describes, RAR compression yielded the best results, but
-this of cause depends on the scenario one finds oneself in.
+regarded by \citet{stamatos2009} use of a compression algorithm. It works not by
+representing each author profile as a set of features, but rather makes use of
+compression to do so. In the initial scenario we have a set of author-profiles
+which is the concatenation of all their individual work. When a new text is then
+introduced the authorship is determined by looping through each author adding
+it to their concatenated profile. The profile is then compressed both with
+and without the new text included. The bit-wise difference is then computed,
+by subtracting them from one another resulting in what is essentially the
+cross-entropy between the two sets. The author with the lowest cross-entropy
+is then considered to be the author of this new text. Different methods of
+comprehension can be used as the base for this model each giving different
+results. In the instance that \citet{stamatos2009} describes, RAR compression
+yielded the best results, but the choice of compression algorithm depends on the
+specific scenario.
 
-We will generally use the instance based approach. The reason we use an instance
-based approach is that it allows us to use more individual text information
-rather than subjugating it to averaging over a set of texts, For example writing
-style may change over time especially for secondary school pupils that evolve
-very much in a short amount of time. Since we use an instance based approach
-we are able to weight similarity to newer texts higher than similarity to
-older texts. The practical application of this, will be explained in Section
-\ref{subsec:prediction_system}.
+We will generally use the instance based approach since it allows us to use
+more metadata text information. For example the writing style of author may
+change over time especially for secondary school pupils that evolve very much
+in a short amount of time. Since we use an instance based approach we are able
+to weight similarity to newer texts higher than similarity to older texts as
+\citet{hansen2014} found worked well. The practical application of this, will be
+explained in Section \ref{subsec:prediction_system}.
 
 There are also another split between methods that we consider. There are
 generalizing and author specific models. In a generalizing model only a single
@@ -101,17 +100,17 @@ describes.
         fraction of texts written by the same author that we say are written by
         the same author.
 
-    \item[\gls{FPR}: ]
-
-        The fraction of negatives that we reported \textit{True} on i.e. the
-        fraction of texts written by different authors that we say are written
-        by the same author.
-
     \item[\gls{TNR}: ]
 
         The fraction of negatives that we reported \textit{False} on i.e. the
         fraction of texts written by different authors that we say are written
         by different authors.
+
+    \item[\gls{FPR}: ]
+
+        The fraction of negatives that we reported \textit{True} on i.e. the
+        fraction of texts written by different authors that we say are written
+        by the same author.
 
     \item[\gls{FNR}: ]
 
@@ -906,11 +905,11 @@ different layers.
         this can be seen in Figure \ref{fig:dropout}.
 
         \begin{figure}
-        \centering
-        \includegraphics[width=0.5\textwidth]{./pictures/method/dropout}
-        \caption{An example of the application of a dropouts being performed
-            on different layers}
-        \label{fig:dropout}
+            \centering
+            \includegraphics[width=0.5\textwidth]{./pictures/method/dropout}
+            \caption{An example of the application of a dropouts being performed
+                on different layers.}
+            \label{fig:dropout}
         \end{figure}
 
         \citet{JMLR:v15:srivastava14a} investigated the use of dropout
