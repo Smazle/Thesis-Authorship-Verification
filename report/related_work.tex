@@ -6,40 +6,35 @@ authorship verification and authorship attribution with a special focus on
 methods that use deep learning.
 
 
-\subsection{Neural Network Based Authorship Verification/Attribution}
+\subsection{Neural Network Methods}
 
 \citet{DBLP:journals/corr/RuderGB16c} shows a Neural Network for authorship
-attribution. Authorship attribution is closely connected to authorship
-verification as every authorship attribution problem can be transformed into a
-series of authorship verification problems. To attribute the author of a text
-you can perform a series of authorship verifications of each candidate author
-and return the author that reported true. Their experiment consisted of a
-network where they first had a Convolutional layer, after that a max-over-time
-pooling layer and then a densely connected network on the top of that.
-Character level features has previously been shown to be important for both
-authorship attribution and in turn authorship verification as well. A point
-which is emphasized when looking at the results of \citet{hansen2014}, and
-\citet{aalykke2016}, who both not only got good results using Character level
-features, but also did so working on data from the same source as we did during
-the creation of this paper. The hope was that the convolutional layer would
-learn important features from sequences of characters. The max-over-time pooling
-would take the most important value from each convolutional filter and would
-extract a similar number of features for each text even though the texts are
-of differing length. The dense network was then supposed to take the features
-extracted from the text and determine authorship of the text from them.
+attribution. Their experiment consisted of a network where they first had
+a Convolutional layer, after that a max-over-time pooling layer and then a
+densely connected network on the top of that. Character level features has
+previously been shown to be important for both authorship attribution and in
+turn authorship verification as well. A point which is emphasized when looking
+at the results of \citet{hansen2014}, and \citet{aalykke2016}, who both not only
+got good results using Character level features, but also did so working on
+data from the same source as we did during the creation of this paper. The hope
+was that the convolutional layer would learn important features from sequences
+of characters. The max-over-time pooling would take the most important value
+from each convolutional filter and would extract a similar number of features
+for each text even though the texts are of differing length. The dense network
+was then supposed to take the features extracted from the text and determine
+authorship of the text from them.
 
 \citet{DBLP:journals/corr/RuderGB16c} also used multiple channels in their
-network. Each channel was a different token sequence some of them were
-word embeddings and some were character embeddings. Some of the channels
-were static while some of the channels were non-static meaning that the
-word/char-embedded vectors would change during training. The point of the
-channels was that the network were able to extract features from multiple
-linguistic layers, all describing a different stylometric feature of text.
-These layers span from character specific features, all the way to application
-specific features, as explanation in \citet[Section 2]{stamatos2009}. We will
-elaborate more on these features, as we get to feature extraction in Section
-\ref{subsec:baseline_methods}. They specifically used networks with the
-following channels
+network. Each channel was a different token sequence some of them were word
+embeddings and some were character embeddings. Some of the channels were static
+while some of the channels were non-static meaning that the word/char-embedded
+vectors would change during training. The point of the channels was that the
+network were able to extract features from multiple linguistic layers, all
+describing a different stylometric feature of text. These layers span from
+character specific features, all the way to application specific features,
+as explanation in \citet[Section 2]{stamatos2009}. We will elaborate more on
+these features in Section \ref{subsec:baseline_methods}. They specifically used
+networks with the following channels
 
 \begin{description}
     \item[CNN-char:] Single non-static character channel.
@@ -107,9 +102,6 @@ to a set of set of long English novels and essays, they got the best results
 using only the combined lexical topical network, which produced an average
 accuracy of 0.7950.
 
-
-\subsection{Siamese Neural Networks}
-
 Siamese Neural Networks are networks that shares weights across multiple parts
 of the network. Siamese Networks were first introduced by \citet{NIPS1993_769}
 for signature verification. The idea behind Siamese Networks is that the parts
@@ -134,8 +126,8 @@ the same function is computed by both parts of the network.
 
 Siamese networks has also been used by \citet{Koch2015SiameseNN} for one-shot
 image classification. One-shot classification is a task that humans are very
-good at but machines tend to be very bad at. If you show a single picture to
-a human of a camel he/she will be able to almost instantly classify images
+good at but machines tend to be very bad at. If you show a human a single
+picture of a camel, he/she will be able to almost instantly classify images
 into images containing camels and images that do not. \citet{Koch2015SiameseNN}
 trained a Siamese Network to learn to compare images and say whether or not
 they contain the same object. Then when presented with a single instance that
@@ -145,9 +137,9 @@ is then able to compare the single sample given to any other image.
 Most relevant for this thesis \citet{qian:2018} performed a study of different
 deep learning methods for authorship attribution. They used both a \gls{GRU}
 network and a \gls{LSTM} network. They implement 4 different networks,
-sentence-level-\gls{GRU}, article-level-\gls{GRU}, article-level-\gls{LSTM}
-and article-level-Siamese-network. Of those 4 networks the Siamese network is
-of special interest to our project. The Siamese network solves the authorship
+sentence-level-\gls{GRU}, article-level-\gls{GRU}, article-level-\gls{LSTM} and
+article-level-Siamese-network. Of those 4 networks the Siamese network is of
+special interest to our project. Their Siamese network solves the authorship
 verification problem and not the authorship attribution problem. A Siamese
 network is a network that use the same weights and parameters in multiple
 parts of the network. The architecture for authorship verification chosen by
@@ -164,17 +156,25 @@ author or by different authors. \citet{qian:2018} obtained excellent results in
 the authorship attribution case on the Siamese network.
 
 
-\subsection{Other Previous Work in Authorship Verification}
+\subsection{Previous Work Using MaComs Dataset}
 
-\citet{hansen2014} and \citet{aalykke2016} both describe approaches very
-applicable to our specific scenario, as they use Danish texts as the basis of
-their authorship-attribution task. \citet{aalykke2016} made use of a distance
-based approach. After extracting a set of features from the text, they made
-use of different distance measures, on which the attribution was based.
-\citet{hansen2014} on the other hand, started by extracting character-n-grams
-from the texts and used those as the features. Using these features, some 5-fold
-cross validation, and weighing the features based on the submission date of the
-text, they trained a SVM classifier, which ended up with an accuracy of 84\%
+\citet{hansen2014} and \citet{aalykke2016} have both worked with MaComs dataset
+before we did. \citet{hansen2014} focused on authorship attribution with a
+temporal focus. They found that ignoring some of the older texts an author had
+written did not affect performance very much. The method they used was based
+on character-n-gram frequencies. They extracted the frequencies of a set of
+character-n-grams and trained an \gls{SVM} on those frequencies. They used cross
+validation to find the best hyperparameters for the \gls{SVM} and weighted the
+assignments by submission time. They ended up with an accuracy of 84 \%.
+
+\citet{aalykke2016} did not work with the authorship attribution problem but
+rather the authorship verification problem. They used a distance based approach.
+They extracted features from the text like \citet{hansen2014} but instead of
+using an \gls{SVM} they found the nearest text in the space of features. They
+experimented using different distance functions.
+
+% TODO: Find aalykke results and report them here. Maybe discuss whether or not
+% we "beat" Hansen and Aalykke in the discussion section.
 
 \subsection{Extracted Knowledge}
 
@@ -184,5 +184,4 @@ authorship attribution case where performance will drop of as the number of
 different authors increases and a new network has to be trained for new authors.
 Similarly good results were obtained by the Siamese networks. Since we are in
 the authorship verification case we try a Siamese network structure since it is
-good at comparing things. 
-
+good at comparing inputs.
