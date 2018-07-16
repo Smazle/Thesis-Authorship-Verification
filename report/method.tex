@@ -471,12 +471,12 @@ different layers.
         elementwise product of the matrices,
 
         \begin{equation}
-            X = I_{1-3,1-3} \circ w =
+            X = I_{1-3,1-3} \otimes w =
             \begin{pmatrix}
                 1 & 1 & 1 \\
                 1 & 0 & 0 \\
                 0 & 1 & 0
-            \end{pmatrix} \circ
+            \end{pmatrix} \otimes
             \begin{pmatrix}
                 1 & 0 & 0 \\
                 1 & 0 & 0 \\
@@ -499,12 +499,12 @@ different layers.
         We then slide the window one to the right and repeat the same process,
 
         \begin{equation}
-            X = I_{2-4,1-3} \circ w =
+            X = I_{2-4,1-3} \otimes w =
             \begin{pmatrix}
                 1 & 1 & 0 \\
                 0 & 0 & 1 \\
                 1 & 0 & 1
-            \end{pmatrix} \circ
+            \end{pmatrix} \otimes
             \begin{pmatrix}
                 1 & 0 & 0 \\
                 1 & 0 & 0 \\
@@ -1229,9 +1229,9 @@ several extensions to basic Stochastic Gradient Descend has been developed that
 automatically tunes the learning rate $\eta$. We will discuss three different
 extension \gls{AdaGrad}, \gls{RMSProp} and \gls{Adam}.
 
-In the description of those three algorithms we will slightly abuse vector
-notation. We will keep using $\mathbf{a} \circ \mathbf{b}$ to mean an
-elementwise multiplication but besides that we use
+In the description of those three algorithms we will slightly abuse
+vector notation. We will keep using $\mathbf{a} \otimes \mathbf{b}$
+to mean an elementwise multiplication but besides that we use
 $\frac{\mathbf{a}}{\mathbf{b}}$ to mean an elementwise division,
 $\sqrt{\mathbf{a}}$ to mean an elementwise square root and $\mathbf{a}^n$ to
 mean an elementwise power.
@@ -1255,7 +1255,7 @@ mean an elementwise power.
         \begin{equation}
             \mathbf{w}^{(t+1)} =
                 \mathbf{w}^{(t)} -
-                \eta \text{diag}\left(G^{(t)}\right)^{-\frac{1}{2}} \circ
+                \eta \text{diag}\left(G^{(t)}\right)^{-\frac{1}{2}} \otimes
                 \Delta E|_{\mathbf{w}^{(t)}},
         \end{equation}
 
@@ -1276,7 +1276,7 @@ mean an elementwise power.
         \begin{equation}
             \label{eq:individual_adagrad}
             \mathbf{w}_i^{(t+1)} =
-                \mathbf{w}_i^{(t)} - \frac{\eta}{\sqrt{G^{(t)}_{i,i}}} \circ
+                \mathbf{w}_i^{(t)} - \frac{\eta}{\sqrt{G^{(t)}_{i,i}}} \otimes
                 \Delta E|_{\mathbf{w}_i^{(t)}}.
         \end{equation}
 
@@ -1320,7 +1320,7 @@ mean an elementwise power.
             \mathbf{v}^{(t+1)} =
                 \gamma\mathbf{v}^{(t)} +
                 (1 - \gamma)\left(
-                    \Delta E|_{\mathbf{w}^{(t + 1)}} \circ
+                    \Delta E|_{\mathbf{w}^{(t + 1)}} \otimes
                     \Delta E|_{\mathbf{w}^{(t + 1)}}
                 \right).
         \end{equation}
@@ -1334,7 +1334,7 @@ mean an elementwise power.
         \begin{equation}
             \mathbf{w}^{(t+1)} =
                 \mathbf{w}^{(t)} -
-                \frac{\eta}{\sqrt{\mathbf{v}^{(t)}}} \circ
+                \frac{\eta}{\sqrt{\mathbf{v}^{(t)}}} \otimes
                 \Delta E|_{\mathbf{w}^{(t)}}.
         \end{equation}
 
@@ -1354,7 +1354,7 @@ mean an elementwise power.
             \mathbf{v}^{(t+1)} &=
                 \gamma_2\mathbf{v}^{(t)} +
                 (1 - \gamma_2) \left(
-                    \Delta E|_{\mathbf{w}^{(t+1)}} \circ \Delta E|_{\mathbf{w}^{(t+1)}}
+                    \Delta E|_{\mathbf{w}^{(t+1)}} \otimes \Delta E|_{\mathbf{w}^{(t+1)}}
                 \right), \\
             \mathbf{\hat{m}}^{(t+1)} &=
                 \frac{\mathbf{m}^{(t+1)}}{1 - \gamma_1^{t + 1}}, \\
