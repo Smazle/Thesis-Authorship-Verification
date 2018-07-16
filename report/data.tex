@@ -158,15 +158,15 @@ length of the texts.
 We initially removed the first 200 characters of each text as the beginning of
 each text contains metadata such as author name, school of origin, and author
 class. We did not discover that we needed to remove the first 200 characters
-based on the statistics above. Rather we discovered during our experiments that
-the networks were using the metadata to make decisions as described later in
-Section \ref{subsec:conv-char-NN}. In addition to the 200 characters we removed
-initially we also removed texts that had below 200 characters left after the
-removal. We did that as we believe they do not provide enough information about
-that specific author to be useful. This constraint resulted
-in 2.49\% of the texts being removed. Furthermore we applied an upper character
-count constraint for computational reasons. We found that limiting the number
-of characters to 30.000 gave good results by removing the troublesome, without
+based on the statistics above. Rather we discovered during our experiments
+that the networks were using the metadata to make decisions as described later
+in Section \ref{subsubsec:conv_char_nn}. In addition to the 200 characters we
+removed initially we also removed texts that had below 200 characters left after
+the removal. We did that as we believe they do not provide enough information
+about that specific author to be useful. This constraint resulted in 2.49\%
+of the texts being removed. Furthermore we applied an upper character count
+constraint for computational reasons. We found that limiting the number of
+characters to 30.000 gave good results by removing the troublesome, without
 affecting the data-quality too much. This constraint resulted in the removal of
 0.16\% of the texts being removed. We have illustrated the cutoffs in Figure
 \ref{fig:cutoff_thresholds}. There it can be seen that the cutoff points removes
@@ -237,7 +237,7 @@ all datasets has been preprocessed.
 \end{figure}
 
 
-\subsection{Neural Network Sample Generation}
+\subsection{Neural Network Sample Generation} \label{subsec:problem_generation}
 
 All of the neural networks we trained were Siamese Neural Networks that
 compared two texts. We therefore had to generate problem instances that
