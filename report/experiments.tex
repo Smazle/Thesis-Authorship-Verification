@@ -1,47 +1,41 @@
 \section{Experiments} \label{sec:experiments} 
 
-In the previous sections we have gone through the theoretical background of
-the different approaches we were going to make use of to classify the provided
-MaCom data. However from this point the practical aspect will be in focus. The
-following sections address what went into implementing the different methods and
-why their final structure and parameters were chosen. Not only that, but each
-method will be tested against the external validation set \gls{C}. This will
-leave us with a final set of candidate methods which is to be run on the test
-dataset. Two of these will be the baseline method, and the others will be the
-neural networks we train during our experimentation.
-
+We have previously described the theory behind the methods we are implementing
+to solve the authorship verification problem. In this section we will describe
+in detail the experiments we performed to find the optimal hyperparameters and
+network structure. We will test each method implemented against the external
+validation set \gls{C}.
 
 \subsection{Baseline Methods} \label{subsec:baseline_methods}
-
-In this section we will go through the experiments performed in order to get
-our baseline results.
 
 The implementation of both the \gls{SVM} and the Extended Delta method closely
 resembles the implementation used by \citet{US}. There is however a big
 difference with the application of the delta method. Contrary to the scenario
-in \citet{US} where PAN data was used there is not an instance where we only
-have 1 text per author. As such the original version of the delta method can be
-used as described by \citet{evert2015towards}. This is the method where when
+in \citep{US} where PAN data was used there is not an instance where we only
+have 1 text per author. Therefore the original version of the delta method can
+be used as described by \citet{evert2015towards}. This is the method where when
 given a new text $t$ supposedly written by an author $\alpha \in \mathcal{A}$
 his texts $T_\alpha$ are extracted and so is a set of texts not written by
 him $\hat{T}_\alpha$ where $|\hat{T}_\alpha| = |T_\alpha|$. The text $t$ is
 given to a \gls{KNN} classifier which determines if $t \in T_\alpha$ or $t \in
 \hat{T}_\alpha$.
 
+% TODO: Consider whether we should move some of the above description to method.
+
 
 \subsubsection{Feature Selection}
 
 The experiments performed on our baseline methods was centered around parameter
-tuning. Not only parameters as the K in the extended delta method but also the
-set of features supplied to the methods. Other methods such as random forest
-has a built in filter for bad and noisy features. This is not the case for both
-the \gls{SVM} and extended delta method who does performs any kind of quality
-analysis of the feature they are given. It is worst for the extended delta
-method as that is just a distance metric that has no way of weighing features.
-Therefore we chose to perform a feature selection for them rather than just
-having them use the entire set available to them. Contrary to our previous
-work made in \citep{US} this process did not consist of trying out some random
-selection of features but rather a more systematic approach was used.
+tuning. Not only parameters such as the $K$ in the extended delta method but
+also the set of features supplied to the methods. Other methods such as random
+forest has a built in filter for bad and noisy features. This is not the case
+for both the \gls{SVM} and the extended delta method who does performs any kind
+of quality analysis of the feature they are given. It is worst for the extended
+delta method as that is just a distance metric that has no way of weighing
+features. Therefore we chose to perform a feature selection for them rather than
+just having them use the entire set available to them. Contrary to what was done
+by \citet{US} this process did not consist of trying out some random selection
+of features but rather a more systematic approach was used.
 
 We started by generating a set of features. The feature set is simply a set of
 n-grams. In order for us to find as good a feature set as possible we created a
@@ -51,16 +45,16 @@ corpus. From the corpus we enumerated all the different n-grams in the different
 categories and computed the frequency of each n-gram. The corpus had,
 
 \begin{itemize}
+    \item 27,535 different word-1-grams,
     \item 188,472 different word-2-grams,
     \item 2,178 different character-2-grams,
-    \item 27,535 different word frequencies,
     \item 219 different \gls{POS}-tag-2-grams, and
     \item 524 special-character-2-grams.
 \end{itemize}
 
 The quantities here are large due to the size of the corpus and will continue
-to rise as n increases. Rather than extracting all of those features from our
-texts we chose to focus on the n-grams with highest frequency as those are
+to rise as $n$ increases. Rather than extracting all of those features from
+our texts we chose to focus on the n-grams with highest frequency as those are
 probably the most important features. Specifically consider a case where a very
 infrequent feature were chosen. That feature might only exist in the corpus and
 in none of the texts in the test set. That feature would therefore be useless
@@ -106,9 +100,9 @@ with n spanning the values from 1 to 10. \citet{US} showed that the when $n$
 in word-n-grams reach a value of 4, the probability of that sequence actually
 occurring in any given text is drastically reduced. A similar thing can be seen
 with the special-character-n-grams where an increase in n would not contribute
-anything. The reason for the small amount of \gls{POS}-tag-n-grams was that
-they were a really big burden computationally, as such a reduction in possible
-n-values had to be made.
+anything. The reason for the small amount of \gls{POS}-tag-n-grams was that they
+were a computationally expensive, as such a reduction in possible n-values had
+to be made.
 
 Having the features we could start doing our feature selection. The process
 proved very computationally expensive. Having to check every combination of 4950
@@ -176,12 +170,14 @@ be seen in Figure \ref{fig:fs_results}. The best number of selected feature were
 
 \subsubsection{Hyper Parameter Selection}\label{sec:hyp_select}
 
-As mentioned in the previous section due to time constraints we were unable to
-do the hyper parameter selection in parallel with the feature selection. For
-that reason we chose to split it up selecting our features first and then tuning
-the parameters based on those selected features. As before where we searched
-for features in a set of features we now search for parameters in a set of
-parameters. We search for parameters in a grid search with the parameters,
+As mentioned in the previous section due to time constraints we were unable
+to do the hyper parameter selection in parallel with the feature selection.
+For that reason we chose to split it up selecting our features first and then
+tuning the parameters based on those selected features. As before where we
+searched for features in a set of features we now search for parameters in a set
+of parameters. Recall that the \gls{SVM} need the $C$ and $\gamma$ parameters
+and the extended delta method need the $p$ and $K$ parameters. We search for
+parameters in a grid search of the values,
 
 \begin{align}
     \text{SVM} &:
@@ -193,26 +189,16 @@ parameters. We search for parameters in a grid search with the parameters,
     \begin{array}{lr}
         p=\{1,2,3,4,5\}\\
         K=\{1,3,5,7,9,11,13,15\}
-    \end{array}
+    \end{array}.
 \end{align}
 
-The one parameter yet to be explained is $p$, which refers to the $p$ in the
-minkowski distance,
-
-\begin{equation}
-    D(X,Y) = \left(\sum_{i = 1}^n |x_i - y_i|^p\right)^{1/p},
-\end{equation}
-
-where $p=1$ and $p=2$ is the manhattan and eucledian distance respectively.
-
-We perform a grid search over all these parameters. For each variation of the
-hyper parameters we average the performance of the method over all unique
-authors in the training set in a manner very similar to the feature selection.
-We make use of the same 3-fold stratified cross validation and arrange each
-author with set of opposing set of texts. The accuracy of each parameter
-configuration can be seen in Table \ref{table:KNN} for \gls{KNN}, and Table
-\ref{table:SVM} for \gls{SVM}. The parameter search was performed on the \gls{J}
-dataset.
+For each variation of the hyper parameters we average the performance of the
+method over all unique authors in the training set in a manner very similar
+to the feature selection. We make use of the same 3-fold stratified cross
+validation and arrange each author with set of opposing set of texts. The
+accuracy of each parameter configuration can be seen in Table \ref{table:KNN}
+for the extended delta method, and Table \ref{table:SVM} for the \gls{SVM}. The
+parameter search was performed on the \gls{J} dataset.
 
 \begin{table}[h]
     \centering
