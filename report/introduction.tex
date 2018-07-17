@@ -36,10 +36,10 @@ as information retrieval, machine learning and \gls{NLP}.
 
 In order for any fully automatic authorship verification to work, Stylometric
 features describing the text have to be automatically extracted. These features
-span multiple linguistic layers, ranging from the low level character n-grams
-to the high level application specific features such as text creation date and
-number of edits. Many of the current day state-of-the-art approaches are based
-on these features.
+span multiple \textit{linguistic layers} ranging from low level character
+sequence frequencies to the high level application specific features such as
+text creation date and number of edits. Many of the current day state-of-the-art
+approaches are based on these features \citep{stamatos2009}.
 
 % The reason for writing about this topic:
 
@@ -102,6 +102,16 @@ We let elementwise multiplication of both vectors and matrices be denoted with
 $\otimes$ and elementwise summation as $\oplus$. We will denote submatrices as
 $X[a,b;c,d]$ which means the submatrix of $X$ that consist of rows $a$ to $b$
 and columns $c$ to $d$.
+
+Much existing work on authorship verification is based on frequencies of
+sequences of objects \textit{n-grams} \citep{stamatos2009}. The object could
+for example be characters and the n-gram would then refer to the frequency of a
+specific character sequence in a text. The n in n-gram refer to the size of the
+sequence. If we take the text to be "hello" the different character-3-grams will
+be "hel", "ell" and "llo". The frequency of each of them is $\frac{1}{3}$. We
+will use n-grams in some of our baseline methods and some of our networks will
+use them indirectly.
+
 
 % Introduce the main ideas that stem from your topic/title and the order in
 % which you will discuss them?

@@ -14,32 +14,7 @@ neural networks we train during our experimentation.
 \subsection{Baseline Methods} \label{subsec:baseline_methods}
 
 In this section we will go through the experiments performed in order to get
-our baseline results. While many different features can be used when performing
-\gls{NLP} we chose the same features as was used by \citet{US} since they span
-several several of the different linguistic layers. An example of a linguistic
-layer could be the character layer. As the name implies the character layer
-focuses on the individual characters used in a specific text. Other examples of
-linguistic layers could be the sentence layer that focuses on the sentences of
-the text, and the meta layer that focuses on things such as publishing/delivery
-date, and file format. The features that were used by \citet{US} and we
-also chose to use were, Word-n-grams, Character-n-grams, Word Frequencies
-(word-1-grams), \gls{POS}-tag-n-grams, and Special-Character-n-grams. An n-gram
-describes the combinations of sequential elements of size n. In the case where
-that element is characters, and n is 3, the string "hello" would produce the
-character-3-grams "hel", "ell" and "llo". This also means that a feature such as
-word frequencies can be considered word-1-grams.
-
-% TODO: We give the definition of an n-gram here but they are used already in
-% our Related Work section. We should consider moving the definition to there.
-
-\gls{POS} tags refer to the grammatical class a certain words belongs to such
-as nouns or adjectives. In order to extract these we made use of a POS-tag
-extractor provided by \citet{polyglot}.
-
-Special-character-n-grams refers to character n-grams that are created by first
-removing all normal alphanumeric and space characters. Left are only dots,
-commas, colons and so on. These n-grams were shown to be very important in
-authorship verification by \citep{US}.
+our baseline results.
 
 The implementation of both the \gls{SVM} and the Extended Delta method closely
 resembles the implementation used by \citet{US}. There is however a big

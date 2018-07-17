@@ -51,9 +51,9 @@ The best performing configuration was the CNN-char.
 \citet{shrestha2017} experimented with classifying the author of short texts
 such as messages on social media, and emails. Their approach made use of a
 \gls{CNN}. This \gls{CNN} only takes in a sequence of character-n-grams. The
-reasoning for this usage of only char-n-grams was the small amount of text
-in each sample. By passing these n-grams through a embedding layer, a 25\%
-dropout layer, 3 convolutional layers and then using max-over-time, they got
+reasoning for this usage of only char-n-grams was the small amount of text in
+each sample. By passing these n-grams through a embedding layer, a 25\% dropout
+layer, 3 convolutional layers and then using max-over-time pooling, they got
 a compact representation of the text. They hypothesized this representation
 captures the morphological, lexical and syntactic level of the supplied text.
 This compact representation is then parsed through a fully connected soft-max

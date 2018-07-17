@@ -178,9 +178,45 @@ they will work just as well for Danish texts that they did on English texts.
 The Danish and English language is very similar as they both derive from the
 Germanic branch of the indo-European language family. \citet{konstantin:2000}
 conducted a study of the similarities and differences between different European
-languages. They found that as expected Danish and English were very close. We
-will now describe shortly the two baseline methods we implemented. For details
-on the methods see \citep{US}.
+languages. They found that as expected Danish and English were very close.
+
+None of the baseline methods works on raw texts. Rather they require hand
+engineered feature sets extracted from the texts. The features used by
+\citet{US} were all n-gram frequencies which is similar to classic authorship
+verification methods \citep{stamatos2009}. We use the same features as described
+in the project. We change the specific n-grams to n-grams extracted from Danish
+texts but the classes of n-grams will stay the same. The n-grams come from
+several linguistic layers. Specifically we use frequencies of character-n-grams,
+special-character-n-grams, word-n-grams and \gls{POS}-tag-n-grams.
+
+\begin{description}
+
+    \item[Character-n-gram]
+
+        Refer to character sequences of size $n$.
+
+    \item[Special-character-n-grams]
+
+        Refer to sequences of characters of size $n$ where all alphanumeric and
+        space characters has been removed from a text. Special-character-n-grams
+        can for example be used to find authors that use long sentences and
+        therefore many commas in a row.
+
+    \item[Word-n-grams]
+
+        Refer to sequences of words of size $n$.
+
+    \item[\gls{POS}-tag-n-grams]
+
+        Refer to \gls{POS}-tag sequences of size $n$. A \gls{POS}-tag is the
+        grammatical class of individual words such as nouns of adjectives. To
+        extract \gls{POS}-tags from texts we use the \gls{POS}-tagger provided
+        by \citep{polyglot}.
+
+\end{description}
+
+We will now describe shortly the two baseline methods we implemented. For
+details on the methods see \citep{US}.
 
 
 \subsubsection{Extended Delta Method}
