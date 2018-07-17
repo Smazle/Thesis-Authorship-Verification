@@ -153,55 +153,48 @@ to accommodate this constraint we can take certain actions which depends on
 the model used. Details about these actions will be addressed in Section
 \ref{subsec:prediction_system}.
 
-In addition to the constraint on the accusation rate, Macom has also expressed
-an interest in getting the specificity of our trained under 95\%. Specificity is
-defined as,
+In addition to the constraint on the accusation error Macom also wants a
+specificity of above 95\%. Specificity is defined as,
 
 \begin{equation}
-        \text{Specificity} = \frac{TN}{(TN + FP)}.
+    \text{Specificity} = \frac{TN}{(TN + FP)}.
 \end{equation}
 
-Specificity
-
-%This constraint is however a bit out of our hands, is a very direct measure of 
-%overall quality of the model. Specificity describes the performance
-%of a model, but only with respect to the negative samples. This is a property
-%that is not easily enforced. For this reason out action in getting towards
-%this goal, will simply be to find the best model possible.
+Specificity therefore represents the fraction of the total negatives we catch.
+To catch 95\% of ghost writers is a very ambitious goal. As described earlier it
+is more important to keep the accusation error low than to catch many ghost
+writers. We will therefore primarily focus on keeping the accusation error lower
+than 10\% and then see how high we can get the specificity at the same time.
 
 \subsection{Baseline Methods}
 
-In order to gauge the efficiency of our deep learning approaches, we have chosen
-to implement some baseline methods. These methods were picked based on their
-performance in a previous project written by us \citet{US}. Albeit that project
-was only concerned with English texts provided by the \citet{pan:2015}, and
-\citet{pan:2014} text forensics tasks, we hypothesize that the performance of
-these approaches will perform just as well on Danish texts when being tuned for
-the Danish language.
+We have implemented two baselines to compare with our neural network methods.
+The methods are based on work by \citep{US}. The methods were developed for
+English texts and not Danish texts that we work with in this assignment. They do
+however represent classical machine learning methods for solving the authorship
+verification problem. They will therefore serve as a great baseline for our
+neural networks. We believe that by changing the parameters of the models
+they will work just as well for Danish texts that they did on English texts.
+The Danish and English language is very similar as they both derive from the
+Germanic branch of the indo-European language family. \citet{konstantin:2000}
+conducted a study of the similarities and differences between different European
+languages. They found that as expected Danish and English were very close. We
+will now describe shortly the two baseline methods we implemented. For details
+on the methods see \citep{US}.
 
-It should be noted that the work done in \citet{US} was done on English
-texts rather than Danish as is the case in this paper. While there there is
-a discernible between the languages the overall difference is not actually
-that far. This is a point also made in \citet{konstantin:2000}, where
-using a lexical distance equation he computed the distance between all
-the European languages. A upgraded figure of his finding can be found
-here\footnote{\url{https://bit.ly/1BOMe9l}}. This model reveal
-that Danish end English are in fact not so lexical different, which makes sense
-as the both derive from the germanic branch of the indo-European language
-family.
 
 \subsubsection{Extended Delta Method}
 
 One of the best performing methods of \citet{US} was the extended delta method.
 As the name suggests the method extends the already existing delta method
-described by \citet{evert2015towards}. The normal delta methods consists of first
-extracting word frequencies from all texts and using these as the describing
-features. After doing this to the entire sample space of texts, and applying a
-linear transformation to their respective feature-sets, \gls{KNN} is then used
-to determine the author of the introduced texts based on its closest neighbors
-in the word-frequency feature-space. The extended delta method, simply expands
-on the set of possible features to pick from, rather than being limited to only
-using the word-frequencies of the text.
+described by \citet{evert2015towards}. The normal delta methods consists
+of first extracting word frequencies from all texts and using these as the
+describing features. After doing this to the entire sample space of texts, and
+applying a linear transformation to their respective feature-sets, \gls{KNN} is
+then used to determine the author of the introduced texts based on its closest
+neighbors in the word-frequency feature-space. The extended delta method, simply
+expands on the set of possible features to pick from, rather than being limited
+to only using the word-frequencies of the text.
 
 
 \subsubsection{Author Specific SVM}
