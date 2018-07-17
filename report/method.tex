@@ -76,8 +76,8 @@ approach since it is easier to implement for MaCom as they only have to train a
 model once.
 
 As a unit of measuring the quality of our models, we will also compute the
-number of \gls{TP}s, \gls{TN}s, \gls{FP}s and \gls{FN}s, as seen in \citet{US}.
-In these problems we get,
+number of \glspl{TP}, \glspl{TN}, \glspl{FP} and \glspl{FN}, as seen in
+\citet{US}. In these problems we get,
 
 \begin{itemize}
     \item a \gls{TP} whenever we answer \textit{True} and the texts are written
@@ -138,19 +138,19 @@ reporting on throughout our experiments,
 
 In the case of MaCom, we want to minimize the \gls{FNR} as much as possible,
 so as to not wrongfully accuse anyone of not having written their assignment.
-This however leaves out a equally important metric. While a low \gls{FNR} is the
-goal, MaCom also wants to minimize the number of \gls{FN}s compared to the total
-number of accusations made. This can be described as:
+This however leaves out a equally important metric. While a low \gls{FNR} is
+the goal, MaCom also wants to minimize the number of \glspl{FN} compared to the
+total number of accusations made. This can be described as:
 
 \begin{equation}
-    \text{Accusation Error} = \frac{FN}{FN + TN}
+    \text{Accusation Error} = \frac{FN}{FN + TN}.
 \end{equation}
 
 The goal is also to keep this error under a certain threshold specified
 by MaCom, which in this case is $0.1$ or $10\%$. In other words, of the
-accusations we made, only $10\%$ of them are allowed to be false. In order
-to accommodate this constraint we can take certain actions, which depends
-on the model used. Details about these actions will be addressed in Section
+accusations we made, only $10\%$ of them are allowed to be wrong. In order
+to accommodate this constraint we can take certain actions which depends on
+the model used. Details about these actions will be addressed in Section
 \ref{subsec:prediction_system}.
 
 In addition to the constraint on the accusation rate, Macom has also expressed
@@ -158,14 +158,16 @@ an interest in getting the specificity of our trained under 95\%. Specificity is
 defined as,
 
 \begin{equation}
-        \text{Specificity} = \frac{TN}{(TN + FP)}
+        \text{Specificity} = \frac{TN}{(TN + FP)}.
 \end{equation}
 
-This constraint is however a bit out of our hands, is a very direct measure of 
-overall quality of the model. Specificity describes the performance
-of a model, but only with respect to the negative samples. This is a property
-that is not easily enforced. For this reason out action in getting towards
-this goal, will simply be to find the best model possible.
+Specificity
+
+%This constraint is however a bit out of our hands, is a very direct measure of 
+%overall quality of the model. Specificity describes the performance
+%of a model, but only with respect to the negative samples. This is a property
+%that is not easily enforced. For this reason out action in getting towards
+%this goal, will simply be to find the best model possible.
 
 \subsection{Baseline Methods}
 
@@ -219,8 +221,8 @@ new text as well.
 
 In this paper we will approach the authorship verification problem using
 deep-learning. The term deep learning, was first introduced to machine machine
-learning in 1989, and afterward to \gls{NN}s in 2000. The terms quickly became
-synonymous with \gls{NN}s due to them being some of the more efficient deep
+learning in 1989, and afterward to \glspl{NN} in 2000. The terms quickly became
+synonymous with \glspl{NN} due to them being some of the more efficient deep
 learning methods \citep{Schmidhuber:2015}.
 
 With the inner workings of the brain used as the basis, a standard simple
@@ -231,36 +233,36 @@ through perceiving the environment, or in other words, when they are fed data
 externally. Other neurons are simply activated through the weighted activation
 of previous neurons. \citep{DBLP:journals/corr/Schmidhuber14}.
 
-\gls{NN}s have been around since the 1940s. However, back then they
-were merely variations of the linear regressors used at the time, and
-was not very reminiscent of the Networks on can see today. It was not
-until the late 1960s, early 70s, that networks comparable to the more
-modern approaches surfaced. Examples of such early works, are the two
-publications \citet{ivakhnenko1973cybernetic} and \citet{4308320}, which
-describe multi-layered feed-forward supervised neural network architectures.
-While the work described in \citet{4308320} was indeed one of the first cases
-of the modern \gls{NN}, actually getting the network to learn was still a
-problem, as the tweaking of individual weights attributed to each neuron in the
-network was not trivial. Little did they know, research to solve that problem
-was already in progress. The basics of continuous \gls{BP} was initially
-described in 1960, in \citet{Kelley1960}, quickly followed by a simpler approach
-which used only the chain rule in 1962, \citet{DREYFUS196230}. It was not
-until 1970 that the modern version of \gls{BP} was described, using automatic
-differentiation as its basis. This prompted an increase in \gls{BP} related
-research the following decades. As the computational power increased several
-1000 folds in the 90s and 2000s, so did the practical usage of \gls{BP},
-and \gls{NN} in general \citet{Schmidhuber:2015}. The real life application of
-\gls{BP}, will be described in Section \ref{sec:BP}.
+\glspl{NN} have been around since the 1940s. However, back then they were
+merely variations of the linear regressors used at the time, and was
+not very reminiscent of the Networks on can see today. It was not until
+the late 1960s, early 70s, that networks comparable to the more modern
+approaches surfaced. Examples of such early works, are the two publications
+\citet{ivakhnenko1973cybernetic} and \citet{4308320}, which describe
+multi-layered feed-forward supervised neural network architectures. While the
+work described in \citet{4308320} was indeed one of the first cases of the
+modern \gls{NN}, actually getting the network to learn was still a problem, as
+the tweaking of individual weights attributed to each neuron in the network was
+not trivial. Little did they know, research to solve that problem was already
+in progress. The basics of continuous \gls{BP} was initially described in 1960,
+in \citet{Kelley1960}, quickly followed by a simpler approach which used only
+the chain rule in 1962, \citet{DREYFUS196230}. It was not until 1970 that the
+modern version of \gls{BP} was described, using automatic differentiation as
+its basis. This prompted an increase in \gls{BP} related research the following
+decades. As the computational power increased several 1000 folds in the 90s
+and 2000s, so did the practical usage of \gls{BP}, and \gls{NN} in general
+\citet{Schmidhuber:2015}. The real life application of \gls{BP}, will be
+described in Section \ref{sec:BP}.
 
 Like with the history of authorship attribution, research in this area of
 science picked up more interest, as we entered the modern computational
-age, and with the introduction of the \gls{CNN}. \gls{CNN}s are based on
+age, and with the introduction of the \gls{CNN}. \glspl{CNN} are based on
 the early work described in \citet{TJP:TJP19681951215}. They showed that
 cats and monkeys visual cortexes contain a set of neurons, each individually
 responding to a receptive field, or area, of their field of view. Neighboring
 receptive fields all have a certain amount of overlap, however in the end
 a cohesive view is created. This is what paved the way for neocognition in
-1980 \cite{Fukushima1980}, the basis of \gls{CNN}s, which works in a very
+1980 \cite{Fukushima1980}, the basis of \glspl{CNN}, which works in a very
 similar manner, looking at overlapping subsections of data. These convolutional
 neurons however were rarely used alone, but together with a down-sampling neuron
 such as Max Pooling introduced in 1993 \citep{Schmidhuber:2015}.
@@ -313,7 +315,7 @@ The activation function $h$, used at each neuron, defines the output of the
 neuron given a certain input. A simple example of this would be computer chip
 circuit, which can be seen as a series of activation functions outputting 0 or
 1 depending on their input. This activation function would be a linear one.
-When applying activation functions to neurons in \gls{NN}s, they are usually
+When applying activation functions to neurons in \glspl{NN}, they are usually
 non-linear, as it allows for the computation of more complex problems using a
 smaller amount of neurons, relative to usage of a linear activation function,
 as they allow for the universal function approximation, a point also made by
@@ -399,7 +401,7 @@ learning library. \cite{chollet2015keras}
 
 \subsubsection{Layers} \label{subsubsec:layers}
 
-\gls{NN}s are organized in layers. The first layer is called the input layer
+\glspl{NN} are organized in layers. The first layer is called the input layer
 and is connected directly to the input to the model and the last layer is called
 the output layer and gives the output of the model. All layers in between are
 called hidden layers. A practical example could be where the input layer was
@@ -638,7 +640,7 @@ different layers.
         \citep{DBLP:series/sci/2012-385}. The circular connections can be used
         to remember previous inputs and an \gls{RNN} therefore has a sense of
         history of previous input and output. Classical feed forward neural
-        networks can be viewed as mappings from and to vectors while \gls{RNN}s
+        networks can be viewed as mappings from and to vectors while \glspl{RNN}
         can be viewed as mappings from and to sequences. An \gls{RNN} does not
         view its input as a vector but as a sequence of inputs in different
         timesteps. We have shown an example of an \gls{RNN} network in Figure
@@ -695,7 +697,7 @@ different layers.
         An \gls{RNN} network are normally optimized using the backpropagation
         through time algorithm. For data where a sense of time does not make
         sense and where the context from both sides of each timesteps is usefull
-        such as for text it is normal to use bidirectional \gls{RNN}s. Then
+        such as for text it is normal to use bidirectional \glspl{RNN}. Then
         both a forwards and a backwards pass is made through the sequence. The
         output of each network at each time step can then depend both on the
         context before and after the input.
@@ -703,7 +705,7 @@ different layers.
     \item[\gls{LSTM} Layer:]
         \label{layer:LSTM}
 
-        As described the main benefit of \gls{RNN}s are their ability to use
+        As described the main benefit of \glspl{RNN} are their ability to use
         previous context to make predictions. Unfortunately the \gls{RNN}
         architecture described above in practise does not allow context from
         far away to influence current output. The problem is known as the
@@ -1436,9 +1438,9 @@ convolutional part of the network which will share weights when extracting
 n-grams from the two texts.
 
 \citet{DBLP:journals/corr/0001KYS17} presented a comparative study of
-\gls{CNN}s and \gls{RNN}s in common \gls{NLP} tasks. They found that
-\gls{RNN}s generally performed better in tasks where understanding the whole
-text was important while \gls{CNN}s performed better when understanding was
+\glspl{CNN} and \glspl{RNN} in common \gls{NLP} tasks. They found that
+\glspl{RNN} generally performed better in tasks where understanding the whole
+text was important while \glspl{CNN} performed better when understanding was
 secondary and the goal was mainly about finding key phrases or statistical
 information from a text. In authorship verification the understanding of the
 text is generally irrelevant since we do not have to say anything about what a
@@ -1505,9 +1507,9 @@ sure we have to be of a decision to accuse an author of not having written
 an assignment. As described earlier MaCom does not want to accuse innocent
 students of cheating. That means that it is very important to MaCom to minimize
 the number accusation error. We can use the $\theta$ parameter to control that
-error. Hopefully the \gls{FN}s will generally end up with a value closer to 1
-than the \gls{TN}s. If that is the case then lowering $\theta$ value will lower
-the fraction since there will be fewer \gls{FN}s. That might lower the overall
+error. Hopefully the \glspl{FN} will generally end up with a value closer to 1
+than the \glspl{TN}. If that is the case then lowering $\theta$ value will lower
+the fraction since there will be fewer \glspl{FN}. That might lower the overall
 accuracy of the prediction system but will make sure that at few students as
 possible are falsely accused.
 

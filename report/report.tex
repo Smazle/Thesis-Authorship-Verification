@@ -38,42 +38,77 @@
 \usepackage[normalem]{ulem}
 \usepackage[square]{natbib}
 
-\newacronym{POS}{POS}{Parts-of-Speech}
-\newacronym{ISG}{ISG}{Integrated Syntactic Graph}
-\newacronym{UBM}{UBM}{Universal Background Model}
-\newacronym{AGS}{AGS}{Average Group Similarity}
-\newacronym{SCAP}{SCAP}{Source Code Author Profile}
-\newacronym{CNG}{CNG}{Common n-gram}
-\newacronym{LNG}{LNG}{Local n-gram}
-\newacronym{RLP}{RLP}{Recentred Local Profiles}
-\newacronym{KNN}{KNN}{K-Nearest Neighbours}
-\newacronym{SVM}{SVM}{Support Vector Machine}
-\newacronym{NLP}{NLP}{Natural Language Processing}
-\newacronym{CNN}{CNN}{Convolutional Neural Network}
-\newacronym{RNN}{RNN}{Recurrent Neural Network}
-\newacronym{NN}{NN}{Artificial Neural Networks}
-\newacronym{AA}{AA}{Authorship Attribution}
-\newacronym{AV}{AV}{Authorship Verification}
-\newacronym{GRU}{GRU}{Gated Recurrent Unit}
-\newacronym{LSTM}{LSTM}{Long Short Term Memory}
-\newacronym{ReLu}{ReLu}{Rectified Linear Unit}
-\newacronym{BP}{BP}{Backprogation}
-\newacronym{SRP}{SRP}{Studieretningsprojekt}
-\newacronym{AdaGrad}{AdaGrad}{Adaptive Gradient Descend}
-\newacronym{RMSProp}{RMSProp}{Root Mean Square Propagation}
-\newacronym{Adam}{Adam}{Adaptive Moment Estimation}
-\newacronym{ROC}{ROC}{Receiver operating characteristic}
-\newacronym{AUC}{AUC}{Area under the curve}
-\newacronym{AUROC}{AUROC}{Area under the ROC-curve}
+\newacronym[longplural=\textit{Parts-of-Speech}, plural=POS']
+    {POS}{POS}{\textit{Part-of-Speech}}
+\newacronym[longplural=\textit{Integrated Syntactic Graphs}, plural=ISGs]
+    {ISG}{ISG}{\textit{Integrated Syntactic Graph}}
+\newacronym[longplural=\textit{Universal Bakground Models}, plural=UBMs]
+    {UBM}{UBM}{\textit{Universal Background Model}}
+\newacronym[longplural=\textit{Average Group Similarities}, plural=AGS']
+    {AGS}{AGS}{\textit{Average Group Similarity}}
+\newacronym[longplural=\textit{Source Code Author Profiles}, plural=SCAPs]
+    {SCAP}{SCAP}{\textit{Source Code Author Profile}}
+\newacronym[longplural=\textit{Common n-grams}, plural=CNGs]
+    {CNG}{CNG}{\textit{Common n-gram}}
+\newacronym[longplural=\textit{Local n-grams}, plural=LGNs]
+    {LNG}{LNG}{\textit{Local n-gram}}
+\newacronym[longplural=\textit{Recentred Local Profiles}, plural=RLPs]
+    {RLP}{RLP}{\textit{Recentred Local Profile}}
+\newacronym[longplural=\textit{K-Nearest Neighbours}, plural=KNNs]
+    {KNN}{KNN}{\textit{K-Nearest Neighbours}}
+\newacronym[longplural=\textit{Support Vector Machines}, plural=SVMs]
+    {SVM}{SVM}{\textit{Support Vector Machine}}
+\newacronym[longplural=\textit{Natural Language Processings}, plural=NLPs]
+    {NLP}{NLP}{\textit{Natural Language Processing}}
+\newacronym[longplural=\textit{Convolutional Neural Networks}, plural=CNNs]
+    {CNN}{CNN}{\textit{Convolutional Neural Network}}
+\newacronym[longplural=\textit{Recurrent Neural Networks}, plural=RNNs]
+    {RNN}{RNN}{\textit{Recurrent Neural Network}}
+\newacronym[longplural=\textit{Artificial Neural Networks}, plural=NNs]
+    {NN}{NN}{\textit{Artificial Neural Networks}}
+\newacronym[longplural=\textit{Authorship Attributions}, plural=AAs]
+    {AA}{AA}{\textit{Authorship Attribution}}
+\newacronym[longplural=\textit{Authorship Verifications}, plural=AVs]
+    {AV}{AV}{\textit{Authorship Verification}}
+\newacronym[longplural=\textit{Gated Recurrent Units}, plural=GRUs]
+    {GRU}{GRU}{\textit{Gated Recurrent Unit}}
+\newacronym[longplural=\textit{Long Short Term Memories}, plural=LSTMs]
+    {LSTM}{LSTM}{\textit{Long Short Term Memory}}
+\newacronym[longplural=\textit{Rectified Linear Units}, plural=ReLus]
+    {ReLu}{ReLu}{\textit{Rectified Linear Unit}}
+\newacronym[longplural=\textit{Backpropagation}, plural=BPs]
+    {BP}{BP}{\textit{Backpropagation}}
+\newacronym[longplural=\textit{Studieretningsprojekter}, plural=SRPs]
+    {SRP}{SRP}{\textit{Studieretningsprojekt}}
+\newacronym[longplural=\textit{Adaptive Gradient Descends}, plural=AdaGrads]
+    {AdaGrad}{AdaGrad}{\textit{Adaptive Gradient Descend}}
+\newacronym[longplural=\textit{Root Mean Square Propagations}, plural=RMSProp]
+    {RMSProp}{RMSProp}{\textit{Root Mean Square Propagation}}
+\newacronym[longplural=\textit{Adaptive Moment Estimations}, plural=Adams]
+    {Adam}{Adam}{\textit{Adaptive Moment Estimation}}
+\newacronym[longplural=\textit{Receiver Operating Characteristics}, plural=ROCs]
+    {ROC}{ROC}{\textit{Receiver Operating Characteristic}}
+\newacronym[longplural=\textit{Area Under the Curves}, plural=AUCs]
+    {AUC}{AUC}{\textit{Area Under the Curve}}
+\newacronym[longplural=\textit{Area Under the \glspl{ROC}-curves}, plural=AUROCs]
+    {AUROC}{AUROC}{\textit{Area Under the \gls{ROC}-curve}}
 
-\newacronym{TP}{TP}{True Positive}
-\newacronym{TN}{TN}{True Negative}
-\newacronym{FP}{FP}{False Positive}
-\newacronym{FN}{FN}{False Negative}
-\newacronym{TPR}{TPR}{True Positive Rate}
-\newacronym{TNR}{TNR}{True Negative Rate}
-\newacronym{FPR}{FPR}{False Positive Rate}
-\newacronym{FNR}{FNR}{False Negative Rate}
+\newacronym[longplural=\textit{True Positives}, plural=TPs]
+    {TP}{TP}{\textit{True Positive}}
+\newacronym[longplural=\textit{True Negatives}, plural=TNs]
+    {TN}{TN}{\textit{True Negative}}
+\newacronym[longplural=\textit{False Positives}, plural=FPs]
+    {FP}{FP}{\textit{False Positive}}
+\newacronym[longplural=\textit{False Negatives}, plural=FNs]
+    {FN}{FN}{\textit{False Negative}}
+\newacronym[longplural=\textit{True Positive Rates}, plural=TPRs]
+    {TPR}{TPR}{\textit{True Positive Rate}}
+\newacronym[longplural=\textit{True Negaive Rates}, plural=TNRs]
+    {TNR}{TNR}{True Negative Rate}
+\newacronym[longplural=\textit{False Positive Rates}, plural=FPRs]
+    {FPR}{FPR}{False Positive Rate}
+\newacronym[longplural=\textit{False Negative Rates}, plural=FNRs]
+    {FNR}{FNR}{False Negative Rate}
 
 % Network names.
 \newacronym{conv-char-NN}{char-CNN}{Character Level Convolutional Siamese Neural Network}

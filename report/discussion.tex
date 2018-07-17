@@ -62,15 +62,15 @@ network had an accusation error closest to to the one required in addition to
 having the highest overall accuracy in all the categories we tested it on.
 While this network was in fact the best, it was closely followed by network
 \gls{conv-char-word-NN}, while the \gls{rec-sent-NN} we also tested had sub-par
-performance, lending credence to the applicability of \gls{CNN}s to \gls{NLP}
+performance, lending credence to the applicability of \glspl{CNN} to \gls{NLP}
 problems. It is however worth noting that this could very well be due to the
-infeasibility of running any of our \gls{RNN}s on the character level of the
-texts supplied to it. Looking at the performance of the two \gls{CNN}s, it
+infeasibility of running any of our \glspl{RNN} on the character level of the
+texts supplied to it. Looking at the performance of the two \glspl{CNN}, it
 becomes obvious that the character level is of great importance when it comes
 to determining the author of a text. The sentence level appears to on a too
 high linguistic level. At least in the way we applied it. We hypothesize that
 applying it to a lower level, such as the word level would greatly increase its
-performance, as \gls{RNN}s would be able to learn based on the words relation to
+performance, as \glspl{RNN} would be able to learn based on the words relation to
 one another, and therefore use a more grammar based learning approach. Looking
 at \gls{conv-char-NN}, and \gls{conv-char-word-NN}, it would seem that focusing
 on the word level of the texts seems to actually hurt the model a bit. We are a
@@ -135,7 +135,7 @@ set (C). }
 \label{fig:AUROC}
 \end{figure}
 
-Another \gls{NLP} advantage \gls{CNN}s has in this context, is the fact that
+Another \gls{NLP} advantage \glspl{CNN} has in this context, is the fact that
 we are able to more accurately determine what part of the text contributed to
 final classification as can be seen in the following section.
 
@@ -438,7 +438,7 @@ kind of prediction. This would also lead to both varying quality of model, as
 the quantity of samples would very. This would also mean that we would not be
 able to apply them to new student, as they have no assignments associated with
 them. The generalizing approach was used instead. This mean that we only have
-to train the \gls{NN}s once, and then it can be applied text even written by
+to train the \glspl{NN} once, and then it can be applied text even written by
 new student. Most of our networks reached their max potential with the first
 10 epochs, meaning that max training time would be around 1 day or continuous
 training. This is the most time consuming part, as the actual prediction time is
