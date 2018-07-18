@@ -24,3 +24,16 @@ noise for our models. This makes the most sensible solution, when working with
 these models in future, to simply remove the citations before training and
 applying the methods. 
 
+There is also the scenario where a group of students do a collective handin of a
+collaborative assignment. As mentioned in Section \ref{subsubsec:group_handin}
+this is not something that our would be able to handle out of the box. However
+a future modification of our methods could tackle this, using a paragraph based
+approach. \ref{subsubsec:ghost_written_areas} One could loop through each
+paragraph in the collaborative text, and then apply our methods. The paragraph
+would be tested against all the students who worked on the assignment. The goal
+would be to attribute each paragraph to one of the proposed writers of the
+assignment. If a certain amount of paragraphs were unattributable, then the
+entire text would be considered the product of a ghost writer. 
+In this scenario a subset of student in the group might have had their parts
+produced by a third party ghost writer, and some of them didn't.
+

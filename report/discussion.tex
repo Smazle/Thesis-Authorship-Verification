@@ -268,6 +268,7 @@ seem to also pick up on the start of sentences.
 
 
 \subsubsection{Locating Ghost Written Areas}
+\label{subsubsec:ghost_written_areas}
 
 We also looked at whether or not we could say something about which parts of an
 assignment are the most likely to be ghost written. That would allow a teacher
@@ -311,6 +312,10 @@ It is also interesting that the first two paragraphs from $t$ received a lower
 average score than the last 3. It seems like the network is better at predicting
 the middle of a text than the start of a text.
 
+This could be used for classification of group assignments, by using the
+prediction of each paragraph against the collaborators behind the assignment. It
+could also be used to detect what amount of a group assignment was written by
+what member of said group.
 
 \subsubsection{Applying Other Machine Learning Methods}
 
@@ -473,6 +478,23 @@ accuracy of the model. This would be cases where a student for some reason
 uses the same sources consistently for their assignments. In this scenario
 we suspect our models would perceive the contents of the citations as part
 of the student vocabulary.
+
+\subsubsection{Group Handin}\label{subsubsec:group_handin}
+
+There is also the scenario where rather than a single student handing in and
+assignment, it is a collaborative assignment between several students. In this
+scenario writing style wouldn't be consistent throughout the paper, seemingly
+rendering our produced models useless. If our models were to work right out of
+the box, the work of a group of students would have to be represented in the
+training data, as if they were a single student. In this scenario our models
+ideally would learn how they wrote as a group. This scenario is however very
+unlikely to happen. It presupposes that students only operate in the same
+groups throughout their years in high school. Not only that, but in order to
+train our models, a substantial portion of the students would have to do this.
+For this reason the above described scenario most likely wouldn't apply in
+practice. This problem does however have a solution, which is described in
+\ref{sec:future_work}.
+
 
 \subsection{Prediction Systems}
 
