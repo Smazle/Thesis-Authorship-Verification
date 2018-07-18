@@ -362,6 +362,9 @@ world situations. We have created our solutions in a lab setting which
 simplifies the problem quite a bit. We discuss here how our results can be
 applied to find real ghost writers.
 
+
+\subsubsection{Data Deficiencies}
+
 The biggest problem with our approach is that we had no actual ghost written
 assignments available. We were given a dataset of authors where each author
 had written a set of assignments. To create ghost written assignments we used
@@ -381,26 +384,21 @@ name and most generated ghost written texts will have a different name.
 Therefore names are an excellent feature to look at due to the way our dataset
 was constructed. In a real ghost writer setting however the names attached to an
 assignment is a useless feature as a ghost writer will always put the students
-name on the assignment. We have tried to work against these deficiencies of our
-dataset by removing as many names as possible and as much other information as
-possible.
+name on the assignment. We have tried to work against these deficiencies of
+our dataset by removing as many names as possible and as much other metadata
+information as possible.
 
-This leads into another subject for discussion. If a student knew, or had
-noticed some of the inner workings of our system would he be able to cheat it?
-The simple answer is yes. The lack of reliable source of a prediction does
-secure the system with regards to the specific writing style, but it is still
-far from unbeatable. The area where this is clearest, is the prediction system.
-The weighing method chosen is used almost exclusively, and would not change
-that often in practice. If a student was to know how his papers were weighted,
-he would be able to get around an accurate prediction. This is especially the
-case with the time based weighing approaches. Knowing that the newest papers
-you wrote is weighted very highly, would enable one to simply make use of a
-ghost writer for the newer assignments. This method would also apply to the
-length based weighing. As for the majority vote and the uniform weighing, such
-a method would not work, as all assignments have equal say in the prediction.
-The only way around those weighing method would be to use a ghost writer in
-all assignments, in which case most similarly designed systems would be at a
-disadvantage.
+We know that we removed a significant amount of information from the texts since
+we observed the training and validation accuracy falling after the change. We
+also saw less of the filters looking at text metadata suggesting that it is not
+as important to the networks.
+
+It is hard to predict exactly how well the network will perform on ghost written
+assignments when we had no such assignments available during testing. However we
+believe we have handled the deficiencies in the dataset as well as possible.
+
+
+\subsubsection{Applicability to non Danish Class Texts}
 
 Another thing to be discussed is our methods applicability to other school
 subjects. The assignments provided to us for the development of this paper was
@@ -422,6 +420,29 @@ in specific network design decision working better on one group than another. In
 order to verify how generalizing our methods are, further experimentation into
 these areas would be needed.
 
+
+\subsubsection{Intentional Cheating of System}
+
+This leads into another subject for discussion. If a student knew, or had
+noticed some of the inner workings of our system would he be able to cheat it?
+The simple answer is yes. The lack of reliable source of a prediction does
+secure the system with regards to the specific writing style, but it is still
+far from unbeatable. The area where this is clearest, is the prediction system.
+The weighing method chosen is used almost exclusively, and would not change
+that often in practice. If a student was to know how his papers were weighted,
+he would be able to get around an accurate prediction. This is especially the
+case with the time based weighing approaches. Knowing that the newest papers
+you wrote is weighted very highly, would enable one to simply make use of a
+ghost writer for the newer assignments. This method would also apply to the
+length based weighing. As for the majority vote and the uniform weighing, such
+a method would not work, as all assignments have equal say in the prediction.
+The only way around those weighing method would be to use a ghost writer in
+all assignments, in which case most similarly designed systems would be at a
+disadvantage.
+
+
+\subsubsection{Runtime in Practise}
+
 The runtime our methods is also a factor. As mentioned in the beginning of this
 papers, running time was a focus during development. If we had chosen an author
 specific approach, we would have to train each of our methods on the texts of
@@ -437,15 +458,6 @@ new student. Most of our networks reached their max potential with the first
 training. This is the most time consuming part, as the actual prediction time is
 negligible. Of course the networks might need retraining some-time, to keep up
 with an evolving education system.
-
-We know that we removed a significant amount of information from the texts since
-we observed the training and validation accuracy falling after the change. We
-also saw less of the filters looking at text metadata suggesting that it is not
-as important to the networks.
-
-It is hard to predict exactly how well the network will perform on ghost written
-assignments when we had no such assignments available during testing. However we
-believe we have handled the deficiencies in the dataset as well as possible.
 
 
 \subsection{Prediction Systems}
