@@ -233,7 +233,7 @@ substrings from the \gls{C} dataset that generated the highest values.
 
         \verb[\n\nx\n[    & \verb[\n\nx\n[    & \verb[\n\nx\n[       &
         \verb'\n\n\n\n'   & \verb'\n\n5\n'    & |1.81 - 2.61| = 0.80 \\
-\verb[ “… [       & \verb[ “… [       & \verb[?“! [          &
+        \verb[ “… [       & \verb[ “… [       & \verb[?“! [          &
         \verb'nd” '       & \verb'r,” '       & |1.75 - 2.53| = 0.78 \\
 
         \verb[S\n, [      & \verb[S\n, [      & \verb[O\n, [         &
@@ -398,23 +398,27 @@ believe we have handled the deficiencies in the dataset as well as possible.
 
 Another thing to be discussed is our methods applicability to other school
 subjects. The assignments provided to us for the development of this paper was
-solely focused on Danish class. For this reason the models almost certainly only
-produced the results they did due to the course the assignment was attached to.
-Thus a certain bias towards the specific course is to be expected. It would
-stand to reason, that assignments made in the Danish course are more focused
-on the higher linguistic levels such as POS-tags and words. Meanwhile courses
-such as math would focus more on the individual characters used, such as "=",
-"?" and numbers. One could take this even further and apply similar methods
-to code, which suddenly introduces a lot of formatting specific quirks. Thus
-the applicability of our current methods has a very large bias towards the
-texts from danish class, and maybe even the specific skill level of a secondary
-school student. It would not be inconceivable that due to all the training being
-focused on secondary school student, our methods have a bias towards that as
-well. Student at that age might very well have a general tendency towards some
-quirks that student on a higher level of education have not. This could result
-in specific network design decision working better on one group than another. In
-order to verify how generalizing our methods are, further experimentation into
-these areas would be needed.
+texts from the Danish course. Therefore the models almost certainly fitted
+features that are specific to texts from that course. Thus a certain bias
+towards the specific course is to be expected. It would stand to reason, that
+assignments made in the Danish course are more focused on the higher linguistic
+levels such as \gls{POS}-tags and words. Meanwhile courses such as Maths would
+focus more on the individual characters used such as "=", "?" and numbers. One
+could take this even further and apply similar methods to code, which suddenly
+introduces a lot of formatting specific quirks. Thus the applicability of our
+current methods has a very large bias towards the texts from the Danish course
+and maybe even the specific skill level of a secondary school student. Students
+at that age might very well have a general tendency towards some specific quirks
+that students on a higher level does not. That could result in specific network
+design decision working better on one group than another. In order to verify how
+generalizing our methods are further experimentation into these areas would be
+needed.
+
+We believe however that if we trained the same networks on data from other
+courses we could obtain a model that had comparable performance to the models
+trained in this thesis. The model would probably find other n-grams to extract
+from the texts but the same architecture would probably still give about the
+same results.
 
 
 \subsubsection{Intentional Cheating of System}
@@ -760,4 +764,3 @@ often gave the best results.
 The negative curve is a bit weird. We expected it to stay flat below 50\% but
 it seems to be rising towards 50\%. The curve is clearly more flat than the
 positive curve but there does still seem to be a trend towards 50\%.
-
