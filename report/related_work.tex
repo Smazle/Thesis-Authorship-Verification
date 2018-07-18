@@ -65,23 +65,20 @@ character-2-grams. After removing bot-like authors, they got an accuracy of
 0.678, and 0.683 respectively. This however, was only with 35 authors used,
 and 1000 tweets per author. In the case where either the authors count was
 increased or the number of tweets was decreased, the accuracy quickly worsened.
-In order to extract some sort of meaning from the predictions they made using
-this approach, they made use of the saliency score to determine the impact each
-n-gram had on the final decision.
 
 The approach proposed by \citet{ding2016} was somewhat more complex. While they
 too made use of a \gls{CNN}, the application of the network was split into
 four different modalities. They described their approach as \textit{Mining
-stylometric representations for authorship analysis}. They did it by using 4
-different \glspl{CNN}, each one focusing on 1-2 stylometric levels of the text.
-The point of splitting it up, was so they could pick and choose which modality
-they wanted to use on the specific example. The first network looked at the
-word level, and topical modalities of the text. In doing so it made use of
-3 different author word biases. The topical bias described a texts tendency
+stylometric representations for authorship analysis}. They did it by using
+4 different \glspl{CNN}, each one focusing on 1-2 stylometric levels of the
+text. The point of splitting it up, was so they could pick and choose which
+modality they wanted to use on the specific example. The first network looked
+at the word level, and topical modalities of the text. In doing so it made use
+of 3 different author word biases. The topical bias described a texts tendency
 towards words that were specific to the topic of the entire text. The local
-contextual bias described the texts tendency towards specific words based on the
-topic of a specific part of the text, as the overall topic was rarely consistent
-throughout the text. Finally there is the lexical bias, which described the bias
+contextual bias described the texts tendency towards specific words based on
+the topic of a specific part of the text, as the overall topic was rarely
+consistent throughout the text. Finally the lexical bias described the bias
 the author had towards words that have a similar meaning, such as "nice day"
 vs "wonderfull day". Using these thee biases, where the local contextual bias
 is derived from a numerical representation of a sequence of words, the network
