@@ -9,11 +9,6 @@
 
     \item
 
-        Discuss why we see such a large performance drop between the validation
-        results and the test results.
-
-    \item
-
         Discuss whether or not we can handle group turn ins.
 
     \item
@@ -41,14 +36,14 @@ While this network was in fact the best, it was closely followed by network
 \gls{conv-char-word-NN}, while the \gls{rec-sent-NN} we also tested had sub-par
 performance, lending credence to the applicability of \glspl{CNN} to \gls{NLP}
 problems. It is however worth noting that this could very well be due to the
-infeasibility of running any of our \glspl{RNN} on the character level of the
-texts supplied to it. We hypothesize that the accuracy of a RNN would be greatly
-increased had it been run on a lower linguistic level. As experiments showed in
-\ref{subsec:conv_char_word_nn}, even \gls{CNN}s performed badly on the sentence
-level. Ideally we would have run and RNN on the word level. We suspect it
-would be able to learn the words and their relation to on another, which makes
-sense with words, but not with sentences. However in order to do so, we would
-need computational power than was available to train the model. Looking at
+infeasibility of running any of our \glspl{RNN} on the character or word level
+of the texts supplied to it. We hypothesize that the accuracy of a RNN would be
+greatly increased had it been run on a lower linguistic level. As experiments
+showed in \ref{subsec:conv_char_word_nn}, even \gls{CNN}s performed badly on the
+sentence level. Ideally we would have run and RNN on the word level. We suspect
+it would be able to learn the words and their relation to on another, which
+makes sense with words, but not with sentences. However in order to do so, we
+would need computational power than was available to train the model. Looking at
 the performance of the two \glspl{CNN}, it becomes obvious that the character
 level is of great importance when it comes to determining the author of a text.
 The sentence level appears to on a too high linguistic level. At least in the
@@ -242,8 +237,7 @@ substrings from the \gls{C} dataset that generated the highest values.
 
         \verb[\n\nx\n[    & \verb[\n\nx\n[    & \verb[\n\nx\n[       &
         \verb'\n\n\n\n'   & \verb'\n\n5\n'    & |1.81 - 2.61| = 0.80 \\
-
-        \verb[ “… [       & \verb[ “… [       & \verb[?“! [          &
+\verb[ “… [       & \verb[ “… [       & \verb[?“! [          &
         \verb'nd” '       & \verb'r,” '       & |1.75 - 2.53| = 0.78 \\
 
         \verb[S\n, [      & \verb[S\n, [      & \verb[O\n, [         &
@@ -744,3 +738,4 @@ often gave the best results.
 The negative curve is a bit weird. We expected it to stay flat below 50\% but
 it seems to be rising towards 50\%. The curve is clearly more flat than the
 positive curve but there does still seem to be a trend towards 50\%.
+
