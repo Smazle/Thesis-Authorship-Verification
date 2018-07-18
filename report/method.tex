@@ -253,7 +253,7 @@ the best results we will expand the search to more than 15.
 Another algorithm used in \citet{US}. Heavily inspired by \citet{hansen2014}
 starts out by fetching all texts known to be written by a specific author and an
 equal number of texts known not to be written by that same author. It is upon
-the feature-set extracted from these texts that a \gls{SVM} is trained, allowing
+the feature set extracted from these texts that a \gls{SVM} is trained, allowing
 it to learn the specific authors writing style from the known texts supplied and
 in contrast what the writing style of someone not him is. When a new text, with
 disputed authorship is presented the hope is that the trained \gls{SVM} will be
@@ -264,14 +264,14 @@ new text as well.
 \subsection{Deep Learning}
 
 In this paper we will approach the authorship verification problem using
-deep-learning. The term deep learning, was first introduced to machine machine
+deep learning. The term deep learning, was first introduced to machine machine
 learning in 1989, and afterward to \glspl{NN} in 2000. The terms quickly became
 synonymous with \glspl{NN} due to them being some of the more efficient deep
 learning methods \citep{Schmidhuber:2015}.
 
 With the inner workings of the brain used as the basis, a standard simple
 \gls{NN} consists of a set interconnected processors, called neurons. Each of
-these neurons has a real-valued activation associated with it, which activates
+these neurons has a real valued activation associated with it, which activates
 differently depending on the specific neuron. The input neurons activate
 through perceiving the environment, or in other words, when they are fed data
 externally. Other neurons are simply activated through the weighted activation
@@ -283,7 +283,7 @@ not very reminiscent of the Networks on can see today. It was not until
 the late 1960s, early 70s, that networks comparable to the more modern
 approaches surfaced. Examples of such early works, are the two publications
 \citet{ivakhnenko1973cybernetic} and \citet{4308320}, which describe
-multi-layered feed-forward supervised neural network architectures. While the
+multi-layered feed forward supervised neural network architectures. While the
 work described in \citet{4308320} was indeed one of the first cases of the
 modern \gls{NN}, actually getting the network to learn was still a problem, as
 the tweaking of individual weights attributed to each neuron in the network was
@@ -878,7 +878,7 @@ different layers.
         reducing the data down to a number a number of key features found within
         that same data. This of course decreases the computation time of the
         network as a whole, and with a smaller amount of parameters, comes a
-        smaller chance of over-fitting.
+        smaller chance of overfitting.
 
         Working in similar fashion as the convolutional layer, the max pooling
         layer also uses a sliding window. This sliding window of a certain
@@ -963,7 +963,7 @@ different layers.
         reduced overfitting in all problems they looked at. In particular
         they found that document classification which is similar to what we
         are doing were also improved. The main drawback of a dropout layer
-        is that it increase the training-time of the networks its used on
+        is that it increase the training time of the networks its used on
         \citep{JMLR:v15:srivastava14a}.
 
 \end{description}
@@ -1182,7 +1182,7 @@ As such, we can summarize the backpropagation algorithm like this.
 At this point we can update each of the weights using point 4, and Equation
 \eqref{eq:update} which is the Step 3.
 
-These three steps Feed-Forward, Back-Propagate and update weights are repeated
+These three steps feed forward, backpropagate and update weights are repeated
 throughout the training cycle of the neural networks, so as to optimize the
 weights after each full iteration on the training set. As is to be expected
 this algorithm as very expensive computationally, as it runs in $O(W)$. This is
@@ -1195,11 +1195,11 @@ very disable at first, and is indeed the reason why neural networks need such a
 long training time. However an alternative described by \citet{Bishop}, which
 involves perturbing each weight instead, and approximating the derivatives.
 This method does however run in $O(W^2)$ time, making the run-time of $O(W)$
-back-propagation provides the desired choice. However, in order to improve
+backpropagation provides the desired choice. However, in order to improve
 on those that $O(W)$ time-complexity a method called batching is used. This
 method, shuffles and split the training dataset up into smaller batches.
 These batches are then run through the network one at a time, performing
-back-propagation after each run-through. This results in the gradient not being
+backpropagation after each run-through. This results in the gradient not being
 as accurate after each batch, but this introduced inaccuracy is negligible
 compared to the computational time won, by reducing the amount of $\mathcal{E}$
 in $O(\mathcal{E}\cdot N\cdot W)$ needed for the same amount of convergence.
@@ -1477,7 +1477,7 @@ The network will take two inputs, a text $t_k \in T_\alpha$ and a text $t_u
 time and give an output. Therefore the convolutional layers will be able to
 learn important n-grams and extract a representation of $t_k$ and $t_u$. This
 representation will be given to some dense layers which will learn how to
-compare the feature-sets extracted. The Siamese part of the network is the
+compare the feature sets extracted. The Siamese part of the network is the
 convolutional part of the network which will share weights when extracting
 n-grams from the two texts.
 
