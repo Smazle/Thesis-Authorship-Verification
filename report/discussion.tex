@@ -357,6 +357,7 @@ be able to conclude which features are the most important for this authorship
 verification task.
 
 \subsection{Applicability of Method}\label{sec:app_of_method}
+% TODO: Discuss scaleability.
 
 In this section we will discuss how applicable our approach will be to real
 world situations. We have created our solutions in a lab setting which
@@ -428,25 +429,51 @@ same results.
 
 \subsubsection{Intentional Cheating of System}
 
-This leads into another subject for discussion. If a student knew, or had
-noticed some of the inner workings of our system would he be able to cheat it?
-The simple answer is yes. The lack of reliable source of a prediction does
-secure the system with regards to the specific writing style, but it is still
-far from unbeatable. The area where this is clearest, is the prediction system.
-The weighing method chosen is used almost exclusively, and would not change
-that often in practice. If a student was to know how his papers were weighted,
-he would be able to get around an accurate prediction. This is especially the
-case with the time based weighing approaches. Knowing that the newest papers
-you wrote is weighted very highly, would enable one to simply make use of a
-ghost writer for the newer assignments. This method would also apply to the
-length based weighing. As for the majority vote and the uniform weighing, such
-a method would not work, as all assignments have equal say in the prediction.
-The only way around those weighing method would be to use a ghost writer in
-all assignments, in which case most similarly designed systems would be at a
-disadvantage.
+Assuming that a student had obtained information about the inner working of
+the system would he/she be able to cheat the system? Cheating would be if the
+student did not write an assignment herself but still had the text classified
+as written by her. We have in a previous section described how we can figure
+out what the network convolutional networks is probably looking at by looking
+at the output of the filter extraction layer. If a student could obtain that
+information she could make sure that any ghost written assignments contained
+the same phrases that the network reacted to each time. It would however be
+very hard to make sure that all filters received the same values in a ghost
+written assignment. The student would have to go through the ghost written
+assignment and making sure that each filter is represented by approximately the
+same phrase as he/she usually use in an assignment. And even if the student
+obtains the correct values for most filters the few filters that obtained a
+different value might be very important in the dense layers that followed the
+feature extraction layers. It is very hard to predict what the dense layers are
+doing with the features it is given so it is in our opinion impractical to cheat
+the convolutional networks by engineering the features in a ghost written
+assignment.
+
+The problem is even harder in our \gls{RNN} networks. Here the student has even
+less information available since it is not possible to tie the reaction of the
+\gls{RNN} to particular places in a text. Again we do not believe it is possible
+to cheat the networks.
+
+What the student could do is exploit our prediction system. Some of the
+prediction systems we have discussed is especially easy to cheat. Lets for
+example consider the $P_{max}$ prediction system. In this prediction system a
+text would have to be similar to only a single other text to be considered not
+ghost written. A student could therefore seed his ``library'' of texts by buying
+a ghost written assignment for a not very important assignment. That would
+probably not result in a problem since teachers will not be as on guard when
+it is only a small assignment. Then when they turn in their \gls{SRP} they can
+use the same ghost writer with no problem since they have seeded one of his/her
+texts into their library.
 
 
-\subsubsection{Runtime in Practise}
+% TODO: It would be nice to have some data here on how long it takes to predict
+% a text against an author with n texts here for each of our networks. We could
+% then discuss system load in periods where n students turn in assignments at
+% the same time.
+%
+% I also want a discussion of other scalability issues here. I tried rewriting
+% the section but could not come up with a good introduction. So I'm saving it
+% for later.
+\subsubsection{Scalability}
 
 The runtime our methods is also a factor. As mentioned in the beginning of this
 papers, running time was a focus during development. If we had chosen an author
@@ -464,6 +491,7 @@ training. This is the most time consuming part, as the actual prediction time is
 negligible. Of course the networks might need retraining some-time, to keep up
 with an evolving education system.
 
+
 \subsubsection{Citations}
 
 Depending on which course the assignments we are using are associated with, the
@@ -474,10 +502,11 @@ the linguistic patterns exhibited by the student. For this reason each citation
 serves as nothing but a source of noise for our models. The solution for is
 however pretty simple and will be addressed in Section \ref{sec:future_work}.
 It should be noted that there would be cases where citation would add to the
-accuracy of the model. This would be cases where a student for some reason
-uses the same sources consistently for their assignments. In this scenario
-we suspect our models would perceive the contents of the citations as part
-of the student vocabulary.
+accuracy of the model. This would be cases where a student for some reason uses
+the same sources consistently for their assignments. In this scenario we suspect
+our models would perceive the contents of the citations as part of the student
+vocabulary.
+
 
 \subsubsection{Group Handin}\label{subsubsec:group_handin}
 
