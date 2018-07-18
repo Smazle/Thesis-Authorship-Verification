@@ -1,7 +1,7 @@
 \section{Method} \label{sec:method}
 
-In this Section we will describe the method we have used to solve the Authorship
-Verification problem presented in Definition \ref{def:authorship_verification}.
+In this Section we will describe the method we have used to solve the authorship
+verification problem presented in Definition \ref{def:authorship_verification}.
 In general there are two methods of representing each author. There is the
 \textit{instance based approach} and the \textit{profile based approach}. In
 the instance based approach each author $\alpha \in \mathcal{A}$ is represented
@@ -15,10 +15,10 @@ illustrated in Figure \ref{fig:profile_based}.
     \centering
     \textbf{Instance Based Authorship Verification or Authorship Attribution}\par\medskip
     \includegraphics[scale=0.5]{./pictures/method/instance_based}
-    \caption{Illustrate the typical instance based Authorship Verification or
-        Authorship Attribution solution setup. Inspired by \citet{stamatos2009}
+    \caption{Illustrate the typical instance based authorship verification or
+        authorship attribution solution setup. Inspired by \citet{stamatos2009}
         a set of authors are given as input each with a set of texts. Some
-        Machine Learning model is trained on the input texts and the model is
+        machine learning model is trained on the input texts and the model is
         used to predict an unknown text.}
     \label{fig:instance_based}
 \end{figure}
@@ -237,8 +237,8 @@ classifier with a custom comparison function.
 
 Like \citet{US} we will find the best parameters via cross validation. We will
 try 5 distance metrics. The 5 distance metrics will be the Minkowski distance
-with $p = 1 \dots 5$. When $p = 1$ the distance metric is the Manhattan distance
-and when $p = 1$ the Euclidian distance. We chose the Manhattan distance since
+with $p = 1 \dots 5$. When $p = 1$ the distance metric is the manhattan distance
+and when $p = 1$ the euclidian distance. We chose the manhattan distance since
 it has been shown to consistently perform well when compared to other distance
 metrics \citep{evert2015towards}. And we chose the Euclidean metric since it has
 been shown to work well on a small amount of features \citep{evert2015towards}.
@@ -279,7 +279,7 @@ of previous neurons. \citep{DBLP:journals/corr/Schmidhuber14}.
 
 \glspl{NN} have been around since the 1940s. However, back then they were
 merely variations of the linear regressors used at the time, and was
-not very reminiscent of the Networks on can see today. It was not until
+not very reminiscent of the networks on can see today. It was not until
 the late 1960s, early 70s, that networks comparable to the more modern
 approaches surfaced. Examples of such early works, are the two publications
 \citet{ivakhnenko1973cybernetic} and \citet{4308320}, which describe
@@ -440,7 +440,7 @@ and the hard sigmoid activation function
 h(x) = \max(0, \min(1, x \cdot 0.2 + 0.5))
 \end{equation}
 
-These both serve as the default activations functions when using the Keras deep
+These both serve as the default activations functions when using the keras deep
 learning library. \cite{chollet2015keras}
 
 \subsubsection{Layers} \label{subsubsec:layers}
@@ -835,7 +835,7 @@ different layers.
 
     \item[Embedding:]
 
-        The Embedding layer is a layer that maps a value into a continuous
+        The embedding layer is a layer that maps a value into a continuous
         vector space. Given a sequence of integers it uses the weights
         associated with the layer, to map that singular value to a vector of
         predetermined size. This can be done on any sort of data, as longs as it
@@ -892,7 +892,7 @@ different layers.
         dimensions, and the stride. An example of this max pooling process can
         be seen in Figure \ref{fig:max_pool}.
 
-        Pooling layers are however, not restricted to only the Max Pooling
+        Pooling layers are however, not restricted to only the max pooling
         layer. The average pooling layers, works in a very similar fashion,
         but instead of extracting the max value, it simply averages values
         currently in the window. The Global Max Pooling Layer, which we use
@@ -944,7 +944,7 @@ different layers.
         the network is successfully learning some general commonality that can
         be used to describe both the data sets, which is the goal. It is when
         these two error do not follow on another, that one has to be alarmed, as
-        network does not generalize properly. This is where the Dropout layer is
+        network does not generalize properly. This is where the dropout layer is
         useful. By deactivating a certain amount of randomly selected neurons
         in a particular layer, the network is forced to learn from a larger
         sparse set of neurons, rather than focusing on a small amount of very
@@ -1049,7 +1049,7 @@ do this for every training sample, averaging $\Delta \mathbf{w}^{(t)}$ for over 
 of them. The goal is clear, we want to find the gradient of our error
 function with respect to all the weights in our network.
 
-After performing step 1(Feed Forward), which entails running training samples
+After performing step 1(feed forward), which entails running training samples
 through the network, we want to determine by how much we have to tweak each
 weights using gradient descent. Due to the hidden nature of the entire network,
 the natural starting point for this process is at the output node. If we for
@@ -1230,13 +1230,13 @@ the learning rate. The algorithm for weight update becomes,
 In that algorithm a single updating of the weights require computing the
 gradient of the error function on each training sample. For large datasets
 that might not be feasible as backpropagation is expensive to compute for such
-datasets. Stochastic Gradient Descend is an attempt at estimating the gradient
-of all datapoints using only a single datapoint. That means that in Stochastic
-Gradient Descend weights are updated much more often and is updated on a noisy
+datasets. Stochastic gradient descend is an attempt at estimating the gradient
+of all datapoints using only a single datapoint. That means that in stochastic
+gradient descend weights are updated much more often and is updated on a noisy
 target \citep{Bishop}. The advantage of Stochastic Gradient Descend is that
 convergence to a local minimum might be much quicker since the algorithm does
 not have to go through all training samples for each weight update. The weight
-updating for Stochastic Gradient Descend is computed as,
+updating for stochastic gradient descend is computed as,
 
 \begin{equation}
     \mathbf{w}^{(t+1)}_i =
@@ -1244,25 +1244,25 @@ updating for Stochastic Gradient Descend is computed as,
         \eta\Delta E_n|_{\mathbf{w}^{(t)}_i}.
 \end{equation}
 
-In practise each weight update in Stochastic Gradient Descend are computed
+In practise each weight update in stochastic gradient descend are computed
 not based on a single training sample but on some small number of training
 samples. That allows the computation to take advantage of highly optimized
 matrix libraries and making each update on a slightly less noisy target
 \footnote{\url{http://ufldl.stanford.edu/tutorial/supervised/OptimizationStochas
-ticGradientDescent/}}. The version of Stochastic Gradient Descend that use more
-than one sample per weight update is known as Stochastic Minibatch Gradient
-Descend.
+ticGradientDescent/}}. The version of stochastic gradient descend that use more
+than one sample per weight update is known as stochastic minibatch gradient
+descend.
 
-To see how Stochastic Gradient Descend might lead to faster convergence consider
+To see how stochastic gradient descend might lead to faster convergence consider
 a dataset with some number of training samples. To create redundancy in the
 dataset we copy all training samples in the dataset to create a new dataset of
 twice the size. In classical Gradient Descend the only effect will be that the
 error increases by a magnitude of 2 but will take twice as long to compute.
-While Stochastic Gradient Descend will converge at the exact same speed as each
+While stochastic gradient descend will converge at the exact same speed as each
 minibatch will still represent an estimate of the true underlying function and
 each weight update still takes the same amount of time \citep{Bishop}.
 
-Another advantage of the Stochastic method is that the optimizer might escape
+Another advantage of the stochastic method is that the optimizer might escape
 from a non optimal local minima and reach a better local minima. To see why that
 might happen consider the fact that each minibatch consist of a different sample
 of training samples. Even though when computed on all training samples the
@@ -1271,10 +1271,10 @@ batch might point towards a better local minima. Therefore the optimizer has the
 possibility of following the gradient of single batches that leads to a final
 better local minima \citep{Bishop}.
 
-A problem in the Stochastic Gradient Descend algorithm is the need to choose
+A problem in the stochastic gradient descend algorithm is the need to choose
 the learning rate $\eta$. If the learning rate is too high the algorithm
 will diverge and if it is to low it will be very slow to converge. Therefore
-several extensions to basic Stochastic Gradient Descend has been developed that
+several extensions to basic stochastic gradient descend has been developed that
 automatically tunes the learning rate $\eta$. We will discuss three different
 extension \gls{AdaGrad}, \gls{RMSProp} and \gls{Adam}.
 
@@ -1346,7 +1346,7 @@ mean an elementwise power.
     \item[\gls{RMSProp}:]
 
         \gls{RMSProp} is an unpublished optimization algorithm.
-        It was introduced by Geoff Hinton in Lecture 6e of his
+        It was introduced by Geoff Hinton in lecture 6e of his
         Coursera Class \citep{DBLP:journals/corr/Ruder16}.
         This section is based primarily on his slides
         \footnote{\url{http://www.cs.toronto.edu/~tijmen/csc321/slides/lecture_s
@@ -1457,8 +1457,8 @@ compares two inputs. The networks has been used by \citet{Koch2015SiameseNN},
 \citet{NIPS1993_769} and \citet{qian:2018} for comparing text, images and
 signatures. \citet{qian:2018} use a Siamese network but with no convolutions and
 a distance function on top for text analysis while \citet{Koch2015SiameseNN}
-used a Siamese network with convolutions and fully connected network on top
-for image analysis. Our approach is to use convolutions in the Siamese network
+used a siamese network with convolutions and fully connected network on top
+for image analysis. Our approach is to use convolutions in the siamese network
 to learn important features from the texts. We also use a fully connected
 network on top of the convolutional layers to learn from the features the
 convolution extracted. An example of this architecture can be seen in Figure
@@ -1479,7 +1479,7 @@ The network will take two inputs, a text $t_k \in T_\alpha$ and a text $t_u
 time and give an output. Therefore the convolutional layers will be able to
 learn important n-grams and extract a representation of $t_k$ and $t_u$. This
 representation will be given to some dense layers which will learn how to
-compare the feature sets extracted. The Siamese part of the network is the
+compare the feature sets extracted. The siamese part of the network is the
 convolutional part of the network which will share weights when extracting
 n-grams from the two texts.
 
@@ -1588,7 +1588,7 @@ that constraint since for any weight function $w \colon \mathcal{T} \rightarrow
 \end{equation}
 
 We can therefore define the weight functions $w$ while ignoring the constraint
-but use $w^*$ as the actual weight function in the Weighted Prediction System.
+but use $w^*$ as the actual weight function in the weighted prediction system.
 
 The most obvious weighing scheme is to just use a uniform weighting. That way
 we simply take an average of the predictions of our networks over the different
@@ -1687,7 +1687,7 @@ below.
 Which is simply the addition of the \textit{Exponential Dropoff Weight}, and the
 \textit{Length Weight}, after they are both individually applied to the text.
 
-We have also defined some different Prediction Systems that does not use weight
+We have also defined some different prediction systems that does not use weight
 functions. The first such system is the $P_{max}$ prediction system. The thought
 behind the system is that we wanted to minimize the accusation error. The
 prediction system takes the text $t' \in T_\alpha$ that looks the most like $t$.

@@ -10,12 +10,12 @@ methods that use deep learning.
 
 \citet{DBLP:journals/corr/RuderGB16c} shows a Neural Network for authorship
 attribution. Their experiment consisted of a network where they first had
-a Convolutional layer, after that a max-over-time pooling layer and then a
+a convolutional layer, after that a max-over-time pooling layer and then a
 densely connected network on the top of that. Character level features has
 previously been shown to be important for both authorship attribution and in
 turn authorship verification as well. A point which is emphasized when looking
 at the results of \citet{hansen2014}, and \citet{aalykke2016}, who both not only
-got good results using Character level features, but also did so working on
+got good results using character level features, but also did so working on
 data from the same source as we did during the creation of this paper. The hope
 was that the convolutional layer would learn important features from sequences
 of characters. The max-over-time pooling would take the most important value
@@ -102,9 +102,9 @@ to a set of set of long English novels and essays, they got the best results
 using only the combined lexical topical network, which produced an average
 accuracy of 0.7950.
 
-Siamese Neural Networks are networks that shares weights across multiple parts
-of the network. Siamese Networks were first introduced by \citet{NIPS1993_769}
-for signature verification. The idea behind Siamese Networks is that the parts
+Siamese neural networks are networks that shares weights across multiple parts
+of the network. Siamese networks were first introduced by \citet{NIPS1993_769}
+for signature verification. The idea behind siamese networks is that the parts
 of the networks that share weights will give similar output for similar input.
 That makes Siamese Networks very good at comparing objects. \citet{NIPS1993_769}
 used a device for getting data from the signatures which were able to give $x$
@@ -112,14 +112,14 @@ and $y$ coordinates for a pens position in different time steps. Their network
 were set up to take two inputs. Each input was a series of feature extractions
 from 200 timesteps. The features extracted were for example if the pen were
 on the board or in the air at the time step. The time input were given to the
-Siamese Network which used convolutions to look at multiple timesteps at a time.
+siamese network which used convolutions to look at multiple timesteps at a time.
 After the convolutions the two inputs were reduced to a higher level 18 element
-long feature vector. The output of the Siamese Network is therefore 2 feature
+long feature vector. The output of the siamese network is therefore 2 feature
 vectors representing the two signatures given as input. \citet{NIPS1993_769}
 then used a distance function on the two feature vectors and a threshold to
 verify whether or not the signatures were written by the same person.
 
-We can see that it is natural to use Siamese networks for verification tasks.
+We can see that it is natural to use siamese networks for verification tasks.
 The network takes two signals as input and will output features extracted from
 the two signals. The features will be similar if the signals are similar since
 the same function is computed by both parts of the network.
@@ -129,18 +129,18 @@ image classification. One-shot classification is a task that humans are very
 good at but machines tend to be very bad at. If you show a human a single
 picture of a camel, he/she will be able to almost instantly classify images
 into images containing camels and images that do not. \citet{Koch2015SiameseNN}
-trained a Siamese Network to learn to compare images and say whether or not
+trained a siamese network to learn to compare images and say whether or not
 they contain the same object. Then when presented with a single instance that
-instance can be given as one of the inputs to the Siamese Network. The network
+instance can be given as one of the inputs to the siamese network. The network
 is then able to compare the single sample given to any other image.
 
 Most relevant for this thesis \citet{qian:2018} performed a study of different
 deep learning methods for authorship attribution. They used both a \gls{GRU}
 network and a \gls{LSTM} network. They implement 4 different networks,
 sentence-level-\gls{GRU}, article-level-\gls{GRU}, article-level-\gls{LSTM} and
-article-level-Siamese-network. Of those 4 networks the Siamese network is of
+article-level-Siamese-network. Of those 4 networks the siamese network is of
 special interest to our project. Their Siamese network solves the authorship
-verification problem and not the authorship attribution problem. A Siamese
+verification problem and not the authorship attribution problem. A siamese
 network is a network that use the same weights and parameters in multiple
 parts of the network. The architecture for authorship verification chosen by
 \citet{qian:2018} started by using a \gls{GRU} network on the two texts to
@@ -153,7 +153,7 @@ the softmax output they added the cosine similarity between the probability
 distributions outputted by the softmax layer. From that cosine similarity they
 can get a binary output saying whether or not the texts are written by the same
 author or by different authors. \citet{qian:2018} obtained excellent results in
-the authorship attribution case on the Siamese network.
+the authorship attribution case on the siamese network.
 
 
 \subsection{Previous Work Using MaComs Dataset}
@@ -182,6 +182,6 @@ Several of the methods for authorship attribution obtained excellent results
 using convolutional methods on the character level. That was however in the
 authorship attribution case where performance will drop of as the number of
 different authors increases and a new network has to be trained for new authors.
-Similarly good results were obtained by the Siamese networks. Since we are in
-the authorship verification case we try a Siamese network structure since it is
+Similarly good results were obtained by the siamese networks. Since we are in
+the authorship verification case we try a siamese network structure since it is
 good at comparing inputs.

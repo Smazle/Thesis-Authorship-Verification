@@ -10,12 +10,12 @@ two baseline methods, the \gls{conv-char-NN}, the \gls{rec-sent-NN} , and the
 \gls{conv-char-word-NN}.
 
 Starting with the baseline methods, we made use of the features and the
-hyper parameters that provided best on the training set. For the Extended
-Delta method, the optimal parameters were $K=1$ and $p = 1$. Then using
+hyper parameters that provided best on the training set. For the extended
+delta method, the optimal parameters were $K=1$ and $p = 1$. Then using
 the same sample generation as was described in the bottom of Section
 \ref{sec:hyp_select}, and normalizing using the scaler produced when
 generating the features, we applied were able to apply the model. The same
-was done with the SVM, where we used the optimal found hyperparameters, $C=10$
+was done with the \gls{SVM}, where we used the optimal found hyperparameters, $C=10$
 and $\gamma = 1000$, to train the model. The results can be seen in Table
 \ref{tab:baseline-res}.
 
@@ -30,7 +30,7 @@ Split & Classifier & Params & TP & TN & FP & FN & \textbf{Acc} & \textbf{A-Error
  & ED & \{K:1, p:1\} & 2369 & 92 & 56 & 1181 & \textbf{0.66549} & \textbf{0.92773} \\ \hline \end{tabular}
 \caption{The results of running our baseline methods on the test dataset (D),
 with the optimal hyper parameters, on both a 50/50 dataset and 96/04 one. ED in
-the classifier column, denotes the Extended delta method, and SVM the support
+the classifier column, denotes the extended delta method, and SVM the support
 vector machine method.}
 \label{tab:baseline-res}
 \end{table}

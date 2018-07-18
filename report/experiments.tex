@@ -141,16 +141,16 @@ class distribution in its folds. While this is not a proglem for the \gls{SVM}
 classifier we also opted the stratified K fold cross so we would more directly
 compare the feature selection of the two models.
 
-For both the \gls{SVM} and Extended Delta method, we ran this algorithm
+For both the \gls{SVM} and dxtended delta method, we ran this algorithm
 until 450 features were selected. The \gls{SVM} performed its feature selection
 using the default RBF kernel, a C with value of 1, and $\gamma =
 \frac{1}{\text{n\_features}}$. Due to some authors having below 3 texts,
 the default K value of \glspl{KNN} K parameter was set to 3 for the feature
 selection.
 
-The results of both the SVM and the Extended Delta method feature selection can
+The results of both the \gls{SVM} and the extended delta method feature selection can
 be seen in Figure \ref{fig:fs_results}. The best number of selected feature were
-220 for the SVM and 4 for the Extended Delta Method, scoring an accuracy of
+220 for the SVM and 4 for the extended delta Method, scoring an accuracy of
 0.697 and 0.672 respectively.
 
 \begin{figure}
@@ -158,7 +158,7 @@ be seen in Figure \ref{fig:fs_results}. The best number of selected feature were
     \textbf{Greedy Feature Selection}\par\medskip
     \includegraphics[scale=0.6]{./pictures/experiments/feature_selection}
     \caption{The process of the greedy feature selection of the SVM and the
-        Extended Delta Method. The x axis shows the number of selected features
+        extended delta Method. The x axis shows the number of selected features
         so far in the search and the y axis the average accuracy when using that
         feature set for each author. The extended delta method peaks with a very
         small feature set while the \gls{SVM} needed more features to maximize
@@ -285,7 +285,7 @@ credence to the applicability of neural networks to this specific scenario.
 In the prediction system from Definition
 \ref{def:weighted_average_prediction_system} we needed a function $f$ that
 takes two texts and returns the probability that those texts are written
-by the same author. As described earlier Siamese Neural Networks are well
+by the same author. As described earlier siamese \gls{NN}s are well
 suited for comparing objects. In this Section we describe the experiments
 we performed with different networks architectures and we will present
 three different networks. The three networks are \gls{conv-char-NN} in
@@ -486,7 +486,7 @@ like "ould ". We have illustrated such a convolutional filter in Figure
         hope is that the layer will learn that similar characters should be
         placed close to each other in the output space and dissimilar characters
         should be placed far apart. The same embedding is performed on both of
-        the input texts and the layer is therefore part of the Siamese part of
+        the input texts and the layer is therefore part of the siamese part of
         the network.
 
     \item[Feature Extraction:]
@@ -532,7 +532,7 @@ like "ould ". We have illustrated such a convolutional filter in Figure
 \end{description}
 
 We have shown an illustration of the network in Figure \ref{fig:conv-char-NN}.
-In the Figure we have illustrated the Siamese part of the network as a blue box.
+In the Figure we have illustrated the siamese part of the network as a blue box.
 The 4 phases of the network is not illustrated in the Figure but it should be
 possible to find them by reading the description above. We trained the network
 on the dataset described in the Section \ref{sec:data} and in the beginning
@@ -560,7 +560,7 @@ used the binary cross-entropy function whose definition can be seen in Lemma
 
 \begin{lemma}[Binary Cross-Entropy]
 
-    Let the loss function Binary Cross entropy be defined as,
+    Let the loss function binary cross entropy be defined as,
 
     \begin{equation}\label{eq:binary_ce}
         L(y, p) = -(y \cdot \log(p) + (1- y)\cdot\log(1 - p)),
@@ -578,7 +578,7 @@ a graph of the training and validation accuracies during training in Figure
 learning with a minibatch size of 8. We used a size of 8 as that was the largest
 batch size that could fit in the GPUs memory. During the training we padded
 all texts with zeros such that all texts in each batch had the same length. We
-did that as it is required by Keras. We have shown the training and validation
+did that as it is required by keras. We have shown the training and validation
 accuracies during training in Figure \ref{fig:conv-char-NN-accuracies}.
 
 \begin{figure}
@@ -712,7 +712,7 @@ accuracy of 0.657.
 
     \item[Embedding:]
 
-        Like with the previous networks, this network is also a Siamese neural
+        Like with the previous networks, this network is also a siamese neural
         network. It takes two texts as input and outputs the probability that
         they are written by the same author. As the title of this section
         suggests the network works on the sentence level rather than the
@@ -766,7 +766,7 @@ accuracy of 0.657.
     \item[Combining:]
 
         Like the networks described in the earlier sections the combinations
-        of our two Siamese paths are done by taking the absolute difference
+        of our two siamese paths are done by taking the absolute difference
         of their two max-pooling outputs.
 
     \item[Decision:]
@@ -816,7 +816,7 @@ validation error throughout training the network was not very high compared to
 our earlier convolutional networks. The training accuracy also increased much
 more than for the convolutional networks while the validation accuracy quickly
 stalled. It therefore seemed like this approach was very prone to overfitting on
-particular authors.This lead to the final network described above. This network
+particular authors. This lead to the final network described above. This network
 included an extra bidirectional \gls{LSTM} layer, and the 0.3 dropout for extra
 generalization.
 
@@ -877,7 +877,7 @@ as follows
     \item[Decision:]
 
     The decision part of this network is simply 2, 500 unit fully connected
-    layers followed by a 0.3 Dropout layer. The output of that dropout layer
+    layers followed by a 0.3 dropout layer. The output of that dropout layer
     is then given the 2 unit soft-max layer, for the final decision.
 
 \end{description}
