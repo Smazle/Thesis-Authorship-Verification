@@ -919,12 +919,25 @@ as follows
     layers followed by a 0.3 Dropout layer. The output of that dropout layer
     is then given the 2 unit soft-max layer, for the final decision.
 
-
 \end{description}
-    
 
+The path gone through to reach this design was a rather short one, compared
+to to the two described above. The design of this network was derived based
+on a combination of the other two network, the \gls{conv-char-NN}, and
+\gls{rec-sent-nn}. The convolutional approach used on \gls{conv-char-NN},
+showed promise, and this network was an attempt to improve on that.
 
-
+Initially these alternations were small. They took the form on a different
+amount of convolutional layers, with a differing amount of sliding window sizes.
+These small changes also included the addition of regularization measures,
+such as dropout layers. The largest change came when we incorporated the
+multi-channel approach used in \gls{rec-sent-NN}. The thought process was,
+that if character were good features for this task, another channel would
+only provide additively better results. This was what yielded the network
+described above, which works on the character level and the word level. 3
+channel convolutional network were also produced during experimentation. Results
+from that seemed to indicate that the linguistic level of sentences were too
+high, thus hurting the model.
 
 \subsection{Prediction System}
 
