@@ -9,26 +9,8 @@
 
     \item
 
-        Generate AUROC curves for our networks and discuss the output.
-
-    \item
-
         What could be the reason that qian got such good results on authorship
         verification using the LSTM when we got so shit results?
-
-    \item
-
-        Discuss how other methods could have possibly been better at giving
-        feedback to teachers.
-
-    \item
-
-        Discuss scalability of method (under the applicability to real world).
-
-    \item
-
-        Discuss applicability of method to other courses such as math, physics,
-        ...
 
     \item
 
@@ -61,49 +43,50 @@ our baselines the best performing network was the \gls{conv-char-NN}. This
 network had an accusation error closest to to the one required in addition to
 having the highest overall accuracy in all the categories we tested it on.
 While this network was in fact the best, it was closely followed by network
-\gls{conv-char-word-NN}, while the \gls{rec-sent-NN} we also tested had sub-par
-performance, lending credence to the applicability of \glspl{CNN} to \gls{NLP}
-problems. It is however worth noting that this could very well be due to the
-infeasibility of running any of our \glspl{RNN} on the character level of the
-texts supplied to it. Looking at the performance of the two \glspl{CNN}, it
-becomes obvious that the character level is of great importance when it comes
-to determining the author of a text. The sentence level appears to on a too
-high linguistic level. At least in the way we applied it. We hypothesize that
-applying it to a lower level, such as the word level would greatly increase its
-performance, as \glspl{RNN} would be able to learn based on the words relation to
-one another, and therefore use a more grammar based learning approach. Looking
-at \gls{conv-char-NN}, and \gls{conv-char-word-NN}, it would seem that focusing
-on the word level of the texts seems to actually hurt the model a bit. We are a
-bit uncertain as to the reason for this, we do however have some theories. The
-reason might be similar to the problem \gls{rec-sent-NN} had. The level might
-actually be a bit to high for our convolutional networks, the image-equivalent
-of having a too large convolutional window, thus ignoring all the small details
-that are needed in order to properly determine the author. This also highlight a
-potential reason behind the differing performance of networks \gls{conv-char-NN}
-and \gls{conv-char-word-NN}. \gls{conv-char-NN} had many filters on the
-character level of the text, whereas \gls{conv-char-word-NN} had more filters on
-the word level. This might very well have led to \gls{conv-char-word-NN} missing
+\gls{conv-char-word-NN}, while the \gls{rec-sent-NN} we also tested had
+sub-par performance, lending credence to the applicability of \glspl{CNN}
+to \gls{NLP} problems. It is however worth noting that this could very
+well be due to the infeasibility of running any of our \glspl{RNN} on the
+character level of the texts supplied to it. Looking at the performance of
+the two \glspl{CNN}, it becomes obvious that the character level is of great
+importance when it comes to determining the author of a text. The sentence
+level appears to on a too high linguistic level. At least in the way we
+applied it. We hypothesize that applying it to a lower level, such as the
+word level would greatly increase its performance, as \glspl{RNN} would be
+able to learn based on the words relation to one another, and therefore use
+a more grammar based learning approach. Looking at \gls{conv-char-NN}, and
+\gls{conv-char-word-NN}, it would seem that focusing on the word level of the
+texts seems to actually hurt the model a bit. We are a bit uncertain as to
+the reason for this, we do however have some theories. The reason might be
+similar to the problem \gls{rec-sent-NN} had. The level might actually be a bit
+to high for our convolutional networks, the image-equivalent of having a too
+large convolutional window, thus ignoring all the small details that are needed
+in order to properly determine the author. This also highlight a potential
+reason behind the differing performance of networks \gls{conv-char-NN} and
+\gls{conv-char-word-NN}. \gls{conv-char-NN} had many filters on the character
+level of the text, whereas \gls{conv-char-word-NN} had more filters on the
+word level. This might very well have led to \gls{conv-char-word-NN} missing
 some relevant person-specific traits on the character level such as typos, dot
 position, comma positions and the like. It would not even be able to find such
 traits on the word level, as the usage of a pre-trained embedding layer means
 that only correctly spelled word were even considered.
 
-Compared to the results produced during validation, which can be seen in
-Table \ref{tab:experi-results}, we can clearly see a difference. The results
-from the validation is of course under the required accusation error threshold
-as that was the dataset on which we actually found the theta and the weight
-function to get under that threshold. Because of that, it stands to reason that
-the models would have a somewhat lower performance when applied to a fresh
-untouched test dataset. This lowered performance takes the form of an increased
-accusation error, and a decreased accuracy. This generally is the case in
-machine learning tasks.
+Compared to the results produced during validation, which can be seen in Table
+\ref{tab:experi-results}, we can clearly see a difference. The results from the
+validation is of course under the required accusation error threshold as that
+was the dataset on which we actually found the theta and the weight function to
+get under that threshold. Because of that, it stands to reason that the models
+would have a somewhat lower performance when applied to a fresh untouched test
+dataset. This lowered performance takes the form of an increased accusation
+error, and a decreased accuracy. This generally is the case in machine learning
+tasks.
 
 A more general description of a models performance can be computed using the
 \gls{AUC} of the \gls{ROC}-curve of a model, better known as \gls{AUROC}.
 A \gls{ROC} curve is the \gls{FPR} plotted against the \gls{TPR}, both of
 which are defined in Section \ref{sec:method}. \gls{AUROC} is a measure of
 discrimination, or a measure of the amount of certainty our model has when it
-makes a decisions. 
+makes a decisions.
 
 The ROC curves and AUROC results for the different networks we produced, can
 be seen in Figure \ref{fig:AUROC}. These figures reinforce the relationship
@@ -117,37 +100,37 @@ general but not adapting very well to thresholding. At least not as well as the
 other two networks.
 
 \begin{figure}
-\centering
-\begin{minipage}{.5\textwidth}
-  \centering
-    \textbf{Constrained ROC-Curve and AUROC for each network}
-  \includegraphics[width=1\linewidth]{./pictures/discussion/AUROC_Constrained}
-\end{minipage}%
-\begin{minipage}{.5\textwidth}
-  \centering
-    \textbf{Unconstrained ROC-Curve and AUROC for each network}
-  \includegraphics[width=1\linewidth]{./pictures/discussion/AUROC_Unconstrained}
-\end{minipage}
-\caption{The ROC-Curve for the three networks produced, plotted for both of the
-possible data sample splits. The curves shown based on the weight functions that
-produced the best possible values produced with that weight on the validation
-set (C). }
-\label{fig:AUROC}
+    \centering
+    \begin{minipage}{.5\textwidth}
+        \centering
+        \textbf{Constrained ROC-Curve and AUROC for each network}
+        \includegraphics[width=1\linewidth]{./pictures/discussion/AUROC_Constrained}
+    \end{minipage}%
+    \begin{minipage}{.5\textwidth}
+        \centering
+        \textbf{Unconstrained ROC-Curve and AUROC for each network}
+        \includegraphics[width=1\linewidth]{./pictures/discussion/AUROC_Unconstrained}
+    \end{minipage}
+    \caption{The ROC-Curve for the three networks produced, plotted for both of
+        the possible data sample splits. The curves shown based on the weight
+        functions that produced the best possible values produced with that
+        weight on the validation set \gls{C}.}
+    \label{fig:AUROC}
 \end{figure}
 
-Another \gls{NLP} advantage \glspl{CNN} has in this context, is the fact that
-we are able to more accurately determine what part of the text contributed to
-final classification as can be seen in the following section.
+Another \gls{NLP} advantage \glspl{CNN} has in this context, is the fact that we
+are able to more accurately determine what part of the text contributed to final
+classification as can be seen in the following section.
 
 
 \subsection{Teacher Feedback}
 
 As mentioned we wanted to look at what kind of feedback we could give to
 teachers in conjunction with the bare predictions. As explained earlier the
-system is not meant to be the final judge of which students are cheating
-but are rather meant as a support system for teachers that are already
-suspicious. We have focused on the \gls{conv-char-NN} network since it performed
-best on the test dataset. 
+system is not meant to be the final judge of which students are cheating but are
+rather meant as a support system for teachers that are already suspicious. We
+have focused on the \gls{conv-char-NN} network since it performed best on the
+test dataset.
 
 \subsection{Extracting Important Features}
 
@@ -191,12 +174,13 @@ teacher can ask for feedback from the system. The teacher will then get a list
 of the $n$ greatest differences between each of the texts and can use that
 information to argue against the student.
 
-As an example we ran our system on a random author and a text that that
-author did not write. The whole output can be seen in Appendix \ref{subsec:teacher_feedback_text_comparisons}. We have shown a truncated output
-in Table \ref{tab:teacher_feedback_output}. The output contains only the
-comparison between one of the candidate authors texts and the unknown text. Text
-1 is from the candidate author and Text 2 is the unknown text. We have
-illustrated what each of the filters is generally looking at by the three
+As an example we ran our system on a random author and a text that
+that author did not write. The whole output can be seen in Appendix
+\ref{subsec:teacher_feedback_text_comparisons}. We have shown a truncated
+output in Table \ref{tab:teacher_feedback_output}. The output contains only
+the comparison between one of the candidate authors texts and the unknown
+text. Text 1 is from the candidate author and Text 2 is the unknown text. We
+have illustrated what each of the filters is generally looking at by the three
 substrings from the \gls{C} dataset that generated the highest values.
 
 \begin{table}
@@ -284,10 +268,10 @@ example" or "for instance" and some people write that as "for eksempel" while
 others use the shorthand above. This could indicate that you are not the author
 of an assignment if that suddenly changes. That cannot be the only reasson
 given but if thousands of those reasons are present you can say with some
-confidence that someone else has written the assignment. As an exampe of one
-of the harder to parse filters consider the filter looking at 
-\verb["ke …''."[, \verb["a...''\n\n"[ and \verb["n''. '' "[. That filter seems to react to
-non alphanumeric characters but none of the reactions on the two texts we are
+confidence that someone else has written the assignment. As an exampe of one of
+the harder to parse filters consider the filter looking at \verb["ke …''."[,
+\verb["a...''\n\n"[ and \verb["n''. '' "[. That filter seems to react to non
+alphanumeric characters but none of the reactions on the two texts we are
 comparing looks anything like what gives the highest numbers. Instead the filter
 seem to also pick up on the start of sentences.
 
@@ -326,8 +310,8 @@ or her accusation.
 
 \subsubsection{Applying Other Machine Learning Methods}
 
-We have also considered using other machine learning methods to give feedback to
-teachers. Simpler machine learning models has the advantage that it is much
+We have also considered using other machine learning methods to give feedback
+to teachers. Simpler machine learning models has the advantage that it is much
 easier to interpret their results compared to neural networks. Consider for
 example logistic regression as described by \citet{Abu-Mostafa:2012:LD:2207825}.
 The input to the logistic regression is a vector of features and the output is a
@@ -344,8 +328,8 @@ to logistic regression models is that they are "only" linear models
 \citet{Abu-Mostafa:2012:LD:2207825}. They are therefore not able to model
 arbitrary functions. But we could still apply logistic regression to the output
 of the feature extraction layer. If we did that we could get an idea of which
-features are the most important extracted by the network. We could then use that
-information to report to teachers which of the filters they should be most
+features are the most important extracted by the network. We could then use
+that information to report to teachers which of the filters they should be most
 attentive of.
 
 In a previous project \citep{US} we used the random forest method in an
@@ -358,9 +342,9 @@ which features are the most important and furthermore the forest is able to
 model non-linear data. We could therefore also try applying a random forest to
 the features extracted by the neural network. Alternately the random forest
 model could be applied using a separate set of features. A \gls{NN} would
-perform the prediction, and in the negative cases a random forest model would be
-trained with the purpose of pointing towards the cause. From that we would be
-able to conclude which features are the most important for this authorship
+perform the prediction, and in the negative cases a random forest model would
+be trained with the purpose of pointing towards the cause. From that we would
+be able to conclude which features are the most important for this authorship
 verification task.
 
 \subsection{Applicability of Method}\label{sec:app_of_method}
@@ -371,8 +355,8 @@ simplifies the problem quite a bit. We discuss here how our results can be
 applied to find real ghost writers.
 
 The biggest problem with our approach is that we had no actual ghost written
-assignments available. We were given a dataset of authors where each author had
-written a set of assignments. To create ghost written assignments we used
+assignments available. We were given a dataset of authors where each author
+had written a set of assignments. To create ghost written assignments we used
 assignments turned in by other authors. It would of course have been better if
 we had had a dataset of authors where each author had a set of assignments known
 to be written by him/her and a set of assignments known to have been written by
@@ -398,16 +382,17 @@ noticed some of the inner workings of our system would he be able to cheat it?
 The simple answer is yes. The lack of reliable source of a prediction does
 secure the system with regards to the specific writing style, but it is still
 far from unbeatable. The area where this is clearest, is the prediction system.
-The weighing method chosen is used almost exclusively, and would not change that
-often in practice. If a student was to know how his papers were weighted, he
-would be able to get around an accurate prediction. This is especially the case
-with the time based weighing approaches. Knowing that the newest papers you
-wrote is weighted very highly, would enable one to simply make use of a ghost
-writer for the newer assignments. This method would also apply to the length
-based weighing. As for the majority vote and the uniform weighing, such a method
-would not work, as all assignments have equal say in the prediction. The only way
-around those weighing method would be to use a ghost writer in all assignments,
-in which case most similarly designed systems would be at a disadvantage.
+The weighing method chosen is used almost exclusively, and would not change
+that often in practice. If a student was to know how his papers were weighted,
+he would be able to get around an accurate prediction. This is especially the
+case with the time based weighing approaches. Knowing that the newest papers
+you wrote is weighted very highly, would enable one to simply make use of a
+ghost writer for the newer assignments. This method would also apply to the
+length based weighing. As for the majority vote and the uniform weighing, such
+a method would not work, as all assignments have equal say in the prediction.
+The only way around those weighing method would be to use a ghost writer in
+all assignments, in which case most similarly designed systems would be at a
+disadvantage.
 
 Another thing to be discussed is our methods applicability to other school
 subjects. The assignments provided to us for the development of this paper was
@@ -742,6 +727,6 @@ drop in accuracy seem to follow closely our $P_{exp_{0.25}}$ prediction system
 weights. That is probably the reason why that particular $\lambda$ value so
 often gave the best results.
 
-The negative curve is a bit weird. We expected it to stay flat below 50\% but it
-seems to be rising towards 50\%. The curve is clearly more flat than the
+The negative curve is a bit weird. We expected it to stay flat below 50\% but
+it seems to be rising towards 50\%. The curve is clearly more flat than the
 positive curve but there does still seem to be a trend towards 50\%.
