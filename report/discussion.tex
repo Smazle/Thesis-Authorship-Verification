@@ -31,12 +31,12 @@ problems. It is however worth noting that this could very well be due to the
 infeasibility of running any of our \glspl{RNN} on the character or word level
 of the texts supplied to it. We hypothesize that the accuracy of a RNN would be
 greatly increased had it been run on a lower linguistic level. As experiments
-showed in \ref{subsubsec:conv_char_word_nn}, even \gls{CNN}s performed badly on the
-sentence level. Ideally we would have run an RNN on the word level. We suspect
-it would be able to learn the words and their relation to on another, which
-makes sense with words, but not with sentences. However in order to do so, we
-would need computational power than was available to train the model. Looking at
-the performance of the two \glspl{CNN}, it becomes obvious that the character
+showed in \ref{subsubsec:conv_char_word_nn}, even \gls{CNN}s performed badly
+on the sentence level. Ideally we would have run an RNN on the word level. We
+suspect it would be able to learn the words and their relation to on another,
+which makes sense with words, but not with sentences. However in order to do so,
+we would need computational power than was available to train the model. Looking
+at the performance of the two \glspl{CNN}, it becomes obvious that the character
 level is of great importance when it comes to determining the author of a text.
 The sentence level appears to on a too high linguistic level. At least in the
 way we applied it. We hypothesize that applying it to a lower level, such as
