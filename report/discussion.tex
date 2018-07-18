@@ -281,32 +281,45 @@ seem to also pick up on the start of sentences.
 We also looked at whether or not we could say something about which parts of an
 assignment are the most likely to be ghost written. That would allow a teacher
 that is suspicious of a student to identify the part of the assignment that
-were least likely to be written by him and look closely at that. To do that
-we split a text into paragraphs and used \gls{conv-char-NN} to get a score
-for each paragraph. We then reported which of the paragraphs of the text are
-the most likely to be ghost written. An author $\alpha$ was chosen from the
-validation dataset C with $|T_\alpha| = 19$. We also chose a random text $t \in
-\overline{T_\alpha}$. We took out one of the texts $t' \in T_\alpha$ and let
-$T = T_\alpha \setminus \{t'\}$. We then combined $t$ and $t'$ into $t''$ such
-that $t''$ consist of all of the text $t'$ followed by a random paragraph from
-the text $t$. That is we constructed a text $t''$ that consisted of a text in
-$T_\alpha$ followed by a single paragraph not from $T_\alpha$. We then used
-\gls{conv-char-NN} to predict which part of $t''$ was most likely written by a
-ghost writer. We would expect that the last paragraph in $t''$ would be the most
-likely. The result was a vector of the probabilities that each paragraph was
-written by the candidate author.
+were least likely to be written by him and look closely at that. To find the
+parts of a text $t$ most likely to be ghost written we split $t$ into a list of
+paragraphs. Each paragraph is separated by at least 2 newline characters. We
+throw away paragraphs of less than 100 characters since it does not make sense
+to predict on so little text. After that we use one of our networks to predict
+each individual paragraph against all of an authors other texts. We take the
+average of the predictions and can then report which paragraphs in the file is
+least similar to the authors other texts.
 
-\begin{equation}
-    (0.66320, 0.60432, 0.54737, 0.47438, 0.30528)^T
-\end{equation}
+To see how well that system worked we looped through each $\alpha \in
+\mathcal{T}$ where $\mathcal{T}$ is the \gls{C} dataset. For each $\alpha$ we
+chose a random text $t$ with more than 5 paragraphs. We then split that text up
+into paragraphs and removed all paragraphs except the first 5. We then chose
+a text $t' \not\in T_\alpha$ and chose a random paragraph from that text. We
+then used \gls{conv-char-NN} to predict the 5 paragraphs from $t$ and single
+paragraph from $t'$ against each $t'' \in T_\alpha \setminus \{t\}$. We computed
+the average prediction on each of the 5 first paragraphs in $t$ and the average
+prediction on the paragraph from $t'$. We expect that the average prediction on
+paragraphs from $t$ is higher than the paragraph from $t'$.
 
-As expected the last paragraph is the least similar and therefore most likely to
-be written by someone else. We are now able to give a teacher an idea of why our
-network makes the predictions it does. We can give feedback on which parts of
-the text is the least characteristic of an authors writing style and we can give
-feedback on why the network thinks that. Of course a teacher will still have to
-make the ultimate decision but can use the output of the network to underpin his
-or her accusation.
+The predictions on the 5 paragraphs from $t$ was 0.42216, 0.43975, 0.44447,
+0.44543 and 0.44425 while the prediction on the paragraph from $t'$ was 0.39524.
+As expected we see that the paragraph from text $t'$ has a lower average score
+than the 5 paragraphs from $t$. The difference is not as large as we would
+have expected however. It seems as if the difference is small enough that
+we cannot rely on the results when used on a single assignment. It is also
+interesting that no predictions have above 50\% chance of being written by
+$\alpha$. It seems like our network does not work well on texts as short as
+a single paragraph. That makes sense since the network works by extracting
+information from 1200 global max pools and comparing the output from two texts.
+Short texts will not be able to achieve an activation of a enough of the filters
+for it to be similar to a longer text. The character limit we chose in this
+experiment was 100 characters while it was 400 when we trained the networks
+which might also be part of the reason.
+
+It is also interesting that the first two paragraphs from $t$ received a lower
+average score than the last 3. It seems like the network is better at predicting
+the middle of a text than the start of a text.
+
 
 \subsubsection{Applying Other Machine Learning Methods}
 
