@@ -460,7 +460,15 @@ use the same ghost writer with no problem since they have seeded one of his/her
 texts into their library.
 
 
-\subsubsection{Runtime in Practise}
+% TODO: It would be nice to have some data here on how long it takes to predict
+% a text against an author with n texts here for each of our networks. We could
+% then discuss system load in periods where n students turn in assignments at
+% the same time.
+%
+% I also want a discussion of other scalability issues here. I tried rewriting
+% the section but could not come up with a good introduction. So I'm saving it
+% for later.
+\subsubsection{Scalability}
 
 The runtime our methods is also a factor. As mentioned in the beginning of this
 papers, running time was a focus during development. If we had chosen an author
@@ -488,10 +496,10 @@ the linguistic patterns exhibited by the student. For this reason each citation
 serves as nothing but a source of noise for our models. The solution for is
 however pretty simple and will be addressed in Section \ref{sec:future_work}.
 It should be noted that there would be cases where citation would add to the
-accuracy of the model. This would be cases where a student for some reason
-uses the same sources consistently for their assignments. In this scenario
-we suspect our models would perceive the contents of the citations as part
-of the student vocabulary.
+accuracy of the model. This would be cases where a student for some reason uses
+the same sources consistently for their assignments. In this scenario we suspect
+our models would perceive the contents of the citations as part of the student
+vocabulary.
 
 \subsection{Prediction Systems}
 
