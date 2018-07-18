@@ -16,10 +16,6 @@
         Look at different filters and discuss what they might look at and
         whether or not that seems like good features to be looking at.
 
-    \item
-
-        Look at how we could handle citations in texts.
-
 \end{itemize}
 
 
@@ -459,6 +455,20 @@ training. This is the most time consuming part, as the actual prediction time is
 negligible. Of course the networks might need retraining some-time, to keep up
 with an evolving education system.
 
+\subsubsection{Citations}
+
+Depending on which course the assignments we are using are associated with, the
+amount of citations will differ. A course with a hefty focus on third party
+sources such as history, will most likely have an increase in citation usage.
+This is not something our models compensate for. Citations introduces a break in
+the linguistic patterns exhibited by the student. For this reason each citation
+serves as nothing but a source of noise for our models. The solution for is
+however pretty simple and will be addressed in Section \ref{sec:future_work}.
+It should be noted that there would be cases where citation would add to the
+accuracy of the model. This would be cases where a student for some reason
+uses the same sources consistently for their assignments. In this scenario
+we suspect our models would perceive the contents of the citations as part
+of the student vocabulary.
 
 \subsection{Prediction Systems}
 
