@@ -250,15 +250,23 @@ the best results we will expand the search to more than 15.
 
 \subsubsection{Author Specific SVM}
 
-Another algorithm used in \citet{US}. Heavily inspired by \citet{hansen2014}
-starts out by fetching all texts known to be written by a specific author and an
-equal number of texts known not to be written by that same author. It is upon
-the feature set extracted from these texts that a \gls{SVM} is trained, allowing
-it to learn the specific authors writing style from the known texts supplied and
-in contrast what the writing style of someone not him is. When a new text, with
-disputed authorship is presented the hope is that the trained \gls{SVM} will be
-able to determine if the author it was trained on, is in fact the author of this
-new text as well.
+Our other baseline method is the author specific \gls{SVM}. The method
+was used in \citep{US} and was originally inspired by \citet{hansen2014}.
+They used the an \gls{SVM} on the Macom dataset as we described in Section
+\ref{subsec:previous_work_using_macoms_dataset}. To verify the authorship of a
+text $t$ and author $\alpha$ using this method, a two class \gls{SVM} classifier
+have to be trained. The positive class is represented by features of each $t'
+\in T_\alpha$ and the negative class is represented by the features of $t''
+\in T\ |\ T \subset \overline{T_\alpha}, |T| = |T_\alpha|$. After training the
+classifier is used to predict the text we are verifying the authorship of $t$.
+Since a separate \gls{SVM} is trained for each author it can learn the specific
+authors writing style from $T_\alpha$ supplied and in contrast what the writing
+style of someone not him is.
+
+The method is based on an \gls{SVM} so we have to experiment with the
+hyperparameters $C$ and $\gamma$. We will find good parameters via cross
+validation. The parameter search will be described in detail in Section
+\ref{sec:experiments}.
 
 
 \subsection{Deep Learning}
