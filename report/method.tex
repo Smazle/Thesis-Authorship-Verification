@@ -423,7 +423,7 @@ function. The function is defined as
 \end{equation}
 
 The softmax function takes any vector $x \in \mathbb{R}^n$ and returns a vector
-$y \in (0, 1)^n$. Where the sum of the output vectors elements will be equal to
+$y \in [0, 1]^n$. Where the sum of the output vectors elements will be equal to
 1. The function is therefore great at constructing a probability distribution
 based on an input vector.
 
@@ -448,8 +448,8 @@ learning library. \cite{chollet2015keras}
 
 \glspl{NN} are organized in layers. The first layer is called the input layer
 and is connected directly to the input to the model and the last layer is called
-the output layer and gives the output of the model. All layers in between are
-called hidden layers. A practical example could be where the input layer was
+the output layer and gives the output of the model. All layers in between
+are called hidden layers. A practical example could be where the input layer
 was layer of neurons where each neuron is connected to a pixel in an input
 image. And the output layer could consist of a single neuron that computes the
 probability that the picture contained a cat. An example layered \gls{NN} are
@@ -460,15 +460,17 @@ shown in Figure \ref{fig:example_nn}.
     \textbf{Example Neural Network}\par\medskip
     \includegraphics[width=\textwidth]{./pictures/method/example_neural_network}
     \caption{Example neural network that illustrates how neurons are organized
-        into different layers with a special input layer and a special output
-        layer. The neurons in the input layer are connected to individual pixels
-        in an input image and the output layer is a single neuron computing the
-        probability that the image contains a cat.}
+        into different layers with a special input layer, a special output layer
+        and two hidden layers. The neurons in the input layer are connected to
+        individual pixels in an input image and the output layer is a single
+        neuron computing the probability that the image contains a cat.}
     \label{fig:example_nn}
 \end{figure}
 
-There are different kinds of layers. Below is a non-exhaustive description of
-different layers.
+There are different kinds of layers. Below is a
+non-exhaustive description of different layers, based on
+\citep{oshea2015,DBLP:series/sci/2012-385,Goodfellow-et-al-2016,
+mikolov2013linguistic,JMLR:v15:srivastava14a}.
 
 \begin{description}
 
@@ -498,7 +500,7 @@ different layers.
         \citep{oshea2015}. Let us for example consider a two dimensional input,
 
         \begin{equation}
-            I = \begin{pmatrix}
+            X = \begin{pmatrix}
                 1 & 1 & 1 & 0 \\
                 1 & 0 & 0 & 1 \\
                 0 & 1 & 0 & 1 \\
@@ -520,7 +522,7 @@ different layers.
         elementwise product of the matrices,
 
         \begin{equation}
-            X = I_{1-3,1-3} \otimes w =
+            Y = X_{[1,3;1,3]} \otimes w =
             \begin{pmatrix}
                 1 & 1 & 1 \\
                 1 & 0 & 0 \\
@@ -542,13 +544,13 @@ different layers.
         that matrix,
 
         \begin{equation}
-            \sum_{i,j} X_{i,j} = 1 + 0 + 0 + 1 + 0 + 0 + 0 + 1 + 0 = 3.
+            \sum_{i,j} Y_{i,j} = 1 + 0 + 0 + 1 + 0 + 0 + 0 + 1 + 0 = 3.
         \end{equation}
 
         We then slide the window one to the right and repeat the same process,
 
         \begin{equation}
-            X = I_{2-4,1-3} \otimes w =
+            Y = X_{[2,4;1,3]} \otimes w =
             \begin{pmatrix}
                 1 & 1 & 0 \\
                 0 & 0 & 1 \\
@@ -569,7 +571,7 @@ different layers.
         and the final value,
 
         \begin{equation}
-            \sum_{i,j} X_{i,j} = 1.
+            \sum_{i,j} Y_{i,j} = 1.
         \end{equation}
 
         We keep sliding the window right until we run out of input. After that
@@ -578,10 +580,10 @@ different layers.
 
         \begin{equation}
             O = \begin{pmatrix}
-                \sum_{i,j} \left( I_{1-3,1-3} \right)_{i,j} &
-                \sum_{i,j} \left( I_{2-4,1-3} \right)_{i,j} \\
-                \sum_{i,j} \left( I_{1-3,2-3} \right)_{i,j} &
-                \sum_{i,j} \left( I_{2-4,2-3} \right)_{i,j}
+                \sum_{i,j} \left( X_{[1,3;1,3]} \otimes w \right)_{i,j} &
+                \sum_{i,j} \left( X_{[2,4;1,3]} \otimes w \right)_{i,j} \\
+                \sum_{i,j} \left( X_{[1,3;2,3]} \otimes w \right)_{i,j} &
+                \sum_{i,j} \left( X_{[2,4;2,3]} \otimes w \right)_{i,j}
             \end{pmatrix} = \begin{pmatrix}
                 3 & 1 \\
                 1 & 2
