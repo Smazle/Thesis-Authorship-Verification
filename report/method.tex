@@ -303,7 +303,7 @@ differentiation as its basis. This prompted an increase in \gls{BP} related
 research in the following decades. As computational power increased in the
 1990s and 2000s, so did the practical usage of \gls{BP}, and \gls{NN} in
 general \citep{Schmidhuber:2015}. The real life application of \gls{BP} will be
-described in Section \ref{sec:BP}.
+described in Section \ref{subsubsec:training_a_network}.
 
 Like with the history of authorship attribution research in this area of science
 picked up more interest as we entered the modern computational age, and with
@@ -622,10 +622,10 @@ mikolov2013linguistic,JMLR:v15:srivastava14a}.
 
         The sliding length can be different than one and is usually referred
         to as stride. The weights the convolutional window uses are learnable
-        and is updated via gradient descent. Certain convolutional filters can
-        be used for edge detection and blurring the input. Some examples of
-        different convolutional kernels applied to a grayscale image are shown
-        in Figure \ref{fig:convolution_example}.
+        by the network. Certain convolutional filters can be used for
+        edge detection and blurring the input. Some examples of different
+        convolutional kernels applied to a grayscale image are shown in Figure
+        \ref{fig:convolution_example}.
 
         \begin{figure}
             \centering
@@ -981,30 +981,41 @@ mikolov2013linguistic,JMLR:v15:srivastava14a}.
 \end{description}
 
 
-\subsubsection{Back-Propagation}\label{sec:BP}
+\subsubsection{Training a Network} \label{subsubsec:training_a_network}
 
-The neural network learns by updating the weights in the network. The weights
-are updated using \gls{BP}. This process can be split into three distinct steps
-which are continuously repeated:
+A neural network learns by updating the weights in the network. The weights are
+updated using \textit{gradient descent} \citep{Bishop}. Gradient descent is
+a method that can minimize any differentiable function by taking small steps
+towards a local minimum. The function we minimize in a neural network is an
+error function. The error function describes a quantity that when minimized
+gives the network the best performance possible. Since gradient descent works
+for any differentiable function the error function can be any function that is
+differentiable. For instance the \gls{MSE} function,
 
-\begin{enumerate}
-    \item Feed Forward
-    \item Back Propagate
-    \item Update Weights
-\end{enumerate}
+\begin{align}
+    MSE(W)   &= \frac{1}{N} \sum_{n=1}^{N} MSE_n(W) \\
+    MSE_n(W) &= \frac{1}{2} \left( \hat{y}_n - y_n \right)^2
+\end{align}
 
-The goal of these three steps is to minimize the overall cost of the network.
-The cost refers to the loss we end up with. In order to do this, we take a
-look at the gradient. The gradient is a multi-variable generalization of
-the derivative of a function. It can be used for describing the slope of a
-function at a certain point. Not only that, but its most desired property for
-our purposes is that it is vector, and this vector points to the direction of
-greatest increase in value for the function at a specific point. As such, we can
-apply gradient descent to our network, which is simply the act of changing our
-loss function arguments, so we step in the negative direction of the gradient,
-which would be the direction of greatest decrease in value, that is, it points
-towards the local minimum of the error function. A model illustrating this
-process can be seen in Figure \ref{fig:grad}
+where $N$ is the number of training samples, $\hat{y}_n$ is the predicted
+results, $y_n$ is the target, and $W$ is a set of weights is often used to
+describe the error on networks with real valued output. The gradient is a
+multi-variable generalization of the derivative of a function. It is vector that
+points in the direction of steepest ascend in value for a function at a specific
+point. Gradient descent is based on the observation that a differentiable
+function $f$ in point $\mathbf{x}$ decrease fastest in the direction of the
+negative gradient of the point $\mathbf{x}$ \citep{Bishop}. That leads to a
+simple update rule that can be applied continuously to reach a local minimum,
+
+\begin{equation}
+    \mathbf{x}_{n+1} = \mathbf{x}_n - \eta \Delta f\left(\mathbf{x}_n\right),
+\end{equation}
+
+where $\eta$ is a small number that makes sure we do not overstep the local
+minimum. An example of the gradient descent process can be seen in Figure
+\ref{fig:gradient_descent}. In terms of minimizing an error function in a neural
+network by changing its weights $\mathbf{w}$ the gradient descent update rule
+looks like,
 
 \begin{figure}
     \centering
@@ -1014,151 +1025,146 @@ process can be seen in Figure \ref{fig:grad}
         which in this case is signified by a black ring. The Figure is generated
         using code from
         \url{https://scipython.com/blog/visualizing-the-gradient-descent-method/}.}
-    \label{fig:grad}
+    \label{fig:gradient_descent}
 \end{figure}
 
-When doing this, many error functions can be of interest, depending on the
-problem. For instance we make use of the following,
-
-\begin{align}
-    E(W)   &= \sum_{n=1}^N E_n(W) \\
-    E_n(W) &= \frac{1}{2}(\hat{y}_n - y_n)^2,
-\end{align}
-
-where $N$ is the number of training samples, $\hat{y}_n$ is the predicted
-results, and $y_n$ is the target, and W is a set of weights. The goal is
-minimize this function. In order to do so, we need to have a independent
-variable we can tweak using gradient descent as per the above description. In
-the case of neural networks we can view this variable as being the weights and
-the biases, which are defined in Section \ref{sec:neurons}. We want to update
-each weight vector by repeating the following operation.
-
-\begin{equation}\label{eq:update}
-    \mathbf{w}^{(t+1)} = \mathbf{w}^{(t)} + \Delta \mathbf{w}^{(t)}
+\begin{equation} \label{eq:gradient_descent_network_update}
+    \mathbf{w}^{(t+1)} = \mathbf{w}^{(t)} + \eta \Delta \mathbf{w}^{(t)},
 \end{equation}
 
-Where $\mathbf{w}$ is a singular weight value, and t refers to a specific time
-step, in the chain of time steps performed by gradient descent.
+where $t$ is the timestep of the update and,
 
 \begin{equation}
-    \Delta \mathbf{w}^{(t)} = -\nabla E|_{\mathbf{w}^{(t)}}
+    \Delta \mathbf{w}^{(t)} = -\nabla E|_{\mathbf{w}^{(t)}}.
 \end{equation}
 
 $\nabla E|_{\mathbf{w}^{(t)}}$ refers to the gradient of the error function
-relative to the specific weight vector $\mathbf{w}^{(t)}$, or rewritten.
+relative to the specific weight vector $\mathbf{w}^{(t)}$, or rewritten,
 
-$$
-\nabla E|_{\mathbf{w}^{(t)}} = \frac{\partial E}{\partial \mathbf{w}^{(t)}}
-$$
+\begin{equation}
+    \nabla E|_{\mathbf{w}^{(t)}} = \frac{\partial E}{\partial \mathbf{w}^{(t)}}.
+\end{equation}
 
-At a later point in Section \ref{sec:optimizers} something called the learning
-rate will be introduced to this equality, but for now for the specifics of
-Back-Propagation, we can omit it for now. This is the function we attempting to
-solve, not for one weight, but for all of them. Not only that, we also want to
-do this for every training sample, averaging $\Delta \mathbf{w}^{(t)}$ for over all
-of them. The goal is clear, we want to find the gradient of our error
-function with respect to all the weights in our network.
+Now we have an update rule for the weights of the network that will minimize
+an error function $E$ chosen by us. We can choose $E$ as any function we want
+that represent our target and is differentiable. The only problem left is how
+to compute the gradient of the network. The computation of the gradient can be
+done via the \gls{BP} algorithm \cite{Bishop}. \Gls{BP} depends on the
+activation of all neurons to a specific sample. That gives us a three step
+algorithm for updating the weights of the network.
 
-After performing step 1(feed forward), which entails running training samples
-through the network, we want to determine by how much we have to tweak each
-weights using gradient descent. Due to the hidden nature of the entire network,
-the natural starting point for this process is at the output node. If we for
-simplicities sake focus on only a single training sample, we can compute the
-loss as follows
+\begin{description}
+    \item[Feed Forward] Give input to first layer in network computing the
+        activation of all neurons to that specific input.
+    \item[Back Propagate] Use the \gls{BP} algorithm to compute the gradient of
+        the network.
+    \item[Update Weights] Use gradient descent to update the weights of the
+        network.
+\end{description}
 
-$$
-E = \frac{1}{2}(\hat{y} - y)^2
-$$
+The computation of the gradient starts at the error function $E$. If we for
+simplicities sake focus on only a single training sample and fix $E$ as the
+\gls{MSE}. We can compute the loss as follows,
+
+\begin{equation}
+    E = \frac{1}{2}(\hat{y} - y)^2.
+\end{equation}
 
 As mentioned we want to determine the gradient of this with respect to all the
-weights $w_{ij} \in W$ in our network. In order to do that, we need to find
-partial derivatives for those same weights, and since each specific weight is
-tied to a specific neuron, we need to differentiate the entire network. But
+weights in our network $w_{ij} \in W$. In order to do that we need to find
+partial derivatives for those same weights and since each specific weight is
+tied to a specific neuron we need to differentiate the entire network. But
 before doing so, we need to establish the chain rule.
 
 \begin{lemma}[Chain Rule]
 \label{lemma:chainrule}
 
-    If functions $f$ and $g$ er both differentiable and $F$ is the composite
+    If functions $f$ and $g$ are both differentiable and $F$ is the composite
     function defined by $F(x) = f(g(x))$, then $F' = f'(g(x)) \cdot g'(x)$,
 
 \end{lemma}
 
-The reason behind the need of the chain rule is that the loss function is
-essentially a giant chain of function call, that spans the entire network. This
-fact becomes apparent attempt to evaluate our single sample error function $E$
-with respect to a weight $w_{ij}$. If we keep in mind that the neurons in feed
-forward neural networks, computes weighted sum of its inputs as per $a_i$ in
-\eqref{eq:neuron}, then we known that $E$ only depends on $w_{ij}$ through the
-call of $a_i$, and it is for that reason what we can apply the chain rule to get
-the following:
+The reason we need of the chain rule is that the loss function is essentially
+a chain of function calls that spans the entire network. This fact becomes
+apparent when we attempt to evaluate our single sample error function $E$ with
+respect to a weight $w_{ij}$. If we keep in mind that the neurons in feed
+forward neural networks computes a weighted sum of its inputs as per $a_i$ in
+Equation \eqref{eq:neuron}. Then we known that $E$ only depends on $w_{ij}$
+through the call of $a_i$, and it is for that reason what we can apply the chain
+rule to get the following,
 
-\begin{equation}\label{eq:bp_start}
-\frac{\partial E}{\partial \mathbf{w}_{ij}} = \frac{\partial E}{\partial a_i}
-\frac{\partial a_i}{\partial \mathbf{w}_{ij}}
+\begin{equation} \label{eq:bp_start}
+    \frac{\partial E}{\partial \mathbf{w}_{ij}} = \frac{\partial E}{\partial a_i}
+    \frac{\partial a_i}{\partial \mathbf{w}_{ij}}.
 \end{equation}
 
 We can add a little extra notation, which we will use hence forth, for the
-sake of easing understanding.
+sake of easing understanding,
 
 \begin{equation}\label{eq:delta}
-\delta_i = \frac{\partial E}{\partial a_i}
+    \delta_i = \frac{\partial E}{\partial a_i}.
 \end{equation}
 
 $\delta$ is often referred to as the \textit{error} of a specific neuron.
-From \eqref{eq:neuron} we get that
+From Equation \eqref{eq:neuron} we get that,
 
 \begin{align}
-\frac{\partial a_i}{\partial \mathbf{w}_{ij}} &= \frac{\partial}{\partial \mathbf{w}_{ij}}
-\sum_{j=1} \mathbf{w}_{ij} x_j + \mathbf{w}_{i0}\\
-&= \frac{\partial}{\partial \mathbf{w}_{ij}} \sum_{j = 0} \mathbf{w}_{ij} x_j\\
-&= x_j
+    \frac{\partial a_i}{\partial \mathbf{w}_{ij}}
+        &= \frac{\partial}{\partial \mathbf{w}_{ij}}
+            \sum_{k=1}^d \mathbf{w}_{ik} x_k + \mathbf{w}_{i0}\\
+        &= \frac{\partial}{\partial \mathbf{w}_{ij}} \sum_{k = 0}^d
+            \mathbf{w}_{ik} x_k\\
+        &= x_j.
 \end{align}
 
-Which when combined with \ref{eq:bp_start} gives us
+Notice that we exchanged the $j$ counter in Equation \eqref{eq:neuron} with $k$
+since we would otherwise have a name clash. That equation when combined with
+Equation \ref{eq:bp_start} gives us,
 
-\begin{equation}
-\label{eq:deriv}
-\frac{\partial E}{\partial \mathbf{w}_{ij}} = \delta_i x_j
+\begin{equation} \label{eq:deriv}
+    \frac{\partial E}{\partial \mathbf{w}_{ij}} = \delta_i x_j.
 \end{equation}
 
-Revealing that the derivative of the cost function with respect to the
-weight $\mathbf{w}_{ij}$ is simply the value of $\delta$ for the neuron at the
-output end of that specific neuron, and $x$ for the input end of the weight for
-that same neuron. This leaves us with calculating $\delta_i$ for the hidden
-units, and the output units of the network. We already know that for output
-units, $\delta$ is computes as follows:
+That reveals that the derivative of the cost function with respect to the weight
+$\mathbf{w}_{ij}$ is simply the value of $\delta$ for the neuron at the output
+end and $x$ for the input end of the weight for that same neuron. This leaves us
+with calculating $\delta_i$ for the hidden units, and the output units of the
+network. We already know that for output units $\delta$ is computed as,
 
 \begin{equation}
-\label{eq:output}
-\delta_k = \hat{y}_k - y_k
+    \label{eq:output}
+    \delta_k = \hat{y}_k - y_k,
 \end{equation}
 
-Where \textit{k}, refers to a specifc output neuron.
-However, for the hidden units, the chain rule has to be used again.
+where $k$ refers to a specific output neuron. For the hidden units the chain
+rule has to be used again,
 
 \begin{equation}
-\label{eq:bp}
-\delta_i = \frac{\partial E}{\partial a_i} =
-\sum_k \frac{\partial E}{\partial a_k} \frac{\partial a_k}{\partial a_i}
+    \label{eq:bp}
+    \delta_i = \frac{\partial E}{\partial a_i} =
+    \sum_k \frac{\partial E}{\partial a_k} \frac{\partial a_k}{\partial a_i},
 \end{equation}
 
-Where the sum runs over all \textit{k} units that unit \textit{i}, sends
-connections.
-Where in this case, \textit{k} denotes the units that, unit \textit{i} sends
-its values.
-
-This can be rewritten using the prior established equalities and the chain rule,
+Where the sum runs over all $k$ output units from unit $i$. The Equation can be
+rewritten using the prior established equalities and the chain rule,
 
 
 \begin{align}
-\sum_k \frac{\partial E}{\partial a_k} \frac{\partial a_k}{\partial a_i} &=
-\sum_k \delta_k \frac{\partial a_k}{\partial a_i} & \text{By \eqref{eq:delta}}\\
-&= \sum_k \delta_k \frac{\partial a_k}{\partial z_i} \frac{\partial z_i}{\partial a_i}
-& \text{By \eqref{eq:neuron} and Lemma \ref{lemma:chainrule}} \\
-&= \sum_k \delta_k h'(a_i) \frac{\partial a_k}{\partial z_i} \\
-&= \sum_k \delta_k h'(a_i) \left( \frac{\partial}{\partial z_i}  \sum_{i=0} \mathbf{w}_{ki} z{i}\right) \\
-&= \sum_k \delta_k h'(a_i) \mathbf{w}_{ki} \\
+    \sum_k \frac{\partial E}{\partial a_k} \frac{\partial a_k}{\partial a_i}
+    &= \sum_k \delta_k \frac{\partial a_k}{\partial a_i}
+    & \text{By Equation \eqref{eq:delta}}
+    \\
+    &= \sum_k \delta_k \frac{\partial a_k}{\partial z_i}
+        \frac{\partial z_i}{\partial a_i}
+    & \text{By Equation \eqref{eq:neuron} and Lemma \ref{lemma:chainrule}}
+    \\
+    &= \sum_k \delta_k h'(a_i) \frac{\partial a_k}{\partial z_i}
+    \\
+    &= \sum_k \delta_k h'(a_i) \left( \frac{\partial}{\partial z_i}
+        \sum_{j} \mathbf{w}_{kj} z_j\right)
+    \\
+    &= \sum_k \delta_k h'(a_i) \mathbf{w}_{ki}
+    \\
 \end{align}
 
 This highlights that changes in $a_i$ only influences the error-function,
@@ -1166,57 +1172,60 @@ through variations of the variables $a_k$. We can compute the $\delta$ for a
 particular hidden unit by backpropagating the $\delta$ value back from higher up
 in the network.
 
-As such, we can summarize the backpropagation algorithm like this.
+As such, we can summarize the weight updating algorithm as,
 
 \begin{enumerate}
     \item
 
         Provide the network with some input data $x_n$, and compute the
         activations of each hidden and output neuron using Equation
-        \eqref{eq:neuron}.
+        \eqref{eq:neuron},
 
     \item
 
         Compute $\delta_n$ for each of the output neurons using Equation
-        \eqref{eq:output}
+        \eqref{eq:output},
 
     \item
 
-        Back-Propagateprop $\delta$ using Equation \eqref{eq:bp}, to compute
-        $\delta_i$ for each neuron
+        Back propagate $\delta$s using Equation \eqref{eq:bp} to compute
+        $\delta_i$ for each neuron,
 
     \item
 
-        Use Equation \eqref{eq:deriv} to evaluate the required derivatives
+        Use Equation \eqref{eq:deriv} to evaluate the required derivatives.
+
+    \item
+
+        Update the weight using the computed derivatives
+        and the gradient descent update rule from Equation
+        \eqref{eq:gradient_descent_network_update}.
 
 \end{enumerate}
 
-At this point we can update each of the weights using point 4, and Equation
-\eqref{eq:update} which is the Step 3.
-
 These three steps feed forward, backpropagate and update weights are repeated
-throughout the training cycle of the neural networks, so as to optimize the
-weights after each full iteration on the training set. As is to be expected
-this algorithm as very expensive computationally, as it runs in $O(W)$. This is
-only for a single training sample though. Thus run-time becomes $O(N\cdot W)$,
-where $N$ is the number of training samples. Additionally, if one trains over
-several epochs, this run-time becomes even more inflated $O(\mathcal{E}\cdot
-N\cdot W)$ iteration having do be computed, where $\mathcal{E}$ is the number
-of epochs run during training. For that reason this run-time might not seem
-very disable at first, and is indeed the reason why neural networks need such a
-long training time. However an alternative described by \citet{Bishop}, which
-involves perturbing each weight instead, and approximating the derivatives.
-This method does however run in $O(W^2)$ time, making the run-time of $O(W)$
-backpropagation provides the desired choice. However, in order to improve
-on those that $O(W)$ time-complexity a method called batching is used. This
-method, shuffles and split the training dataset up into smaller batches.
-These batches are then run through the network one at a time, performing
-backpropagation after each run-through. This results in the gradient not being
-as accurate after each batch, but this introduced inaccuracy is negligible
-compared to the computational time won, by reducing the amount of $\mathcal{E}$
-in $O(\mathcal{E}\cdot N\cdot W)$ needed for the same amount of convergence.
-A mote detailed description of this process can be found in the next Section.
-\citep{Bishop}.
+throughout the training cycle of the neural networks. Such that the weights
+are optimized after each full parse over the training dataset. As is to be
+expected this algorithm as very expensive computationally as it runs in $O(W)$.
+This is only for a single training sample though. Thus run-time becomes $O(N
+\cdot W)$, where $N$ is the number of training samples. Additionally, if
+one trains over several epochs, this run-time becomes even more inflated
+with $O(\mathcal{E}\cdot N\cdot W)$ iterations having do be computed, where
+$\mathcal{E}$ is the number of epochs run during training. For that reason
+this run-time might not seem very viable at first, and is indeed the reason
+why neural networks need such a long training time. However an alternative
+described by \citet{Bishop}, which involves perturbing each weight instead, and
+approximating the derivatives. This method does however run in $O(W^2)$ time,
+making the run-time of $O(W)$ backpropagation provides the desired choice.
+However, in order to improve on those that $O(W)$ time-complexity a method
+called batching is used. This method, shuffles and split the training dataset
+up into smaller batches. These batches are then run through the network one at
+a time, performing backpropagation after each run-through. This results in the
+gradient not being as accurate after each batch, but this introduced inaccuracy
+is negligible compared to the computational time won, by reducing the amount of
+$\mathcal{E}$ in $O(\mathcal{E}\cdot N\cdot W)$ needed for the same amount of
+convergence. A mote detailed description of this process can be found in the
+next Section. \citep{Bishop}.
 
 
 \subsubsection{Optimizers}\label{sec:optimizers}
