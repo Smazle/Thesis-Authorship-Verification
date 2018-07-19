@@ -912,56 +912,55 @@ mikolov2013linguistic,JMLR:v15:srivastava14a}.
         the data the layer is provided, thus eliminating the need for a sliding
         window.
 
-    \begin{figure}
-    \centering
-    \begin{equation}
-        \begin{tabular}{|llll|}
-        \hline
-        1 & 8 & 7 & 2 \\
-        9 & 7 & 9 & 8 \\
-        3 & 6 & 2 & 4 \\
-        5 & 7 & 9 & 9 \\\hline
-        \end{tabular}
-            \Longrightarrow
-        \begin{tabular}{|ll|ll|}
-        \hline
-        \cc{blue}1 & \cc{blue}8 & \cc{red}7 & \cc{red}2 \\
-        \cc{blue}9 & \cc{blue}7 & \cc{red}3 & \cc{red}8 \\ \hline
-        \cc{orange}3 & \cc{orange}6 & \cc{green}2 & \cc{green}4 \\
-        \cc{orange}5 & \cc{orange}7 & \cc{green}9 & \cc{green}9\\
-        \hline
-        \end{tabular}
-            \Longrightarrow
-        \begin{tabular}{|l|l|}
-        \hline
-        \cc{blue}9 & \cc{red}8\\\hline
-        \cc{orange}7 & \cc{green}9\\
-        \hline
-        \end{tabular}
-    \end{equation}
-    \caption{An example of a max pooling performing using a 2x2 kernel and
-        stride 2.}
-    \label{fig:max_pool}
-    \end{figure}
+        \begin{figure}
+        \centering
+        \begin{equation}
+            \begin{tabular}{|llll|}
+            \hline
+            1 & 8 & 7 & 2 \\
+            9 & 7 & 9 & 8 \\
+            3 & 6 & 2 & 4 \\
+            5 & 7 & 9 & 9 \\\hline
+            \end{tabular}
+                \Longrightarrow
+            \begin{tabular}{|ll|ll|}
+            \hline
+            \cc{blue}1 & \cc{blue}8 & \cc{red}7 & \cc{red}2 \\
+            \cc{blue}9 & \cc{blue}7 & \cc{red}3 & \cc{red}8 \\ \hline
+            \cc{orange}3 & \cc{orange}6 & \cc{green}2 & \cc{green}4 \\
+            \cc{orange}5 & \cc{orange}7 & \cc{green}9 & \cc{green}9\\
+            \hline
+            \end{tabular}
+                \Longrightarrow
+            \begin{tabular}{|l|l|}
+            \hline
+            \cc{blue}9 & \cc{red}8\\\hline
+            \cc{orange}7 & \cc{green}9\\
+            \hline
+            \end{tabular}
+        \end{equation}
+        \caption{An example of a max pooling performing using a 2x2 kernel and
+            stride 2.}
+        \label{fig:max_pool}
+        \end{figure}
 
 
     \item[Dropout Layer:]
 
-        This layer is used for the intent of regularizing a network. A good
-        optimizer a network will slowly fit more and more on the training data
-        it is provided, when given enough training time. This might seem like
-        a bad thing at first, but if the validation error follows the training
-        error as the network get more and more fit on the training data, then
-        the network is successfully learning some general commonality that can
-        be used to describe both the data sets, which is the goal. It is when
-        these two error do not follow on another, that one has to be alarmed, as
-        network does not generalize properly. This is where the dropout layer is
-        useful. By deactivating a certain amount of randomly selected neurons
-        in a particular layer, the network is forced to learn from a larger
-        sparse set of neurons, rather than focusing on a small amount of very
-        informative ones, resulting in a potential better understanding of the
-        data as a whole, rather than small amount of key features. An example of
-        this can be seen in Figure \ref{fig:dropout}.
+        The layer is used for regularization of neural networks. A good
+        optimizer of a network will slowly fit more and more to the training
+        data it is provided. This might seem like a bad thing at first, but if
+        the validation error follows the training error as the network learns
+        the training data, then the network is successfully learning some
+        general commonality that can be used to describe both the data. It is
+        the two errors do not follow on another that one has to be alarmed, as
+        the network does not generalize properly. This is where the dropout
+        layer is useful. By deactivating a certain amount of randomly selected
+        neurons in a particular layer, the network is forced to learn from a
+        larger sparse set of neurons, rather than focusing on a small amount
+        of very informative ones. That typically results in a potential better
+        understanding of the data as a whole rather than small amount of key
+        features. An example of this can be seen in Figure \ref{fig:dropout}.
 
         \begin{figure}
             \centering
@@ -975,7 +974,7 @@ mikolov2013linguistic,JMLR:v15:srivastava14a}.
         layers in different problem settings. They found that dropout layers
         reduced overfitting in all problems they looked at. In particular
         they found that document classification which is similar to what we
-        are doing were also improved. The main drawback of a dropout layer
+        are doing was also improved. The main drawback of a dropout layer
         is that it increase the training time of the networks its used on
         \citep{JMLR:v15:srivastava14a}.
 
