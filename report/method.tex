@@ -769,7 +769,7 @@ mikolov2013linguistic,JMLR:v15:srivastava14a}.
         vanishing/exploding gradient problem. When backpropagating through an
         \gls{RNN} network each timestep corresponds to a separate layer in a
         normal feed forward neural network. So for sequences of several thousand
-        timesteps backpropagation has to go through several thousand layers.
+        timesteps, backpropagation has to go through several thousand layers.
         The magnitude of the gradient will at each layer either increase up or
         decrease and through the hundreds or thousands of layers that leads to
         the gradient either blowing up exponentially or vanishing to nothing.
@@ -807,7 +807,7 @@ mikolov2013linguistic,JMLR:v15:srivastava14a}.
 
         The input to the \gls{LSTM} is fed into 4 \gls{RNN} networks that also
         receives the output from the previous timesteps. From bottom to top in
-        the Figure the networks are.
+        the Figure the networks are:
 
         First: A network combining the current input and the previous output into
         an activation in the current timestep.
