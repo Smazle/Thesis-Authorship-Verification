@@ -1080,15 +1080,16 @@ Figure \ref{fig:conv-char-NN-pred-4}.
     \label{fig:conv-char-NN-pred-4}
 \end{figure}
 
-The best configuration for the 0.5 split were using the $P_{lexp_{0.25}}$
-and using the threshold $\theta = 0.390$. That configuration obtained an
-accusation error of 0.095 and an accuracy of 0.83167. The configuration had
-1482 \glspl{TN}, 1843 \glspl{TP}, 156 \glspl{FN} and 517 \glspl{FP}. The best
-configuration for the 0.04 split were using the $P_{MV}$ and using the threshold
-$\theta = 0.057$. That configuration obtained an accusation error of 0.0 and
-an accuracy of 0.96444. The configuration had 8 \glspl{TN}, 1999 \glspl{TP}, 0
-\glspl{FN} and 73 \glspl{FP}.
-
+The best configuration for both the 50/50 split and 96/04 split was the
+following,
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+\hline
+Split & Weight            & $\theta$ & TPS  & TNS  & FPS & FNS & Acc    & A-Error \\ \hline
+50/50 & $P_{lexp_{0.25}}$ & 0.390    & 1843 & 1482 & 517 & 156 & 0.8316 & 0.095   \\ \hline
+96/04 & $P_{mv}$          & 0.057    & 1999 & 8    & 74  & 0   & 0.9644 & 0.000   \\ \hline
+\end{tabular}
+\end{center}
 
 \subsubsection{\glsdesc{rec-sent-NN}}
 \label{subsubsec:prediction_system_rec-sent-NN}
@@ -1129,18 +1130,21 @@ results which can be seen in the Figures, \ref{fig:rec-sent-NN-pred-50} and
     \label{fig:rec-sent-NN-pred-4}
 \end{figure}
 
-As can be seen, the \gls{RNN} severely when compared to earlier results. The
-best configuration for the 50/50 split under the accusation error constraint was
-the $P_{lexp_{0.25}}$ and $\theta = 0.033$. Using this configuration the network
-got 1965 \glspl{TP}, 310 \glspl{TN}, 1689 \glspl{FP} and 34 \glspl{FN} resulting
-in an accuracy of 0.569 with an accusation error of 0.099. As for the 96/04
-split the best configuration was the $P_{lexp_{0.25}}$ and $\theta = 0.002$.
-This got us 1999 \glspl{TP}, 1 \glspl{TN}, 79 \glspl{FP} and 0 \glspl{FN},
-resulting in an accuracy of 0.962 and an accusation error of 0.0. These result
-are to expected when looking at the graphs. The immediate spike in accusation
-error leaves the model very little room to increase the accuracy in. This is
-most likely the result of the aforementioned author specific learning the
-network does.
+The best configurations for \gls{rec-sent-NN}, using both the 50/50 and
+96/04 split of data was the following,
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+\hline
+Split & Weight            & $\theta$ & TPS  & TNS & FPS  & FNS & Acc    & A-Error \\ \hline
+50/50 & $P_{lexp_{0.25}}$ & 0.033    & 1965 & 310 & 1689 & 34  & 0.5690 & 0.099   \\ \hline
+96/04 & $P_{lexp_{0.25}}$ & 0.002    & 1999 & 1   & 79   & 0   & 0.9620 & 0.000   \\ \hline
+\end{tabular}
+\end{center}
+
+These result are to expected when looking at the graphs. The immediate spike in
+accusation error leaves the model very little room to increase the accuracy in.
+This is most likely the result of the aforementioned author specific learning
+the network does.
 
 
 \subsubsection{\glsdesc{conv-char-word-NN}}
@@ -1184,28 +1188,31 @@ negatives in Figure \ref{fig:conv-char-word-NN-pred-4}.
     \label{fig:conv-char-word-NN-pred-4}
 \end{figure}
 
-The best configuration for the 0.5 split were using the $P_{lexp_{0.25}}$
-and using the threshold $\theta = 0.433$. That configuration obtained an
-accusation error of 0.099 and an accuracy of 0.78989. The configuration had
-1302 \glspl{TN}, 1856 \glspl{TP}, 143 \glspl{FN} and 697 \glspl{FP}. The best
-configuration for the 0.04 split were using the $P_{exp_{0.25}}$ and using the
-threshold $\theta = 0.127$. That configuration obtained an accusation error
-of 0.0 and an accuracy of 0.96492. The configuration had 9 \glspl{TN}, 1999
-\glspl{TP}, 0 \glspl{FN} and 73 \glspl{FP}.
+The best configuration for the 50/50 split and the 96/04 split was the
+following,
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+\hline
+Split & Weight            & $\theta$ & TPS  & TNS  & FPS & FNS & Acc     & A-Error \\ \hline
+50/50 & $P_{lexp_{0.25}}$ & 0.433    & 1856 & 1302 & 697 & 143 & 0.7898 & 0.099   \\ \hline
+96/04 & $P_{exp_{0.25}}$  & 0.127    & 1999 & 9    & 73  & 0   & 0.9649 & 0.000   \\ \hline
+\end{tabular}
+\end{center}
 
 A summarizing view of the validation performance of the different networks can
 be seen in Table \ref{tab:experi-results}.
 
 \begin{table}[h]
-\begin{tabular}{|c|c|c|c|c|c|c|c||c|c|}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|}
 \hline
-Split & Network & Weight & $\theta$ & TP & TN & FP & FN & \textbf{Acc} & \textbf{A-Error} \\ \hline
-\multirow{3}{*}{50/50} & \gls{conv-char-NN} & $P_{lexp_{0.25}}$ & 0.390 & 1843 & 1482 & 517 & 156 & \textbf{0.8316} & \textbf{0.095} \\ \cline{2-10} 
- & \gls{rec-sent-NN} & $P_{lexp_{0.25}}$ & 0.033 & 1965 & 310 & 1689 & 34 & \textbf{0.5690} & \textbf{0.099} \\ \cline{2-10} 
- & \gls{conv-char-word-NN} & $P_{lexp_{0.25}}$ & 0.433 & 1856 & 1302 & 697 & 143 & \textbf{0.7898} & \textbf{0.099} \\ \hline
-\multirow{3}{*}{96/04} & \gls{conv-char-NN} & $P_{mv}$ & 0.057 & 1999 & 8 & 74 & 0 & \textbf{0.9644} & \textbf{0.000} \\ \cline{2-10} 
- & \gls{rec-sent-NN} & $P_{lexp_{0.25}}$ & 0.002 & 1999 & 1 & 79 & 0 & \textbf{0.9620} & \textbf{0.000} \\ \cline{2-10} 
- & \gls{conv-char-word-NN} & $P_{exp_{0.25}}$ & 0.127 & 1999 & 9 & 73 & 0 & \textbf{0.9649} & \textbf{0.000} \\ \hline
+Split                  & Network                 & Weight            & $\theta$ & TPS  & TNS  & FPS  & FNS & Acc     & A-Error \\ \hline
+\multirow{3}{*}{50/50} & \gls{conv-char-NN}      & $P_{lexp_{0.25}}$ & 0.390    & 1843 & 1482 & 517  & 156 & 0.8316 & 0.095   \\ \cline{2-10} 
+                       & \gls{rec-sent-NN}       & $P_{lexp_{0.25}}$ & 0.033    & 1965 & 310  & 1689 & 34  & 0.5690 & 0.099   \\ \cline{2-10} 
+                       & \gls{conv-char-word-NN} & $P_{lexp_{0.25}}$ & 0.433    & 1856 & 1302 & 697  & 143 & 0.7898 & 0.099   \\ \hline
+\multirow{3}{*}{96/04} & \gls{conv-char-NN}      & $P_{mv}$          & 0.057    & 1999 & 8    & 74   & 0   & 0.9644 & 0.000   \\ \cline{2-10} 
+                       & \gls{rec-sent-NN}       & $P_{lexp_{0.25}}$ & 0.002    & 1999 & 1    & 79   & 0   & 0.9620 & 0.000   \\ \cline{2-10} 
+                       & \gls{conv-char-word-NN} & $P_{exp_{0.25}}$  & 0.127    & 1999 & 9    & 73   & 0   & 0.9649 & 0.000   \\ \hline
 \end{tabular}
 \caption{A summarizing view of the performance of the different networks on the
 the validation dataset (F).}
