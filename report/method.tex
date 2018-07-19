@@ -973,7 +973,7 @@ mikolov2013linguistic,JMLR:v15:srivastava14a}.
         \citet{JMLR:v15:srivastava14a} investigated the use of dropout
         layers in different problem settings. They found that dropout layers
         reduced overfitting in all problems they looked at. In particular
-        they found that document classification which is similar to what we
+        they found that document classification, which is similar to what we
         are doing was also improved. The main drawback of a dropout layer
         is that it increase the training time of the networks its used on
         \citep{JMLR:v15:srivastava14a}.
@@ -994,17 +994,17 @@ which are continuously repeated:
 \end{enumerate}
 
 The goal of these three steps is to minimize the overall cost of the network.
-The cost refers to the loss we end up with. In order to do this, we take look at
-the gradient. The gradient is a multi-variable generalization of the derivative
-of a function. It can be used for describing the slope of a function at a
-certain point. Not only that, but its most desired property for our purposes is
-that it is vector, and this vector points to the direction of greatest increase
-in value for the function at a specific point. As such, we can apply gradient
-descent to our network, which is simply the act of changing our loss function
-arguments, so we step in the negative direction of the gradient, which would
-be the direction of greatest decrease in value, that is, it points towards the
-local minimum of the error function. A model illustrating this process can be
-seen in Figure \ref{fig:grad}
+The cost refers to the loss we end up with. In order to do this, we take a
+look at the gradient. The gradient is a multi-variable generalization of
+the derivative of a function. It can be used for describing the slope of a
+function at a certain point. Not only that, but its most desired property for
+our purposes is that it is vector, and this vector points to the direction of
+greatest increase in value for the function at a specific point. As such, we can
+apply gradient descent to our network, which is simply the act of changing our
+loss function arguments, so we step in the negative direction of the gradient,
+which would be the direction of greatest decrease in value, that is, it points
+towards the local minimum of the error function. A model illustrating this
+process can be seen in Figure \ref{fig:grad}
 
 \begin{figure}
     \centering
@@ -1018,20 +1018,20 @@ seen in Figure \ref{fig:grad}
 \end{figure}
 
 When doing this, many error functions can be of interest, depending on the
-problem. For examples sake we make use of the following.
+problem. For instance we make use of the following,
 
 \begin{align}
-E(W) &= \sum_{n=1}^N E_n(W)\\
-E_n(W) &= \frac{1}{2}(\hat{y}_n - y_n)^2
+    E(W)   &= \sum_{n=1}^N E_n(W) \\
+    E_n(W) &= \frac{1}{2}(\hat{y}_n - y_n)^2,
 \end{align}
 
-Where N is the number of training samples, $\hat{y}_n$ is the predicted results,
-and $y_n$ is the target, and W is a set of weights. The goal is minimize this
-function. In order to do so, we need to have a independent variable we can tweak
-using gradient descent as per the above description. In the case of neural
-networks we can view this variable as being the weights and the biases, which
-are defined in Section \ref{sec:neurons}. We want to update each weight vector
-by repeating the following operation.
+where $N$ is the number of training samples, $\hat{y}_n$ is the predicted
+results, and $y_n$ is the target, and W is a set of weights. The goal is
+minimize this function. In order to do so, we need to have a independent
+variable we can tweak using gradient descent as per the above description. In
+the case of neural networks we can view this variable as being the weights and
+the biases, which are defined in Section \ref{sec:neurons}. We want to update
+each weight vector by repeating the following operation.
 
 \begin{equation}\label{eq:update}
     \mathbf{w}^{(t+1)} = \mathbf{w}^{(t)} + \Delta \mathbf{w}^{(t)}
@@ -1240,13 +1240,13 @@ the learning rate. The algorithm for weight update becomes,
 In that algorithm a single updating of the weights require computing the
 gradient of the error function on each training sample. For large datasets
 that might not be feasible as backpropagation is expensive to compute for such
-datasets. Stochastic gradient descend is an attempt at estimating the gradient
+datasets. Stochastic gradient descent is an attempt at estimating the gradient
 of all datapoints using only a single datapoint. That means that in stochastic
-gradient descend weights are updated much more often and is updated on a noisy
-target \citep{Bishop}. The advantage of Stochastic Gradient Descend is that
+gradient descent weights are updated much more often and is updated on a noisy
+target \citep{Bishop}. The advantage of stochastic gradient descent is that
 convergence to a local minimum might be much quicker since the algorithm does
 not have to go through all training samples for each weight update. The weight
-updating for stochastic gradient descend is computed as,
+updating for stochastic gradient descent is computed as,
 
 \begin{equation}
     \mathbf{w}^{(t+1)}_i =
@@ -1254,21 +1254,21 @@ updating for stochastic gradient descend is computed as,
         \eta\Delta E_n|_{\mathbf{w}^{(t)}_i}.
 \end{equation}
 
-In practise each weight update in stochastic gradient descend are computed
+In practise each weight update in stochastic gradient descent are computed
 not based on a single training sample but on some small number of training
 samples. That allows the computation to take advantage of highly optimized
 matrix libraries and making each update on a slightly less noisy target
 \footnote{\url{http://ufldl.stanford.edu/tutorial/supervised/OptimizationStochas
-ticGradientDescent/}}. The version of stochastic gradient descend that use more
+ticGradientDescent/}}. The version of stochastic gradient descent that use more
 than one sample per weight update is known as stochastic minibatch gradient
 descend.
 
-To see how stochastic gradient descend might lead to faster convergence consider
+To see how stochastic gradient descent might lead to faster convergence consider
 a dataset with some number of training samples. To create redundancy in the
 dataset we copy all training samples in the dataset to create a new dataset of
-twice the size. In classical Gradient Descend the only effect will be that the
+twice the size. In classical gradient descent the only effect will be that the
 error increases by a magnitude of 2 but will take twice as long to compute.
-While stochastic gradient descend will converge at the exact same speed as each
+While stochastic gradient descent will converge at the exact same speed as each
 minibatch will still represent an estimate of the true underlying function and
 each weight update still takes the same amount of time \citep{Bishop}.
 
@@ -1281,10 +1281,10 @@ batch might point towards a better local minima. Therefore the optimizer has the
 possibility of following the gradient of single batches that leads to a final
 better local minima \citep{Bishop}.
 
-A problem in the stochastic gradient descend algorithm is the need to choose
+A problem in the stochastic gradient descent algorithm is the need to choose
 the learning rate $\eta$. If the learning rate is too high the algorithm
 will diverge and if it is to low it will be very slow to converge. Therefore
-several extensions to basic stochastic gradient descend has been developed that
+several extensions to basic stochastic gradient descent has been developed that
 automatically tunes the learning rate $\eta$. We will discuss three different
 extension \gls{AdaGrad}, \gls{RMSProp} and \gls{Adam}.
 
