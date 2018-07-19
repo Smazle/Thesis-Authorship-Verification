@@ -733,7 +733,7 @@ mikolov2013linguistic,JMLR:v15:srivastava14a}.
         where $\psi_h$ is the activation function of the hidden unit, $I$ is the
         number of input units, $H$ is the number of hidden units and $w_{hj}$ is
         the weight between neuron $h$ and $j$'th input for that neuron $h$. That
-        is the activation of the hidden units is an activation function applied
+        is the activation of a hidden unit is an activation function applied
         to a weighted sum of the current inputs and the activation of all hidden
         units in the previous timestep \citep{DBLP:series/sci/2012-385}. The
         output of the \gls{RNN} is then computed as,
@@ -747,15 +747,15 @@ mikolov2013linguistic,JMLR:v15:srivastava14a}.
         by starting at time $t=1$ and recursively calling the functions above
         until the end of the sequence is reached incrementing $t$ by one in
         each recursive call. The initial values of the hidden units can be
-        any initialization value. The obvious choice is 0 however better
+        any initialization value. The obvious choice is 0, however better
         results have been found using non zero initial hidden unit values
         \citep{DBLP:series/sci/2012-385}.
 
-        An \gls{RNN} network are normally optimized using the backpropagation
+        A \gls{RNN} network are normally optimized using the backpropagation
         through time algorithm. For data where a sense of time does not make
         sense and where the context from both sides of each timesteps is usefull
         such as for text it is normal to use bidirectional \glspl{RNN}. Then
-        both a forwards and a backwards pass is made through the sequence. The
+        both a forward and a backward pass are made through the sequence. The
         output of each network at each time step can then depend both on the
         context before and after the input.
 
