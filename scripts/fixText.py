@@ -32,6 +32,13 @@ def Convert(line, x):
         'Gradient Descent': 'gradient descent',
         'base-line': 'baseline',
         'base-lines': 'baselines',
+        'feed-forward': 'feed forward',
+        'over-fitting': 'overfitting',
+        'over-fit': 'overfit',
+        'training-time': 'training time',
+        'back-propagation': 'backpropagation',
+        'back-propagate': 'backpropagate',
+        'feature-set': 'feature set'
     }
 
     for key in c:
@@ -53,15 +60,25 @@ def Warnings(line, x):
         if key in x:
             print(key, line, x)
 
-    word = word_tokenize(x)
-    for i in range(len(word) - 1):
-        if len(word[i][0]) < 2:
-            continue
+    exceptions = [
+        'Figure', 'Figures', 'Danish', 'Section', 'Sections', 'Table', 'Rom',
+        'Rome', 'Appendix'
+    ]
 
-        if word[i][0].isalnum():
-            if word[i][0] == word[i][0].upper() and \
-                    word[i + 1][0] == word[i + 1][0].upper():
-                print(word[i][0], line, x)
+    if not any(a in x for a in ['}', '{', ']', '[']):
+        words = word_tokenize(x)
+        for w in words[1:]:
+            if w[0].isupper():
+                idx = x.index(w)
+
+                if x[idx - 2] != '.' and \
+                        not x[idx + 1].isupper() and \
+                        x[idx + 1].isalpha() and \
+                        w not in exceptions and \
+                        x[idx - 2] != '?' and \
+                        x[idx - 2] != '!':
+
+                    print(w, line, x)
 
 
 reportFolder = sys.argv[-1]
