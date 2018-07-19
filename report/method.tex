@@ -486,8 +486,6 @@ mikolov2013linguistic,JMLR:v15:srivastava14a}.
 
     \item[Convolutional Layer:]
 
-        % TODO: Describe here how convolutions for text could look.
-
         A convolutional layer is mainly used to extract position independent
         features from data. The convolution consist of a sliding window that
         slides over some input data and gives an output for each possible
@@ -681,6 +679,16 @@ mikolov2013linguistic,JMLR:v15:srivastava14a}.
                 kernel and the third a sharpening kernel.}
             \label{fig:convolution_example}
         \end{figure}
+
+        Convolutional layers for text analysis works slightly differently.
+        Text is not two dimensional but one dimensional data. A convolution
+        on text therefore does not use a two dimensional weight matrix but a
+        weight vector. The process is the same as before. The weights vector
+        slides over the text looking at a sequence of characters at a time. Each
+        character is multiplied by the weight in that positition and a sum is
+        computed. The output of the layer is a one dimensional sequence of these
+        weighted sums. We will describe in more detail how convolutions for text
+        work in Section \ref{subsubsec:conv_char_nn}.
 
     \item[\gls{RNN} Layer:]
 
