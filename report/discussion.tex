@@ -115,8 +115,21 @@ text contributed to final classification as can be seen in the Section
 
 As mentioned all the way back in Section
 \ref{subsec:previous_work_using_macoms_dataset} other papers have been produced
-with Macoms data as their basis.
+with Macoms data as their basis. Much like us \cite{hanse2014}, made use
+of an SVM classifier, but for authorship attribution rather and authorship
+verification. When all was said and done, they got an accuracy of 84\%. This
+means that not only did they beat our SVM implementation, but our neural
+networks as well. We do however think we can justify this difference. While they
+did have access to the same large data-set we did, they chose only to extract
+the library of 30 authors. Due to the author-specific nature of their SVM
+implementation, each of those 30 authors texts got further split into training
+validation and test data. This approach could very well result in a giant bias
+towards those specific authors. For their purposes it might have made sense, as
+they had to remake their attribution task, to a one-against-many verification
+task. When considering that, and the fact that most likely had a better set of
+negative samples to train on, the results are understandable.
 
+% Include Aalykke, takes a long time to read :(
 
 \subsection{Teacher Feedback}\label{subsec:teacher_feedback_text_comparisons}
 
