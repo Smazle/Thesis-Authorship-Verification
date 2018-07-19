@@ -16,37 +16,19 @@ the same sample generation as was described in the bottom of Section
 \ref{sec:hyp_select}, and normalizing using the scaler produced when
 generating the features, we applied were able to apply the model. The same
 was done with the \gls{SVM}, where we used the optimal found hyperparameters, $C=10$
-and $\gamma = 1000$, to train the model. The results can be seen in Table
-\ref{tab:baseline-res}.
+and $\gamma = 1000$, to train the model. 
 
-\begin{table}[h]
-\centering
-\begin{tabular}{|c|c|c|c|c|c|c||c|c|}
-\hline
-Split & Classifier & Params & TP & TN & FP & FN & \textbf{Acc} & \textbf{A-Error} \\ \hline
-\multirow{2}{*}{50/50} & SVM & \{C:10, $\gamma$:1000\} & 2667 & 2442 & 1100 & 883 & \textbf{0.71958} & \textbf{0.26556} \\ \cline{2-9} 
- & ED & \{K:1, p:1\} & 2349 & 2064 & 1486 & 1201 & \textbf{0.62155} & \textbf{0.36784} \\ \hline
-\multirow{2}{*}{96/04} & SVM & \{C:10, $\gamma$:1000\} & 2629 & 98 & 57 & 921 & \textbf{0.73723} & \textbf{0.90382} \\ \cline{2-9} 
- & ED & \{K:1, p:1\} & 2369 & 92 & 56 & 1181 & \textbf{0.66549} & \textbf{0.92773} \\ \hline \end{tabular}
-\caption{The results of running our baseline methods on the test dataset (D),
-with the optimal hyper parameters, on both a 50/50 dataset and 96/04 one. ED in
-the classifier column, denotes the extended delta method, and SVM the support
-vector machine method.}
-\label{tab:baseline-res}
-\end{table}
-
-With this we have our baseline to beat. As briefly mentioned in Section
-\ref{subsec:baseline_methods}, these method are not very well suited for this
-particular task. Since they both provide binary results denoting a students
-innocence, or lack thereof, it is not possible to apply any kind of thresholding
-to force our models under the 10\% accusation error goal. They always perform at
-their maximum capacity. For this reason we had to alter they way we compare the
-deep learning approaches with our baselines. This was done by determining the
-best performing $\theta$ and weight function for our neural network with regard
-to accuracy, and with no regard to the accusation error, as both our baselines
-do not focus on that either. Thus we compared the results of our baselines on
-the 50/50 dataset and the 96/04 dataset with the highest unconstrained accuracy
-our \gls{NN} methods could muster.
+As briefly mentioned in Section \ref{subsec:baseline_methods}, these method are
+not very well suited for this particular task. Since they both provide binary
+results denoting a students innocence, or lack thereof, it is not possible to
+apply any kind of thresholding to force our models under the 10\% accusation
+error goal. They always perform at their maximum capacity. For this reason
+we had to alter they way we compare the deep learning approaches with our
+baselines. This was done by determining the best performing $\theta$ and weight
+function for our neural network with regard to accuracy, and with no regard to
+the accusation error, as both our baselines do not focus on that either. Thus we
+compared the results of our baselines on the 50/50 dataset and the 96/04 dataset
+with the highest unconstrained accuracy our \gls{NN} methods could muster.
 
 After determining the best networks using the dataset (E) in conjunction with
 dataset (F), we proceeded to train the three networks on the entire dataset (B)
@@ -58,63 +40,59 @@ Having now trained the models we can determine the accuracy and accusation
 error of our different networks, both with and without the 10\% accusation error
 constraint.
 
-Doing this for the network \gls{conv-char-NN}, using the test dataset D, yielded
-the results seen in Table \ref{tab:char_CNN_res}
+We also used that same approach for the other two networks. The combined
+results for the 50/50 split test dataset (D) can be seen in Table
+\ref{tab:50_results}, and the results for the 96/04 split data can be seen in
+table \ref{tab:04_results}.
 
 \begin{table}[]
-\begin{tabular}{|c|c|c|c|c|c|c|c||c|c|}
+\centering
+\textbf{The results of running our methods on a 50/50 split test dataset}\par\medskip
+\begin{tabular}{|c|l|c|c|c|c|c|c|c|c|}
 \hline
-Split & Constrained & Weight & $\theta$ & TP & TN & FP & FN & \textbf{Acc} & \textbf{A-Error} \\ \hline
-\multirow{2}{*}{50/50} & Yes & $P_{lexp_{0.25}}$ & 0.390 & 3392 & 2344 & 1206 & 158 & \textbf{0.80788} & \textbf{0.0631} \\ \cline{2-10} 
- & No & $P_{lexp_{0.25}}$ & 0.486 & 3231 & 2913 & 637 & 319 & \textbf{0.86535} & \textbf{0.0987} \\ \hline
-\multirow{2}{*}{96/04} & Yes & $P_{MV}$ & 0.057 & 3546 & 13 & 140 & 4 & \textbf{0.96111} & \textbf{0.2352} \\ \cline{2-10} 
- & No & $P_{lexp_{0.25}}$ & 0.137 & 3540 & 28 & 125 & 10 & \textbf{0.96354} & \textbf{0.2631} \\ \hline
+Bound                & Method                  & Weight            & $\theta$ & TPS  & TNS  & FPS  & FNS  & Acc             & A-Error         \\ \hline
+\multirow{5}{*}{Yes} & SVM                     & \multicolumn{8}{c|}{N/A}                                                                     \\ \cline{2-10} 
+                     & Extended Delta          & \multicolumn{8}{c|}{N/A}                                                                     \\ \cline{2-10} 
+                     & \gls{conv-char-NN}      & $P_{lexp_{0.25}}$ & 0.390    & 3392 & 2344 & 1206 & 158  & \textbf{0.8078} & \textbf{0.0631} \\ \cline{2-10} 
+                     & \gls{conv-char-word-NN} & $P_{lexp_{0.25}}$ & 0.433    & 3185 & 2512 & 1038 & 36   & 0.8023          & 0.1268          \\ \cline{2-10} 
+                     & \gls{rec-sent-NN}       & $P_{lexp_{0.25}}$ & 0.033    & 3182 & 1470 & 2080 & 368  & 0.6552          & 0.2002          \\ \hline\hline
+\multirow{5}{*}{No}  & SVM                     & N/A               & N/A      & 2667 & 2442 & 1100 & 883  & 0.7195          & 0.2656          \\ \cline{2-10} 
+                     & Extended Delta          & N/A               & N/A      & 2349 & 2064 & 1486 & 1201 & 0.6215          & 0.3678          \\ \cline{2-10} 
+                     & \gls{conv-char-NN}      & $P_{lexp_{0.25}}$ & 0.486    & 3231 & 2913 & 637  & 319  & \textbf{0.8653} & \textbf{0.0987} \\ \cline{2-10} 
+                     & \gls{conv-char-word-NN} & $P_{lexp_{0.25}}$ & 0.544    & 2810 & 3088 & 462  & 740  & 0.8307          & 0.1933          \\ \cline{2-10} 
+                     & \gls{rec-sent-NN}       & $P_{lexp_{0.25}}$ & 0.267    & 1795 & 3076 & 474  & 1755 & 0.6860          & 0.3632          \\ \hline
 \end{tabular}
-\caption{The result of running the network \gls{conv-char-NN} on the dataset
-(D). Split denotes the split between negative and positive samples in the
-generated test sample set. Allowed Err, denotes if the parameters, weight
-method, and $\theta$ was selected based on their ability accusation error under
-0.1 or just their accuracy. A-Error denotes the accusation error.}
-\label{tab:char_CNN_res}
-\end{table}
-
-We also used that same approach for the other two networks, resulting in what
-can be seen in Table \ref{tab:char_word_CNN_res}, which is the test results of
-\gls{conv-char-word-NN}, and in Table \ref{tab:RNN_res}, which contains the
-results from \gls{rec-sent-NN}.
-
-\begin{table}[]
-\begin{tabular}{|c|c|c|c|c|c|c|c||c|c|}
-\hline
-Split & Constrained & Weight & $\theta$ & TP & TN & FP & FN & \textbf{Acc} & \textbf{A-Error} \\ \hline
-\multirow{2}{*}{50/50} & Yes & $P_{lexp_{0.25}}$ & 0.433 & 3185 & 2512 & 1038 & 36 & \textbf{0.80239} & \textbf{0.1268} \\ \cline{2-10} 
- & No & $P_{lexp_{0.25}}$ & 0.544 & 2810 & 3088 & 462 & 740 & \textbf{0.83070} & \textbf{0.1933} \\ \hline
-\multirow{2}{*}{96/04} & Yes & $P_{exp_{0.25}}$ & 0.127 & 3516 & 32 & 112 & 34 & \textbf{0.96047} & \textbf{0.5151} \\ \cline{2-10} 
- & No & $P_{lexp_{0.25}}$ & 0.192 & 3507 & 47 & 97 & 43 & \textbf{0.96210} & \textbf{0.4777} \\ \hline
-\end{tabular}
-\caption{The result of running the network \gls{conv-char-word-NN} on the
-dataset (D). Split denotes the split between negative and positive samples in
-the generated test sample set. Allowed Err, denotes if the parameters, weight
-method, and $\theta$ was selected based on their ability accusation error under
-0.1 or just their accuracy. A-Error denotes the accusation error.}
-\label{tab:char_word_CNN_res}
+\caption{The results on the 50/50 data set, using the listed methods.
+\textit{Bound} refers to wether or not $\theta$ and the Weight which we used,
+was chosen based on their accuracy bounded/constrained by a 0.1 accusation error.
+In the case of Yes, it refers to under the 0.1 threshold and No refers to simply
+maximizing accuracy with no regard for accusation error. In both case
+the best results were bolded.}
+\label{tab:50_results}
 \end{table}
 
 \begin{table}[]
-\begin{tabular}{|c|c|c|c|c|c|c|c||c|c|}
+\centering
+\textbf{The results of running our methods on a 96/04 split test dataset}\par\medskip
+\begin{tabular}{|c|l|c|c|c|c|c|c|c|c|}
 \hline
-Split & Constrained & Weight & $\theta$ & TP & TN & FP & FN & \textbf{Acc} & \textbf{A-Error} \\ \hline
-\multirow{2}{*}{50/50} & Yes & $P_{lexp_{0.25}}$ & 0.033 & 3182 & 1470 & 2080 & 368 & \textbf{0.65521} & \textbf{0.2002} \\ \cline{2-10} 
- & No & $P_{lexp_{0.25}}$ & 0.267 & 1795 & 3076 & 474 & 1755 & \textbf{0.68605} & \textbf{0.3632} \\ \hline
-\multirow{2}{*}{96/04} & Yes & $P_{lexp_{0.25}}$ & 0.002 & 3505 & 18 & 130 & 45 & \textbf{0.95267} & \textbf{0.7142} \\ \cline{2-10} 
- & No & $P_{lexp_{0.25}}$ & 0.002 & 3505 & 18 & 130 & 45 & \textbf{0.95267} & \textbf{0.7142} \\ \hline
+Bound                & Method                  & Weight            & $\theta$ & TPS  & TNS & FPS & FNS  & Acc             & A-Error         \\ \hline
+\multirow{5}{*}{Yes} & SVM                     & \multicolumn{8}{c|}{N/A}                                                                   \\ \cline{2-10} 
+                     & Extended Delta          & \multicolumn{8}{c|}{N/A}                                                                   \\ \cline{2-10} 
+                     & \gls{conv-char-NN}      & $P_{MV}$          & 0.057    & 3546 & 13  & 140 & 4    & \textbf{0.9611} & \textbf{0.2352} \\ \cline{2-10} 
+                     & \gls{conv-char-word-NN} & $P_{exp_{0.25}}$  & 0.127    & 3516 & 32  & 112 & 34   & 0.9604          & 0.5151          \\ \cline{2-10} 
+                     & \gls{rec-sent-NN}       & $P_{lexp_{0.25}}$ & 0.002    & 3505 & 18  & 130 & 45   & 0.9526          & 0.7142          \\ \hline\hline
+\multirow{5}{*}{No}  & SVM                     & N/A               & N/A      & 2629 & 98  & 57  & 921  & 0.7372          & 0.9038          \\ \cline{2-10} 
+                     & Extended Delta          & N/A               & N/A      & 2369 & 92  & 56  & 1181 & 0.66549         & 0.9277          \\ \cline{2-10} 
+                     & \gls{conv-char-NN}      & $P_{lexp_{0.25}}$ & 0.137    & 3540 & 28  & 125 & 10   & \textbf{0.9635} & \textbf{0.2631} \\ \cline{2-10} 
+                     & \gls{conv-char-word-NN} & $P_{lexp_{0.25}}$ & 0.192    & 3507 & 47  & 97  & 43   & 0.9621          & 0.4777          \\ \cline{2-10} 
+                     & \gls{rec-sent-NN}       & $P_{lexp_{0.25}}$ & 0.002    & 3505 & 18  & 130 & 45   & 0.9526          & 0.7142          \\ \hline
 \end{tabular}
-\caption{The result of running the network \gls{rec-sent-NN} on the
-dataset (D). Split denotes the split between negative and positive samples in
-the generated test sample set. Allowed Err, denotes if the parameters, weight
-method, and $\theta$ was selected based on their ability accusation error under
-0.1 or just their accuracy. A-Error denotes the accusation error.}
-\label{tab:RNN_res}
+\caption{The results on the 96/04 data set, using the listed methods.
+\textit{Bound} refers to wether or not $\theta$ and the Weight which we used,
+was chosen based on their accuracy bounded/constrained by a 0.1 accusation error.
+In the case of Yes, it refers to under the 0.1 threshold and No refers to simply
+maximizing accuracy with no regard for accusation error. In both case
+the best results were bolded.}
+\label{tab:04_results}
 \end{table}
-
-
