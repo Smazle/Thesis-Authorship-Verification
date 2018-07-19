@@ -305,30 +305,31 @@ research in the following decades. As computational power increased in the
 general \citep{Schmidhuber:2015}. The real life application of \gls{BP} will be
 described in Section \ref{sec:BP}.
 
-Like with the history of authorship attribution, research in this area of
-science picked up more interest, as we entered the modern computational
-age, and with the introduction of the \gls{CNN}. \glspl{CNN} are based on
-the early work described in \citet{TJP:TJP19681951215}. They showed that
-cats and monkeys visual cortexes contain a set of neurons, each individually
-responding to a receptive field, or area, of their field of view. Neighboring
-receptive fields all have a certain amount of overlap, however in the end
-a cohesive view is created. This is what paved the way for neocognition in
-1980 \cite{Fukushima1980}, the basis of \glspl{CNN}, which works in a very
-similar manner, looking at overlapping subsections of data. These convolutional
-neurons however were rarely used alone, but together with a down-sampling neuron
-such as Max Pooling introduced in 1993 \citep{Schmidhuber:2015}.
+Like with the history of authorship attribution research in this area of science
+picked up more interest as we entered the modern computational age, and with
+the introduction of the \gls{CNN}. \glspl{CNN} are based on the early work
+described in \citet{TJP:TJP19681951215}. They showed that cats and monkeys
+visual cortexes contain a set of neurons, each individually responding to a
+receptive field, or area, of their field of view. Neighboring receptive fields
+all have a certain amount of overlap but in the end a cohesive view is created.
+This is what paved the way for neocognition in 1980 \citep{Fukushima1980}, the
+basis of \glspl{CNN} which works in a very similar manner looking at overlapping
+subsections of data. These convolutional neurons however were rarely used alone
+but together with a down-sampling neuron such as Max Pooling introduced in 1993
+\citep{Schmidhuber:2015}.
 
 
 \subsubsection{Neurons}\label{sec:neurons}
 
 As mentioned previously a \gls{NN} consists of a collection of neurons. Each
-neuron is a simplified mathematical model, which behaves much like neurons
-in the brain would, receiving, processing and transmitting data/information.
-Each neuron has a set of inputs called $x_{ij}$ and a single output called
-$z_i$, where $i$ refers to the neuron, and $j$ refers to the specific input to
-that neuron. The neurons compute a weighted sum of its inputs and applies an
-activation function $h$ to the weighted sum. The weights are called $w_{ij}$,
-and the bias $w_{i0}$. The function each neuron computes is then,
+neuron is a simplified mathematical model which behaves much like neurons in
+the brain. They receive, process and transmit information. Each neuron has a
+set of inputs called $x_{j}$ one of which $x_{0}$ is a special bias input set
+to 1 and a single output called $z_i$, where $i$ refers to the neuron and $j$
+refers to the specific input to that neuron. Each neuron computes a weighted sum
+of its inputs and applies an activation function $h$ to the weighted sum. The
+weights are called $w_{ij}$ and the weight of the bias $w_{i0}$. The function
+each neuron computes is,
 
 \begin{equation}\label{eq:neuron}
     z_i = h(a_i) = h\left(
@@ -337,7 +338,8 @@ and the bias $w_{i0}$. The function each neuron computes is then,
         \sum_{j = 0}^d w_{ij}x_j \right)
 \end{equation}
 
-A more intuitive model of such a neuron can be seen in Figure \ref{fig:neuron}.
+where $d$ is the number of inputs to the neuron. A more intuitive model of such
+a neuron can be seen in Figure \ref{fig:neuron}.
 
 \begin{figure}[!tbp]
   \centering
@@ -349,15 +351,16 @@ A more intuitive model of such a neuron can be seen in Figure \ref{fig:neuron}.
     \includegraphics[width=\textwidth]{./pictures/method/neuron_bias.png}
   \end{minipage}
     \caption{The inner workings of a neuron, with and without an implicit
-        bias \citep{Igel}.}
+        bias \citep{Igel}. The left figure is without implicit bias while the
+        right figure is with implicit bias.}
 \label{fig:neuron}
 \end{figure}
 
-One has the options to arrange the neurons in what is called layers, to achieve
-a certain desired behavior, more details regarding these specific layers will
-be explained in later chapters. The training of a \gls{NN} consists of changing
-the weights applied at each neuron, with the goal of modeling the relationships
-present in the data.
+Neurons are usually arranged in layers in order to achieve a certain desired
+behaviour, more details regarding these specific layers will be explained in
+later chapters. The training of a \gls{NN} consists of changing the weights
+applied at each neuron, with the goal of modeling the relationships present in
+the data.
 
 
 \subsubsection{Activation Functions} \label{subsubsec:activation_functions}
@@ -402,36 +405,27 @@ its costs. If the learning rate of the network is not configured correctly, a
 never reaches a point of activation again. In other words, the neuron "dies". As
 such, one can risk a network containing a lot of dead non-activation neurons,
 thus greatly decreasing its learning quality. On the other hand the sigmoid
-function, does not allow its neurons to die. It can become victim to saturation.
-In the case of weight being too small or too high, the output values will
+function does not allow its neurons to die. It can become victim to saturation.
+In the case of a weight being too small or too large, the output values will
 be placed at the far ends of the sigmoid range of values. At this point the
 gradient is incredibly small, meaning that the contribution that neuron now
-has is negligible. This neuron is now only a strain on the network, slowing it
-down through its activation, but contribution nothing, a problem \gls{ReLu}
+has is negligible. This neuron is now only a strain on the network, slowing
+it down through its activation but contributing nothing a problem \gls{ReLu}
 does not have. Its based on these considerations we chose the \gls{ReLu}
 activation function, leaving us the task of properly selecting our learning rate
 \citep{JiYan, AndrejKarpathy, AvinashSharmaV}.
 
 As the activation function of our output neurons we have used the softmax
-function. The softmax function is shown in Figure \ref{fig:softmax_activation}.
-The function is defined as
+function. The function is defined as
 
 \begin{equation}
     h(x_i) = \frac{e^{x_i}}{\sum_{k=1}^n e^{x_k}}, \text{for $i = 1 \dots n$}.
 \end{equation}
 
-The softmax function takes any vector $x \in \mathbb{R}^n$ and returns a
-vector $y \in (0, 1)^n$. Where the sum of the output vectors elements will
-be equal to 1. The function is therefore great at constructing a probability
-distribution based on an input vector. 
-
-\begin{figure}
-    \centering
-    \textbf{Softmax Activation Function}\par\medskip
-    \includegraphics[width=0.5\textwidth]{./pictures/method/softmax_function.png}
-    \caption{The softmax activation function.}
-    \label{fig:softmax_activation}
-\end{figure}
+The softmax function takes any vector $x \in \mathbb{R}^n$ and returns a vector
+$y \in (0, 1)^n$. Where the sum of the output vectors elements will be equal to
+1. The function is therefore great at constructing a probability distribution
+based on an input vector.
 
 Exceptions to usage of the \gls{ReLu} activation function can be found when
 we make use \gls{LSTM} layers during our experimentation. It makes use of the
