@@ -129,7 +129,9 @@ they had to remake their attribution task, to a one-against-many verification
 task. When considering that, and the fact that most likely had a better set of
 negative samples to train on, the results are understandable.
 
-% Include Aalykke, takes a long time to read :(
+\cite{aalykke2016} also worked on MaComs data, however using a set of distance
+measure and thesholding. They got an impressive 71.9\% \gls{TNR} on their negative
+cases, while adhering to a 5\% accusation error constraint.
 
 \subsection{Teacher Feedback}\label{subsec:teacher_feedback_text_comparisons}
 
@@ -515,13 +517,16 @@ amount of citations will differ. A course with a hefty focus on third party
 sources such as history, will most likely have an increase in citation usage.
 This is not something our models compensate for. Citations introduces a break in
 the linguistic patterns exhibited by the student. For this reason each citation
-serves as nothing but a source of noise for our models. The solution for is
+serves as nothing but a source of noise for our models. The solution for this is
 however pretty simple and will be addressed in Section \ref{sec:future_work}.
-It should be noted that there would be cases where citation would add to the
-accuracy of the model. This would be cases where a student for some reason uses
-the same sources consistently for their assignments. In this scenario we suspect
-our models would perceive the contents of the citations as part of the student
-vocabulary.
+There is however another citation problem which isn't easily addressed. A
+student could perform some direct copying of external sources, without marking
+it as such. This would give the same break in linguistic patterns, but wouldn't
+be nearly as easily detectable. It should be noted that there would be cases
+where citation would add to the accuracy of the model. This would be cases
+where a student for some reason uses the same sources consistently for their
+assignments. In this scenario we suspect our models would perceive the contents
+of the citations as part of the student vocabulary.
 
 
 \subsubsection{Group Handin}\label{subsubsec:group_handin}
