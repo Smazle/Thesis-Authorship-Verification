@@ -716,12 +716,12 @@ mikolov2013linguistic,JMLR:v15:srivastava14a}.
             \label{fig:rnn_illustration}
         \end{figure}
 
-        In the forward pass of an \gls{RNN} network both the activation of the
-        hidden units and the activation of the output units have to be computed.
-        In the computation of the activation of the hidden units the activation
-        of the hidden units in the previous timestep are required. We let
-        $a^{(t)}_h$ denote the activation of neuron $h$ in the hidden layer in
-        timestep $t$. It is computed as,
+        In the forward pass of an \gls{RNN} network both the activations of
+        the hidden units and the activations of the output units have to be
+        computed. In the computation of the activation of the hidden units the
+        activation of the hidden units in the previous timestep are required. We
+        let $a^{(t)}_h$ denote the activation of neuron $h$ in the hidden layer
+        in timestep $t$. It is computed as,
 
         \begin{equation}
             a^{(t)}_h = \psi_h\left(
@@ -731,19 +731,23 @@ mikolov2013linguistic,JMLR:v15:srivastava14a}.
         \end{equation}
 
         where $\psi_h$ is the activation function of the hidden unit, $I$ is the
-        number of input units, $H$ is the number of hidden units and $w_{hj}$ is
-        the weight between neuron $h$ and $j$'th input for that neuron $h$. That
-        is the activation of a hidden unit is an activation function applied
-        to a weighted sum of the current inputs and the activation of all hidden
-        units in the previous timestep \citep{DBLP:series/sci/2012-385}. The
-        output of the \gls{RNN} is then computed as,
+        number of input units, $H$ is the number of hidden units and $w_{hj}$
+        is the weight between neuron $h$ and the $j$'th input to that neuron.
+        The weight $w_{hj}$ and $w_{hh'}$ does not refer to the same weight even
+        when $j = h'$. Instead we abuse notation such that $w_{hj}$ enumerates
+        the weights between the input and hidden layer and $w_{hh'}$ enumerates
+        the weights between the hidden layer neurons. That is the activation of
+        a hidden unit is an activation function applied to a weighted sum of the
+        current inputs and the activation of all hidden units in the previous
+        timestep \citep{DBLP:series/sci/2012-385}. The output of the \gls{RNN}
+        is then computed as,
 
         \begin{equation}
             a^{(t)}_k = \sum_{h=1}^H w_{hk} a_{h}^{(t)}.
         \end{equation}
 
         That is the output of an \gls{RNN} layer is a weighted sum of its
-        hidden units.The complete sequence of hidden activations are computed
+        hidden units. The complete sequence of hidden activations are computed
         by starting at time $t=1$ and recursively calling the functions above
         until the end of the sequence is reached incrementing $t$ by one in
         each recursive call. The initial values of the hidden units can be
