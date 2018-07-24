@@ -1441,9 +1441,9 @@ $\mathbf{a}^n$ to mean an elementwise power.
         large steps are taken. The two bottom equations are scaling the internal
         state based on the time step $t$. As $t$ increases the denominators
         increase meaning that the value of the whole fraction decreases. That
-        means that in the beginning the step size is adjusted upwards and as $t$
-        increases smaller and smaller steps are taken. The actual weight update
-        in the \gls{Adam} algorithm are performed as,
+        means that in the beginning the step size is adjusted upwards and as
+        $t$ increases, smaller and smaller steps are taken. The actual weight
+        updates in the \gls{Adam} algorithm are then given by,
 
         \begin{equation}
             \mathbf{w}^{(t + 1)} = \mathbf{w}^{(t)} -
@@ -1466,19 +1466,18 @@ $\mathbf{a}^n$ to mean an elementwise power.
 Classical machine learning approaches for text analysis and all our baseline
 methods are based on handcrafted feature sets. Deep learning has shown
 promising results in extracting features from raw images and raw text
-\citep{hongxiaosunyuan}. We wanted to use deep learning to automatically learn
-features from a large amount of data. At the same time we want to solve the
-MaCom problem. Siamese neural networks are as described earlier networks that
-compares two inputs. The networks has been used by \citet{Koch2015SiameseNN},
-\citet{NIPS1993_769} and \citet{qian:2018} for comparing text, images and
-signatures. \citet{qian:2018} use a Siamese network but with no convolutions and
-a distance function on top for text analysis while \citet{Koch2015SiameseNN}
-used a siamese network with convolutions and fully connected network on top
-for image analysis. Our approach is to use convolutions in the siamese network
-to learn important features from the texts. We also use a fully connected
-network on top of the convolutional layers to learn from the features the
-convolution extracted. An example of this architecture can be seen in Figure
-\ref{fig:siamese_example}.
+\citep{hongxiaosunyuan}. We wanted to use deep learning to automatically
+learn features from a large amount of data. At the same time we want to solve
+the MaCom problem. Siamese neural networks are as described earlier networks
+that compares two inputs. They have been used for comparing texts, images and
+signatures \citep{Koch2015SiameseNN,NIPS1993_769,qian:2018}. \citet{qian:2018}
+use a Siamese network but with no convolutions and a distance function on top
+for text analysis while \citet{Koch2015SiameseNN} used a siamese network with
+convolutions and fully connected network on top for image analysis. Our approach
+is to use convolutions in the siamese network to learn important features from
+the texts. We also use a fully connected network on top of the convolutional
+layers to learn from the features the convolution extracted. An example of this
+architecture can be seen in Figure \ref{fig:siamese_example}.
 
 \begin{figure}
     \centering
