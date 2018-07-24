@@ -58,7 +58,7 @@ change over time especially for secondary school pupils that evolve very much
 in a short amount of time. Since we use an instance based approach we are able
 to weight similarity to newer texts higher than similarity to older texts as
 \citet{hansen2014} found worked well. The practical application of this, will be
-explained in Section \ref{subsec:prediction_system}.
+explained in Section \ref{subsec:combining_neural_network_output}.
 
 There are also another split between methods that we consider. There are
 generalizing and author specific models. In a generalizing model only a single
@@ -151,7 +151,7 @@ by MaCom, which in this case is $0.1$ or $10\%$. In other words, of the
 accusations we made, only $10\%$ of them are allowed to be wrong. In order
 to accommodate this constraint we can take certain actions which depends on
 the model used. Details about these actions will be addressed in Section
-\ref{subsec:prediction_system}.
+\ref{subsec:combining_neural_network_output}.
 
 In addition to the constraint on the accusation error Macom also wants a
 specificity of above 95\%. Specificity is defined as,
@@ -1474,29 +1474,32 @@ signatures \citep{Koch2015SiameseNN,NIPS1993_769,qian:2018}. \citet{qian:2018}
 use a Siamese network but with no convolutions and a distance function on top
 for text analysis while \citet{Koch2015SiameseNN} used a siamese network with
 convolutions and fully connected network on top for image analysis. Our approach
-is to use convolutions in the siamese network to learn important features from
-the texts. We also use a fully connected network on top of the convolutional
-layers to learn from the features the convolution extracted. An example of this
-architecture can be seen in Figure \ref{fig:siamese_example}.
+is to use convolutions or \gls{RNN}s in the siamese network to learn important
+features from the texts. We also use a fully connected network on top of the
+feature extraction layers to learn from the features the extracted. An example
+of this architecture can be seen in Figure \ref{fig:siamese_example}.
 
 \begin{figure}
     \centering
     \includegraphics[scale=0.5]{./pictures/method/siamese}
-    \caption{The basic architecture of a Siamese neural network, which takes in
-        two sources of data, and runs it through two parallelle networks,
-        sharing their weights at each layer.}
+    \caption{The basic architecture of a siamese neural network. The network
+        takes two sources of data and runs it through two parallel weight
+        sharing networks. The two parallel networks extracts features from the
+        raw data. Those features are given to a prediction module that compares
+        the feature sets extracted. The decision module can be anything that
+        compares two vectors such as a distance function or a dense neural
+        network.}
     \label{fig:siamese_example}
 \end{figure}
 
-The network will take two inputs, a text $t_k \in T_\alpha$ and a text $t_u
-\in T_{\alpha'}$. The network will then try to figure out whether $\alpha =
-\alpha'$. The convolutions in the network will look at $n$ characters at a
-time and give an output. Therefore the convolutional layers will be able to
-learn important n-grams and extract a representation of $t_k$ and $t_u$. This
-representation will be given to some dense layers which will learn how to
-compare the feature sets extracted. The siamese part of the network is the
-convolutional part of the network which will share weights when extracting
-n-grams from the two texts.
+The network will take two inputs, a text $t \in T_\alpha$ and a text $t' \in
+T_{\alpha'}$. The network will then try to figure out whether $\alpha = \alpha'$
+by comparing $t$ and $t'$. The texts will be represented in some format such as
+a sequence of characters or a sequence of words. The siamese part of the network
+will extract features from the texts using convolutions or \gls{RNN} layers.
+These features will serve as a \textit{representation} of the texts $t$ and
+$t'$. This representation will be given to some dense layers which will learn
+how to compare the feature sets extracted.
 
 \citet{DBLP:journals/corr/0001KYS17} presented a comparative study of
 \glspl{CNN} and \glspl{RNN} in common \gls{NLP} tasks. They found that
@@ -1511,22 +1514,23 @@ on statistical information from the texts and not on an actual understanding of
 the texts. We have therefore chosen to start out with using convolutional neural
 networks.
 
-The final output of the network will be a probability that $\alpha = \alpha'$.
-Since the MaCom dataset consist of multiple known texts per author and this
+The final output of the networks we train will be the probability that $\alpha =
+\alpha'$. Since the MaCom dataset consist of multiple texts per author and this
 network architecture only compares two texts we define a separate system for
-making the final prediction.
+making the final prediction based on all the known texts of an author.
 
 
-\subsection{Prediction System}\label{subsec:prediction_system}
+\subsection{Combining Neural Network Output}
+\label{subsec:combining_neural_network_output}
 
 In the generic Siamese \gls{NN} presented in Section
-\ref{subsubsec:siamese_networks} the output of the network is a probability that
-two texts are written by the same author. However in the problem we are trying
-solve defined in Definition \ref{def:authorship_verification} we take several
-texts as input. We therefore need a method of combining the predictions on
-multiple texts to a single prediction on a particular problem instance. We do
-that using a Prediction System. We let the generic Siamese \gls{NN} described
-above be known as a function $f \in \mathcal{F}$.
+\ref{subsubsec:siamese_networks} the output of the network is a probability
+that two texts are written by the same author. However in the problem we are
+trying solve defined in Definition \ref{def:authorship_verification} we take
+several texts as input. We therefore need a method of combining the predictions
+on multiple texts to a single prediction on a particular problem instance. We
+do that using a \textit{prediction system}. We let the generic Siamese \gls{NN}
+described above be known as a function $f \in \mathcal{F}$.
 
 \begin{definition}[Text Comparison Function]
     \label{def:text_comparison_function}
