@@ -1771,4 +1771,17 @@ texts are greater than $\theta$ than lower.
 
 \end{definition}
 
+
+\subsection{Summary}
+
+To summarize we will implement 2 baseline methods and an indeterminate number of
+neural network based methods. The baseline methods will be the extended delta
+method and an author specific \gls{SVM} method. The baselines will both need
+manually extracted feature sets and feature tuning. The networks will be siamese
+\glspl{NN}. They work by using either convolutional or recurrent networks to
+extract features from raw text data. The features are compared using a dense
+network. Each of our neural networks will only compare two texts at a time.
+Since an author has multiple texts we will combine the predictions on each of an
+authors texts using a prediction system.
+
 % TODO: Write about error functions.
