@@ -1586,7 +1586,7 @@ that weigh texts based on metadata such as the time they were written and the
 length of the texts. In the following definition of different weight functions
 we will ignore the constraint that the weight functions has to sum to 1 for
 each author. We ignore that constraint since for any weight function $w \colon
-\mathcal{T} \rightarrow \mathbb{R}$ we can define a new weight function $w*
+\mathcal{T} \rightarrow \mathbb{R}$ we can define a new weight function $w^*
 \colon \mathcal{T} \rightarrow [0, 1]$ as,
 
 \begin{equation}\label{eq:normalize}
@@ -1603,20 +1603,20 @@ texts an author has written.
 \begin{definition}[Uniform Weight]
     \label{def:uniform_weight}
 
-    Let the uniform weight function be,
+    The uniform weight function is given by,
 
     \begin{align}
         &u \colon \mathcal{T} \rightarrow \{ 1 \} \\
-        &u \colon t \mapsto 1.
+        &u(t) \mapsto 1.
     \end{align}
 
 \end{definition}
 
-The \textit{Uniform Weight} function does not use any information we know about
+The \textit{uniform weight} function does not use any information we know about
 the texts. We define it as a baseline to make sure we do not make any weight
 functions that are worse than a simple uniform weighing. Our other weight
 functions makes use of metadata we know about the texts. We start by defining a
-weight function \textit{Exponential Dropoff Weight} that use the time a text was
+weight function \textit{exponential dropoff weight} that use the time a text was
 turned in to MaComs servers to weight the texts. We assume that newer texts will
 better reflect the current writing style of a student than older texts. Recall
 that $\tau$ denotes the function that returns the relative time of a text as
@@ -1625,21 +1625,21 @@ described in Section \ref{subsec:notation}.
 \begin{definition}[Exponential Dropoff Weight]
     \label{def:exponential_dropoff_weight}
 
-    Let the time based exponential dropoff function be defined as,
+    Given $\lambda \in \mathbb{R}^+$ the time based exponential dropoff weight
+    function is given by,
 
     \begin{align}
         &exp_\lambda \colon \mathcal{T} \rightarrow \mathbb{R}^+ \\
-        &exp_\lambda \colon t \mapsto e^{-\lambda \tau(t)}.
+        &exp_\lambda(t) \mapsto e^{-\lambda \tau(t)}.
     \end{align}
 
 \end{definition}
 
-The $\lambda$ parameter in that weight function can be used to control how
-important newer texts are. When $\lambda = 0$ the \textit{Exponential Dropoff
-Weight} is equivalent to the \textit{Uniform Weight} function and as $\lambda
-\rightarrow \infty$ more weight is given to the latest text. We have shown the
-weights given to different assignments for different $\lambda$ values in Figure
-\ref{fig:weights}.
+The $\lambda$ parameter can be used to control how important newer texts are.
+When $\lambda = 0$ the exponential dropoff weight is equivalent to the Uniform
+Weight function and as $\lambda \rightarrow \infty$ more weight is given to the
+most recent text. We have shown the weights given to different assignments for
+different $\lambda$ values in Figure \ref{fig:weights}.
 
 \begin{figure}
     \centering
@@ -1663,12 +1663,14 @@ text length.
 
 \begin{definition}[Length Weight]
 
-    Let the text length based weight function be defined as,
+    The text length based weight function is given by,
 
     \begin{align}
         &l \colon \mathcal{T} \rightarrow \mathbb{N}^+ \\
-        &l \colon t \mapsto \left\lfloor \frac{|t|}{1000} \right\rceil + 1
+        &l(t) \mapsto \left\lfloor \frac{|t|}{1000} \right\rceil + 1,
     \end{align}
+
+    where $\lfloor x \rceil$ is $x$ rounded to nearest whole number.
 
 \end{definition}
 
