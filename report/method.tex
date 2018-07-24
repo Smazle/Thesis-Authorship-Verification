@@ -994,7 +994,7 @@ towards a local minimum. The function we minimize in a neural network is an
 error function. The error function describes a quantity that when minimized
 gives the network the best performance possible. Since gradient descent works
 for any differentiable function the error function can be any function that is
-differentiable. For instance the \gls{MSE} function,
+differentiable. As an example consider the \gls{MSE} function,
 
 \begin{align}
     MSE(W)   &= \frac{1}{N} \sum_{n=1}^{N} MSE_n(W) \\
@@ -1002,14 +1002,15 @@ differentiable. For instance the \gls{MSE} function,
 \end{align}
 
 where $N$ is the number of training samples, $\hat{y}_n$ is the predicted
-results, $y_n$ is the target, and $W$ is a set of weights is often used to
-describe the error on networks with real valued output. The gradient is a
-multi-variable generalization of the derivative of a function. It is vector that
-points in the direction of steepest ascend in value for a function at a specific
-point. Gradient descent is based on the observation that a differentiable
-function $f$ in point $\mathbf{x}$ decrease fastest in the direction of the
-negative gradient of the point $\mathbf{x}$ \citep{Bishop}. That leads to a
-simple update rule that can be applied continuously to reach a local minimum,
+results, $y_n$ is the target, and $W$ is a set of weights. That function is
+often used to describe the error on networks with real valued output. The
+gradient is a multi-variable generalization of the derivative of a function.
+It is vector that points in the direction of steepest ascend in value for a
+function at a specific point. Gradient descent is based on the observation that
+a differentiable function $f$ in point $\mathbf{x}$ decrease fastest in the
+direction of the negative gradient of the point $\mathbf{x}$ \citep{Bishop}.
+That leads to a simple update rule that can be applied continuously to reach a
+local minimum,
 
 \begin{equation}
     \mathbf{x}_{n+1} = \mathbf{x}_n - \eta \Delta f\left(\mathbf{x}_n\right),
@@ -1237,37 +1238,25 @@ next Section. \citep{Bishop}.
 
 \subsubsection{Optimizers}\label{sec:optimizers}
 
-Optimizations of the gradient descent algorithm in the training of a neural
-network are referred to as an optimizer function. The optimizer functions
-responsibility is to minimize the error function $E$ as fast as possible
-without overstepping the "valleys" in the function. The easiest way to use
-gradient information for weight updating is to take a small step in the opposite
-direction of the gradient since we might overstep the valley if we take to large
-a step. To take a small step we introduce a parameter $\eta > 0$ that scales the
-magnitude of the gradient \citep{Bishop}. The parameter is often referred to as
-the learning rate. The algorithm for weight update becomes,
+Traditional gradient descent has been updated with several different algorithms.
+These algorithms are called \textit{optimizers}. A good optimizer algorithm
+will reach a local minimum faster than traditional gradient descent. The first
+optimizer algorithm we will discuss is the \textit{stochastic gradient descent}
+algorithm. In the traditional gradient descent we have described a single
+weight update require computing the gradient of the error function on each
+training sample. Often such a detailed gradient is not needed in practise.
+Stochastic gradient descent is an attempt at estimating the gradient of all
+datapoints using only a single datapoint. That means that in stochastic gradient
+descent weights are updated much more often and is updated on a noisy target
+\citep{Bishop}. The advantage of stochastic gradient descent is that convergence
+to a local minimum might be much quicker since the algorithm does not have to
+go through all training samples for each weight update. The weight updating for
+stochastic gradient descent is computed as,
 
 \begin{equation}
     \mathbf{w}^{(t+1)} =
         \mathbf{\mathbf{w}}^{(t)} -
-        \eta\Delta E|_{\mathbf{w}^{(t)}}.
-\end{equation}
-
-In that algorithm a single updating of the weights require computing the
-gradient of the error function on each training sample. For large datasets
-that might not be feasible as backpropagation is expensive to compute for such
-datasets. Stochastic gradient descent is an attempt at estimating the gradient
-of all datapoints using only a single datapoint. That means that in stochastic
-gradient descent weights are updated much more often and is updated on a noisy
-target \citep{Bishop}. The advantage of stochastic gradient descent is that
-convergence to a local minimum might be much quicker since the algorithm does
-not have to go through all training samples for each weight update. The weight
-updating for stochastic gradient descent is computed as,
-
-\begin{equation}
-    \mathbf{w}^{(t+1)}_i =
-        \mathbf{\mathbf{w}}^{(t)}_i -
-        \eta\Delta E_n|_{\mathbf{w}^{(t)}_i}.
+        \eta\Delta E_n|_{\mathbf{w}^{(t)}}.
 \end{equation}
 
 In practise each weight update in stochastic gradient descent are computed
@@ -1304,12 +1293,12 @@ several extensions to basic stochastic gradient descent has been developed that
 automatically tunes the learning rate $\eta$. We will discuss three different
 extension \gls{AdaGrad}, \gls{RMSProp} and \gls{Adam}.
 
-In the description of those three algorithms we will slightly abuse
-vector notation. We will keep using $\mathbf{a} \otimes \mathbf{b}$
-to mean an elementwise multiplication but besides that we use
-$\frac{\mathbf{a}}{\mathbf{b}}$ to mean an elementwise division,
-$\sqrt{\mathbf{a}}$ to mean an elementwise square root and $\mathbf{a}^n$ to
-mean an elementwise power.
+In the description of those three algorithms we will slightly abuse vector
+notation. Given $\mathbf{a}, \mathbf{b} \in \mathbb{R}^n$ we will keep using
+$\mathbf{a} \otimes \mathbf{b}$ to mean an elementwise multiplication but
+besides that we use $\frac{\mathbf{a}}{\mathbf{b}}$ to mean an elementwise
+division, $\sqrt{\mathbf{a}}$ to mean an elementwise square root and
+$\mathbf{a}^n$ to mean an elementwise power.
 
 \begin{description}
 
