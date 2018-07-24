@@ -1306,9 +1306,11 @@ $\mathbf{a}^n$ to mean an elementwise power.
 
         The algorithm was invented by \citet{Duchi:2011:ASM:1953048.2021068}.
         The algorithm attempts to solve the problem of choosing a learning
-        rate and the problem of how to handle infrequent features. Infrequent
-        features are often the most important features for a classification task
-        but since they are infrequent they are hard to learn on. \gls{AdaGrad}
+        rate and the problem of how to handle parameters that are infrequently
+        activated. When a parameter is only infrequently activated the gradient
+        on that parameter will often be close to 0. Infrequently used parameters
+        are often the most important parameters for a classification task but
+        since they are infrequent they are hard to learn on. \gls{AdaGrad}
         assigns a separate learning rate to each separate parameter. The
         algorithm gives infrequently observed parameters a very high learning
         rate and frequently observed parameters a very low learning rate. The
@@ -1324,7 +1326,8 @@ $\mathbf{a}^n$ to mean an elementwise power.
         \end{equation}
 
         where $G^{(t)}$ is a matrix containing the sum of the outer product
-        of the gradient in all previous timesteps $1, \dots, t$. $G^{(t)}$ is
+        of the gradient in all previous timesteps $1, \dots, t$ and
+        $\text{diag}(X)$ is the diagonal vector of the matrix $X$. $G^{(t)}$ is
         defined as,
 
         \begin{equation}
@@ -1340,12 +1343,12 @@ $\mathbf{a}^n$ to mean an elementwise power.
         \begin{equation}
             \label{eq:individual_adagrad}
             \mathbf{w}_i^{(t+1)} =
-                \mathbf{w}_i^{(t)} - \frac{\eta}{\sqrt{G^{(t)}_{i,i}}} \otimes
+                \mathbf{w}_i^{(t)} - \frac{\eta}{\sqrt{G^{(t)}_{ii}}} \otimes
                 \Delta E|_{\mathbf{w}_i^{(t)}}.
         \end{equation}
 
         $G_{i,i}$ works as a scaling factor for weight $\mathbf{w}_i$.
-        Since $\sqrt{G_{i,i}} = \sqrt{\sum_{t'=1}^t \left(\Delta
+        Since $\sqrt{G_{ii}} = \sqrt{\sum_{t'=1}^t \left(\Delta
         E|_{\mathbf{w}^{(t')}_i}\right)^2}$, $G_{i,i}$ is the L2 norm
         of the gradient in the previous timesteps. That means that if the
         gradient has generally been large for a particular weight the norm
@@ -1360,24 +1363,22 @@ $\mathbf{a}^n$ to mean an elementwise power.
 
     \item[\gls{RMSProp}:]
 
-        \gls{RMSProp} is an unpublished optimization algorithm.
-        It was introduced by Geoff Hinton in lecture 6e of his
-        Coursera Class \citep{DBLP:journals/corr/Ruder16}.
-        This section is based primarily on his slides
-        \footnote{\url{http://www.cs.toronto.edu/~tijmen/csc321/slides/lecture_s
-        lides_lec6 .pdf}}. The idea behind \gls{RMSProp} is similar to
-        \gls{AdaGrad} each weight is updated at an independent rate. Unlike
-        \gls{AdaGrad} the rate is chosen by a moving average instead of the
-        L2 norm of all previous steps. That allows the algorithm to adapt
-        quickly to changes in the gradient. When the gradient of a weight is
-        large the algorithm tunes down the learning rate and when the gradient
-        is consistently small it tunes up the learning rate. That functions
-        well since a large gradient is found in a steep volatile area while a
-        consistently small gradient is found in a flat non volatile area. In the
-        steep areas we are likely to overshoot the target if the learning rate
-        is to high while in flat areas we do not have that problem. The internal
-        state of the algorithm is a vector $\mathbf{v}$ of the running average
-        of gradient magnitudes. It is updated with the equation,
+        \gls{RMSProp} was introduced by Geoff Hinton in lecture 6e of his
+        Coursera Class \citep{DBLP:journals/corr/Ruder16}. This section is based
+        primarily on his slides \citep{HintonSrivastavaSwersky2014}. The idea
+        behind \gls{RMSProp} is similar to \gls{AdaGrad} each weight is updated
+        at an independent rate. Unlike \gls{AdaGrad} the rate is chosen by a
+        moving average instead of the L2 norm of all previous steps. That allows
+        the algorithm to adapt quickly to changes in the gradient. When the
+        gradient of a weight is large the algorithm decreases the learning rate
+        and when the gradient is consistently small it tunes up the learning
+        rate. That functions well since a large gradient is found in a steep
+        volatile area while a consistently small gradient is found in a flat non
+        volatile area. In the steep areas we are likely to overshoot the target
+        if the learning rate is to high while in flat areas we do not have that
+        problem. The internal state of the algorithm is a vector $\mathbf{v}$
+        of the running average of gradient magnitudes. It is updated with the
+        equation,
 
         \begin{equation}
             \label{eq:rms_prop_state}
