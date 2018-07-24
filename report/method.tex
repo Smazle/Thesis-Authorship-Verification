@@ -1493,7 +1493,7 @@ of this architecture can be seen in Figure \ref{fig:siamese_example}.
 \end{figure}
 
 The network will take two inputs, a text $t \in T_\alpha$ and a text $t' \in
-T_{\alpha'}$. The network will then try to figure out whether $\alpha = \alpha'$
+T_{\alpha'}$. The network will then try to determine whether $\alpha = \alpha'$
 by comparing $t$ and $t'$. The texts will be represented in some format such as
 a sequence of characters or a sequence of words. The siamese part of the network
 will extract features from the texts using convolutions or \gls{RNN} layers.
@@ -1528,9 +1528,10 @@ In the generic Siamese \gls{NN} presented in Section
 that two texts are written by the same author. However in the problem we are
 trying solve defined in Definition \ref{def:authorship_verification} we take
 several texts as input. We therefore need a method of combining the predictions
-on multiple texts to a single prediction on a particular problem instance. We
-do that using a \textit{prediction system}. We let the generic Siamese \gls{NN}
-described above be known as a function $f \in \mathcal{F}$.
+on multiple texts to a single prediction on a particular problem instance.
+We do that using a \textit{prediction system}. We let the generic siamese
+\gls{NN} described above be known as a \textit{text comparison function} $f \in
+\mathcal{F}$.
 
 \begin{definition}[Text Comparison Function]
     \label{def:text_comparison_function}
@@ -1541,69 +1542,55 @@ described above be known as a function $f \in \mathcal{F}$.
 
 \end{definition}
 
-Using that fixed $f$ we can define a weighted average based prediction system
-$P_w$. The $w$ in that name denotes the weight function that is used. We will
-define the weight functions later.
+For fixed text comparison function $f$, we now define the \textit{weighted
+average based prediction system} $P_w$.
 
 \begin{definition}[Weighted Average Prediction System]
     \label{def:weighted_average_prediction_system}
 
-    Let the weighted average prediction system be,
+    Let $w: \mathcal{T} \rightarrow [0, 1]$ be a weight function, such that
+    $\forall \alpha \in \mathcal{A}: \sum_{t \in T_\alpha} w(t) = 1$. Then the
+    weighted average prediction system is given by,
 
     \begin{align}
         &P_w \colon \mathcal{A} \times \mathcal{T} \times [0, 1] \rightarrow
             \{0, 1\} \\
-        &P_w \colon \alpha \times t \times \theta \mapsto \mathbbm{1}\left[
+        &P_w(\alpha, t, \theta) \mapsto \mathbbm{1}\left[
                 \sum_{t' \in T_\alpha} w(t') f(t, t') > \theta
-            \right].
+            \right],
     \end{align}
+
+    where $\mathbbm{1}\left[\cdot\right]$ is the indicator function.
 
 \end{definition}
 
-That is the prediction system returns 1 if the weighted average of the
-probability that $t$ is written by the same author as $t'$ for each $t' \in
-T_\alpha$ is greater than the threshold $\theta$ and 0 otherwise.
+That is, the weighted average prediction system $P_w$ returns 1 if the weighted
+average of the probability that $t$ is written by the same author as $t'$ for
+each $t' \in T_\alpha$ is greater than the threshold $\theta$ and 0 otherwise.
 
-The $\theta$ parameter in the prediction system determines when we consider
-an unknown text to be written by an author. The natural choice for $\theta$
-is 0.5 since that is what the network use when it computes the loss of each
-training sample. However the $\theta$ parameter can be used to enforce how
+The $\theta$ parameter in $P_w$ determines when we consider an unknown text
+to be written by an author. The $\theta$ parameter can be used to enforce how
 sure we have to be of a decision to accuse an author of not having written
 an assignment. As described earlier MaCom does not want to accuse innocent
 students of cheating. That means that it is very important to MaCom to minimize
-the number accusation error. We can use the $\theta$ parameter to control that
-error. Hopefully the \glspl{FN} will generally end up with a value closer to 1
-than the \glspl{TN}. If that is the case then lowering $\theta$ value will lower
-the fraction since there will be fewer \glspl{FN}. That might lower the overall
+the accusation error. We can use the $\theta$ parameter to control that error.
+Hopefully the \glspl{FN} will generally end up with a value closer to 1 than
+the \glspl{TN}. If that is the case then lowering $\theta$ value will lower the
+fraction since there will be fewer \glspl{FN}. That might lower the overall
 accuracy of the prediction system but will make sure that at few students as
 possible are falsely accused.
 
-The $w$ parameter in the prediction system can be used to weigh the known texts
-differently. We are going to try several different weight functions that weigh
-texts based on metadata such as the time they were written and the length of
-the texts.
-
-\begin{definition}[Weight Function]
-    \label{def:weight_function}
-
-    Let a weight function $\mathcal{W}$ be any function,
-
-    \begin{equation}
-        \mathcal{W} \colon \mathcal{T} \rightarrow [0, 1],
-    \end{equation}
-
-    such that $\forall \alpha \colon \sum_{t \in T_\alpha} w(t) = 1$.
-
-\end{definition}
-
-In the following definition of different weight functions we will ignore the
-constraint that the weight functions has to sum to 1 for each author. We ignore
-that constraint since for any weight function $w \colon \mathcal{T} \rightarrow
-\mathbb{R}$ we can define a new weight function $w* \colon \mathcal{T}
-\rightarrow [0, 1]$ as,
+The $w$ parameter in the prediction system can be used to weigh the known
+texts differently. We are going to try several different weight functions
+that weigh texts based on metadata such as the time they were written and the
+length of the texts. In the following definition of different weight functions
+we will ignore the constraint that the weight functions has to sum to 1 for
+each author. We ignore that constraint since for any weight function $w \colon
+\mathcal{T} \rightarrow \mathbb{R}$ we can define a new weight function $w*
+\colon \mathcal{T} \rightarrow [0, 1]$ as,
 
 \begin{equation}\label{eq:normalize}
-    w^*(t) = \frac{w(t)}{\sum_{t \in T_\alpha} w(t)}.
+    w^*(t) = \frac{w(t)}{\sum_{t' \in T_\alpha} w(t')}.
 \end{equation}
 
 We can therefore define the weight functions $w$ while ignoring the constraint
