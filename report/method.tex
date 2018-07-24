@@ -1676,42 +1676,44 @@ text length.
 
 Thus this weight function gives more weight the longer a text is but where only
 differences on the order of thousands of characters are considered significant.
-We used the \textit{Exponential Dropoff Weight} and \textit{Length Weight}
-functions to implement another weight function that use both text length and
-time to give weights to an assignment. The combined weight function is shown
-below.
+We used the exponential dropoff weight and length weight functions to implement
+another weight function that use both text length and time to give weights to an
+assignment. The combined weight function is shown below.
 
 \begin{definition}[Exponential Dropoff and Length Weight]
 
-    Let the combined time and length weight function be defined as,
+    Given $\lambda \in \mathbb{R}^+$ the combined time and length weight
+    function is given by,
 
     \begin{align}
         &lexp_\lambda \colon \mathcal{T} \rightarrow [0, 2] \\
-        &lexp_\lambda \colon t \mapsto epx^*_\lambda(t) + l^*(t).
+        &lexp_\lambda(t) \mapsto epx^*_\lambda(t) + l^*(t).
     \end{align}
 
 \end{definition}
 
-Which is simply the addition of the \textit{Exponential Dropoff Weight}, and the
-\textit{Length Weight}, after they are both individually applied to the text.
+Which is simply the addition of the exponential dropoff weight and the length
+weight, after they are both individually applied to the text.
 
-We have also defined some different prediction systems that does not use weight
-functions. The first such system is the $P_{max}$ prediction system. The thought
-behind the system is that we wanted to minimize the accusation error. The
-prediction system takes the text $t' \in T_\alpha$ that looks the most like $t$.
-That way if just a single assignment from a candidate author looks sufficiently
-like the text we are comparing with we report that the author matches. That
-should hopefully result in less people being accused of ghost writing.
+We have also defined some different prediction systems that are not based on
+weighted averages. The first such system is the $P_{max}$ prediction system.
+The thought behind the system is that we wanted to minimize the accusation
+error. The prediction system takes the text $t' \in T_\alpha$ that looks the
+most like $t$. That way if just a single assignment from a candidate author
+looks sufficiently like the text we are comparing with we report that the author
+matches. That should hopefully result in less people being accused of ghost
+writing.
 
 \begin{definition}[Maximum Prediction System]
     \label{def:maximum_prediction_system}
 
-    Let the prediction system based only on most similar text be defined as,
+    The maximum prediction system $P_{max}$ based only on most similar text is
+    given by,
 
     \begin{align}
         &P_{max} \colon \mathcal{A} \times \mathcal{T} \times [0, 1] \rightarrow
             \{0, 1\} \\
-        &P_{max} \colon \alpha \times t \times \theta \mapsto \mathbbm{1}\left[
+        &P_{max}(\alpha, t, \theta) \mapsto \mathbbm{1}\left[
                 \underset{t' \in T_\alpha}{\text{maximize}} f(t, t') > \theta
             \right].
     \end{align}
@@ -1726,12 +1728,13 @@ indicate ghost writing.
 \begin{definition}[Minimum Prediction System]
     \label{def:minimum_prediction_system}
 
-    Let the prediction system based only on least similar text be defined as,
+    The minimum prediction system $P_{min}$ based only on least similar text is
+    given by,
 
     \begin{align}
         &P_{min} \colon \mathcal{A} \times \mathcal{T} \times [0, 1] \rightarrow
             \{0, 1\} \\
-        &P_{min} \colon \alpha \times t \times \theta \mapsto \mathbbm{1}\left[
+        &P_{min}(\alpha, t, \theta) \mapsto \mathbbm{1}\left[
                 \underset{t' \in T_\alpha}{\text{minimize}} f(t, t') > \theta
             \right].
     \end{align}
@@ -1754,12 +1757,12 @@ texts are greater than $\theta$ than lower.
 \begin{definition}[Majority Vote Prediction System]
     \label{def:majority_vote_prediction_system}
 
-    Let the majority vote based system be defined as,
+    The majority vote prediction system $P_{MV}$ is given by,
 
     \begin{align}
         &P_{MV} \colon \mathcal{A} \times \mathcal{T} \times [0, 1] \rightarrow
             \{0, 1\} \\
-        &P_{MV} \colon \alpha \times t \times \theta \mapsto \mathbbm{1}\left[
+        &P_{MV}(\alpha, t, \theta) \mapsto \mathbbm{1}\left[
                 \frac{1}{|T_\alpha|} \sum_{t' \in T_\alpha} \mathbbm{1}\left[
                     f(t, t') > \theta
                 \right] > \frac{1}{2}
