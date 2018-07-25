@@ -1,1 +1,43 @@
 \section{Conclusion} \label{sec:conclusion}
+
+We have created three deep neural networks. The networks works on different
+layers of an authors texts. The character layer, the word layer and the sentence
+layer. We evaluated all networks on a dataset with 96\% positive cases and
+4\% negative cases. That split reflects the believed real world data. On
+that test dataset all of our networks performed better than the baseline
+methods. Furthermore one of our networks \gls{conv-char-NN} had slightly better
+performance than previous work on MaComs dataset that we have found.
+
+We did not hit the targets set by MaCom at the beginning of the project. The
+specifications were to have an accusation error below 10\% and still catch 95\%
+of the cheaters. We knew that that goal was very ambitious and we focused on
+fulfilling the first requirement. We ended up with an accusation error of 23\%
+and caught 8.5\% of the cheaters on our best network. The fact that we used a
+dataset with only 4\% negatives made it very hard to keep the accusation error
+low.
+
+We looked at what kind of feedback we could give to teachers. We found that it
+is possible for some of our networks to report the largest differences between
+the texts. A teacher would be able to use thousands of those differences
+to explain why an assignment might be ghost written. We also performed an
+experiment that showed that we are able to find the areas of a text most likely
+to be ghost written. The results were not overwhelmingly positive as the
+difference between ghost written and non ghost written paragraphs were small.
+That suggests that our networks has problems handling such small amounts of
+text.
+
+We believe that the networks we have implemented are not ready to be implemented
+in a real world setting. However we also believe that it is possible to continue
+working with the methods we have explored and obtain something that is ready for
+implementation. We have used previous work on MaComs datasets as a starting
+point for our own methods. Similarly future work on the dataset might be based
+on the work in this thesis.
+
+We have shown by beating our baselines and getting slightly better results on
+previous work on MaComs dataset. That it is possible to use neural networks
+on raw text data when performing authorship verification. One of the big
+advantages of our methods is that the input to the network is raw text. There
+is no need for manual feature engineering as classic authorship attribution and
+verification requires. Another big advantage is the our model is generalizing.
+It can be trained once and used many times. Verifying a single text is fast and
+scalable.
