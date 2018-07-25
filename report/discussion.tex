@@ -20,9 +20,9 @@
 Looking at the results presented in Section \ref{sec:results} it is apparent
 that we have not achieved less the than 10\% accusation error on the test
 set that MaCom required we believe however that some of the methods show
-promising results. While all the networks we applied to the the test set beat
+promising results. While all the networks we applied to the test set beat
 our baselines the best performing network was the \gls{conv-char-NN}. This
-network had an accusation error closest to to the one required in addition to
+network had an accusation error closest to the one required in addition to
 having the highest overall accuracy in all the categories we tested it on.
 While this network was in fact the best, it was closely followed by network
 \gls{conv-char-word-NN}, while the \gls{rec-sent-NN} we also tested had sub-par
@@ -135,60 +135,61 @@ cases, while adhering to a 5\% accusation error constraint.
 
 \subsection{Teacher Feedback}\label{subsec:teacher_feedback_text_comparisons}
 
-As mentioned we wanted to look at what kind of feedback we could give to
-teachers in conjunction with the bare predictions. As explained earlier the
-system is not meant to be the final judge of which students are cheating but are
-rather meant as a support system for teachers that are already suspicious. We
-have focused on the \gls{conv-char-NN} network since it performed best on the
-test dataset.
+As mentioned in Section \ref{sec:introduction} we wanted to look at what kind
+of feedback we could give to teachers in conjunction with the bare predictions.
+As explained earlier the system is not meant to be the final judge of which
+students are cheating but are rather meant as a support system for teachers that
+are already suspicious. We have focused on the \gls{conv-char-NN} network since
+it performed best on the test dataset.
 
 \subsection{Extracting Important Features}
 
 We have previously looked at the output of the feature extraction layer to
-obtain information on what a specific network were looking at. We wanted to do
-something similar for teacher feedback. Recall that \gls{conv-char-NN} started
-with a convolutional layer followed by a max pool layer. We therefore know
-that the larger the output of the convolutional layer the more important that
-particular character sequence is. The output of the feature extraction can be
-thought of as in Figure \ref{fig:feature_extraction_output_example}. Each filter
-gives a single output that is the maximum output of any filter position. The
-combining function for the third network was the absolute difference. That means
-that when we are comparing texts $t$ and $t'$ the output of the combination
-will be high for a particular filter iff the maximum output of that filter is
-significantly different for $t$ and $t'$.
+obtain information on what a specific network were looking at, during the
+creation of the networks. We wanted to do something similar for teacher
+feedback. Recall that \gls{conv-char-NN} started with a convolutional layer
+followed by a max pool layer. We therefore know that the larger the output of
+the convolutional layer the more important that particular character sequence
+is. The output of the feature extraction can be thought of as in Figure
+\ref{fig:feature_extraction_output_example}. Each filter gives a single output
+that is the maximum output of any filter position. The combining function for
+the third network was the absolute difference. That means that when we are
+comparing texts $t$ and $t'$ the output of the combination will be high for
+a particular filter iff the maximum output of that filter is significantly
+different for $t$ and $t'$.
 
 \begin{figure}
     \centering
     \textbf{Teacher Feedback Example}\par\medskip
     \includegraphics[width=\textwidth]{./pictures/discussion/teacher_feedback_example}
-    \caption{Illustrates our feedback to teachers. The
-        particular network used in this example only has three filters. The
-        three filters maximum activations are shown in three different colors
-        for the two texts they are comparing. The first filter looks for
-        negative qualifiers. Therefore it reacts strongly to both the Danish
-        word "ikke" (not) and the Danish word "ngen" (noone). The second filter
-        looks for city names so it reacts strongly to the string "Rom " (Rome)
-        but less strongly to "Der " (not a city name) even though it looks like
-        a city name. The third filter reacts to phrases that contains the word
-        "p\aa " (on) and therefore reacts about the same to both texts.}
+    \caption{Illustrates our feedback to teachers. The particular network
+    used in this example only has three filters. The three filters maximum
+    activations are shown in three different colors for the two texts they are
+    comparing. The first filter looks for negative qualifiers. Therefore it
+    reacts strongly to both the Danish word "ikke" (not) and part of the Danish
+    word "ingen" (none). The second filter looks for city names so it reacts
+    strongly to the string "Rom " (Rome) but less strongly to "Der " (not a city
+    name) even though it looks like a city name. The third filter reacts to
+    phrases that contains the word "p\aa " (on) and therefore reacts about the
+    same to both texts.}
     \label{fig:feature_extraction_output_example}
 \end{figure}
 
-It is hard to know exactly what the following layers does with the absolute
+It is hard to know exactly what the following layers do with the absolute
 difference. But we feel that it is a fair assumption that the largest filter
-differences translates to the most important differences. The feedback system
+differences translate to the most important differences. The feedback system
 we implemented for teachers takes an author $\alpha$, text $t$ and $n \in
 \mathbb{N}^+$ and outputs the $n$ largest differences between each $t' \in
-T_\alpha$ and $t$. The idea is that the when our system reports a negative the
+T_\alpha$ and $t$. The idea is that when our system reports a negative the
 teacher can ask for feedback from the system. The teacher will then get a list
 of the $n$ greatest differences between each of the texts and can use that
-information to argue against the student.
+information to strengthen the claim that a student used a ghostwriter.
 
 As an example we ran our system on a random author and a text that
 that author did not write. The whole output can be seen in Appendix
 \ref{subsec:teacher_feedback_text_comparisons}. We have shown a truncated
 output in Table \ref{tab:teacher_feedback_output}. The output contains only
-the comparison between one of the candidate authors texts and the unknown
+the comparison between one of the candidate authors' texts and the unknown
 text. Text 1 is from the candidate author and Text 2 is the unknown text. We
 have illustrated what each of the filters is generally looking at by the three
 substrings from the \gls{C} dataset that generated the highest values.

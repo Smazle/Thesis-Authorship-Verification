@@ -1,7 +1,7 @@
 \section{Results} \label{sec:results}
 
 We have finally reached the point where we can determine the unbiased accuracy
-our different models. To do this we will make use of the \gls{D} dataset. As
+of our different models. To do this we will make use of the \gls{D} dataset. As
 mentioned in Section \ref{sec:data}, this dataset consists of 3558 authors, none
 of which are repeated in any of the other sets.
 
@@ -18,13 +18,13 @@ the features, we applied were able to apply the model. The same was done with
 the \gls{SVM}, where we used the optimal found hyperparameters, $C=10$ and
 $\gamma = 1000$, to train the model.
 
-As briefly mentioned in Section \ref{subsec:baseline_methods}, these method are
+As briefly mentioned in Section \ref{subsec:baseline_methods}, these methods are
 not very well suited for this particular task. Since they both provide binary
-results denoting a students innocence, or lack thereof, it is not possible to
+results denoting a students' innocence, or lack thereof, it is not possible to
 apply any kind of thresholding to force our models under the 10\% accusation
-error goal. They always perform at their maximum capacity. For this reason
-we had to alter they way we compare the deep learning approaches with our
-baselines. This was done by determining the best performing $\theta$ and weight
+error goal. They always perform at their maximum capacity. For this reason we
+had to alter the way we compare the deep learning approaches with our baselines.
+This was done by determining the best performing threshold ($\theta$) and weight
 function for our neural network with regard to accuracy, and with no regard to
 the accusation error, as both our baselines do not focus on that either. Thus we
 compared the results of our baselines on the 50/50 dataset and the 96/04 dataset
@@ -38,7 +38,9 @@ models, before applying them to the \gls{D} test dataset.
 
 Having now trained the models we can determine the accuracy and accusation error
 of our different networks, both with and without the 10\% accusation error
-constraint.
+constraint. It should be noted that the parameters found that adhere to to the
+10\% constraint were found on the training data. As with any machine learning
+approach, this does not ensure the same level of adherence on the test data.
 
 We also used that same approach for the other two networks. The combined
 results for the 50/50 split test dataset \gls{D} can be seen in Table

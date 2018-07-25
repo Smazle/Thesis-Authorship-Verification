@@ -2,11 +2,11 @@
 
 In this Section we will describe the method we have used to solve the authorship
 verification problem presented in Definition \ref{def:authorship_verification}.
-In general there are two methods of representing each author. There is the
+In general there are two methods for representing each author. There is the
 \textit{instance based approach} and the \textit{profile based approach}. In
 the instance based approach each author $\alpha \in \mathcal{A}$ is represented
-by a set of texts they have written $T_\alpha$. In the profile based approach
-texts of $T_\alpha$ are combined in some way, resulting in a single (typically
+by a set of texts $T_\alpha$ he/she have written. In the profile based approach
+texts in $T_\alpha$ are combined in some way, resulting in a single (typically
 smaller) ``profile'' representing the author. The instance based approach is
 illustrated in Figure \ref{fig:instance_based} and the profile based approach is
 illustrated in Figure \ref{fig:profile_based}.
@@ -36,28 +36,28 @@ illustrated in Figure \ref{fig:profile_based}.
     \label{fig:profile_based}
 \end{figure}
 
-An example of a profile-based authorship attribution approach, which is highly
-regarded by \citet{stamatos2009} use of a compression algorithm. It works not by
-representing each author profile as a set of features, but rather makes use of
-compression to do so. In the initial scenario we have a set of author-profiles
-which is the concatenation of all their individual work. When a new text is then
-introduced the authorship is determined by looping through each author adding
-it to their concatenated profile. The profile is then compressed both with
-and without the new text included. The bit-wise difference is then computed,
-by subtracting them from one another resulting in what is essentially the
-cross-entropy between the two sets. The author with the lowest cross-entropy
-is then considered to be the author of this new text. Different methods of
-comprehension can be used as the base for this model each giving different
-results. In the instance that \citet{stamatos2009} describes, RAR compression
-yielded the best results, but the choice of compression algorithm depends on the
-specific scenario.
+\noindent An example of a profile-based authorship attribution approach, which
+is highly regarded by \citet{stamatos2009} use of a compression algorithm.
+It works not by representing each author profile as a set of features, but
+rather makes use of compression to do so. In the initial scenario we have
+a set of author-profiles for each author $\alpha$, where each profile is
+the concatenation of $\alpha$s work. When a new text is then introduced the
+authorship is determined by looping through each author adding the new text to
+their concatenated profile. The profile is then compressed both with and without
+the new text included. The bit-wise difference is then computed, by subtracting
+them from one another resulting in what is essentially the cross-entropy between
+the two sets. The author with the lowest cross-entropy is then considered to
+be the author of this new text. Different methods of compression can be used
+as the base for this model each giving different results. In the instance that
+\citet{stamatos2009} describes, RAR compression yielded the best results, but
+the choice of compression algorithm depends on the specific scenario.
 
 We will generally use the instance based approach since it allows us to use
-more metadata text information. For example the writing style of author may
+more metadata text information. For example the writing style of an author may
 change over time especially for secondary school pupils that evolve very much
 in a short amount of time. Since we use an instance based approach we are able
 to weight similarity to newer texts higher than similarity to older texts as
-\citet{hansen2014} found worked well. The practical application of this, will be
+\citet{hansen2014} found worked well. The practical application of this will be
 explained in Section \ref{subsec:combining_neural_network_output}.
 
 There are also another split between methods that we consider. There are
@@ -65,7 +65,7 @@ generalizing and author specific models. In a generalizing model only a single
 model is trained on data from multiple authors and are able to make predictions
 about previously unseen authors. In the author specific model a separate model
 has to be trained for each author and is not able to make predictions for
-previously unseen authors. The generalizing models main advantage is that it
+previously unseen authors. The generalizing models' main advantage is that it
 only has to be trained once and after that it can be used for everyone and it
 can make use of a large amount data since it can use data from several authors
 for training. The author specific model has the advantage that it can better fit
@@ -80,41 +80,41 @@ number of \glspl{TP}, \glspl{TN}, \glspl{FP} and \glspl{FN}, as seen in
 \citet{US}. In these problems we get,
 
 \begin{itemize}
-    \item a \gls{TP} whenever we answer \textit{True} and the texts are written
-        by the same author,
-    \item a \gls{TN} whenever we answer \textit{False} and the texts are
-        \textbf{not} written by the same author,
-    \item a \gls{FP} whenever we answer \textit{True} and the texts are
-        \textbf{not} written by the same author,
-    \item a \gls{FN} whenever we answer \textit{False} and the texts are written
-        by the same author.
+    \item a \gls{TP} whenever we answer \textit{True} and the text is written
+        by the claimed author,
+    \item a \gls{TN} whenever we answer \textit{False} and the text is
+        \textbf{not} written by the claimed author,
+    \item a \gls{FP} whenever we answer \textit{True} and the text is
+        \textbf{not} written by the claimed author,
+    \item a \gls{FN} whenever we answer \textit{False} and the texts is written
+        by the claimed author.
 \end{itemize}
 
 Given those definitions the \gls{TPR}, \gls{FPR}, \gls{TNR} and \gls{FNR}
-describes.
+are defined as follows.
 
 \begin{description}
     \item[\gls{TPR}: ]
 
-        The fraction of positives that we reported \textit{True} on i.e. the
+        The fraction of positives that we reported \textit{True} on i.e.~the
         fraction of texts written by the same author that we say are written by
         the same author.
 
     \item[\gls{TNR}: ]
 
-        The fraction of negatives that we reported \textit{False} on i.e. the
+        The fraction of negatives that we reported \textit{False} on i.e.~the
         fraction of texts written by different authors that we say are written
         by different authors.
 
     \item[\gls{FPR}: ]
 
-        The fraction of negatives that we reported \textit{True} on i.e. the
+        The fraction of negatives that we reported \textit{True} on i.e.~the
         fraction of texts written by different authors that we say are written
         by the same author.
 
     \item[\gls{FNR}: ]
 
-        The fraction of positives that we reported \textit{False} on i.e. the
+        The fraction of positives that we reported \textit{False} on i.e.~the
         fraction of texts written by the same author that we say are written by
         different authors.
 
@@ -129,7 +129,7 @@ And they can be computed as,
     FNR &= \frac{FN}{FN + TP}.
 \end{align}
 
-Using these definition we can also describe the accuracy measure we will be
+Using these definitions we can also describe the accuracy measure we will be
 reporting on throughout our experiments,
 
 \begin{equation}
@@ -137,8 +137,8 @@ reporting on throughout our experiments,
 \end{equation}
 
 In the case of MaCom, we want to minimize the \gls{FNR} as much as possible,
-so as to not wrongfully accuse anyone of not having written their assignment.
-This however leaves out a equally important metric. While a low \gls{FNR} is
+so as to not wrongfully accuse anyone of handing in a ghostwritten assignment.
+This however leaves out an equally important metric. While a low \gls{FNR} is
 the goal, MaCom also wants to minimize the number of \glspl{FN} compared to the
 total number of accusations made. This can be described as:
 
@@ -157,7 +157,7 @@ In addition to the constraint on the accusation error Macom also wants a
 specificity of above 95\%. Specificity is defined as,
 
 \begin{equation}
-    \text{Specificity} = \frac{TN}{(TN + FP)}.
+    \text{Specificity} = \frac{TN}{TN + FP}.
 \end{equation}
 
 Specificity therefore represents the fraction of the total negatives we catch.
@@ -169,25 +169,27 @@ than 10\% and then see how high we can get the specificity at the same time.
 \subsection{Baseline Methods}
 
 We have implemented two baselines to compare with our neural network methods.
-The methods are based on work by \citep{US}. The methods were developed for
-English texts and not Danish texts that we work with in this assignment. They do
-however represent classical machine learning methods for solving the authorship
-verification problem. They will therefore serve as a great baseline for our
-neural networks. We believe that by changing the parameters of the models
-they will work just as well for Danish texts that they did on English texts.
-The Danish and English language is very similar as they both derive from the
-Germanic branch of the indo-European language family. \citet{konstantin:2000}
-conducted a study of the similarities and differences between different European
-languages. They found that as expected Danish and English were very close.
+The methods are based on our preliminary report \citep{US}. The methods were
+developed for English texts and not Danish texts that we work with in this
+assignment. They do however represent classical machine learning methods for
+solving the authorship verification problem. They will therefore serve as
+a great baseline for our neural networks. We believe that by changing the
+parameters of the models they will work just as well for Danish texts that they
+did on English texts. The Danish and English language is very similar as they
+both derive from the Germanic branch of the indo-European language family.
+\citet{konstantin:2000} conducted a study of the similarities and differences
+between different European languages. They found that as expected Danish and
+English were very close.
 
-None of the baseline methods works on raw texts. Rather they require hand
+None of the baseline methods work on raw texts. Rather they require hand
 engineered feature sets extracted from the texts. The features used by
-\citet{US} were all n-gram frequencies which is similar to classic authorship
-verification methods \citep{stamatos2009}. We use the same features as described
-in the project. We change the specific n-grams to n-grams extracted from Danish
-texts but the classes of n-grams will stay the same. The n-grams come from
-several linguistic layers. Specifically we use frequencies of character-n-grams,
-special-character-n-grams, word-n-grams and \gls{POS}-tag-n-grams.
+\citet{US} were all n-gram frequencies as in many classic authorship
+verification methods \citep{stamatos2009}. We use the same features as
+described in our preliminary report. We change the specific n-grams to
+n-grams extracted from Danish texts but the classes of n-grams will stay the
+same. The n-grams come from several linguistic layers. Specifically we use
+frequencies of character-n-grams, special-character-n-grams, word-n-grams and
+\gls{POS}-tag-n-grams.
 
 \begin{description}
 
@@ -237,64 +239,65 @@ classifier with a custom comparison function.
 
 Like \citet{US} we will find the best parameters via cross validation. We will
 try 5 distance metrics. The 5 distance metrics will be the Minkowski distance
-with $p = 1 \dots 5$. When $p = 1$ the distance metric is the manhattan distance
-and when $p = 1$ the euclidian distance. We chose the manhattan distance since
+with $p = 1,\dots,5$. When $p = 1$ the distance metric is the manhattan distance
+and when $p = 2$ the euclidian distance. We chose the manhattan distance since
 it has been shown to consistently perform well when compared to other distance
 metrics \citep{evert2015towards}. And we chose the Euclidean metric since it has
 been shown to work well on a small amount of features \citep{evert2015towards}.
-The rest of the $p$ values are there or seeing if we could find something better
-than the classical distance metrics. The different number of nearest neighbours
-we will try will initially be between 1 and 15. However if we find that 15 gives
-the best results we will expand the search to more than 15.
+The rest of the $p$ values are there for seeing if we could find something
+better than the classical distance metrics. The different number of nearest
+neighbours we will try will initially be between 1 and 15. However if we find
+that 15 gives the best results we will expand the search to more than 15.
 
 
 \subsubsection{Author Specific SVM}
+\glsreset{SVM} 
 
 Our other baseline method is the author specific \gls{SVM}. The method
 was used in \citep{US} and was originally inspired by \citet{hansen2014}.
-They used the an \gls{SVM} on the Macom dataset as we described in Section
+They used an \gls{SVM} on the Macom dataset as we described in Section
 \ref{subsec:previous_work_using_macoms_dataset}. To verify the authorship of a
 text $t$ and author $\alpha$ using this method, a two class \gls{SVM} classifier
-have to be trained. The positive class is represented by features of each $t'
-\in T_\alpha$ and the negative class is represented by the features of $t''
-\in T\ |\ T \subset \overline{T_\alpha}, |T| = |T_\alpha|$. After training the
+has to be trained. The positive class is represented by features of each $t' \in
+T_\alpha$ and the negative class is represented by the features of $t'' \in T$
+where $T \subset \overline{T_\alpha}$ and $|T| = |T_\alpha|$. After training the
 classifier is used to predict the text we are verifying the authorship of $t$.
-Since a separate \gls{SVM} is trained for each author it can learn the specific
-authors writing style from $T_\alpha$ supplied and in contrast what the writing
-style of someone not him is.
+Since a separate \gls{SVM} model is trained for each author it can learn the
+specific authors' writing style from $T_\alpha$. In contrast it also learns how
+the author doesn't write using $T$.
 
 The method is based on an \gls{SVM} so we have to experiment with the
-hyperparameters $C$ and $\gamma$. We will find good parameters via cross
-validation. The parameter search will be described in detail in Section
-\ref{sec:experiments}.
+hyperparameters $C$ and $\gamma$.\cite[E-Chapter 8]{Abu-Mostafa:2012:LD:2207825}
+We will find good parameters via cross validation. The parameter search will be
+described in detail in Section \ref{sec:experiments}.
 
 
 \subsection{Deep Learning}
 
-In this paper we will approach the authorship verification problem using
-deep learning. The term deep learning, was first introduced to machine machine
-learning in 1989, and afterward to \glspl{NN} in 2000. The terms quickly became
-synonymous with \glspl{NN} due to them being some of the more efficient deep
-learning methods \citep{Schmidhuber:2015}.
+In this paper we will approach the authorship verification problem using deep
+learning. The term deep learning was first introduced to machine learning in
+1989, and afterward to \glspl{NN} in 2000. The term deep learning quickly became
+synonymous with \glspl{NN} as they were some of the more efficient and popular
+deep learning methods \citep{Schmidhuber:2015}.
 
 With the inner workings of the brain used as the basis, a standard simple
 \gls{NN} consists of a set interconnected processors, called neurons. Each of
 these neurons has a real valued activation associated with it, which activates
 differently depending on the specific neuron. The input neurons activate
 through perceiving the environment, or in other words, when they are fed data
-externally. Other neurons are simply activated through the weighted activation
-of previous neurons \citep{DBLP:journals/corr/Schmidhuber14}.
+externally. Other neurons are simply activated through the weighted output of
+previous neurons \citep{DBLP:journals/corr/Schmidhuber14}.
 
 \glspl{NN} have been around since the 1940s. However, back then they were
-merely variations of the linear regressors used at the time, and was not
-very reminiscent of the networks on can see today. It was not until the late
+merely variations of the linear regressors used at the time, and were not
+very reminiscent of the networks one can see today. It was not until the late
 1960s, early 1970s, that networks comparable to the more modern approaches
 surfaced. Examples of such early works are \citep{ivakhnenko1973cybernetic} and
 \citep{4308320}, which describe multi-layered feed forward supervised neural
 network architectures. While the work described in \citep{4308320} was indeed
 one of the first cases of the modern \gls{NN}, getting the network to learn was
 still a problem, as the tweaking of individual weights attributed to each neuron
-in the network was not trivial. Little did they know, research to solve that
+in the network was not trivial. Little did they know that research to solve that
 problem was already in progress. The basics of continuous \gls{BP} was initially
 described in 1960, by \citet{Kelley1960}, quickly followed by a simpler approach
 which used only the chain rule in 1962 by \citet{DREYFUS196230}. It was not
@@ -305,10 +308,11 @@ research in the following decades. As computational power increased in the
 general \citep{Schmidhuber:2015}. The real life application of \gls{BP} will be
 described in Section \ref{subsubsec:training_a_network}.
 
+\glsreset{CNN}
 Like with the history of authorship attribution research in this area of science
 picked up more interest as we entered the modern computational age, and with
 the introduction of the \gls{CNN}. \glspl{CNN} are based on the early work
-described in \citet{TJP:TJP19681951215}. They showed that cats and monkeys
+described in \citet{TJP:TJP19681951215}. They showed that cats' and monkeys'
 visual cortexes contain a set of neurons, each individually responding to a
 receptive field, or area, of their field of view. Neighboring receptive fields
 all have a certain amount of overlap but in the end a cohesive view is created.
@@ -322,14 +326,14 @@ but together with a down-sampling neuron such as Max Pooling introduced in 1993
 \subsubsection{Neurons}\label{sec:neurons}
 
 As mentioned previously a \gls{NN} consists of a collection of neurons. Each
-neuron is a simplified mathematical model which behaves much like neurons in
-the brain. They receive, process and transmit information. Each neuron has a
-set of inputs called $x_{j}$ one of which $x_{0}$ is a special bias input set
-to 1 and a single output called $z_i$, where $i$ refers to the neuron and $j$
-refers to the specific input to that neuron. Each neuron computes a weighted sum
-of its inputs and applies an activation function $h$ to the weighted sum. The
-weights are called $w_{ij}$ and the weight of the bias $w_{i0}$. The function
-each neuron computes is,
+neuron is a simplified mathematical model which behaves much like neurons in the
+brain. They receive, process and transmit information. Each neuron has a set of
+inputs called $x_{j}$ one of which $x_{0}$ is a special bias input set to 1 and
+a single output called $z_i$, where $i$ refers to the neuron and $j$ refers to
+the specific input to that neuron. Each neuron computes a weighted sum of its
+inputs and applies an activation function $h$ to the weighted sum. The weights
+are called $w_{ij}$ and the weight of the bias $w_{i0}$, where $x_0 = 1$. The
+function each neuron computes is,
 
 \begin{equation}\label{eq:neuron}
     z_i = h(a_i) = h\left(
@@ -419,7 +423,7 @@ As the activation function of our output neurons we have used the softmax
 function. The function is defined as
 
 \begin{equation}
-    h(x_i) = \frac{e^{x_i}}{\sum_{k=1}^n e^{x_k}}, \text{for $i = 1 \dots n$}.
+    h(x_i) = \frac{e^{x_i}}{\sum_{k=1}^n e^{x_k}}, \text{for $i = 1,\dots,n$}.
 \end{equation}
 
 The softmax function takes any vector $x \in \mathbb{R}^n$ and returns a vector
@@ -718,10 +722,10 @@ mikolov2013linguistic,JMLR:v15:srivastava14a}.
 
         In the forward pass of an \gls{RNN} network both the activations of
         the hidden units and the activations of the output units have to be
-        computed. In the computation of the activation of the hidden units the
-        activation of the hidden units in the previous timestep are required. We
-        let $a^{(t)}_h$ denote the activation of neuron $h$ in the hidden layer
-        in timestep $t$. It is computed as,
+        computed. In the computation of the activation of the hidden units, the
+        output of hidden units in the previous timestep are required. We let
+        $a^{(t)}_h$ denote the activation of neuron $h$ in the hidden layer in
+        timestep $t$. It is computed as,
 
         \begin{equation}
             a^{(t)}_h = \psi_h\left(
@@ -743,26 +747,27 @@ mikolov2013linguistic,JMLR:v15:srivastava14a}.
         is then computed as,
 
         \begin{equation}
-            a^{(t)}_k = \sum_{h=1}^H w_{hk} a_{h}^{(t)}.
+            y^{(t)}_k = \sum_{h=1}^H w_{hk} a_{h}^{(t)}.
         \end{equation}
 
         That is the output of an \gls{RNN} layer is a weighted sum of its
         hidden units. The complete sequence of hidden activations are computed
-        by starting at time $t=1$ and recursively calling the functions above
+        by starting at time $t=1$ and calling the functions above
         until the end of the sequence is reached incrementing $t$ by one in
-        each recursive call. The initial values of the hidden units can be
+        each recursive call. The initial weight at of the hidden units can be
         any initialization value. The obvious choice is 0, however better
-        results have been found using non zero initial hidden unit values
+        results have been found using non zero initial hidden unit weight values
         \citep{DBLP:series/sci/2012-385}.
 
-        A \gls{RNN} network are normally optimized using the backpropagation
-        through time algorithm. For data where a sense of time does not make
+        A \gls{RNN} network are normally trained using the \emph{backpropagation
+        through time} algorithm. For data where the usage of time does not make
         sense and where the context from both sides of each timesteps is usefull
         such as for text it is normal to use bidirectional \glspl{RNN}. Then
         both a forward and a backward pass are made through the sequence. The
         output of each network at each time step can then depend both on the
         context before and after the input.
 
+    \glsreset{LSTM}
     \item[\gls{LSTM} Layer:]
         \label{layer:LSTM}
 
@@ -1005,7 +1010,7 @@ where $N$ is the number of training samples, $\hat{y}_n$ is the predicted
 results, $y_n$ is the target, and $W$ is a set of weights. That function is
 often used to describe the error on networks with real valued output. The
 gradient is a multi-variable generalization of the derivative of a function.
-It is vector that points in the direction of steepest ascend in value for a
+It is a vector that points in the direction of steepest ascend in value for a
 function at a specific point. Gradient descent is based on the observation that
 a differentiable function $f$ in point $\mathbf{x}$ decrease fastest in the
 direction of the negative gradient of the point $\mathbf{x}$ \citep{Bishop}.
