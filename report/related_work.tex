@@ -1,6 +1,6 @@
 \section{Related Work} \label{sec:related_work}
 
-In this section we will describe some previous work which served as sources
+In this section we describe some previous work which has served as sources
 of inspiration for this paper. It describes the work done on the subject of
 authorship verification and authorship attribution with a special focus on
 methods that use deep learning.
@@ -9,30 +9,30 @@ methods that use deep learning.
 \subsection{Neural Network Methods}
 
 \citet{DBLP:journals/corr/RuderGB16c} shows a Neural Network for authorship
-attribution. Their experiment consisted of a network where they first had
+attribution. Their experiment consists of a network where they first had
 a convolutional layer, after that a max-over-time pooling layer and then a
 densely connected network on the top of that. Character level features has
 previously been shown to be important for both authorship attribution and in
 turn authorship verification as well. A point which is emphasized when looking
 at the results of \citet{hansen2014}, and \citet{aalykke2016}, who both not only
-got good results using character level features, but also did so working on
+achieved good results using character level features, but also did so working on
 data from the same source as we did during the creation of this paper. The hope
 was that the convolutional layer would learn important features from sequences
 of characters. The max-over-time pooling would take the most important value
 from each convolutional filter and would extract a similar number of features
-for each text even though the texts are of differing length. The dense network
+for each text even though the texts were of differing lengths. The dense network
 was then supposed to take the features extracted from the text and determine
 authorship of the text from them.
 
 \citet{DBLP:journals/corr/RuderGB16c} also used multiple channels in their
-network. Each channel was a different token sequence some of them were word
+network. Each channel was a different token sequence, some of them were word
 embeddings and some were character embeddings. Some of the channels were static
 while some of the channels were non-static meaning that the word/char-embedded
 vectors would change during training. The point of the channels was that the
-network were able to extract features from multiple linguistic layers, all
+network was able to extract features from multiple linguistic layers, all
 describing a different stylometric feature of text. These layers span from
 character specific features, all the way to application specific features,
-as explanation in \citet[Section 2]{stamatos2009}. We will elaborate more on
+as explained in \citet[Section 2]{stamatos2009}. We will elaborate more on
 these features in Section \ref{subsec:baseline_methods}. They specifically used
 networks with the following channels
 
@@ -46,23 +46,24 @@ networks with the following channels
         channel and one non-static character channel.
 \end{description}
 
+\noindent
 The best performing configuration was the CNN-char.
 
 \citet{shrestha2017} experimented with classifying the author of short texts
 such as messages on social media, and emails. Their approach made use of a
 \gls{CNN}. This \gls{CNN} only takes in a sequence of character-n-grams. The
-reasoning for this usage of only char-n-grams was the small amount of text in
+reasoning for this use of only char-n-grams was the small amount of text in
 each sample. By passing these n-grams through a embedding layer, a 25\% dropout
 layer, 3 convolutional layers and then using max-over-time pooling, they got
 a compact representation of the text. They hypothesized this representation
 captures the morphological, lexical and syntactic level of the supplied text.
 This compact representation is then parsed through a fully connected soft-max
-layer, to produce a probabilistic distribution over all authors. In order to
-test their method they used a twitter data set, containing approximately 9000
-user, all having written more than 1000 tweets. They made use of two different
-configurations of their networks. One using character-1-grams and one using
-character-2-grams. After removing bot-like authors, they got an accuracy of
-0.678, and 0.683 respectively. This however, was only with 35 authors used,
+layer, to produce a probabilistic distribution over all authors. In order
+to test their method they used a Twitter data set, containing approximately
+9000 users, that had all written more than 1000 Tweets. They made use of two
+different configurations of their networks. One using character-1-grams and one
+using character-2-grams. After removing bot-like authors, they got an accuracy
+of 0.678, and 0.683 respectively. This however, was only with 35 authors used,
 and 1000 tweets per author. In the case where either the authors count was
 increased or the number of tweets was decreased, the accuracy quickly worsened.
 
