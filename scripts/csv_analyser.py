@@ -58,8 +58,8 @@ for idx, row in f.iterrows():
 
     author, time, text = row['StudentId'], row['Date'], row['Text']
 
-    text = text[200:]
     text = util.clean(text)
+    text = text[200:]
 
     lengths.append(len(text))
     uniques.append(len(set(list(text))))

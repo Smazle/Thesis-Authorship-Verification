@@ -38,7 +38,8 @@ def Convert(line, x):
         'training-time': 'training time',
         'back-propagation': 'backpropagation',
         'back-propagate': 'backpropagate',
-        'feature-set': 'feature set'
+        'feature-set': 'feature set',
+        'testset': 'test set'
     }
 
     for key in c:
