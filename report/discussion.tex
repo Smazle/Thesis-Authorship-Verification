@@ -18,25 +18,25 @@
 \subsection{Results}
 
 Looking at the results presented in Section \ref{sec:results} it is apparent
-that we have not achieved less the than 10\% accusation error on the test
-set that MaCom required we believe however that some of the methods show
-promising results. While all the networks we applied to the test set beat
-our baselines the best performing network was the \gls{conv-char-NN}. This
-network had an accusation error closest to the one required in addition to
-having the highest overall accuracy in all the categories we tested it on.
-While this network was in fact the best, it was closely followed by network
-\gls{conv-char-word-NN}, while the \gls{rec-sent-NN} we also tested had sub-par
-performance, lending credence to the applicability of \glspl{CNN} to \gls{NLP}
-problems. It is however worth noting that this could very well be due to the
-infeasibility of running any of our \glspl{RNN} on the character or word level
-of the texts supplied to it. We hypothesize that the accuracy of a RNN would be
-greatly increased had it been run on a lower linguistic level. As experiments
-showed in \ref{subsubsec:conv_char_word_nn}, even \gls{CNN}s performed badly
-on the sentence level. Ideally we would have run an RNN on the word level. We
-suspect it would be able to learn the words and their relation to on another,
-which makes sense with words, but not with sentences. However in order to do so,
-we would need computational power than was available to train the model. Looking
-at the performance of the two \glspl{CNN}, it becomes obvious that the character
+that we have not achieved less the than 10\% accusation error on the test set
+that MaCom required we believe however that some of the methods show promising
+results. While all the networks we applied to the test set beat our baselines
+the best performing network was the \gls{conv-char-NN}. This network had an
+accusation error closest to the one required in addition to having the highest
+overall accuracy in all the categories we tested it on. While this network was
+in fact the best, it was closely followed by network \gls{conv-char-word-NN},
+while the \gls{rec-sent-NN} we also tested had sub-par performance, lending
+credence to the applicability of \glspl{CNN} to \gls{NLP} problems. It is
+however worth noting that this could very well be due to the infeasibility of
+running any of our \glspl{RNN} on the character or word level of the texts
+supplied to it. We hypothesize that the accuracy of a RNN would be greatly
+increased had it been run on a lower linguistic level. As experiments showed
+in \ref{subsubsec:conv_char_word_nn}, even \gls{CNN}s performed badly on the
+sentence level. Ideally we would have run an RNN on the word level. We suspect
+it would be able to learn the words and their relation to on another, which
+makes sense with words, but not with sentences. However in order to do so, we
+would need computational power than was available to train the model. Looking at
+the performance of the two \glspl{CNN}, it becomes obvious that the character
 level is of great importance when it comes to determining the author of a text.
 The sentence level appears to on a too high linguistic level. At least in the
 way we applied it. We hypothesize that applying it to a lower level, such as
@@ -111,27 +111,78 @@ fact that we are able to more accurately determine what part of the
 text contributed to final classification as can be seen in the Section
 \ref{subsec:teacher_feedback_text_comparisons}.
 
-\subsubsection{Comparison with previous MaCom works}
 
-As mentioned all the way back in Section
-\ref{subsec:previous_work_using_macoms_dataset} other papers have been produced
-with Macoms data as their basis. Much like us \cite{hanse2014}, made use
-of an SVM classifier, but for authorship attribution rather and authorship
-verification. When all was said and done, they got an accuracy of 84\%. This
-means that not only did they beat our SVM implementation, but our neural
-networks as well. We do however think we can justify this difference. While they
-did have access to the same large dataset we did, they chose only to extract
-the library of 30 authors. Due to the author-specific nature of their SVM
-implementation, each of those 30 authors texts got further split into training
-validation and test data. This approach could very well result in a giant bias
-towards those specific authors. For their purposes it might have made sense, as
-they had to remake their attribution task, to a one-against-many verification
-task. When considering that, and the fact that most likely had a better set of
-negative samples to train on, the results are understandable.
+\subsubsection{Previous Work on MaCom Data}
 
-\cite{aalykke2016} also worked on MaComs data, however using a set of distance
-measure and thesholding. They got an impressive 71.9\% \gls{TNR} on their negative
-cases, while adhering to a 5\% accusation error constraint.
+In Section \ref{subsec:previous_work_using_macoms_dataset} we described other
+experiments about authorship attribution and verification on MaComs dataset.
+In this section we compare our authorship verification results with those
+other results. The first experiment we compare against is \citep{aalykke2016}.
+\citet{aalykke2016} evaluated their performance using sensitivity and
+specificity of their best performing configuration. The sensitivity is reported
+at 95.0\% and the specificity at 71.9\%. Those results were obtained on a
+dataset with 500 positive cases and 500 negative cases. \citet{aalykke2016}
+comments that his results is not directly comparable to the real world as he
+use a 50/50 dataset. We have focused on developing methods that work the best
+on a 96/4 split dataset. We have however reported results when maximizing
+accuracy on a 50/50 dataset which is comparable to \citep{aalykke2016}. In our
+best configuration on the 50/50 split we obtained a sensitivity of 91.0\% and a
+specificity of 82.1\%. That means that we had a worse sensitivity but a better
+specificity. The accuracy obtained by \citet{aalykke2016} was $\frac{0.95 +
+0.719}{2} = 0.8345$ while our accuracy was at $0.86535$ so we had a higher
+accuracy.
+
+\citet{aalykke2016}s results are impressive considering they use only the
+distances between feature sets to compare assignments. One caveat to consider
+when looking at their results compared to ours is that they tried all thresholds
+on the test dataset and reported the best results obtained. The results we
+report used a configuration found on a validation dataset and evaluated on a
+test dataset. We can therefore expect that our results will be an unbiased
+estimate of real world performance while \citet{aalykke2016}s results will
+probably not. Another thing to consider is that \citet{aalykke2016} used a
+test dataset that only contained \gls{SRP} assignments. In our test dataset
+we predict the newest text in an authors library which is not necessarily the
+\gls{SRP} assignment. That gives \citet{aalykke2016} another advantage in that
+the \gls{SRP} assignments are generally longer assignments and therefore gives a
+better picture of an authors writing style.
+
+To summarize \citet{aalykke2016} has a lower accusation error than us on of 5\%
+(100\% - 95\%) vs our 9.87\% which is very important to MaCom. At the same time
+they also have a lower specificity of 71.9\% vs our 82.1\%. So which method to
+use is a tradeoff between how many false accusations to allow vs how large a
+fraction of cheaters to catch. We believe that our method would have obtained
+better results if we had used a test dataset of only \gls{SRP} assignments. It
+would have been interesting to perform that test.
+
+We also compare against another experiment. This experiment was described in
+\citep{hansen2014}. They measured their results using a simple accuracy. They
+achieved a maximum accuracy of 84\%. They do not specify the fraction between
+negatives and positives that they evaluate against. We assume that they evaluate
+on a 50/50 percent split as \citet{aalykke2016}. Again our most comparable
+result is when we maximize accuracy on a 50/50 split. Our best accuracy in that
+setting were 86.54\%. That is a negligible difference that might result only
+from the specific test sets used. \citet{hansen2014} focused on the computation
+time of their method. Since they used an author specific model they had to train
+a separate model on each new author and a new model each time an author turned
+in a new assignment. That is where our generalizing model has an advantage.
+We only have to train the model once and after that it can be used on any new
+author. The prediction time of a neural network is negligible when compared to
+training a \gls{SVM}.
+
+\citet{hansen2014} found that recent texts were more important for predicting an
+authors writing style than older texts. That is something that we also found.
+Most of the best configurations we found used a weight function based on turn in
+time of the assignments. We will discuss how students writing styles evolve in
+Section \ref{subsec:writing_style_changes}.
+
+We seem to have very comparable but slightly better performance than previous
+experiments performed on MaComs dataset. Our results are not significantly
+better but we have several advantages over previous methods. We have focused on
+performance on a dataset split with 96\% positives and 4\% negatives and we have
+implemented a generalizing model. The data split means that our results are more
+reliable as estimates of real world performance and the generalizing model means
+that we can save a lot of computation time.
+
 
 \subsection{Teacher Feedback}\label{subsec:teacher_feedback_text_comparisons}
 
@@ -142,7 +193,7 @@ students are cheating but are rather meant as a support system for teachers that
 are already suspicious. We have focused on the \gls{conv-char-NN} network since
 it performed best on the test dataset.
 
-\subsection{Extracting Important Features}
+\subsubsection{Extracting Important Features}
 
 We have previously looked at the output of the feature extraction layer to
 obtain information on what a specific network were looking at, during the
@@ -793,6 +844,7 @@ a couple of the prediction systems.
 
 
 \subsection{Writing Style Changes}
+\label{subsec:writing_style_changes}
 
 In this section we discuss how a secondary school students writing style changes
 during his/her school years. We observed that time based weights worked well
