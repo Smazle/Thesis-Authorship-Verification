@@ -1,9 +1,9 @@
 \section{Results} \label{sec:results}
 
 We have finally reached the point where we can determine the unbiased accuracy
-our different models. To do this we will make use of the (D) dataset. As
-mentioned in Section \ref{sec:data}, this dataset consists of 3558 authors,
-none of which are repeated in any of the other sets.
+our different models. To do this we will make use of the \gls{D} dataset. As
+mentioned in Section \ref{sec:data}, this dataset consists of 3558 authors, none
+of which are repeated in any of the other sets.
 
 We have 5 models which we are going to apply to this test dataset, our
 two baseline methods, the \gls{conv-char-NN}, the \gls{rec-sent-NN} , and the
@@ -13,10 +13,10 @@ Starting with the baseline methods, we made use of the features and the
 hyper parameters that provided best on the training set. For the extended
 delta method, the optimal parameters were $K=1$ and $p = 1$. Then using
 the same sample generation as was described in the bottom of Section
-\ref{sec:hyp_select}, and normalizing using the scaler produced when
-generating the features, we applied were able to apply the model. The same
-was done with the \gls{SVM}, where we used the optimal found hyperparameters, $C=10$
-and $\gamma = 1000$, to train the model. 
+\ref{sec:hyp_select}, and normalizing using the scaler produced when generating
+the features, we applied were able to apply the model. The same was done with
+the \gls{SVM}, where we used the optimal found hyperparameters, $C=10$ and
+$\gamma = 1000$, to train the model.
 
 As briefly mentioned in Section \ref{subsec:baseline_methods}, these method are
 not very well suited for this particular task. Since they both provide binary
@@ -30,18 +30,18 @@ the accusation error, as both our baselines do not focus on that either. Thus we
 compared the results of our baselines on the 50/50 dataset and the 96/04 dataset
 with the highest unconstrained accuracy our \gls{NN} methods could muster.
 
-After determining the best networks using the dataset (E) in conjunction with
-dataset (F), we proceeded to train the three networks on the entire dataset (B)
-using dataset (C) as the validation set used throughout the training. Doing
-this, was all for the sake of providing more data for the final models, before
-applying them to the (D) test dataset.
+After determining the best networks using the dataset \gls{E} in conjunction
+with dataset \gls{F}, we proceeded to train the three networks on the entire
+dataset \gls{B} using dataset \gls{C} as the validation set used throughout the
+training. Doing this, was all for the sake of providing more data for the final
+models, before applying them to the \gls{D} test dataset.
 
-Having now trained the models we can determine the accuracy and accusation
-error of our different networks, both with and without the 10\% accusation error
+Having now trained the models we can determine the accuracy and accusation error
+of our different networks, both with and without the 10\% accusation error
 constraint.
 
 We also used that same approach for the other two networks. The combined
-results for the 50/50 split test dataset (D) can be seen in Table
+results for the 50/50 split test dataset \gls{D} can be seen in Table
 \ref{tab:50_results}, and the results for the 96/04 split data can be seen in
 table \ref{tab:04_results}.
 
