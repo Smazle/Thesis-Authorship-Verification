@@ -32,7 +32,7 @@ Internet, the data available simply was not suitable for authorship attribution
 tasks. Books were too big resulting in a lack of homogeneity, and the amount of
 authors and bench-marking data was too small. The internet paved the way for
 insurmountable amounts of data and variations of that data, impacting areas such
-as information retrieval, machine learning and \gls{NLP}.
+as information retrieval, machine learning and \gls{NLP}.\cite{stamatos2009}
 
 In order for any fully automatic authorship verification to work, stylometric
 features describing the text have to be automatically extracted. These features
@@ -81,20 +81,22 @@ of using a ghost writer, as the product should work in a supplementary manner.
 
 \subsection{Notation} \label{subsec:notation}
 
-We will work with several different kinds of objects. The main ones are texts
-and authors. We will generally name texts $t$ and authors $\alpha$. If multiple
-texts or authors are used we will generally call them $t'$ and $\alpha'$ or
-$t_n$ and $\alpha_n$ if many texts or authors are needed. Let $\mathcal{A} =
-{\alpha_1, \alpha_2, \dots, \alpha_n}$ denote the set of all authors, where
-$T_\alpha$ denotes the set of texts written by the author $\alpha$. Let
-$\mathcal{T} = \bigcup_{\alpha \in \mathcal{A}} T_\alpha$ subject to $T_{\alpha}
-\cap T_{\alpha'} = \emptyset$ for all $\alpha \neq \alpha'$. Additionally
-let $\overline{T_\alpha} = \mathcal{T} \setminus T_\alpha$ denote the set of
-texts which are not written by author $\alpha$. Texts will be represented by a
-sequence of characters. We denote the length of that sequence $|t|$. Each text
-also has a point of time where it was written. This time is represented used the
-function $\tau \colon \mathcal{T} \rightarrow \mathbb{N}^+$, which returns the
-time in months relative to the earliest submitted $t \in \mathcal{T_\alpha}$.
+We will work with several different kinds of objects. The main ones are
+texts and authors. We will generally name texts $t$ and authors $\alpha$.
+If multiple texts or authors are used we will generally call them $t'$ and
+$\alpha'$ or $t_n$ and $\alpha_n$ if many texts or authors are needed.
+The set $\mathcal{A} = \{\alpha_1, \alpha_2, \dots, \alpha_n\}$ denotes
+all authors, where $T_\alpha$ denotes the set of texts written by the author
+$\alpha$. This leads to the disjunction $\overline{T_\alpha} = \mathcal{T}
+\setminus T_\alpha$, denoting the texts which are not written by $\alpha$,
+where $\mathcal{T} = \bigcup_{\alpha \in \mathcal{A}} T_\alpha$ subject to
+$T_{\alpha} \cap T_{\alpha'} = \emptyset$ for all $\alpha \neq \alpha'$.
+Texts will be represented by a sequence of characters. We denote the length
+of that sequence $|t|$, for any text $t$. Each text also has a point of
+time where it was written. This time is given by the function $\tau \colon
+\mathcal{T} \rightarrow \mathbb{N}^+$, which returns the point in time where the
+assignment was submitted in months relative to the earliest submitted $t \in
+\mathcal{T_\alpha}$.
 
 For vectors we will use the standard notation of naming them in lower case bold
 letters as $\mathbf{x}$. Matrices will be named upper case non bold letters.
@@ -104,19 +106,18 @@ $X[a,b;c,d]$ which means the submatrix of $X$ that consist of rows $a$ to $b$
 and columns $c$ to $d$.
 
 Much existing work on authorship verification is based on frequencies of
-sequences of objects \textit{n-grams} \citep{stamatos2009}. The object could
-for example be characters and the n-gram would then refer to the frequency of a
-specific character sequence in a text. The n in n-gram refer to the size of the
-sequence. If we take the text to be "hello" the different character-3-grams will
-be "hel", "ell" and "llo". The frequency of each of them is $\frac{1}{3}$. We
-will use n-grams in some of our baseline methods and some of our networks will
-use them indirectly.
-
+sequences of \textit{object-n-grams} \citep{stamatos2009}. The object could for
+example be characters and the n in n-gram would then refer to the length of
+character sequences in a text. If we take the text to be "hello" the different
+character-3-grams will be ``hel'', ``ell'' and ``llo''. The frequency of each of them
+is $\frac{1}{3}$, and would service as the input for the specific model. We will
+use n-grams in some of our baseline methods and some of our networks will use
+them indirectly.
 
 % Introduce the main ideas that stem from your topic/title and the order in
 % which you will discuss them?
 
-As described the problem main problem we try to solve in this thesis is
+As described the problem we try to solve in this thesis is
 authorship verification which is defined below.
 
 \begin{definition}[Authorship Verification]
@@ -133,34 +134,34 @@ below.
 
 \begin{definition}[Authorship Attribution]
 
-    Given a set of authors $A = \{\alpha_1, \alpha_2,...\alpha_n\}$, each with
-    set of text $T_{\alpha_i}$, and a text of unknown authorship \texttt{t},
-    determine which $\alpha_i \in A$ is the author of \texttt{t}.
+    Given a set of authors $A = \{\alpha_1, \alpha_2,\dots,\alpha_n\}$, each
+    with a set of texts $T_{\alpha_i}$, and a text $t$ of unknown authorship,
+    determine which $\alpha_i \in A$ is the author of $t$.
 
 \end{definition}
 
 The problems are closely linked since an answer for authorship attribution
 can be obtained by using authorship verification and an answer for authorship
-verification can be obtained by using authorship attribution. Consider a case
-where we are given an oracle answering the authorship verification problem
-$\mathcal{S}$. $\mathcal{S}$ is a mapping from an author $\alpha$ and text $t$
-to either true or false. Given an instance of the authorship attribution problem
-with authors $A$ and text $t$ we solve the problem by using $\mathcal{S}$ on
-each author $\alpha \in A$. We return the author where $\mathcal{S}$ reports
-true. Now consider a case where we are given a solution to the authorship
-attribution problem $\mathcal{S}'$. $\mathcal{S}'$ is now a mapping from a set
-of authors $A$ and text $t$ to an author $\alpha \in A$. Given an instance of
-the authorship verification problem with author $\alpha_i \in A$ and text $t$
-and a set of texts written by different authors $\overline{T}_{\alpha}$ we solve
-the verification problem by applying the attribution function to the texts
-$T_{\alpha} \cup \overline{T}_{\alpha}$ and the text of unknown authorship $t$.
-If $t \in T_{\alpha}$ we report true and otherwise false.
-
+verification can be obtained by using authorship attribution. Consider a
+case where we are given an oracle $\mathcal{S}$ answering the authorship
+verification problem as follows. The oracle $\mathcal{S}$ is a mapping from
+an author $\alpha$ and text $t$ to either true or false. Given an instance
+of the authorship attribution problem with authors $A$ and text $t$ we solve
+the problem by using $\mathcal{S}$ on each author $\alpha \in A$. We return
+the author where $\mathcal{S}$ reports true. Now consider a case where we are
+given a solution to the authorship attribution problem $\mathcal{S}'$. The
+solution $\mathcal{S}'$ is now a mapping from a set of authors $A$ and text $t$
+to an author $\alpha \in A$. Given an instance of the authorship verification
+problem with author $\alpha_i \in A$ and text $t$ and a set of texts written by
+different authors $\overline{T}_{\alpha}$ we solve the verification problem by
+applying $\mathcal{S}'$ to the texts $T_{\alpha} \cup \overline{T}_{\alpha}$
+and the text of unknown authorship $t$. We then return $\mathcal{S}'(A, t) =
+\alpha$.
 
 \subsection{Roadmap}
 
-In Section \ref{sec:related_work} we will go through previous work in authorship
-verification/attribution and previous work performed on MaComs dataset. We will
+In Section \ref{sec:related_work} we will go through previous work on authorship
+verification/attribution and previous work performed on MaCom's dataset. We will
 specifically focus on neural network based methods as we want to expand on those
 methods.
 
@@ -178,8 +179,8 @@ In Section \ref{sec:experiments} we go through the different network
 architectures we used. We present the results we obtained on a validation
 dataset and how we reached the final architectures we settled on.
 
-In Section \ref{sec:results} we presents our baseline performance on the testset
-and the performance of our neural network based methods performance.
+In Section \ref{sec:results} we present our testset performances for our baseline,
+and neural network based methods.
 
 In Section \ref{sec:discussion} we discuss the results we presented in the
 previous section. We discuss the applicability of the method we developed to the
