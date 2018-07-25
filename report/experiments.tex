@@ -679,6 +679,71 @@ by deleting names from the texts. When we trained the network again with those
 preprocessing steps we got a substantial hit in network performance. However the
 network were hopefully not looking at metadata anymore.
 
+As described in Section \ref{subsubsec:tuning_parameters} we also have to choose
+the best prediction system and best threshold $\theta$ for the network. The
+dataset we use to tune the prediction system $P_x$ and threshold $\theta$ are
+the \gls{F} dataset. The set consists of 2,000 previously unseen authors. We
+find parameters for two cases. One where we generate 50\% positive problems and
+50\% negative problems and one where we generate 96\% positive problems and 4\%
+negative problems. In the 50/50 case we end up with 4,000 differeent problems.
+For each of the authors we generate a positive sample by taking the newest text
+as the unknown text and a negative sample by choosing a random text from some
+other author in the set.
+
+As described in Section \ref{subsubsec:tuning_parameters} the best threshold
+for a prediction system is found by taking the threshold that maximizes
+accuracy while having an accusation error of less than 10\%. The best
+prediction system is then the system that has the highest accuracy for
+their best threshold. We try 1,001 different thresholds $\theta = 0.000,
+0.001, \dots, 1.000$ and we try the weight functions $P_\mathcal{U}$,
+$P_{exp_{0.25}}$, $P_{exp_{0.50}}$, $P_{exp_{0.75}}$, $P_{exp_{1.00}}$,
+$P_{lexp_{0.25}}$, $P_{MV}$, $P_{max}$, $P_{min}$ and $P_l$. We have shown
+the accuracy and accusation error for the dataset containing 50\% negatives
+in Figure \ref{fig:conv-char-NN-pred-50} and for the dataset containing 4\%
+negatives in Figure \ref{fig:conv-char-NN-pred-4}.
+
+\begin{figure}
+    \centering
+    \textbf{Prediction System Results for 0.5 Split, \glsdesc{conv-char-NN}}\par\medskip
+    \includegraphics[scale=0.33]{./pictures/experiments/conv_char_nn/prediction_system_50}
+    \caption{Results of running the prediction system with the
+        \gls{conv-char-NN} on a validation dataset with 50\% positive samples
+        and 50\% negative samples. In the upper graph we show the accuracies
+        obtained as a function of $\theta$ for different prediction systems
+        $P_x$. At the bottom we have shown the accusation error as a function
+        $\theta$ again with one line for each prediction system. We can see that
+        as the threshold increases and we accuse more people of cheating the
+        accusation error rises.}
+    \label{fig:conv-char-NN-pred-50}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \textbf{Prediction System Results for 0.04 Split, \glsdesc{conv-char-NN}}\par\medskip
+    \includegraphics[scale=0.33]{./pictures/experiments/conv_char_nn/prediction_system_04}
+    \caption{Results of running the prediction system with \gls{conv-char-NN}
+        on a validation dataset with 96\% positive samples and 4\% negative
+        samples. In the upper graph we show the accuracies obtained as a
+        function of $\theta$ for different prediction systems $P_x$. At the
+        bottom we have shown the accusation error as a function $\theta$ again
+        with one line for each prediction system. We can see that as the
+        threshold increases and we accuse more people of cheating the accusation
+        error rises.}
+    \label{fig:conv-char-NN-pred-4}
+\end{figure}
+
+The best configuration for both the 50/50 split and 96/04 split was the
+following,
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+\hline
+Split & Weight            & $\theta$ & TP  & TN  & FP & FN & Acc    & A-Error \\ \hline
+50/50 & $P_{lexp_{0.25}}$ & 0.390    & 1843 & 1482 & 517 & 156 & 0.8316 & 0.095   \\ \hline
+96/04 & $P_{mv}$          & 0.057    & 1999 & 8    & 74  & 0   & 0.9644 & 0.000   \\ \hline
+\end{tabular}
+\end{center}
+
 
 \subsubsection{\glsdesc{rec-sent-NN}}
 \label{subsubsec:rec_sent_nn}
@@ -820,8 +885,56 @@ particular authors. This lead to the final network described above. This network
 included an extra bidirectional \gls{LSTM} layer, and the 0.3 dropout for extra
 generalization.
 
-As mentioned this final network yielded the accuracy initially described,
-0.657 after 10 epochs. 
+We also chose the best prediction system $P_x$ and best threshold $\theta$ for
+this network. We tried the same thresholds and prediction systems as before.
+The results can be seen in the Figures, \ref{fig:rec-sent-NN-pred-50} and
+\ref{fig:rec-sent-NN-pred-4}
+
+\begin{figure}
+    \centering
+    \textbf{Prediction System Results for 0.5 Split, \glsdesc{rec-sent-NN}}\par\medskip
+    \includegraphics[scale=0.33]{./pictures/experiments/rec_sent_nn/prediction_system_50}
+    \caption{Results of running the prediction system with \gls{rec-sent-NN} on
+        a validation dataset with 50\% positive samples and 50\% negative
+        samples. In the upper graph we show the accuracies obtained as a
+        function of $\theta$ for different prediction systems. At the bottom we
+        have shown the accusation error as a function $\theta$ again with one
+        line for each prediction system. We can see that as the threshold
+        increases and we accuse more people of cheating the accusation error
+        rises.}
+    \label{fig:rec-sent-NN-pred-50}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \textbf{Prediction System Results for 0.04 Split, \glsdesc{rec-sent-NN}}\par\medskip
+    \includegraphics[scale=0.33]{./pictures/experiments/rec_sent_nn/prediction_system_04}
+    \caption{Results of running the prediction system with \gls{rec-sent-NN} on
+        a validation dataset with 96\% positive samples and 4\% negative
+        samples. In the upper graph we show the accuracies obtained as a
+        function of $\theta$ for different prediction systems. At the bottom we
+        have shown the accusation error as a function $\theta$ again with one
+        line for each weight. We can see that as the threshold increases and we
+        accuse more people of cheating the accusation error rises.}
+    \label{fig:rec-sent-NN-pred-4}
+\end{figure}
+
+The best configurations for \gls{rec-sent-NN}, using both the 50/50 and
+96/04 split of data was the following,
+
+\begin{center}
+    \begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+    \hline
+    Split & Weight            & $\theta$ & TP   & TN  & FP   & FN  & Acc    & A-Error \\ \hline
+    50/50 & $P_{lexp_{0.25}}$ & 0.033    & 1965 & 310 & 1689 & 34  & 0.5690 & 0.099   \\ \hline
+    96/04 & $P_{lexp_{0.25}}$ & 0.002    & 1999 & 1   & 79   & 0   & 0.9620 & 0.000   \\ \hline
+    \end{tabular}
+\end{center}
+
+These result are to expected when looking at the graphs. The immediate spike in
+accusation error leaves the model very little room to increase the accuracy in.
+This is most likely the result of the aforementioned author specific learning
+the network does.
 
 
 \subsubsection{\glsdesc{conv-char-word-NN}}
@@ -900,275 +1013,23 @@ channel convolutional network were also produced during experimentation. Results
 from that seemed to indicate that the linguistic level of sentences were too
 high, thus hurting the model.
 
-\subsection{Prediction System}
-
-Our prediction system has several hyperparameters we have to choose to get
-the best results. We recall that MaCom wanted a system that had an accusation
-error of less than 10\%. We can use the threshold parameter $\theta$ in the
-prediction system to control how many people we accuse. The best parameters
-for the prediction system is those parameters that gives the highest accuracy
-subject to the constraint that the accusation error should be less than 10\%. To
-tune the parameters we use the dataset \gls{H}. From that dataset we constructed
-a set of tuples $(\alpha, t_u)$ where $\alpha$ is a candidate author and $t_u$
-is a text of unknown authorship. We let the set of tuples be known as $V$. None
-of the authors in \gls{H} has been seen by the networks during training and none
-of the texts $t_u$ has been seen by the networks during training. The parameters
-that maximize the accuracy subject to the bounded accusation error is the same
-as the parameters that minimize the error rate subject to the bounded accusation
-error. That optimization problem is,
-
-\begin{equation}
-    \label{eq:prediction_system_minimization}
-    \begin{aligned}
-        & \underset{\theta, x}{\text{minimize}}
-        & & \sum_{(\alpha, t_u) \in V} \left|
-            P_x(T_\alpha \setminus \{t_u\}, t_u, \theta) -
-            \mathbbm{1}_{T_\alpha}(t_u)
-        \right| \\
-        & \text{subject to}
-        & & \frac{\sum_{(\alpha, t_u) \in V} \mathbbm{1}_{T_\alpha}(t_u) \cdot
-            \left(1 - P_x(T_\alpha \setminus \{t_u\}, t_u, \theta)\right)}
-{\sum_{(\alpha, t_u) \in V} (1 - P_x(T_\alpha \setminus \{t_u\}, t_u, \theta)} <
-            \frac{1}{10}
-    \end{aligned}
-\end{equation}
-
-In the optimization problem we fix the network $f$ we validate like we did
-when defining the prediction systems. The expression we minimize is the
-number of errors made in prediction over the validation set $V$. Consider a
-problem $(\alpha, t_u) \in V$ where $t_u \in T_\alpha$. Then we know that
-$\mathbbm{1}_{T_\alpha}(t_u) = 1$ from the definition of the indicator function
-then if the prediction system returns the correct result 1 we have,
-
-\begin{equation}
-    e = \left|
-        P_x(T_\alpha \setminus \{t_u\}, t_u, \theta) -
-        \mathbbm{1}_{T_\alpha}(t_u)
-    \right| = |1 - 1| = 0,
-\end{equation}
-
-and if the prediction system returns the incorrect result 0 we have,
-
-\begin{equation}
-    e = \left|
-        P_x(T_\alpha \setminus \{t_u\}, t_u, \theta) -
-        \mathbbm{1}_{T_\alpha}(t_u)
-    \right| = |0 - 1| = 1.
-\end{equation}
-
-Similarly for a problem $(\alpha, t_u) \in V$ where $t_u \notin T_\alpha$ we
-know that $\mathbbm{1}_{T_\alpha}(t_u) = 0$ from the definition of the indicator
-function. Then if the prediction system returns the correct result 0 we have,
-
-\begin{equation}
-    e = \left|
-        P_x(T_\alpha \setminus \{t_u\}, t_u, \theta) -
-        \mathbbm{1}_{T_\alpha}(t_u)
-    \right| = |0 - 0| = 0, \end{equation}
-
-and if the prediction system returns the incorrect result 1 we have,
-
-\begin{equation}
-    e = \left|
-        P_x(T_\alpha \setminus \{t_u\}, t_u, \theta) -
-        \mathbbm{1}_{T_\alpha}(t_u)
-    \right| = |1 - 0| = 1.
-\end{equation}
-
-That is the expression we minimize is 0 whenever there is no error and 1
-whenever there is an error. So we minimize the number of errors we make. The
-subject to expression makes sure that the fraction of false accusations we make
-is less than $10\%$ of the accusations we make. The expression should be read
-as,
-
-\begin{equation}
-    \frac{\textit{false accusations}}{\textit{total accusations}} < \frac{1}{10}
-\end{equation}
-
-Consider the numerator of the fraction on the left hand side,
-
-\begin{equation}
-    \textit{false accusations} = \sum_{(\alpha, t_u) \in V}
-    \mathbbm{1}_{T_\alpha}(t_u) \cdot
-    \left(1 - P_x(T_\alpha \setminus \{t_u\}, t_u, \theta)\right).
-\end{equation}
-
-For a $(\alpha, t_u) \in V$ where $t_u \in T_\alpha$ we have that
-$\mathbbm{1}_{T_\alpha}(t_u) = 1$ then if $P$ is correct it returns 1 and we
-get,
-
-\begin{equation}
-    \mathbbm{1}_{T_\alpha}(t_u) \cdot
-    \left(1 - P_x(T_\alpha \setminus \{t_u\}, t_u, \theta)\right) =
-    1 \cdot (1 - 1) = 0,
-\end{equation}
-
-and if $P$ is incorrect and returns 0 we have,
-
-\begin{equation}
-    \mathbbm{1}_{T_\alpha}(t_u) \cdot
-    \left(1 - P_x(T_\alpha \setminus \{t_u\}, t_u, \theta)\right) =
-    1 \cdot (1 - 0) = 1.
-\end{equation}
-
-Similarly for a $(\alpha, t_u) \in V$ where $t_u \in T_\alpha$ we have that
-$\mathbbm{1}_{T_\alpha}(t_u) = 0$ and therefore the expression is always
-0. Therefore the expression is 1 whenever we have a false accusation and 0
-otherwise. The right hand side of the inequality simply counts the number of
-accusations by inverting the output of $P$ and divides that by 10. So the
-condition makes sure that only 10\% of the accusations we make are false
-accusations.
-
-We have run our prediction system on several of the networks we trained as
-part of our experiments. For each of the networks we present several graphs
-showing their performance for different prediction systems and thresholds and
-we report the best configuration for that network. The dataset we use to tune
-$\theta$ and the weight function $w$ are \gls{F}. The set consists of 2,000
-previously unseen authors. For each author we generate two problems meaning that
-we end up with 4,000 different problems. For each of the authors we generate a
-positive sample by taking the newest text as the unknown text and a negative
-sample by choosing a random text from some other author in the set. That is
-we have a 0.5 split between positive and negative samples. We also tried our
-prediction system on another validation set. In the real world it has been
-estimated that 4\% of turn ins for the \gls{SRP} are written by "ghost writers"
-\footnote{https://politiken.dk/indland/uddannelse/art5603163/Gymnasieelever-\%C2
-\% BBSnyderi-beviser-hvor-vanvittig-betydningsfuld-SRP-er-blevet\%C2\%AB}. We
-therefore also wanted to find the $\theta$ and $w$ for a validation set with
-only 4\% negative samples instead of 50\% negative samples. We generated 2,000
-positive samples as before and then for each sample we added a negative sample
-with a 4\% chance.
-
-
-\subsubsection{\glsdesc{conv-char-NN}}
-\label{subsubsec:prediction_system_conv-char-NN}
-
-The first network we tuned hyperparameters for were the network presented
-in Figure \ref{fig:conv-char-NN}. The network used only convolutions on the
-character level to extract features and used a dense network to decide whether
-or not the texts were written by the same author. We have shown the accuracy
+Similarly to the two other networks found the best prediction system and
+tuned the threshold for this network. We try the same prediction systems
+and thresholds as for the other two networks. We have shown the accuracy
 and accusation error for the dataset containing 50\% negatives in Figure
-\ref{fig:conv-char-NN-pred-50} and for the dataset containing 4\% negatives in
-Figure \ref{fig:conv-char-NN-pred-4}.
-
-\begin{figure}
-    \centering
-    \textbf{Prediction System Results for 0.5 Split, \glsdesc{conv-char-NN}}\par\medskip
-    \includegraphics[scale=0.33]{./pictures/experiments/conv_char_nn/prediction_system_50}
-    \caption{Results of running the prediction system with the network described
-        in Section \ref{subsubsec:conv_char_nn} on a validation dataset with
-        50\% positive samples and 50\% negative samples. In the upper graph we
-        show the accuracies obtained as a function of $\theta$ for different
-        weights $w$. At the bottom we have shown the accusation error as a
-        function $\theta$ again with one line for each weight. We can see that
-        as the threshold increases and we accuse more people of cheating the
-        accusation error rises.}
-    \label{fig:conv-char-NN-pred-50}
-\end{figure}
-
-\begin{figure}
-    \centering
-    \textbf{Prediction System Results for 0.04 Split, \glsdesc{conv-char-NN}}\par\medskip
-    \includegraphics[scale=0.33]{./pictures/experiments/conv_char_nn/prediction_system_04}
-    \caption{Results of running the prediction system with the network described
-        in Section \ref{subsubsec:conv_char_nn} on a validation dataset with
-        96\% positive samples and 4\% negative samples. In the upper graph we
-        show the accuracies obtained as a function of $\theta$ for different
-        weights $w$. At the bottom we have shown the accusation error as a
-        function $\theta$ again with one line for each weight. We can see that
-        as the threshold increases and we accuse more people of cheating the
-        accusation error rises.}
-    \label{fig:conv-char-NN-pred-4}
-\end{figure}
-
-The best configuration for both the 50/50 split and 96/04 split was the
-following,
-
-\begin{center}
-\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
-\hline
-Split & Weight            & $\theta$ & TP  & TN  & FP & FN & Acc    & A-Error \\ \hline
-50/50 & $P_{lexp_{0.25}}$ & 0.390    & 1843 & 1482 & 517 & 156 & 0.8316 & 0.095   \\ \hline
-96/04 & $P_{mv}$          & 0.057    & 1999 & 8    & 74  & 0   & 0.9644 & 0.000   \\ \hline
-\end{tabular}
-\end{center}
-
-\subsubsection{\glsdesc{rec-sent-NN}}
-\label{subsubsec:prediction_system_rec-sent-NN}
-
-The second network we tuned hyperparameters for was the network depicted in
-\ref{fig:rec-sent-NN}. This network was the one \gls{RNN} we attempted to use
-to solve this problem. Applying the prediction system to this network gave the
-results which can be seen in the Figures, \ref{fig:rec-sent-NN-pred-50} and
-\ref{fig:rec-sent-NN-pred-4}
-
-\begin{figure}
-    \centering
-    \textbf{Prediction System Results for 0.5 Split, \glsdesc{rec-sent-NN}}\par\medskip
-    \includegraphics[scale=0.33]{./pictures/experiments/rec_sent_nn/prediction_system_50}
-    \caption{Results of running the prediction system with the network described
-        in Section \ref{subsubsec:rec_sent_nn} on a validation dataset
-        with 50\% positive samples and 50\% negative samples. In the upper graph
-        we show the accuracies obtained as a function of $\theta$ for different
-        weights $w$. At the bottom we have shown the accusation error as a
-        function $\theta$ again with one line for each weight. We can see that
-        as the threshold increases and we accuse more people of cheating the
-        accusation error rises.}
-    \label{fig:rec-sent-NN-pred-50}
-\end{figure}
-
-\begin{figure}
-    \centering
-    \textbf{Prediction System Results for 0.04 Split, \glsdesc{rec-sent-NN}}\par\medskip
-    \includegraphics[scale=0.33]{./pictures/experiments/rec_sent_nn/prediction_system_04}
-    \caption{Results of running the prediction system with the network described
-        in Section \ref{subsubsec:rec_sent_nn} on a validation dataset
-        with 96\% positive samples and 4\% negative samples. In the upper graph
-        we show the accuracies obtained as a function of $\theta$ for different
-        weights $w$. At the bottom we have shown the accusation error as a
-        function $\theta$ again with one line for each weight. We can see that
-        as the threshold increases and we accuse more people of cheating the
-        accusation error rises.}
-    \label{fig:rec-sent-NN-pred-4}
-\end{figure}
-
-The best configurations for \gls{rec-sent-NN}, using both the 50/50 and
-96/04 split of data was the following,
-\begin{center}
-\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
-\hline
-Split & Weight            & $\theta$ & TP  & TN & FP  & FN & Acc    & A-Error \\ \hline
-50/50 & $P_{lexp_{0.25}}$ & 0.033    & 1965 & 310 & 1689 & 34  & 0.5690 & 0.099   \\ \hline
-96/04 & $P_{lexp_{0.25}}$ & 0.002    & 1999 & 1   & 79   & 0   & 0.9620 & 0.000   \\ \hline
-\end{tabular}
-\end{center}
-
-These result are to expected when looking at the graphs. The immediate spike in
-accusation error leaves the model very little room to increase the accuracy in.
-This is most likely the result of the aforementioned author specific learning
-the network does.
-
-
-\subsubsection{\glsdesc{conv-char-word-NN}}
-\label{subsubsec:prediction_system_conv-char-word-NN}
-
-The third network we tuned hyperparameters for was the network presented
-in Figure TODO. The network used convolutions on the character level and
-word level to extract features and used a dense network to decide whether or
-not the texts were written by the same author. We have shown the accuracy
-and accusation error for the dataset containing 50\% negatives in Figure
-\ref{fig:conv-char-word-NN-pred-50} and for the dataset containing 4\%
-negatives in Figure \ref{fig:conv-char-word-NN-pred-4}.
+\ref{fig:conv-char-word-NN-pred-50} and for the dataset containing 4\% negatives
+in Figure \ref{fig:conv-char-word-NN-pred-4}.
 
 \begin{figure}
     \centering
     \textbf{Prediction System Results for 0.5 Split, \glsdesc{conv-char-word-NN}}\par\medskip
     \includegraphics[scale=0.33]{./pictures/experiments/conv_char_word_nn/prediction_system_50}
-    \caption{Results of running the prediction system with the network described
-        in Section \ref{subsubsec:conv_char_word_nn} on a validation dataset
-        with 50\% positive samples and 50\% negative samples. In the upper graph
-        we show the accuracies obtained as a function of $\theta$ for different
-        weights $w$. At the bottom we have shown the accusation error as a
-        function $\theta$ again with one line for each weight. We can see that
+    \caption{Results of running the prediction system with
+        \gls{conv-char-word-NN} on a validation dataset with 50\% positive
+        samples and 50\% negative samples. In the upper graph we show the
+        accuracies obtained as a function of $\theta$ for different prediction
+        systems. At the bottom we have shown the accusation error as a function
+        $\theta$ again with one line for each prediction system. We can see that
         as the threshold increases and we accuse more people of cheating the
         accusation error rises.}
     \label{fig:conv-char-word-NN-pred-50}
@@ -1178,12 +1039,12 @@ negatives in Figure \ref{fig:conv-char-word-NN-pred-4}.
     \centering
     \textbf{Prediction System Results for 0.04 Split, \glsdesc{conv-char-word-NN}}\par\medskip
     \includegraphics[scale=0.33]{./pictures/experiments/conv_char_word_nn/prediction_system_04}
-    \caption{Results of running the prediction system with the network described
-        in Section \ref{subsubsec:conv_char_word_nn} on a validation dataset
-        with 96\% positive samples and 4\% negative samples. In the upper graph
-        we show the accuracies obtained as a function of $\theta$ for different
-        weights $w$. At the bottom we have shown the accusation error as a
-        function $\theta$ again with one line for each weight. We can see that
+    \caption{Results of running the prediction system with
+        \gls{conv-char-word-NN} on a validation dataset with 96\% positive
+        samples and 4\% negative samples. In the upper graph we show the
+        accuracies obtained as a function of $\theta$ for different prediction
+        systems. At the bottom we have shown the accusation error as a function
+        $\theta$ again with one line for each prediction system. We can see that
         as the threshold increases and we accuse more people of cheating the
         accusation error rises.}
     \label{fig:conv-char-word-NN-pred-4}
@@ -1193,17 +1054,36 @@ The best configuration for the 50/50 split and the 96/04 split was the
 following,
 
 \begin{center}
-\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
-\hline
-Split & Weight            & $\theta$ & TP  & TN  & FP & FN & Acc     & A-Error \\ \hline
-50/50 & $P_{lexp_{0.25}}$ & 0.433    & 1856 & 1302 & 697 & 143 & 0.7898 & 0.099   \\ \hline
-96/04 & $P_{exp_{0.25}}$  & 0.127    & 1999 & 9    & 73  & 0   & 0.9649 & 0.000   \\ \hline
-\end{tabular}
+    \begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+        \hline
+        Split & Weight            & $\theta$ & TP   & TN   & FP  & FN  & Acc     & A-Error \\ \hline
+        50/50 & $P_{lexp_{0.25}}$ & 0.433    & 1856 & 1302 & 697 & 143 & 0.7898 & 0.099   \\ \hline
+        96/04 & $P_{exp_{0.25}}$  & 0.127    & 1999 & 9    & 73  & 0   & 0.9649 & 0.000   \\ \hline
+    \end{tabular}
 \end{center}
 
-A summarizing view of the validation performance of the different networks can
-be seen in Table \ref{tab:experi-results}.
 
+\subsection{Summary}
+
+In this section we described the experiments we performed. We started by
+explaining how we selected the features our baselines work on. After that we
+described how we performed the parameter selection for the baseline methods. We
+then presented three different network architectures. Two convolutional and one
+recurrent. The networks worked on different linguistic layers,
+
+\begin{description}
+    \item[\gls{conv-char-NN}] The character level,
+    \item[\gls{rec-sent-NN}] The sentence level,
+    \item[\gls{conv-char-word-NN}] Word and character level.
+\end{description}
+
+For each of the networks we used a validation set to determine the best
+configurations for the prediction system. A summarizing view of the
+validation performance of the different networks can be seen in Table
+\ref{tab:experi-results}.
+
+% TODO: This should probably not be called weights. The weights are now known as
+% "prediction systems".
 \begin{table}[h]
 \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|}
 \hline
@@ -1215,7 +1095,7 @@ Split                  & Network                 & Weight            & $\theta$ 
                        & \gls{rec-sent-NN}       & $P_{lexp_{0.25}}$ & 0.002    & 1999 & 1    & 79   & 0   & 0.9620 & 0.000   \\ \cline{2-10} 
                        & \gls{conv-char-word-NN} & $P_{exp_{0.25}}$  & 0.127    & 1999 & 9    & 73   & 0   & 0.9649 & 0.000   \\ \hline
 \end{tabular}
-\caption{A summarizing view of the performance of the different networks on the
-the validation dataset (F).}
+\caption{The performance of all neural networks we have implemented on the
+    validation dataset.}
 \label{tab:experi-results}
 \end{table}
