@@ -78,9 +78,9 @@ makes a decisions.
 
 The ROC curves and AUROC results for the different networks we produced, can
 be seen in Figure \ref{fig:AUROC}. These figures reinforce the relationship
-between the networks already expressed. \gls{conv-char-NN} still performs
-best. It is however very closely followed by \gls{conv-char-word-NN}, to the
-point of certain overlaps in the ROC-Curve in the 96/04 split constrained
+between the networks already expressed. \gls{conv-char-NN} still performs best.
+It is however very closely followed by \gls{conv-char-word-NN}, to the point
+of certain overlaps in the ROC-Curve in the 4\% negative sample, constrained
 configuration. While \gls{rec-sent-NN} does have the worst AUROC score, it is
 higher than we anticipated when looking back at the results presented in Section
 \ref{sec:results}. This might be attributed to the model being working good in
@@ -122,15 +122,15 @@ other results. The first experiment we compare against is \citep{aalykke2016}.
 specificity of their best performing configuration. The sensitivity is reported
 at 95.0\% and the specificity at 71.9\%. Those results were obtained on a
 dataset with 500 positive cases and 500 negative cases. \citet{aalykke2016}
-comments that his results is not directly comparable to the real world as he
-use a 50/50 dataset. We have focused on developing methods that work the best
-on a 96/4 split dataset. We have however reported results when maximizing
-accuracy on a 50/50 dataset which is comparable to \citep{aalykke2016}. In our
-best configuration on the 50/50 split we obtained a sensitivity of 91.0\% and a
-specificity of 82.1\%. That means that we had a worse sensitivity but a better
-specificity. The accuracy obtained by \citet{aalykke2016} was $\frac{0.95 +
-0.719}{2} = 0.8345$ while our accuracy was at $0.86535$ so we had a higher
-accuracy.
+comments that his results is not directly comparable to the real world as he use
+a dataset with 50\% negative samples. We have focused on developing methods that
+work the best on a dataset with 4\% negative samples. We have however reported
+results when maximizing accuracy on a 50\% negative dataset which is comparable
+to \citep{aalykke2016}. In our best configuration on the 50\% negative dataset
+we obtained a sensitivity of 91.0\% and a specificity of 82.1\%. That means that
+we had a worse sensitivity but a better specificity. The accuracy obtained by
+\citet{aalykke2016} was $\frac{0.95 + 0.719}{2} = 0.8345$ while our accuracy was
+at $0.86535$ so we had a higher accuracy.
 
 \citet{aalykke2016}s results are impressive considering they use only the
 distances between feature sets to compare assignments. One caveat to consider
@@ -642,25 +642,28 @@ prediction systems.
 
         \begin{figure}
             \centering
-            \textbf{$P_{exp_\lambda}$ 0.5 Split}\par\medskip
+            \textbf{$P_{exp_\lambda}$ 50\% Negative Samples}\par\medskip
             \includegraphics[width=0.7\textwidth]{./pictures/discussion/conv_char_nn_prediction_zoom_50_time}
+
             \caption{Illustrate important intervals for our different
-                $P_{exp_\lambda}$ prediction systems for the \gls{conv-char-NN}
-                network on the 0.5 split dataset. On the left we have shown the
-                beginning of the curves, in the middle we have shown the top
-                accuracy and to the right we have shown the end of the curves.}
+            $P_{exp_\lambda}$ prediction systems for the \gls{conv-char-NN}
+            network on the dataset with 50\% negative samples. On the left we
+            have shown the beginning of the curves, in the middle we have shown
+            the top accuracy and to the right we have shown the end of the
+            curves.}
             \label{fig:conv_char_prediction_zoom_50}
         \end{figure}
 
         \begin{figure}
             \centering
-            \textbf{$P_{exp_\lambda}$ 0.04 Split}\par\medskip
+            \textbf{$P_{exp_\lambda}$ 4\% Negative Samples}\par\medskip
             \includegraphics[width=0.7\textwidth]{./pictures/discussion/conv_char_nn_prediction_zoom_04_time}
             \caption{Illustrate important intervals for our different
-                $P_{exp_\lambda}$ prediction systems for the \gls{conv-char-NN}
-                network on the 0.04 split dataset. On the left we have shown the
-                beginning of the curves, in the middle we have shown the top
-                accuracy and to the right we have shown the end of the curves.}
+            $P_{exp_\lambda}$ prediction systems for the \gls{conv-char-NN}
+            network on the dataset with 4\% negative samples. On the left we
+            have shown the beginning of the curves, in the middle we have shown
+            the top accuracy and to the right we have shown the end of the
+            curves.}
             \label{fig:conv_char_prediction_zoom_04}
         \end{figure}
 
@@ -777,7 +780,7 @@ prediction systems.
 
         That is exactly the result we expected and shows that it was a good idea
         to look at text length as part of our prediction systems. We have not
-        shown the results of the 0.04 split as the same is the case there.
+        shown the results of the 4\% dataset as the same is the case there.
 
     \item[$P_{lepx_{0.25}}$]
 
