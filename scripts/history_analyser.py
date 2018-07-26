@@ -29,7 +29,6 @@ print('Best validation', np.max(val_accuracies), 'in epoch',
 plt.plot(epochs, accuracies, c='r', label='Training')
 plt.plot(epochs, val_accuracies, c='b', label='Validation')
 plt.grid(True)
-plt.ylim(0.0, 1.01)
 plt.xlabel('Epochs')
 plt.ylabel('Accuracy')
 plt.legend()
