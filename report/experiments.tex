@@ -63,14 +63,11 @@ as inspiration we generated a candidate feature set of 4950 features. The set
 consisted of,
 
 \begin{itemize}
-    \item
-
-        The frequencies of the 500 most frequent words,
 
     \item
 
-        The frequencies of the 500 most frequent word-n-grams for $n \in \{2, 3,
-        4\}$,
+        The frequencies of the 500 most frequent word-n-grams for $n \in \{1, 2,
+        3, 4\}$,
 
     \item
 
@@ -583,7 +580,8 @@ accuracies during training in Figure \ref{fig:conv-char-NN-accuracies}.
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.6\textwidth]{./pictures/experiments/conv_char_nn/training_accuracy}
+    \textbf{Training and Validation Accuracies for Network \gls{conv-char-NN}}\par\medskip
+    \includegraphics[width=0.5\textwidth]{./pictures/experiments/conv_char_nn/training_accuracy}
     \caption{The training and validation accuracy of \gls{conv-char-NN} during
         training. Each epoch contains several thousand minibatches which is why
         the training and validation accuracies rises so much in the first
@@ -662,8 +660,8 @@ strings of the convolutional filter looking at Danish names.
         \verb!elsen\n\n\n! & Nielsen, Mikkelsen. \\
         \verb!ersen\n\n\n! & Pedersen, Andersen, Petersen, Iversen, Jespersen. \\
         \verb!ansen\n\n\n! & Hansen, Christiansen, Johansen, Kristiansen. \\
-        \verb!ensen\n\n\n! & Jensen, Christensen, S\o rensen, J\o rgensen, Kristensen,
-                             Mortensen, Mogensen. \\
+        \verb!ensen\n\n\n! & Jensen, Christensen, S\o rensen, J\o rgensen,
+                             Kristensen, Mortensen, Mogensen. \\
         \verb!arsen\n\n\n! & Larsen. \\
         \verb!ulsen\n\n\n! & Poulsen.
     \end{tabular}
@@ -704,7 +702,7 @@ negatives in Figure \ref{fig:conv-char-NN-pred-4}.
 
 \begin{figure}
     \centering
-    \textbf{Prediction System Results for 0.5 Split, \glsdesc{conv-char-NN}}\par\medskip
+    \textbf{Prediction System Results for 0.5 Split, \gls{conv-char-NN}}\par\medskip
     \includegraphics[scale=0.33]{./pictures/experiments/conv_char_nn/prediction_system_50}
     \caption{Results of running the prediction system with the
         \gls{conv-char-NN} on a validation dataset with 50\% positive samples
@@ -719,7 +717,7 @@ negatives in Figure \ref{fig:conv-char-NN-pred-4}.
 
 \begin{figure}
     \centering
-    \textbf{Prediction System Results for 0.04 Split, \glsdesc{conv-char-NN}}\par\medskip
+    \textbf{Prediction System Results for 0.04 Split, \gls{conv-char-NN}}\par\medskip
     \includegraphics[scale=0.33]{./pictures/experiments/conv_char_nn/prediction_system_04}
     \caption{Results of running the prediction system with \gls{conv-char-NN}
         on a validation dataset with 96\% positive samples and 4\% negative
@@ -757,20 +755,17 @@ the same data as the convolutional networks and the \textit{Embedding},
 \textit{Feature Extraction}, \textit{Combining} and \textit{Comparing} structure
 was used as well. The best model we generated can be seen depicted in Figure
 \ref{fig:rec-sent-NN}. After 10 epochs this network peaked with a validation
-accuracy of 0.657.
+accuracy of 0.657. We have shown a plot of the training and validation
+accuracies during training in Figure \ref{fig:rec-sent-NN-training}.
 
 \begin{figure}
     \centering
-    \includegraphics[width=\textwidth]{./pictures/experiments/rec_sent_nn/model}
-    \caption{The structure of network \gls{rec-sent-NN}. The weights are shared
-        from from the embedding layer all the way down to right before the two
-        paths merge. The lambda layer takes each sentence and averages along
-        the first axis causing the dimensionality to change from a matrix with
-        25 rows and 300 columns to a column vector with 300 elements. The LSTM
-        layers are bidirectional meaning its runs through the layer from both
-        directions resulting in an output dimensionality twice the unit count
-        of 50.
-    \label{fig:rec-sent-NN}}
+    \textbf{Training and Validation Accuracies for Network \gls{rec-sent-NN}}\par\medskip
+    \includegraphics[width=0.5\textwidth]{./pictures/experiments/rec_sent_nn/training}
+    \caption{Shows the training and validation accuracies during training of
+        \gls{rec-sent-NN}. We stopped training after we observed that the
+        validation accuracy no longer followed the training accuracy.}
+    \label{fig:rec-sent-NN-training}
 \end{figure}
 
 \begin{description}
@@ -848,6 +843,20 @@ accuracy of 0.657.
 
 \end{description}
 
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{./pictures/experiments/rec_sent_nn/model}
+    \caption{The structure of network \gls{rec-sent-NN}. The weights are shared
+        from from the embedding layer all the way down to right before the two
+        paths merge. The lambda layer takes each sentence and averages along
+        the first axis causing the dimensionality to change from a matrix with
+        25 rows and 300 columns to a column vector with 300 elements. The LSTM
+        layers are bidirectional meaning its runs through the layer from both
+        directions resulting in an output dimensionality twice the unit count
+        of 50.
+    \label{fig:rec-sent-NN}}
+\end{figure}
+
 The path to this final design was a long one. The initial network designs
 for our recurrent networks was based on a combination of the work done by
 \citet{qian:2018} and our \gls{conv-char-NN} network described in Section
@@ -892,7 +901,7 @@ The results can be seen in the Figures, \ref{fig:rec-sent-NN-pred-50} and
 
 \begin{figure}
     \centering
-    \textbf{Prediction System Results for 0.5 Split, \glsdesc{rec-sent-NN}}\par\medskip
+    \textbf{Prediction System Results for 0.5 Split, \gls{rec-sent-NN}}\par\medskip
     \includegraphics[scale=0.33]{./pictures/experiments/rec_sent_nn/prediction_system_50}
     \caption{Results of running the prediction system with \gls{rec-sent-NN} on
         a validation dataset with 50\% positive samples and 50\% negative
@@ -907,7 +916,7 @@ The results can be seen in the Figures, \ref{fig:rec-sent-NN-pred-50} and
 
 \begin{figure}
     \centering
-    \textbf{Prediction System Results for 0.04 Split, \glsdesc{rec-sent-NN}}\par\medskip
+    \textbf{Prediction System Results for 0.04 Split, \gls{rec-sent-NN}}\par\medskip
     \includegraphics[scale=0.33]{./pictures/experiments/rec_sent_nn/prediction_system_04}
     \caption{Results of running the prediction system with \gls{rec-sent-NN} on
         a validation dataset with 96\% positive samples and 4\% negative
@@ -940,13 +949,23 @@ the network does.
 \subsubsection{\glsdesc{conv-char-word-NN}}
 \label{subsubsec:conv_char_word_nn}
 
-The last network we produced, is what we call \gls{conv-char-word-NN}.
-This network is very reminiscent of \gls{conv-char-NN}, mostly due to
-its convolutional nature. This network was an attempt at expanding
-on the successful architecture of \gls{conv-char-NN}. Applied to the 
-same data as the previous networks, we got a maximum accuracy of 0.697
-on the second epoch. The design of the network in the different parts was
-as follows
+The last network we produced, is what we call \gls{conv-char-word-NN}. This
+network is similar to \gls{conv-char-NN} mostly due being convolutional.
+This network was an attempt at expanding on the successful architecture of
+\gls{conv-char-NN}. Applied to the same data as the previous networks, we got a
+maximum accuracy of 0.697 on the second epoch. We have shown the training and
+validation accuracies in Figure \ref{fig:conv-char-word-NN-training}. The design
+of the network in the different parts was as follows,
+
+\begin{figure}
+    \centering
+    \textbf{Training and Validation Accuracies for Network \gls{conv-char-word-NN}}\par\medskip
+    \includegraphics[width=0.5\textwidth]{./pictures/experiments/conv_char_word_nn/training}
+    \caption{Training and validation accuracies of \gls{conv-char-word-NN}
+        during training. We stop training when the validation accuracy no longer
+        follow the training accuracy.}
+    \label{fig:conv-char-word-NN-training}
+\end{figure}
 
 \begin{description}
 
@@ -1022,7 +1041,7 @@ in Figure \ref{fig:conv-char-word-NN-pred-4}.
 
 \begin{figure}
     \centering
-    \textbf{Prediction System Results for 0.5 Split, \glsdesc{conv-char-word-NN}}\par\medskip
+    \textbf{Prediction System Results for 0.5 Split, \gls{conv-char-word-NN}}\par\medskip
     \includegraphics[scale=0.33]{./pictures/experiments/conv_char_word_nn/prediction_system_50}
     \caption{Results of running the prediction system with
         \gls{conv-char-word-NN} on a validation dataset with 50\% positive
@@ -1037,7 +1056,7 @@ in Figure \ref{fig:conv-char-word-NN-pred-4}.
 
 \begin{figure}
     \centering
-    \textbf{Prediction System Results for 0.04 Split, \glsdesc{conv-char-word-NN}}\par\medskip
+    \textbf{Prediction System Results for 0.04 Split, \gls{conv-char-word-NN}}\par\medskip
     \includegraphics[scale=0.33]{./pictures/experiments/conv_char_word_nn/prediction_system_04}
     \caption{Results of running the prediction system with
         \gls{conv-char-word-NN} on a validation dataset with 96\% positive

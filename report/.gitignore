@@ -2,8 +2,9 @@
 *.bbl
 *.log
 *.out
-./*.pdf
 *.toc
 *.blg
 *.glo
 *.ist
+*.pdf
+!*/**
