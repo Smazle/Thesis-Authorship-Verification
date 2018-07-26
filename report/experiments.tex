@@ -1114,18 +1114,45 @@ configurations for the prediction system. A summarizing view of the
 validation performance of the different networks can be seen in Table
 \ref{tab:experi-results}.
 
-% TODO: This should probably not be called weights. The weights are now known as
-% "prediction systems".
 \begin{table}[h]
-\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|}
-\hline
-Split                  & Network                 & Weight            & $\theta$ & TP  & TN  & FP  & FN & Acc     & A-Error \\ \hline
-\multirow{3}{*}{50/50} & \gls{conv-char-NN}      & $P_{lexp_{0.25}}$ & 0.390    & 1843 & 1482 & 517  & 156 & 0.8316 & 0.095   \\ \cline{2-10} 
-                       & \gls{rec-sent-NN}       & $P_{lexp_{0.25}}$ & 0.033    & 1965 & 310  & 1689 & 34  & 0.5690 & 0.099   \\ \cline{2-10} 
-                       & \gls{conv-char-word-NN} & $P_{lexp_{0.25}}$ & 0.433    & 1856 & 1302 & 697  & 143 & 0.7898 & 0.099   \\ \hline
-\multirow{3}{*}{96/04} & \gls{conv-char-NN}      & $P_{mv}$          & 0.057    & 1999 & 8    & 74   & 0   & 0.9644 & 0.000   \\ \cline{2-10} 
-                       & \gls{rec-sent-NN}       & $P_{lexp_{0.25}}$ & 0.002    & 1999 & 1    & 79   & 0   & 0.9620 & 0.000   \\ \cline{2-10} 
-                       & \gls{conv-char-word-NN} & $P_{exp_{0.25}}$  & 0.127    & 1999 & 9    & 73   & 0   & 0.9649 & 0.000   \\ \hline
+    \small
+    \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|}
+        \hline
+        Split                  & Network                 & Prediction System &
+        $\theta$               & TP                      & TN                &
+        FP                     & FN                      & Acc               &
+        A-Error
+        \\ \hline
+        \multirow{3}{*}{50/50} & \gls{conv-char-NN}      & $P_{lexp_{0.25}}$ &
+        0.390                  & 1843                    & 1482              &
+        517                    & 156                     & 0.8316            &
+        0.095
+        \\
+        \cline{2-10}           & \gls{rec-sent-NN}       & $P_{lexp_{0.25}}$ &
+        0.033                  & 1965                    & 310               &
+        1689                   & 34                      & 0.5690            &
+        0.099
+        \\
+        \cline{2-10}           & \gls{conv-char-word-NN} & $P_{lexp_{0.25}}$ &
+        0.433                  & 1856                    & 1302              &
+        697                    & 143                     & 0.7898            &
+        0.099
+        \\ \hline
+        \multirow{3}{*}{96/04} & \gls{conv-char-NN}      & $P_{mv}$          &
+        0.057                  & 1999                    & 8                 &
+        74                     & 0                       & 0.9644            &
+        0.000
+        \\
+        \cline{2-10}           & \gls{rec-sent-NN}       & $P_{lexp_{0.25}}$ &
+        0.002                  & 1999                    & 1                 &
+        79                     & 0                       & 0.9620            &
+        0.000
+        \\
+        \cline{2-10}           & \gls{conv-char-word-NN} & $P_{exp_{0.25}}$  &
+        0.127                  & 1999                    & 9                 &
+        73                     & 0                       & 0.9649            &
+        0.000
+        \\ \hline
 \end{tabular}
 \caption{The performance of all neural networks we have implemented on the
     validation dataset.}
