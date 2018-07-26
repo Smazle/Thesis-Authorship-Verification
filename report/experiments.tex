@@ -693,7 +693,7 @@ for a prediction system is found by taking the threshold that maximizes
 accuracy while having an accusation error of less than 10\%. The best
 prediction system is then the system that has the highest accuracy for
 their best threshold. We try 1,001 different thresholds $\theta = 0.000,
-0.001, \dots, 1.000$ and we try the weight functions $P_\mathcal{U}$,
+0.001, \dots, 1.000$ and we try the prediction systems $P_\mathcal{U}$,
 $P_{exp_{0.25}}$, $P_{exp_{0.50}}$, $P_{exp_{0.75}}$, $P_{exp_{1.00}}$,
 $P_{lexp_{0.25}}$, $P_{MV}$, $P_{max}$, $P_{min}$ and $P_l$. We have shown
 the accuracy and accusation error for the dataset containing 50\% negatives
@@ -734,12 +734,18 @@ The best configuration for both the 50/50 split and 96/04 split was the
 following,
 
 \begin{center}
-\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
-\hline
-Split & Weight            & $\theta$ & TP  & TN  & FP & FN & Acc    & A-Error \\ \hline
-50/50 & $P_{lexp_{0.25}}$ & 0.390    & 1843 & 1482 & 517 & 156 & 0.8316 & 0.095   \\ \hline
-96/04 & $P_{mv}$          & 0.057    & 1999 & 8    & 74  & 0   & 0.9644 & 0.000   \\ \hline
-\end{tabular}
+    \begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+        \hline
+        Split  & Prediction System & $\theta$ & TP   & TN   & FP  & FN  &
+        Acc    & A-Error
+        \\ \hline
+        50/50  & $P_{lexp_{0.25}}$ & 0.390    & 1843 & 1482 & 517 & 156 &
+        0.8316 & 0.095
+        \\ \hline
+        96/04  & $P_{mv}$          & 0.057    & 1999 & 8    & 74  & 0   &
+        0.9644 & 0.000
+        \\ \hline
+    \end{tabular}
 \end{center}
 
 
@@ -923,8 +929,9 @@ The results can be seen in the Figures, \ref{fig:rec-sent-NN-pred-50} and
         samples. In the upper graph we show the accuracies obtained as a
         function of $\theta$ for different prediction systems. At the bottom we
         have shown the accusation error as a function $\theta$ again with one
-        line for each weight. We can see that as the threshold increases and we
-        accuse more people of cheating the accusation error rises.}
+        line for each prediction system. We can see that as the threshold
+        increases and we accuse more people of cheating the accusation error
+        rises.}
     \label{fig:rec-sent-NN-pred-4}
 \end{figure}
 
@@ -933,10 +940,16 @@ The best configurations for \gls{rec-sent-NN}, using both the 50/50 and
 
 \begin{center}
     \begin{tabular}{|c|c|c|c|c|c|c|c|c|}
-    \hline
-    Split & Weight            & $\theta$ & TP   & TN  & FP   & FN  & Acc    & A-Error \\ \hline
-    50/50 & $P_{lexp_{0.25}}$ & 0.033    & 1965 & 310 & 1689 & 34  & 0.5690 & 0.099   \\ \hline
-    96/04 & $P_{lexp_{0.25}}$ & 0.002    & 1999 & 1   & 79   & 0   & 0.9620 & 0.000   \\ \hline
+        \hline
+        Split  & Prediction System & $\theta$ & TP   & TN  & FP   & FN  &
+        Acc    & A-Error
+        \\ \hline
+        50/50  & $P_{lexp_{0.25}}$ & 0.033    & 1965 & 310 & 1689 & 34  &
+        0.5690 & 0.099
+        \\ \hline
+        96/04  & $P_{lexp_{0.25}}$ & 0.002    & 1999 & 1   & 79   & 0   &
+        0.9620 & 0.000
+        \\ \hline
     \end{tabular}
 \end{center}
 
@@ -1088,9 +1101,15 @@ following,
 \begin{center}
     \begin{tabular}{|c|c|c|c|c|c|c|c|c|}
         \hline
-        Split & Weight            & $\theta$ & TP   & TN   & FP  & FN  & Acc     & A-Error \\ \hline
-        50/50 & $P_{lexp_{0.25}}$ & 0.433    & 1856 & 1302 & 697 & 143 & 0.7898 & 0.099   \\ \hline
-        96/04 & $P_{exp_{0.25}}$  & 0.127    & 1999 & 9    & 73  & 0   & 0.9649 & 0.000   \\ \hline
+        Split  & Prediction System & $\theta$ & TP   & TN   & FP  & FN  &
+        Acc    & A-Error
+        \\ \hline
+        50/50  & $P_{lexp_{0.25}}$ & 0.433    & 1856 & 1302 & 697 & 143 &
+        0.7898 & 0.099
+        \\ \hline
+        96/04  & $P_{exp_{0.25}}$  & 0.127    & 1999 & 9    & 73  & 0   &
+        0.9649 & 0.000
+        \\ \hline
     \end{tabular}
 \end{center}
 
