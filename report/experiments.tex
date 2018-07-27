@@ -257,15 +257,16 @@ a correct prediction would be the model saying he did write it. The results of
 this process can be seen in Table \ref{tab:baseline-val-res}.
 
 \begin{table}[h]
-    \centering
+    \begin{adjustbox}{center}
     \begin{tabular}{|c|c|c|c|c|c|c||c|c|}
         \hline
-        Split & Classifier & Params & TP & TN & FP & FN & \textbf{Accuracy} & \textbf{Accu Err} \\ \hline
-        \multirow{2}{*}{50/50} & SVM & \{C:10, $\gamma$:1000\} &  759 & 692 & 308 & 241 & \textbf{0.7255} & \textbf{0.2583} \\ \cline{2-9} 
+        Negatives & Classifier & Params & TP & TN & FP & FN & \textbf{Accuracy} & \textbf{Accu Err} \\ \hline
+        50\% & SVM & \{C:10, $\gamma$:1000\} &  759 & 692 & 308 & 241 & \textbf{0.7255} & \textbf{0.2583} \\ \cline{2-9} 
         & ED & \{K:1, p:1\} & 667 & 583 & 417 & 333 & \textbf{0.625} & \textbf{0.36353} \\ \hline
-        \multirow{2}{*}{96/04} & SVM & \{C:10, $\gamma$:1000\} & 762 & 23 & 25 & 238 & \textbf{0.749} & \textbf{0.91187} \\ \cline{2-9} 
+        4\% & SVM & \{C:10, $\gamma$:1000\} & 762 & 23 & 25 & 238 & \textbf{0.749} & \textbf{0.91187} \\ \cline{2-9} 
         & ED & \{K:1, p:1\} & 680 & 23 & 23 & 320 & \textbf{0.67208} & \textbf{0.93294} \\ \hline
     \end{tabular}
+    \end{adjustbox}
     \caption{The results of running our two baseline methods the \gls{SVM} and
         Extended Delta method, on the dataset \gls{C} the validation set.}
     \label{tab:baseline-val-res}
@@ -702,7 +703,7 @@ negatives in Figure \ref{fig:conv-char-NN-pred-4}.
 
 \begin{figure}
     \centering
-    \textbf{Prediction System Results for 0.5 Split, \gls{conv-char-NN}}\par\medskip
+    \textbf{Prediction system results for 50\% negative dataset, \gls{conv-char-NN}}\par\medskip
     \includegraphics[scale=0.33]{./pictures/experiments/conv_char_nn/prediction_system_50}
     \caption{Results of running the prediction system with the
         \gls{conv-char-NN} on a validation dataset with 50\% positive samples
@@ -717,7 +718,7 @@ negatives in Figure \ref{fig:conv-char-NN-pred-4}.
 
 \begin{figure}
     \centering
-    \textbf{Prediction System Results for 0.04 Split, \gls{conv-char-NN}}\par\medskip
+    \textbf{Prediction system results for 4\% negative dataset, \gls{conv-char-NN}}\par\medskip
     \includegraphics[scale=0.33]{./pictures/experiments/conv_char_nn/prediction_system_04}
     \caption{Results of running the prediction system with \gls{conv-char-NN}
         on a validation dataset with 96\% positive samples and 4\% negative
@@ -730,23 +731,23 @@ negatives in Figure \ref{fig:conv-char-NN-pred-4}.
     \label{fig:conv-char-NN-pred-4}
 \end{figure}
 
-The best configuration for both the 50/50 split and 96/04 split was the
+The best configuration for both the 50\% and 4\% negative dataset was the
 following,
 
-\begin{center}
+\begin{adjustbox}{center}
     \begin{tabular}{|c|c|c|c|c|c|c|c|c|}
         \hline
-        Split  & Prediction System & $\theta$ & TP   & TN   & FP  & FN  &
-        Acc    & A-Error
+        Negatives  & Prediction System & $\theta$ & TP   & TN   & FP  & FN  &
+        Acc        & A-Error
         \\ \hline
-        50/50  & $P_{lexp_{0.25}}$ & 0.390    & 1843 & 1482 & 517 & 156 &
-        0.8316 & 0.095
+        50\%       & $P_{lexp_{0.25}}$ & 0.390    & 1843 & 1482 & 517 & 156 &
+        0.8316     & 0.095
         \\ \hline
-        96/04  & $P_{mv}$          & 0.057    & 1999 & 8    & 74  & 0   &
-        0.9644 & 0.000
+        4\%        & $P_{mv}$          & 0.057    & 1999 & 8    & 74  & 0   &
+        0.9644     & 0.000
         \\ \hline
     \end{tabular}
-\end{center}
+\end{adjustbox}
 
 
 \subsubsection{\glsdesc{rec-sent-NN}}
@@ -907,7 +908,7 @@ The results can be seen in the Figures, \ref{fig:rec-sent-NN-pred-50} and
 
 \begin{figure}
     \centering
-    \textbf{Prediction System Results for 0.5 Split, \gls{rec-sent-NN}}\par\medskip
+    \textbf{Prediction system results for 50\% negative dataset, \gls{rec-sent-NN}}\par\medskip
     \includegraphics[scale=0.33]{./pictures/experiments/rec_sent_nn/prediction_system_50}
     \caption{Results of running the prediction system with \gls{rec-sent-NN} on
         a validation dataset with 50\% positive samples and 50\% negative
@@ -922,7 +923,7 @@ The results can be seen in the Figures, \ref{fig:rec-sent-NN-pred-50} and
 
 \begin{figure}
     \centering
-    \textbf{Prediction System Results for 0.04 Split, \gls{rec-sent-NN}}\par\medskip
+    \textbf{Prediction system results for 4\% negative dataset,\gls{rec-sent-NN}}\par\medskip
     \includegraphics[scale=0.33]{./pictures/experiments/rec_sent_nn/prediction_system_04}
     \caption{Results of running the prediction system with \gls{rec-sent-NN} on
         a validation dataset with 96\% positive samples and 4\% negative
@@ -935,22 +936,25 @@ The results can be seen in the Figures, \ref{fig:rec-sent-NN-pred-50} and
     \label{fig:rec-sent-NN-pred-4}
 \end{figure}
 
-The best configurations for \gls{rec-sent-NN}, using both the 50/50 and
-96/04 split of data was the following,
+The best configurations for \gls{rec-sent-NN}, using both the 50\% and
+4\% negative dataset was the following,
 
 \begin{center}
+    \begin{adjustbox}{center}
     \begin{tabular}{|c|c|c|c|c|c|c|c|c|}
         \hline
-        Split  & Prediction System & $\theta$ & TP   & TN  & FP   & FN  &
-        Acc    & A-Error
+        Negative  & Prediction System & $\theta$ & TP   & TN  & FP   & FN  &
+        Acc       & A-Error
         \\ \hline
-        50/50  & $P_{lexp_{0.25}}$ & 0.033    & 1965 & 310 & 1689 & 34  &
-        0.5690 & 0.099
+        50\%      & $P_{lexp_{0.25}}$ & 0.033    & 1965 & 310 & 1689 & 34  &
+        0.5690    & 0.099
         \\ \hline
-        96/04  & $P_{lexp_{0.25}}$ & 0.002    & 1999 & 1   & 79   & 0   &
-        0.9620 & 0.000
+        4\%       & $P_{lexp_{0.25}}$ & 0.002    & 1999 & 1   & 79   & 0   &
+        0.9620    & 0.000
         \\ \hline
+    \hline
     \end{tabular}
+    \end{adjustbox}
 \end{center}
 
 These result are to expected when looking at the graphs. The immediate spike in
@@ -1067,7 +1071,7 @@ in Figure \ref{fig:conv-char-word-NN-pred-4}.
 
 \begin{figure}
     \centering
-    \textbf{Prediction System Results for 0.5 Split, \gls{conv-char-word-NN}}\par\medskip
+    \textbf{Prediction system results for 50\% negative dataset, \gls{conv-char-word-NN}}\par\medskip
     \includegraphics[scale=0.33]{./pictures/experiments/conv_char_word_nn/prediction_system_50}
     \caption{Results of running the prediction system with
         \gls{conv-char-word-NN} on a validation dataset with 50\% positive
@@ -1082,7 +1086,7 @@ in Figure \ref{fig:conv-char-word-NN-pred-4}.
 
 \begin{figure}
     \centering
-    \textbf{Prediction System Results for 0.04 Split, \gls{conv-char-word-NN}}\par\medskip
+    \textbf{Prediction system results for 4\% negative dataset, \gls{conv-char-word-NN}}\par\medskip
     \includegraphics[scale=0.33]{./pictures/experiments/conv_char_word_nn/prediction_system_04}
     \caption{Results of running the prediction system with
         \gls{conv-char-word-NN} on a validation dataset with 96\% positive
@@ -1095,22 +1099,24 @@ in Figure \ref{fig:conv-char-word-NN-pred-4}.
     \label{fig:conv-char-word-NN-pred-4}
 \end{figure}
 
-The best configuration for the 50/50 split and the 96/04 split was the
+The best configuration for the 50\% and 4\% negative datasets was the
 following,
 
 \begin{center}
+    \begin{adjustbox}{center}
     \begin{tabular}{|c|c|c|c|c|c|c|c|c|}
         \hline
-        Split  & Prediction System & $\theta$ & TP   & TN   & FP  & FN  &
-        Acc    & A-Error
+        Negative  & Prediction System & $\theta$ & TP   & TN   & FP  & FN  &
+        Acc       & A-Error
         \\ \hline
-        50/50  & $P_{lexp_{0.25}}$ & 0.433    & 1856 & 1302 & 697 & 143 &
-        0.7898 & 0.099
+        50\%      & $P_{lexp_{0.25}}$ & 0.433    & 1856 & 1302 & 697 & 143 &
+        0.7898    & 0.099
         \\ \hline
-        96/04  & $P_{exp_{0.25}}$  & 0.127    & 1999 & 9    & 73  & 0   &
-        0.9649 & 0.000
+        4\%       & $P_{exp_{0.25}}$  & 0.127    & 1999 & 9    & 73  & 0   &
+        0.9649    & 0.000
         \\ \hline
     \end{tabular}
+    \end{adjustbox}
 \end{center}
 
 
@@ -1131,18 +1137,19 @@ recurrent. The networks worked on different linguistic layers,
 For each of the networks we used a validation set to determine the best
 configurations for the prediction system. A summarizing view of the
 validation performance of the different networks can be seen in Table
-\ref{tab:experi-results}.
+\ref{tab:experiment-validation-results}.
 
 \begin{table}[h]
+    \centering
     \small
     \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|}
         \hline
-        Split                  & Network                 & Prediction System &
+        Negative               & Network                 & Prediction System &
         $\theta$               & TP                      & TN                &
         FP                     & FN                      & Acc               &
         A-Error
         \\ \hline
-        \multirow{3}{*}{50/50} & \gls{conv-char-NN}      & $P_{lexp_{0.25}}$ &
+        \multirow{3}{*}{50\%}  & \gls{conv-char-NN}      & $P_{lexp_{0.25}}$ &
         0.390                  & 1843                    & 1482              &
         517                    & 156                     & 0.8316            &
         0.095
@@ -1157,7 +1164,7 @@ validation performance of the different networks can be seen in Table
         697                    & 143                     & 0.7898            &
         0.099
         \\ \hline
-        \multirow{3}{*}{96/04} & \gls{conv-char-NN}      & $P_{mv}$          &
+        \multirow{3}{*}{4\%}   & \gls{conv-char-NN}      & $P_{mv}$          &
         0.057                  & 1999                    & 8                 &
         74                     & 0                       & 0.9644            &
         0.000
@@ -1172,8 +1179,8 @@ validation performance of the different networks can be seen in Table
         73                     & 0                       & 0.9649            &
         0.000
         \\ \hline
-\end{tabular}
-\caption{The performance of all neural networks we have implemented on the
-    validation dataset.}
-\label{tab:experi-results}
+    \end{tabular}
+    \caption{The performance of all neural networks we have implemented on the
+        validation dataset.}
+    \label{tab:experiment-validation-results}
 \end{table}

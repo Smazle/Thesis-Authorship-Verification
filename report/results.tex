@@ -27,7 +27,7 @@ had to alter the way we compare the deep learning approaches with our baselines.
 This was done by determining the best performing threshold ($\theta$) and weight
 function for our neural network with regard to accuracy, and with no regard to
 the accusation error, as both our baselines do not focus on that either. Thus we
-compared the results of our baselines on the 50/50 dataset and the 96/04 dataset
+compared the results of our baselines on the 50\% and 4\% negative dataset
 with the highest unconstrained accuracy our \gls{NN} methods could muster.
 
 After determining the best networks using the dataset \gls{E} in conjunction
@@ -43,16 +43,17 @@ constraint. It should be noted that the parameters found that adhere to to the
 approach, this does not ensure the same level of adherence on the test data.
 
 We also used that same approach for the other two networks. The combined
-results for the 50/50 split test dataset \gls{D} can be seen in Table
-\ref{tab:50_results}, and the results for the 96/04 split data can be seen in
+results for the 50\% negative test dataset \gls{D} can be seen in Table
+\ref{tab:50_results}, and the results for the 4\% negative data can be seen in
 table \ref{tab:04_results}.
 
 \begin{table}[]
 \centering
-\textbf{The results of running our methods on a 50/50 split test dataset}\par\medskip
+\textbf{The results of running our methods on a 50\% negative test dataset}\par\medskip
+\begin{adjustbox}{center}
 \begin{tabular}{|c|l|c|c|c|c|c|c|c|c|}
 \hline
-Bound                & Method                  & Weight            & $\theta$ & TP  & TN  & FP  & FN  & Acc             & A-Error         \\ \hline
+Constrained                & Method                  & Weight            & $\theta$ & TP  & TN  & FP  & FN  & Acc             & A-Error         \\ \hline
 \multirow{5}{*}{Yes} & SVM                     & \multicolumn{8}{c|}{N/A}                                                                     \\ \cline{2-10} 
                      & Extended Delta          & \multicolumn{8}{c|}{N/A}                                                                     \\ \cline{2-10} 
                      & \gls{conv-char-NN}      & $P_{lexp_{0.25}}$ & 0.390    & 3392 & 2344 & 1206 & 158  & \textbf{0.8078} & \textbf{0.0631} \\ \cline{2-10} 
@@ -64,9 +65,10 @@ Bound                & Method                  & Weight            & $\theta$ & 
                      & \gls{conv-char-word-NN} & $P_{lexp_{0.25}}$ & 0.544    & 2810 & 3088 & 462  & 740  & 0.8307          & 0.1933          \\ \cline{2-10} 
                      & \gls{rec-sent-NN}       & $P_{lexp_{0.25}}$ & 0.267    & 1795 & 3076 & 474  & 1755 & 0.6860          & 0.3632          \\ \hline
 \end{tabular}
-\caption{The results on the 50/50 dataset, using the listed methods.
-\textit{Bound} refers to wether or not $\theta$ and the Weight which we used,
-was chosen based on their accuracy bounded/constrained by a 0.1 accusation error.
+\end{adjustbox}
+\caption{The results on the 50\% negative dataset, using the listed methods.
+Constrained refers to wether or not $\theta$ and the Weight which we used,
+was chosen based on their accuracy constrained by a 0.1 accusation error.
 In the case of Yes, it refers to under the 0.1 threshold and No refers to simply
 maximizing accuracy with no regard for accusation error. In both case
 the best results were bolded.}
@@ -75,10 +77,11 @@ the best results were bolded.}
 
 \begin{table}[]
 \centering
-\textbf{The results of running our methods on a 96/04 split test dataset}\par\medskip
+\textbf{The results of running our methods on a 4\% negative test dataset}\par\medskip
+\begin{adjustbox}{center}
 \begin{tabular}{|c|l|c|c|c|c|c|c|c|c|}
 \hline
-Bound                & Method                  & Weight            & $\theta$ & TP  & TN & FP & FN  & Acc             & A-Error         \\ \hline
+Constrained                & Method                  & Weight            & $\theta$ & TP  & TN & FP & FN  & Acc             & A-Error         \\ \hline
 \multirow{5}{*}{Yes} & SVM                     & \multicolumn{8}{c|}{N/A}                                                                   \\ \cline{2-10} 
                      & Extended Delta          & \multicolumn{8}{c|}{N/A}                                                                   \\ \cline{2-10} 
                      & \gls{conv-char-NN}      & $P_{MV}$          & 0.057    & 3546 & 13  & 140 & 4    & \textbf{0.9611} & \textbf{0.2352} \\ \cline{2-10} 
@@ -90,9 +93,10 @@ Bound                & Method                  & Weight            & $\theta$ & 
                      & \gls{conv-char-word-NN} & $P_{lexp_{0.25}}$ & 0.192    & 3507 & 47  & 97  & 43   & 0.9621          & 0.4777          \\ \cline{2-10} 
                      & \gls{rec-sent-NN}       & $P_{lexp_{0.25}}$ & 0.002    & 3505 & 18  & 130 & 45   & 0.9526          & 0.7142          \\ \hline
 \end{tabular}
-\caption{The results on the 96/04 data set, using the listed methods.
-\textit{Bound} refers to wether or not $\theta$ and the Weight which we used,
-was chosen based on their accuracy bounded/constrained by a 0.1 accusation error.
+\end{adjustbox}
+\caption{The results on the 4\% negative data set, using the listed methods.
+Constrained refers to wether or not $\theta$ and the Weight which we used,
+was chosen based on their accuracy constrained by a 0.1 accusation error.
 In the case of Yes, it refers to under the 0.1 threshold and No refers to simply
 maximizing accuracy with no regard for accusation error. In both case
 the best results were bolded.}
