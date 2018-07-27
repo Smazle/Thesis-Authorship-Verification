@@ -18,41 +18,39 @@
 \subsection{Results}
 
 Looking at the results presented in Section \ref{sec:results} it is apparent
-that we have not achieved less the than 10\% accusation error on the test set
-that MaCom required we believe however that some of the methods show promising
-results. While all the networks we applied to the test set beat our baselines
-the best performing network was the \gls{conv-char-NN}. This network had an
-accusation error closest to the one required in addition to having the highest
-overall accuracy in all the categories we tested it on. While this network was
-in fact the best, it was closely followed by network \gls{conv-char-word-NN},
-while the \gls{rec-sent-NN} we also tested had sub-par performance, lending
-credence to the applicability of \glspl{CNN} to \gls{NLP} problems. It is
-however worth noting that this could very well be due to the infeasibility of
-running any of our \glspl{RNN} on the character or word level of the texts
-supplied to it. We hypothesize that the accuracy of a RNN would be greatly
-increased had it been run on a lower linguistic level. As experiments showed
-in \ref{subsubsec:conv_char_word_nn}, even \gls{CNN}s performed badly on the
-sentence level. Ideally we would have run an RNN on the word level. We suspect
-it would be able to learn the words and their relation to on another, which
-makes sense with words, but not with sentences. However in order to do so, we
-would need computational power than was available to train the model. Looking at
+that we have not achieved less the than 10\% accusation error on the test
+set that MaCom required. We believe however that some of the methods show
+promising results. While all the networks we applied to the test set beat
+our baselines the best performing network was the \gls{conv-char-NN}. This
+network had an accusation error closest to the one required in addition to
+having the highest overall accuracy in all the categories we tested it on.
+While this network was in fact the best, it was closely followed by network
+\gls{conv-char-word-NN}, the \gls{rec-sent-NN} we also tested had sub-par
+performance, lending credence to the increased applicability of \glspl{CNN} to
+\gls{NLP} problems. It is however worth noting that this could very well be
+due to the infeasibility of running any of our \glspl{RNN} on the character or
+word level of the texts supplied to it. We hypothesize that the accuracy of a
+RNN would be greatly increased had it been run on a lower linguistic level.
+As experiments showed in \ref{subsubsec:conv_char_word_nn}, even \gls{CNN}s
+performed badly on the sentence level. Ideally we would have run an RNN on the
+word level. We suspect it would be able to learn the words and more importantly
+their relation to one another in a sentence. This relation is one that can not
+be found on the sentence level. In order work on the word-level, we would need
+more computational power than was available, to train the model. Looking at
 the performance of the two \glspl{CNN}, it becomes obvious that the character
 level is of great importance when it comes to determining the author of a text.
 The sentence level appears to on a too high linguistic level. At least in the
-way we applied it. We hypothesize that applying it to a lower level, such as
-the word level would greatly increase its performance, as \glspl{RNN} would
-be able to learn based on the words relation to one another, and therefore
-use a more grammar based learning approach. Looking at \gls{conv-char-NN},
-and \gls{conv-char-word-NN}, it would seem that focusing on the word level of
-the texts seems to actually hurt the model a bit. We are a bit uncertain as
-to the reason for this, we do however have some theories. The reason might be
-similar to the problem \gls{rec-sent-NN} had. The level might actually be a bit
-to high for our convolutional networks, the image-equivalent of having a too
-large convolutional window, thus ignoring all the small details that are needed
-in order to properly determine the author. This also highlight a potential
+way we applied it. Looking at \gls{conv-char-NN}, and \gls{conv-char-word-NN},
+it would seem that focusing on the word level of the texts seems to actually
+hurt the model a bit. We are a bit uncertain as to the reason for this, we
+do however have some theories. The reason might be similar to the problem
+\gls{rec-sent-NN} had. The level might actually be a bit to high for our
+convolutional networks, the image-equivalent of having a too large convolutional
+window. This would result in ignoring all the small details that are needed
+in order to properly determine the author. This also highlights a potential
 reason behind the differing performance of networks \gls{conv-char-NN} and
-\gls{conv-char-word-NN}. \gls{conv-char-NN} had many filters on the character
-level of the text, whereas \gls{conv-char-word-NN} had more filters on the
+\gls{conv-char-word-NN}. \gls{conv-char-NN} had all of its filters on the character
+level of the text, whereas \gls{conv-char-word-NN} had most filters on the
 word level. This might very well have led to \gls{conv-char-word-NN} missing
 some relevant person-specific traits on the character level such as typos, dot
 position, comma positions and the like. It would not even be able to find such
