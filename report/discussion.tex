@@ -49,9 +49,9 @@ convolutional networks, the image-equivalent of having a too large convolutional
 window. This would result in ignoring all the small details that are needed
 in order to properly determine the author. This also highlights a potential
 reason behind the differing performance of networks \gls{conv-char-NN} and
-\gls{conv-char-word-NN}. \gls{conv-char-NN} had all of its filters on the character
-level of the text, whereas \gls{conv-char-word-NN} had most filters on the
-word level. This might very well have led to \gls{conv-char-word-NN} missing
+\gls{conv-char-word-NN}. \gls{conv-char-NN} had all of its filters on the
+character level of the text, whereas \gls{conv-char-word-NN} had most filters on
+the word level. This might very well have led to \gls{conv-char-word-NN} missing
 some relevant person-specific traits on the character level such as typos, dot
 position, comma positions and the like. It would not even be able to find such
 traits on the word level, as the usage of a pre-trained embedding layer means
@@ -212,15 +212,15 @@ different for $t$ and $t'$.
     \textbf{Teacher Feedback Example}\par\medskip
     \includegraphics[width=\textwidth]{./pictures/discussion/teacher_feedback_example}
     \caption{Illustrates our feedback to teachers. The particular network
-    used in this example only has three filters. The three filters maximum
-    activations are shown in three different colors for the two texts they are
-    comparing. The first filter looks for negative qualifiers. Therefore it
-    reacts strongly to both the Danish word "ikke" (not) and part of the Danish
-    word "ingen" (none). The second filter looks for city names so it reacts
-    strongly to the string "Rom " (Rome) but less strongly to "Der " (not a city
-    name) even though it looks like a city name. The third filter reacts to
-    phrases that contains the word "p\aa " (on) and therefore reacts about the
-    same to both texts.}
+        used in this example only has three filters. The three filters maximum
+        activations are shown in three different colors for the two texts they
+        are comparing. The first filter looks for negative qualifiers. Therefore
+        it reacts strongly to both the Danish word "ikke" (not) and part of the
+        Danish word "ingen" (none). The second filter looks for city names so it
+        reacts strongly to the string "Rom " (Rome) but less strongly to "Der "
+        (not a city name) even though it looks like a city name. The third
+        filter reacts to phrases that contains the word "p\aa " (on) and
+        therefore reacts about the same to both texts.}
     \label{fig:feature_extraction_output_example}
 \end{figure}
 
