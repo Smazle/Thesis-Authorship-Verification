@@ -788,19 +788,21 @@ mikolov2013linguistic,JMLR:v15:srivastava14a}.
         the gradient has disappeared while backpropagating back to the early
         weights. Therefore the network will not learn to use context over long
         periods of time but only to use the local context around a particular
-        timestep.
+        timestep \citep{DBLP:series/sci/2012-385}.
 
         There are several solutions to that problem and one of them are
-        \gls{LSTM} networks. \gls{LSTM} networks are designed to be able to
-        remember things over long periods of time, hence the name. They have
-        several \gls{RNN} constructs with specific purposes. They have an
-        \gls{RNN} responsible for computing the output given the current input
-        and the previous activation as described before. They have an \gls{RNN}
-        responsible for deciding what part of the input to ignore. They have
-        an \gls{RNN} responsible for deciding what to forget from the current
-        memory. And they have an \gls{RNN} responsible for deciding what part of
-        the output to select as the current output of the unit. We have showed
-        the structure of an \gls{LSTM} in Figure \ref{fig:lstm}.
+        \gls{LSTM} networks. \gls{LSTM} networks were introduced by
+        \citet{Hochreiter:1997:LSM:1246443.1246450}. \gls{LSTM} networks are
+        designed to be able to remember things over long periods of time, hence
+        the name. They have several \gls{RNN} constructs with specific purposes.
+        They have an \gls{RNN} responsible for computing the output given the
+        current input and the previous activation as described before. They have
+        an \gls{RNN} responsible for deciding what part of the input to ignore.
+        They have an \gls{RNN} responsible for deciding what to forget from the
+        current memory. And they have an \gls{RNN} responsible for deciding
+        what part of the output to select as the current output of the unit
+        \citep{DBLP:series/sci/2012-385}. We have showed the structure of an
+        \gls{LSTM} in Figure \ref{fig:lstm}.
 
         \begin{figure}
             \centering
@@ -818,8 +820,8 @@ mikolov2013linguistic,JMLR:v15:srivastava14a}.
         receives the output from the previous timesteps. From bottom to top in
         the Figure the networks are:
 
-        First: A network combining the current input and the previous output into
-        an activation in the current timestep.
+        First: A network combining the current input and the previous output
+        into an activation in the current timestep.
 
         Second: A network combining the current input and the previous output to
         compute which part of the activation of the first network to keep. The
@@ -848,10 +850,6 @@ mikolov2013linguistic,JMLR:v15:srivastava14a}.
         values to throw away by outputting small numbers. This network is the
         last applied to the output and can therefore select which values should
         be output.
-
-        % TODO: cite http://www.bioinf.jku.at/publications/older/2604.pdf
-        % Which is the original article for LSTMs.
-        % Also cite http://www.cs.toronto.edu/~graves/preprint.pdf.
 
     \item[Embedding:]
 
