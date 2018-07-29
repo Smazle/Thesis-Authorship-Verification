@@ -18,17 +18,18 @@ the features, we applied were able to apply the model. The same was done with
 the \gls{SVM}, where we used the optimal found hyperparameters, $C=10$ and
 $\gamma = 1000$, to train the model.
 
-As briefly mentioned in Section \ref{subsec:baseline_methods}, these methods are
-not very well suited for this particular task. Since they both provide binary
-results denoting a students' innocence, or lack thereof, it is not possible to
-apply any kind of thresholding to force our models under the 10\% accusation
-error goal. They always perform at their maximum capacity. For this reason we
-had to alter the way we compare the deep learning approaches with our baselines.
-This was done by determining the best performing threshold ($\theta$) and weight
-function for our neural network with regard to accuracy, and with no regard to
-the accusation error, as both our baselines do not focus on that either. Thus we
-compared the results of our baselines on the 50\% and 4\% negative dataset
-with the highest unconstrained accuracy our \gls{NN} methods could muster.
+As briefly mentioned in Section \ref{subsec:baseline_methods}, these methods
+are not very well suited for this particular task. Since they both provide
+binary results denoting a students' innocence, or lack thereof, it is not
+possible to apply any kind of thresholding to force our models under the 10\%
+accusation error goal. They always perform at their maximum capacity. For this
+reason we had to alter the way we compare the deep learning approaches with our
+baselines. This was done by determining the best performing threshold ($\theta$)
+and prediction system for our neural network with regard to accuracy, and with
+no regard to the accusation error, as both our baselines do not focus on that
+either. Thus we compared the results of our baselines on the 50\% and 4\%
+negative dataset with the highest unconstrained accuracy our \gls{NN} methods
+could muster.
 
 After determining the best networks using the dataset \gls{E} in conjunction
 with dataset \gls{F}, we proceeded to train the three networks on the entire
@@ -53,7 +54,7 @@ table \ref{tab:04_results}.
 \begin{adjustbox}{center}
 \begin{tabular}{|c|l|c|c|c|c|c|c|c|c|}
 \hline
-Constrained                & Method                  & Weight            & $\theta$ & TP  & TN  & FP  & FN  & Acc             & A-Error         \\ \hline
+Constrained                & Method                  & Prediction System            & $\theta$ & TP  & TN  & FP  & FN  & Acc             & A-Error         \\ \hline
 \multirow{5}{*}{Yes} & SVM                     & \multicolumn{8}{c|}{N/A}                                                                     \\ \cline{2-10} 
                      & Extended Delta          & \multicolumn{8}{c|}{N/A}                                                                     \\ \cline{2-10} 
                      & \gls{conv-char-NN}      & $P_{lexp_{0.25}}$ & 0.390    & 3392 & 2344 & 1206 & 158  & \textbf{0.8078} & \textbf{0.0631} \\ \cline{2-10} 
@@ -67,11 +68,11 @@ Constrained                & Method                  & Weight            & $\the
 \end{tabular}
 \end{adjustbox}
 \caption{The results on the 50\% negative dataset, using the listed methods.
-Constrained refers to wether or not $\theta$ and the Weight which we used,
-was chosen based on their accuracy constrained by a 0.1 accusation error.
+Constrained refers to whether or not $\theta$ and the prediction system which we
+used, was chosen based on their accuracy constrained by a 0.1 accusation error.
 In the case of Yes, it refers to under the 0.1 threshold and No refers to simply
 maximizing accuracy with no regard for accusation error. In both case
-the best results were bolded.}
+the best results are shown in bold.}
 \label{tab:50_results}
 \end{table}
 

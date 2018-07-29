@@ -4,11 +4,6 @@
 
     \item
 
-        What could be the reason that qian got such good results on authorship
-        verification using the LSTM when we got so shit results?
-
-    \item
-
         Look at different filters and discuss what they might look at and
         whether or not that seems like good features to be looking at.
 
@@ -180,6 +175,48 @@ performance on a dataset split with 96\% positives and 4\% negatives and we have
 implemented a generalizing model. The data split means that our results are more
 reliable as estimates of real world performance and the generalizing model means
 that we can save a lot of computation time.
+
+
+\subsubsection{Other Authorship Verification Results}
+
+As described earlier \citet{qian:2018} received excellent authorship
+verification results. They achieved an accuracy of 99.8\%. We based our
+recurrent network on their architecture as we wanted to replicate their results.
+Our recurrent network had no where near as high accuracy as we achieved an
+accuracy of 68.6\%. We had not suspected that our results would be exactly as
+good as \citet{qian:2018} but we had not expected such a large drop. There is
+however some important differences between the datasets the networks are trained
+and tested on.
+
+The dataset \citet{qian:2018} used were the Reuter\_50\_50 dataset
+\citep{Dua:2017}. It contains 100 texts from 50 authors. For each author
+50 of his/her 100 texts were in the training dataset and 50 were in the
+testing dataset. Furthermore the texts were all from the same topic
+(corporate/industrial). In contrast our dataset use completely different authors
+between the training and test dataset and we have texts spanning many topics.
+
+At one point we trained a network using the \citet{qian:2018} inspired
+architecture on a training and validation dataset using the same authors. There
+we observed that the validation accuracy followed the training accuracy far
+longer than was the case for a validation dataset containing different authors.
+We therefore believe that the reason \citet{qian:2018} obtained such good
+results was that the test and training set consisted of the same authors. We
+wanted to create a generalizing model that were trained once and used many times
+which meant that this architecture did not work as well for us.
+
+It would have been interesting to look into creating a combination between our
+generalizing models and author specific \gls{NN} models. The problems with
+using author specific models is that it is necessary to train a different
+model for each author and retrain models when new material is turned in by an
+existing author. However they have the advantage of often being more accurate
+than generalizing models. We could have used our generalizing model to find
+potential ghost writing candidates. Using our \gls{conv-char-word-NN} we could
+catch 32.6\% of the ghost writers on a 4\% negative dataset but we could only do
+so with an accusation error of 47.7\%. We could stop taking the output of the
+generalizing model as the truth. We could then use an author specific network
+to verify the result of the generalizing model. Then we would only be required
+to train a generalized model in those cases where we suspect ghost written
+assignments.
 
 
 \subsection{Teacher Feedback}\label{subsec:teacher_feedback_text_comparisons}
@@ -511,9 +548,9 @@ assignment and making sure that each filter is represented by approximately the
 same phrase as he/she usually use in an assignment. And even if the student
 obtains the correct values for most filters the few filters that obtained a
 different value might be very important in the dense layers that followed the
-feature extraction layers. It is very hard to predict what the dense layers are
-doing with the features it is given so it is in our opinion impractical to cheat
-the convolutional networks by engineering the features in a ghost written
+feature extraction layers. It is very hard to predict what the dense layers
+are doing with the features it is given so it is in our opinion impractical to
+cheat the convolutional networks by engineering the features in a ghost written
 assignment.
 
 The problem is even harder in our \gls{RNN} networks. Here the student has even
