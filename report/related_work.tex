@@ -64,92 +64,94 @@ to test their method they used a Twitter data set, containing approximately
 different configurations of their networks. One using character-1-grams and one
 using character-2-grams. After removing bot-like authors, they got an accuracy
 of 0.678, and 0.683 respectively. This however, was only with 35 authors used,
-and 1000 tweets per author. In the case where either the authors count was
-increased or the number of tweets was decreased, the accuracy quickly worsened.
+and 1000 Tweets per author. In the case where either the authors count was
+increased or the number of Tweets were decreased, the accuracy quickly worsened.
 
 The approach proposed by \citet{ding2016} was somewhat more complex. While they
 too made use of a \gls{CNN}, the application of the network was split into
 four different modalities. They described their approach as \textit{Mining
-stylometric representations for authorship analysis}. They did it by using
-4 different \glspl{CNN}, each one focusing on 1-2 stylometric levels of the
-text. The point of splitting it up, was so they could pick and choose which
-modality they wanted to use on the specific example. The first network looked
-at the word level, and topical modalities of the text. In doing so it made use
-of 3 different author word biases. The topical bias described a texts tendency
-towards words that were specific to the topic of the entire text. The local
-contextual bias described the texts tendency towards specific words based on
-the topic of a specific part of the text, as the overall topic was rarely
-consistent throughout the text. Finally the lexical bias described the bias
-the author had towards words that have a similar meaning, such as "nice day"
-vs "wonderfull day". Using these thee biases, where the local contextual bias
-is derived from a numerical representation of a sequence of words, the network
-predicted the word most likely to fit into the local context. The second network
-looked at the character modality, and worked in a somewhat similar fashion,
-but on the character level. It represented each word in the text as a set of
+stylometric representations for authorship analysis}. They used four different
+\glspl{CNN}, each one focusing on 1-2 stylometric levels of the text. The point
+of splitting it up, was so they could pick and choose which modality they wanted
+to use on the specific example. The first network looked at the word level,
+and topical modalities of the text. In doing so it made use of 3 different
+author word biases. The topical bias described a text's tendency towards words
+that were specific to the topic of the entire text. The local contextual
+bias described the text's tendency towards specific words based on the topic
+of a specific part of the text, as the overall topic was rarely consistent
+throughout the text. Finally the lexical bias described the author's bias
+towards words with a similar meaning, such as "nice day" vs "wonderfull
+day". Using these thee biases, where the local contextual bias is derived
+from a numerical representation of a sequence of words, the network predicted
+the word most likely to fit into the local context. The second network looked
+at the character modality, and worked in a somewhat similar fashion, but
+on the character level. It represented each word in the text as a set of
 character bigrams. After converting each of these bigrams to the numerical
 representation, it was fed through a fully connected sigmoid layer, establishing
-the relation between the bigrams and the word they come together to represent.
+the relation between the bigrams and the word they came together to represent.
 The third and last network addressed the syntactic modality. This focused on
 the \gls{POS}-tags of the text. By looking at the N neighboring \gls{POS}-tag
 bigrams, the network determined the most likely \gls{POS} of that word. All
-these three modality-network attempted to optimize the forward log probability
+these three modality-networks attempted to optimize the forward log probability
 of their prediction. After training each of these models on the texts of a
 specific author, they were applied to two texts. The similarity of each of these
-two texts, were then computed using a simple cosine distance. When applying this
-to a set of set of long English novels and essays, they got the best results
+two texts was then computed using a simple cosine distance. When applying this
+to a set of long English novels and essays, they got the best results
 using only the combined lexical topical network, which produced an average
 accuracy of 0.7950.
 
-Siamese neural networks are networks that shares weights across multiple parts
-of the network. Siamese networks were first introduced by \citet{NIPS1993_769}
-for signature verification. The idea behind siamese networks is that the parts
-of the networks that share weights will give similar output for similar input.
-That makes Siamese Networks very good at comparing objects. \citet{NIPS1993_769}
-used a device for getting data from the signatures which were able to give $x$
-and $y$ coordinates for a pens position in different time steps. Their network
-were set up to take two inputs. Each input was a series of feature extractions
-from 200 timesteps. The features extracted were for example if the pen were
-on the board or in the air at the time step. The time input was given to the
-siamese network which used convolutions to look at multiple timesteps at a time.
-After the convolutions the two inputs were reduced to a higher level 18 element
-long feature vector. The output of the siamese network is therefore 2 feature
-vectors representing the two signatures given as input. \citet{NIPS1993_769}
-then used a distance function on the two feature vectors and a threshold to
-verify whether or not the signatures were written by the same person.
+Siamese neural networks are networks that share weights across multiple parts of
+the network. Siamese networks were first introduced by \citet{NIPS1993_769} for
+signature verification. The idea behind siamese networks is that the parts of
+the networks that share weights will give similar output for similar input. That
+makes Siamese Networks very good at comparing objects. \citet{NIPS1993_769} used
+a device for to collect data from the signatures which were able to give $x$
+and $y$ coordinates for a pen's position in different time steps. Their network
+was set up to take two inputs. Each input was a series of feature extractions
+from 200 timesteps. One such feature could be binary value indicating if the
+pen was on the board or in the air at a specific time step. The time input
+was given to the siamese network which used convolutions to look at multiple
+timesteps at one. After the convolutions the two inputs were reduced to a
+higher level 18 element long feature vector. The output of the siamese network
+was therefore 2 feature vectors representing the two signatures given as input.
+\citet{NIPS1993_769} then used a distance function on the two feature vectors
+and a threshold to verify whether or not the signatures were written by the same
+person.
 
-We can see that it is natural to use siamese networks for verification tasks.
-The network takes two signals as input and will output features extracted from
-the two signals. The features will be similar if the signals are similar since
-the same function is computed by both parts of the network.
+This makes siamese networks for verification tasks the obvious choice. A siamese
+network takes two signals as input and will output features extracted from the
+two signals. The features will be similar if the signals are similar since the
+same function is computed by both parts of the network.
 
 Siamese networks has also been used by \citet{Koch2015SiameseNN} for one-shot
 image classification. One-shot classification is a task that humans are very
 good at but machines tend to be very bad at. If you show a human a single
-picture of a camel, he/she will be able to almost instantly classify images
-into images containing camels and images that do not. \citet{Koch2015SiameseNN}
-trained a siamese network to learn to compare images and say whether or not
-they contain the same object. Then when presented with a single instance that
-instance can be given as one of the inputs to the siamese network. The network
-is then able to compare the single sample given to any other image.
+picture of a camel, he/she will be able to almost instantly determine if a
+camel is contained within.\citet{Koch2015SiameseNN} trained a siamese network
+to compare images and determine whether or not they contain the same object.
+The model could then be used to pair-wise compare new images to provided test
+images. The high scoring pair would then be deemed to be of the non-test images'
+class. Thus the network learned to determine if two images was of the same
+class, but not which class specifically.
 
 Most relevant for this thesis \citet{qian:2018} performed a study of different
 deep learning methods for authorship attribution. They used both a \gls{GRU}
 network and a \gls{LSTM} network. They implement 4 different networks,
-sentence-level-\gls{GRU}, article-level-\gls{GRU}, article-level-\gls{LSTM} and
-article-level-Siamese-network. Of those 4 networks the siamese network is of
-special interest to our project. Their Siamese network solves the authorship
+sentence-level-\gls{GRU}, article-level-\gls{GRU}, article-level-\gls{LSTM}
+and article-level-Siamese-network. Of those 4 networks the siamese network
+is of special interest to our project, because it solves the authorship
 verification problem and not the authorship attribution problem. A siamese
 network is a network that use the same weights and parameters in multiple
 parts of the network. The architecture for authorship verification chosen by
-\citet{qian:2018} started by using a \gls{GRU} network on the two texts to
-verify authorship on. On top of the \gls{GRU} network they used an average
+\citet{qian:2018} started by using a \gls{GRU} network on the two texts given
+to it for comparison. On top of the \gls{GRU} network they used an average
 pool. The output of the average pool is then seen as features extracted from
-the two texts. They then use a softmax layer to get a distribution over the
-probability of who has written the two texts. These probabilities are then used
+the two texts. They then used a softmax layer to get a distribution over the
+probability of who has written the two texts. These probabilities were then used
 to see whether or not the same author is predicted for both texts. On top of
 the softmax output they added the cosine similarity between the probability
 distributions outputted by the softmax layer. From that cosine similarity they
-can get a binary output saying whether or not the texts are written by the same
+could compute a binary output saying whether or not the texts were written by the same
 author or by different authors. \citet{qian:2018} obtained excellent results in
 the authorship attribution case on the siamese network.
 
@@ -168,18 +170,18 @@ assignments by submission time. They ended up with an accuracy of 84 \%.
 
 \citet{aalykke2016} did not work with the authorship attribution problem but
 rather the authorship verification problem. They used a distance based approach.
-They extracted features from the text like \citet{hansen2014} but instead
-of using an \gls{SVM} they found the nearest text in the space of features.
-They experimented using different distance functions, and used thresholding
+They extracted features from the text like \citet{hansen2014} but instead of
+using an \gls{SVM} they found the nearest text in the space of features. They
+experimented using different distance functions, and then used thresholding
 to determine if the proposed author was correct. This lead to a plagiarism
 detection accuracy of 71.9\%, and a false accusation rate of under 5\%.
 
 \subsection{Summary}
 
 Several of the methods for authorship attribution obtained excellent results
-using convolutional methods on the character level. That was however in the
+using convolutional methods on the character level. However that was in the
 authorship attribution case where performance will drop of as the number of
-different authors increases and a new network has to be trained for new authors.
-Similarly good results were obtained by the siamese networks. Since we are in
-the authorship verification case we try a siamese network structure since it is
-good at comparing inputs.
+different authors increase and a new network has to be trained for new authors.
+Similarly good results were obtained by the siamese networks. Since we work with
+authorship verification we try a siamese network structure as it is good at
+comparing inputs.
