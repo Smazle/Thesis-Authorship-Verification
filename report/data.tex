@@ -1,5 +1,3 @@
-% TODO: Write somewhere that all the texts we have are from Danish class.
-
 % TODO: Write somewhere that a problem with the dataset is that we have no
 % ground truth i.e. we don't know which assignments are ghost written in the
 % real world.
@@ -15,19 +13,21 @@ and how we generated problem instances to train our neural networks on.
 
 Our dataset is provided by the Danish company MaCom. The dataset is a file
 consisting of a set of texts written in Danish where each text is associated
-with an author ID. Throughout the development process we have been given
-several data extracts. We will only discuss the last dataset as the other are
-irrelevant. The texts in the dataset is extracted from pdf files meaning that
-sometimes the texts extracted will just contain random characters. The final
-extract consisted of a set of 10,058 authors where a maximum of 100 authors were
-extracted from each school. In total the dataset contains 133,749 texts. We
-needed to split the dataset into pieces as we needed several different datasets
-for different purposes in our experiments. The split is illustrated in Figure
-\ref{fig:data_split}. Each split is performed on the author level such that
-if a single text $t \in T_\alpha$ is in a particular dataset then all $t' \in
-T_\alpha$ is in that same dataset. The splits are performed randomly such that
-each dataset contains a random set of author. We have named our datasets as
-upper case characters. The different datasets we use are,
+with an author ID. All the texts are from Danish class which corresponds to
+English class in English speaking countries. Throughout the development process
+we have been given several data extracts. We will only discuss the last dataset
+as the other are irrelevant. The texts in the dataset is extracted from pdf
+files meaning that sometimes the texts extracted will just contain random
+characters. The final extract consisted of a set of 10,058 authors where a
+maximum of 100 authors were extracted from each school. In total the dataset
+contains 133,749 texts. We needed to split the dataset into pieces as we needed
+several different datasets for different purposes in our experiments. The split
+is illustrated in Figure \ref{fig:data_split}. Each split is performed on the
+author level such that if a single text $t \in T_\alpha$ is in a particular
+dataset then all $t' \in T_\alpha$ is in that same dataset. The splits are
+performed randomly such that each dataset contains a random set of author. We
+have named our datasets as upper case characters. The different datasets we use
+are,
 
 \begin{figure}
     \centering
