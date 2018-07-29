@@ -1,6 +1,3 @@
-% TODO: Write somewhere that a problem with the dataset is that we have no
-% ground truth i.e. we don't know which assignments are ghost written in the
-% real world.
 \section{Data} \label{sec:data}
 
 In this section we will describe the dataset we have worked with, how we
@@ -247,14 +244,16 @@ all datasets has been preprocessed.
 
 All of the neural networks we trained were siamese neural networks that
 compared two texts. We therefore had to generate problem instances that
-contained two texts from either the same or different authors and a class
-that reflected that. For each author $\alpha$ in the training dataset \gls{G}
-we generate all possible combinations of two of the texts in $T_\alpha$ as
-positive samples. We also generate the same number of negative samples by
-taking a random text in $T_\alpha$ and a random text in $\overline{T_\alpha}$.
-This the total number of problems we generate for each
-author is $2\frac{\left|T_\alpha\right|!}{2!(\left|T_\alpha\right|-2)!}
+contained two texts from either the same or different authors and a class that
+reflected that. A problem with the dataset we are given is that it contains
+no labelled ghost written assignments. We created such an assignment by
+pairing assignments from different students For each author $\alpha$ in the
+training dataset \gls{G} we generate all possible combinations of two of the
+texts in $T_\alpha$ as positive samples. We also generate the same number
+of negative samples by taking a random text in $T_\alpha$ and a random text
+in $\overline{T_\alpha}$. This the total number of problems we generate for
+each author is $2\frac{\left|T_\alpha\right|!}{2!(\left|T_\alpha\right|-2)!}
 = \frac{\left|T_\alpha\right|!}{(\left|T_\alpha\right|-2)!} =
-\left|T_\alpha\right| \cdot (\left|T_\alpha\right| - 1) $. The neural
-networks were trained on these problem instances. We generated problems in the
-same way for the network training validation dataset $H$.
+\left|T_\alpha\right| \cdot (\left|T_\alpha\right| - 1) $. The neural networks
+were trained on these problem instances. We generated problems in the same way
+for the network training validation dataset $H$.
