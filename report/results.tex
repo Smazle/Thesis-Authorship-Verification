@@ -1,52 +1,57 @@
 \section{Results} \label{sec:results}
 
-We have finally reached the point where we can determine the unbiased accuracy
-of our different models. To do this we will make use of the \gls{D} dataset. As
-mentioned in Section \ref{sec:data}, this dataset consists of 3558 authors, none
-of which are repeated in any of the other sets.
+In this section we go through the results we obtained on the test dataset
+\gls{D}. We report the number of \glspl{TP}, \glspl{TN}, \glspl{FP}, \glspl{FN},
+accuracy and accusation error. The methods we evaluate on the datasets are the
+\gls{conv-char-NN}, the \gls{rec-sent-NN}, the \gls{conv-char-word-NN} and the
+two baseline methods. As mentioned in Section \ref{sec:data} the test dataset
+consist of texts from 3558 different authors.
 
-We have 5 models which we are going to apply to this test dataset, our
-two baseline methods, the \gls{conv-char-NN}, the \gls{rec-sent-NN} , and the
-\gls{conv-char-word-NN}.
+Recall that in the real world approximately 4\% of assignments are ghost
+written. Since that is the case we will report our performance to a dataset
+containing 4\% negatives. That result can be used to estimate real world
+performance of our methods. We will also report our results on a dataset
+containing 50\% negatives. Other authorship verification results and other work
+on MaComs dataset use 50\% negatives. We want to compare our results to those
+other methods. Therefore we also evaluate all methods on a dataset with 50\%
+negatives.
 
-Starting with the baseline methods, we made use of the features and the
-hyper parameters that provided best on the training set. For the extended
-delta method, the optimal parameters were $K=1$ and $p = 1$. Then using
-the same sample generation as was described in the bottom of Section
-\ref{sec:hyp_select}, and normalizing using the scaler produced when generating
-the features, we applied were able to apply the model. The same was done with
-the \gls{SVM}, where we used the optimal found hyperparameters, $C=10$ and
-$\gamma = 1000$, to train the model.
 
-As briefly mentioned in Section \ref{subsec:baseline_methods}, these methods
-are not very well suited for this particular task. Since they both provide
-binary results denoting a students' innocence, or lack thereof, it is not
-possible to apply any kind of thresholding to force our models under the 10\%
-accusation error goal. They always perform at their maximum capacity. For this
-reason we had to alter the way we compare the deep learning approaches with our
-baselines. This was done by determining the best performing threshold ($\theta$)
-and prediction system for our neural network with regard to accuracy, and with
-no regard to the accusation error, as both our baselines do not focus on that
-either. Thus we compared the results of our baselines on the 50\% and 4\%
-negative dataset with the highest unconstrained accuracy our \gls{NN} methods
-could muster.
+\subsection{Baselines}
 
-After determining the best networks using the dataset \gls{E} in conjunction
-with dataset \gls{F}, we proceeded to train the three networks on the entire
-dataset \gls{B} using dataset \gls{C} as the validation set used throughout the
-training. Doing this, was all for the sake of providing more data for the final
-models, before applying them to the \gls{D} test dataset.
+The first of our implemented baseline methods were the extended delta method.
+The hyperparameters that gave the best result for the extended delta method
+was $K = 1$ and $p = 1$. The method requires normalizing to mean 0 and unit
+variance. We computed the transformation required to normalize the training
+data and applied that to the test data. As discussed earlier the delta method
+are a classical solution to the authorship verification problem. The version we
+implemented is not able to threshold the accusation error. We therefore just
+report the results that maximize accuracy and the accusation error associated
+with that result.
 
-Having now trained the models we can determine the accuracy and accusation error
-of our different networks, both with and without the 10\% accusation error
-constraint. It should be noted that the parameters found that adhere to to the
-10\% constraint were found on the training data. As with any machine learning
-approach, this does not ensure the same level of adherence on the test data.
+The second of our implemented baseline methods were the author specific
+\gls{SVM}. The hyperparameters that gave the best result on the author specific
+\gls{SVM} were $C = 10$ and $\gamma = 1000$. As with the extended delta method
+we have not thresholded this method to achieve below 10\% accusation error.
+There was again no obvious way to do the thresholding. So we only report the
+accuracy and accusation error of the method when maximizing accuracy.
 
-We also used that same approach for the other two networks. The combined
-results for the 50\% negative test dataset \gls{D} can be seen in Table
-\ref{tab:50_results}, and the results for the 4\% negative data can be seen in
-table \ref{tab:04_results}.
+
+\subsection{Neural Networks}
+
+We retrained our three neural networks using the \gls{B} dataset. The \gls{B}
+dataset is much larger than the dataset they were originally trained on. We used
+the \gls{C} dataset for early stopping. For the networks we report both the
+configurations maximizing accuracy and the configurations maximizing accuracies
+while keeping the accusation error under 10\%. The configurations are shown
+together with the results. It should be noted that the parameters found that
+adhere to to the 10\% constraint were found on the training data. As with any
+machine learning approach this does not ensure the same level of adherence on
+the test data.
+
+The results for both the baseline methods and the three networks are shown in
+Figure \ref{tab:50_results} for the dataset of 50\% negatives and in Figure
+\ref{tab:04_results} for the 4\% negative dataset. 
 
 \begin{table}[]
 \centering

@@ -272,10 +272,10 @@ this process can be seen in Table \ref{tab:baseline-val-res}.
     \label{tab:baseline-val-res}
 \end{table}
 
-Unfortunately both of these methods are not suitable for the prediction system
-described earlier and thus a to get it below the allowed accusation error was
-not possible. While this is not ideal for comparative purposes it does lend
-credence to the applicability of neural networks to this specific scenario.
+Neither the extended delta and the author specific \gls{SVM} methods output a
+probability. Therefore they are much harder to threshold and keep under the
+accusation error limits set by MaCom. We therefore just report the results when
+maximizing the accuracy of the methods.
 
 
 \subsection{Deep Learning}
