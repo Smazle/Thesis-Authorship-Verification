@@ -1796,27 +1796,27 @@ optimization problem is,
         & \underset{\theta, x}{\text{minimize}}
         & & \sum_{(\alpha, t_u) \in V} \left|
             P_x(T_\alpha \setminus \{t_u\}, t_u, \theta) -
-            \mathbbm{1}_{T_\alpha}(t_u)
+            \mathbbm{1}\left[t_u \in T_\alpha\right]
         \right| \\
         & \text{subject to}
-        & & \frac{\sum_{(\alpha, t_u) \in V} \mathbbm{1}_{T_\alpha}(t_u) \cdot
+        & & \frac{\sum_{(\alpha, t_u) \in V} \mathbbm{1}\left[t_u \in T_\alpha\right] \cdot
             \left(1 - P_x(T_\alpha \setminus \{t_u\}, t_u, \theta)\right)}
 {\sum_{(\alpha, t_u) \in V} (1 - P_x(T_\alpha \setminus \{t_u\}, t_u, \theta)} <
             \frac{1}{10}
     \end{aligned}
 \end{equation}
 
-In the optimization problem we fix the network $f$ we like we did when defining
+In the optimization problem we fix the network $f$ like we did when defining
 the prediction systems. The expression we minimize is the number of errors made
-in prediction over the validation set $V$. Consider a problem $(\alpha, t_u) \in
-V$ where $t_u \in T_\alpha$. Then we know that $\mathbbm{1}_{T_\alpha}(t_u) =
-1$ from the definition of the indicator function then if the prediction system
-returns the correct result 1 we have,
+in prediction over the validation set $V$. Consider a problem $(\alpha, t_u)
+\in V$ where $t_u \in T_\alpha$. Then we know that $\mathbbm{1}\left[t_u \in
+T_\alpha\right] = 1$ from the definition of the indicator function then if the
+prediction system returns the correct result 1 we have,
 
 \begin{equation}
     e = \left|
         P_x(T_\alpha \setminus \{t_u\}, t_u, \theta) -
-        \mathbbm{1}_{T_\alpha}(t_u)
+        \mathbbm{1}\left[t_u \in T_\alpha\right]
     \right| = |1 - 1| = 0,
 \end{equation}
 
@@ -1825,18 +1825,19 @@ and if the prediction system returns the incorrect result 0 we have,
 \begin{equation}
     e = \left|
         P_x(T_\alpha \setminus \{t_u\}, t_u, \theta) -
-        \mathbbm{1}_{T_\alpha}(t_u)
+        \mathbbm{1}\left[t_u \in T_\alpha\right]
     \right| = |0 - 1| = 1.
 \end{equation}
 
 Similarly for a problem $(\alpha, t_u) \in V$ where $t_u \notin T_\alpha$ we
-know that $\mathbbm{1}_{T_\alpha}(t_u) = 0$ from the definition of the indicator
-function. Then if the prediction system returns the correct result 0 we have,
+know that $\mathbbm{1}\left[t_u \in T_\alpha\right] = 0$ from the definition of
+the indicator function. Then if the prediction system returns the correct result
+0 we have,
 
 \begin{equation}
     e = \left|
         P_x(T_\alpha \setminus \{t_u\}, t_u, \theta) -
-        \mathbbm{1}_{T_\alpha}(t_u)
+        \mathbbm{1}\left[t_u \in T_\alpha\right]
     \right| = |0 - 0| = 0, \end{equation}
 
 and if the prediction system returns the incorrect result 1 we have,
@@ -1844,7 +1845,7 @@ and if the prediction system returns the incorrect result 1 we have,
 \begin{equation}
     e = \left|
         P_x(T_\alpha \setminus \{t_u\}, t_u, \theta) -
-        \mathbbm{1}_{T_\alpha}(t_u)
+        \mathbbm{1}\left[t_u \in T_\alpha\right]
     \right| = |1 - 0| = 1.
 \end{equation}
 
@@ -1862,16 +1863,16 @@ Consider the numerator of the fraction on the left hand side,
 
 \begin{equation}
     \textit{false accusations} = \sum_{(\alpha, t_u) \in V}
-    \mathbbm{1}_{T_\alpha}(t_u) \cdot
+    \mathbbm{1}\left[t_u \in T_\alpha\right] \cdot
     \left(1 - P_x(T_\alpha \setminus \{t_u\}, t_u, \theta)\right).
 \end{equation}
 
 For a $(\alpha, t_u) \in V$ where $t_u \in T_\alpha$ we have that
-$\mathbbm{1}_{T_\alpha}(t_u) = 1$ then if $P$ is correct it returns 1 and we
+$\mathbbm{1}\left[t_u \in T_\alpha\right] = 1$ then if $P$ is correct it returns 1 and we
 get,
 
 \begin{equation}
-    \mathbbm{1}_{T_\alpha}(t_u) \cdot
+    \mathbbm{1}\left[t_u \in T_\alpha\right] \cdot
     \left(1 - P_x(T_\alpha \setminus \{t_u\}, t_u, \theta)\right) =
     1 \cdot (1 - 1) = 0,
 \end{equation}
@@ -1879,13 +1880,13 @@ get,
 and if $P$ is incorrect and returns 0 we have,
 
 \begin{equation}
-    \mathbbm{1}_{T_\alpha}(t_u) \cdot
+    \mathbbm{1}\left[t_u \in T_\alpha\right] \cdot
     \left(1 - P_x(T_\alpha \setminus \{t_u\}, t_u, \theta)\right) =
     1 \cdot (1 - 0) = 1.
 \end{equation}
 
 Similarly for a $(\alpha, t_u) \in V$ where $t_u \in T_\alpha$ we have that
-$\mathbbm{1}_{T_\alpha}(t_u) = 0$ and therefore the expression is always
+$\mathbbm{1}\left[t_u \in T_\alpha\right] = 0$ and therefore the expression is always
 0. Therefore the expression is 1 whenever we have a false accusation and 0
 otherwise. The right hand side of the inequality simply counts the number of
 accusations by inverting the output of $P_x$ and divides that by 10. So the
@@ -1895,9 +1896,9 @@ accusations.
 In the real world it has been estimated that 4\% of turn
 ins for the \gls{SRP} are written by "ghost writers"
 \footnote{https://politiken.dk/indland/uddannelse/art5603163/Gymnasieelever-\%C2
-\% BBSnyderi-beviser-hvor-vanvittig-betydningsfuld-SRP-er-blevet\%C2\%AB}. We
-therefore want to find the best prediction system and threshold $\theta$ on a
-dataset with 4\% negatives. We also find the best prediction system and
+\% BBSnyderi-beviser-hvor-vanvittig-betydningsfuld-SRP-er-blevet\%C2\%AB}.
+We therefore want to find the best prediction system and threshold $\theta$
+on a dataset with 4\% negatives. We also find the best prediction system and
 threshold for a dataset with 50\% negatives as that is easier to compare with
 other methods.
 
