@@ -868,7 +868,13 @@ prediction systems.
         In the middle the uniform weight function is clearly better than the
         majority vote and the accusation error curves cross. At the end of the
         graph the majority vote again has the highest accuracy but now has the
-        lowest accusation error.
+        lowest accusation error. The cause behind this behavior is most likely
+        the sane as $P_{exp}$. In the higher and lower ends og $\theta$, more
+        a smaller amount of more extreme predictions is needed to get the best
+        performance. $P_{MV}$ simply allows for to much negative infuence from
+        poorly representing texts when using high and low $\theta$ values,
+        much like the uniform weighing.
+
 
         \begin{figure}
             \centering
