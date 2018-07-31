@@ -17,6 +17,7 @@ def Convert(line, x):
         "mustn't": 'must not',
         "shan't": 'shall not',
         "shouldn't": 'should not',
+        "doesn't": 'does not',
         "wasn't": 'was not',
         "weren't": 'were not',
         "won't": 'will not',
@@ -97,5 +98,20 @@ for i in filter(lambda x: x.split('.')[-1] == 'tex', d):
     with open(reportFolder + i, 'r') as f:
         print(i)
         for idx, line in enumerate(f):
-            Warnings(idx + 1, line)
-        input()
+            words = word_tokenize(line)
+            if len(words) < 3:
+                continue
+            for i, _ in enumerate(words[:-1]):
+                i = i + 1
+                if words[i - 1] == words[i]:
+                    if not all(x.isalpha() for x in words[i]):
+                        continue
+
+                    print(idx + 1, words[i], '\t', line)
+
+# for i in filter(lambda x: x.split('.')[-1] == 'tex', d):
+#    with open(reportFolder + i, 'r') as f:
+#        print(i)
+#        for idx, line in enumerate(f):
+#            Warnings(idx + 1, line)
+#        input()
