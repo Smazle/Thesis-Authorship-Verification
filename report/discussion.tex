@@ -90,12 +90,12 @@ other two networks.
 
 \begin{figure}
     \centering
-    \begin{minipage}{.5\textwidth}
+    \begin{minipage}{.8\textwidth}
         \centering
         \textbf{Constrained ROC-Curve and AUROC for each network}
         \includegraphics[width=1\linewidth]{./pictures/discussion/AUROC_Constrained}
-    \end{minipage}%
-    \begin{minipage}{.5\textwidth}
+    \end{minipage}\\
+    \begin{minipage}{.8\textwidth}
         \centering
         \textbf{Unconstrained ROC-Curve and AUROC for each network}
         \includegraphics[width=1\linewidth]{./pictures/discussion/AUROC_Unconstrained}
@@ -114,33 +114,34 @@ In Section \ref{subsec:previous_work_using_macoms_dataset} we described other
 experiments about authorship attribution and verification on MaCom's dataset.
 In this section we compare our authorship verification results with those
 other results. The first experiment we compare against is \citep{aalykke2016}.
-\citet{aalykke2016} evaluated their performance using sensitivity and
-specificity of their best performing configuration. The sensitivity is reported
-at 95.0\% and the specificity at 71.9\%. Those results were obtained on a
-dataset with 500 positive cases and 500 negative cases. \citet{aalykke2016}
-comments that his results is not directly comparable to the real world as he use
-a dataset with 50\% negative samples. We have focused on developing methods that
-work the best on a dataset with 4\% negative samples. We have however reported
-results when maximizing accuracy on a 50\% negative dataset which is comparable
-to \citep{aalykke2016}. In our best configuration on the 50\% negative dataset
-we obtained a sensitivity of 91.0\% and a specificity of 82.1\%. That means that
+\citet{aalykke2016} evaluated his performance using sensitivity and specificity
+of their best performing configuration. The sensitivity is reported at 95.0\%
+and the specificity at 71.9\%. Those results were obtained on a dataset with
+500 positive cases and 500 negative cases. \citet{aalykke2016} commented that
+his results were not directly comparable to the real world as he used a dataset
+with 50\% negative samples. We have focused on developing methods that work the
+best on a dataset with 4\% negative samples. We have however reported results
+when maximizing accuracy on a 50\% negative dataset which is comparable to
+\citep{aalykke2016}. In our best configuration on the 50\% negative dataset we
+obtained a sensitivity of 91.0\% and a specificity of 82.1\%. That means that
 we had a worse sensitivity but a better specificity. The accuracy obtained by
 \citet{aalykke2016} was $\frac{0.95 + 0.719}{2} = 0.8345$ while our accuracy was
 at $0.86535$ so we had a higher accuracy.
 
-\citet{aalykke2016}s results were impressive considering they use only the
-distances between feature sets to compare assignments. One caveat to consider
-when looking at their results compared to ours is that they tried all thresholds
-on the test dataset and reported the best results obtained. The results we
-report used a configuration found on a validation dataset and evaluated on a
-test dataset. We can therefore expect that our results will be an unbiased
-estimate of real world performance while \citet{aalykke2016}s results will
-probably not. Another thing to consider is that \citet{aalykke2016} used a
-test dataset that only contained \gls{SRP} assignments. In our test dataset
-we predict the newest text in an authors library which is not necessarily the
-\gls{SRP} assignment. That gives \citet{aalykke2016} another advantage in that
-the \gls{SRP} assignments are generally longer assignments and therefore gives a
-better picture of an authors writing style.
+The results produced by \citet{aalykke2016} were impressive considering he
+only used the distances between feature sets to compare assignments. One
+caveat to consider when looking at their results compared to ours is that
+they tried all thresholds on the test dataset and reported the best results
+obtained. The results we report used a configuration found on a validation
+dataset and evaluated on a test dataset. We can therefore expect that our
+results will be an unbiased estimate of real world performance while the best
+results produced by \citet{aalykke2016} will probably not. Another thing to
+consider is that \citet{aalykke2016} used a test dataset that only contained
+\gls{SRP} assignments. In our test dataset we predict the newest text in an
+author's library which is not necessarily the \gls{SRP} assignment. That gives
+\citet{aalykke2016} another advantage in that the \gls{SRP} assignments are
+generally longer assignments and therefore gives a better picture of an author's
+writing style.
 
 To summarize \citet{aalykke2016} has a lower accusation error than us on of 5\%
 (100\% - 95\%) vs our 9.87\% which is very important to MaCom. At the same time
@@ -156,14 +157,14 @@ achieved a maximum accuracy of 84\%. They do not specify the fraction between
 negatives and positives that they evaluate against. We assume that they evaluate
 on a 50/50 percent split as \citet{aalykke2016}. Again our most comparable
 result is when we maximize accuracy on a 50/50 split. Our best accuracy in that
-setting were 86.54\%. That is a negligible difference that might result only
-from the specific test sets used. \citet{hansen2014} focused on the computation
-time of their method. Since they used an author specific model they had to train
-a separate model on each new author and a new model each time an author turned
-in a new assignment. That is where our generalizing model has an advantage.
-We only have to train the model once and after that it can be used on any new
-author. The prediction time of a neural network is negligible when compared to
-training a \gls{SVM}.
+setting were 86.54\%. That is a difference that could very well be specific to
+the test set used. \citet{hansen2014} focused on the computation time of their
+method. Since they used an author specific model they had to train a separate
+model on each new author and a new model each time an author turned in a new
+assignment. That is where our generalizing model has an advantage. We only have
+to train the model once and after that it can be used on any new author. The
+prediction time of a neural network is negligible when compared to training an
+\gls{SVM}.
 
 \citet{hansen2014} found that recent texts were more important for predicting an
 authors writing style than older texts. That is something that we also found.
@@ -185,16 +186,16 @@ that we can save a lot of computation time.
 As described earlier \citet{qian:2018} received excellent authorship
 verification results. They achieved an accuracy of 99.8\%. We based our
 recurrent network on their architecture as we wanted to replicate their results.
-Our recurrent network had no where near as high accuracy as we achieved an
+Our recurrent network had nowhere near as high accuracy as we achieved an
 accuracy of 68.6\%. We had not suspected that our results would be exactly as
 good as \citet{qian:2018} but we had not expected such a large drop. There is
 however some important differences between the datasets the networks are trained
 and tested on.
 
 The dataset \citet{qian:2018} used were the Reuter\_50\_50 dataset
-\citep{Dua:2017}. It contains 100 texts from 50 authors. For each author
-50 of his/her 100 texts were in the training dataset and 50 were in the
-testing dataset. Furthermore the texts were all from the same topic
+\citep{Dua:2017}. It contains 100 texts from each of 50 authors. For each
+author 50 of his/her 100 texts were in the training dataset and 50 were in
+the testing dataset. Furthermore the texts were all from the same topic
 (corporate/industrial). In contrast our dataset use completely different authors
 between the training and test dataset and we have texts spanning many topics.
 

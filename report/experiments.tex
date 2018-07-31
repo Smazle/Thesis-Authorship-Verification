@@ -389,7 +389,7 @@ of the layers are shown in Table \ref{tab:glossary}.
             function described in Section \ref{sec:neurons}.                   &
             \begin{minipage}[t]{\linewidth}
             \begin{compactdesc}
-                \item[Units] Number of neurons in in the layer.
+                \item[Units] Number of neurons in the layer.
                 \item[Activation] The activation function to be applied.
             \end{compactdesc}
             \end{minipage}                                                    \\
@@ -441,10 +441,10 @@ of the layers are shown in Table \ref{tab:glossary}.
 \end{landscape}
 
 
-\subsubsection{\glsdesc{conv-char-NN}}
+\subsubsection{Character Level Convolutional Siamese Neural Network}
 \label{subsubsec:conv_char_nn}
 
-The idea behind network \gls{conv-char-NN} is that we wanted to use convolutions
+The idea behind the \gls{conv-char-NN} is that we wanted to use convolutions
 to look for n-grams in texts. Traditional authorship verification/attribution
 is based on carefully engineered n-grams that are compared between two texts
 \citep{stamatos2009}. Instead of choosing the n-grams ourselves we wanted the
@@ -747,20 +747,20 @@ following,
 \end{adjustbox}
 
 
-\subsubsection{\glsdesc{rec-sent-NN}}
+\subsubsection{Sentence Level Recurrent Neural Network}
 \label{subsubsec:rec_sent_nn}
 
 After having attempted a convolutional approach as was just described we
-proceeded with some recurrent experiments as well. After having looked at
-previous experiments described by \cite{qian:2018} which showed promise in
-terms of authorship attribution we considered this a natural extension of
-our convolutional approaches. Every \gls{RNN} experiment was performed on
-the same data as the convolutional networks and the \textit{Embedding},
-\textit{Feature Extraction}, \textit{Combining} and \textit{Comparing} structure
-was used as well. The best model we generated can be seen depicted in Figure
-\ref{fig:rec-sent-NN}. After 10 epochs this network peaked with a validation
-accuracy of 0.657. We have shown a plot of the training and validation
-accuracies during training in Figure \ref{fig:rec-sent-NN-training}.
+proceeded with some recurrent experiments as well. Looking at previous
+experiments described by \cite{qian:2018} which showed promise in terms
+of authorship attribution we considered this a natural extension of our
+convolutional approaches. Every \gls{RNN} experiment was performed on the same
+data as the convolutional networks and the \textit{Embedding}, \textit{Feature
+Extraction}, \textit{Combining} and \textit{Comparing} structure was used as
+well. The best model we generated is called \gls{rec-sent-NN} and can be seen
+depicted in Figure \ref{fig:rec-sent-NN}. After 10 epochs this network peaked
+with a validation accuracy of 0.657. We have shown a plot of the training and
+validation accuracies during training in Figure \ref{fig:rec-sent-NN-training}.
 
 \begin{figure}
     \centering
@@ -783,22 +783,23 @@ accuracies during training in Figure \ref{fig:rec-sent-NN-training}.
         character level. That clearly has consequences for the embedding part of
         the network.
 
-        The input to the network is given as a sequence of sequences. The outer
-        sequence consisting of sentences and the inner sequence consisting
-        of the words in each sentence. In order for the dimensionality to
-        work the amount of word in a sequence is padded or truncated such
-        that they consist of 25 words each. An amount which was chosen based
-        on the analysis of the training dataset \gls{B}. Contrary to earlier
-        networks the embedded representations of these words were not trained
-        as as part of the network. Pre-trained embedding produced by Facebook
+        The input to the network is given as a sequence of sequences. The
+        outer sequence consisting of sentences and the inner sequence
+        consisting of the words in each sentence. In order for the
+        dimensionality to work the amount of words in a sequence is padded
+        or truncated such that they consist of 25 words each. An amount
+        which was chosen based on the analysis of the training dataset
+        \gls{B}. Contrary to earlier networks the embedded representations
+        of these words were not trained as part of the network.
+        Instead we used pre-trained embeddings produced by Facebook
         \footnote{\url{https://github.com/facebookresearch/fastText/blob
         /master/ pretrained-vectors.md}} using the method described by
-        \citet{bojanowski2016enriching} was used instead. That resulted in each
-        word being mapped to a 300 dimensional vector. At this point we have
-        a sequence of sentences each containing a sequence of 300 dimensional
-        word-embeddings. The network then proceeds to take the average of the
-        word sequence contained within each sentence, resulting in each sentence
-        being represented as the average of its words.
+        \citet{bojanowski2016enriching}. That resulted in each word being
+        mapped to a 300 dimensional vector. At this point we have a sequence of
+        sentences each containing a sequence of 300 dimensional word-embeddings.
+        The network then proceeds to take the average of the word sequence
+        contained within each sentence, resulting in each sentence being
+        represented as the average of its words.
 
     \item[Feature Extraction:]
 
@@ -851,7 +852,7 @@ accuracies during training in Figure \ref{fig:rec-sent-NN-training}.
     \centering
     \includegraphics[width=\textwidth]{./pictures/experiments/rec_sent_nn/model}
     \caption{The structure of network \gls{rec-sent-NN}. The weights are shared
-        from from the embedding layer all the way down to right before the two
+        from the embedding layer all the way down to right before the two
         paths merge. The lambda layer takes each sentence and averages along
         the first axis causing the dimensionality to change from a matrix with
         25 rows and 300 columns to a column vector with 300 elements. The LSTM
@@ -960,16 +961,17 @@ This is most likely the result of the aforementioned author specific learning
 the network does.
 
 
-\subsubsection{\glsdesc{conv-char-word-NN}}
+\subsubsection{Character and Word Level Convolutional Siamese Neural Network}
 \label{subsubsec:conv_char_word_nn}
 
-The last network we produced, is what we call \gls{conv-char-word-NN}. This
-network is similar to \gls{conv-char-NN} mostly due being convolutional.
-This network was an attempt at expanding on the successful architecture of
-\gls{conv-char-NN}. Applied to the same data as the previous networks, we got a
-maximum accuracy of 0.697 on the second epoch. We have shown the training and
-validation accuracies in Figure \ref{fig:conv-char-word-NN-training}. The design
-of the network in the different parts was as follows,
+The last network we produced is what we call \gls{conv-char-word-NN}. This
+network is similar to \gls{conv-char-NN} as it is also convolutional. This
+network was an attempt at expanding on the successful architecture of
+\gls{conv-char-NN} by using looking at words in addition to characters. Applied
+to the same data as the previous networks, we got a maximum accuracy of 0.697 on
+the second epoch. We have shown the training and validation accuracies in Figure
+\ref{fig:conv-char-word-NN-training}. The design of the network in the different
+parts was as follows.
 
 \begin{figure}
     \centering
@@ -987,33 +989,36 @@ of the network in the different parts was as follows,
 
     Like in \gls{conv-char-NN} the embedding layers takes in a text as a
     stream of characters, where they are then mapped to a 5 dimensional vector
-    space. There is not a very big difference here. In addition to that however,
-    we also added the word channel used in \gls{rec-sent-NN}. This works in
-    exactly the same way. It uses the pre-trained embeddings mentioned to map
-    each word of the text in addition to mapping the characters. This is the
-    basic idea of this network, a multi-channeled convolutional approach. Thus
-    the network doesn't only take 2 inputs, in the form of two texts. It takes 4
-    inputs, a character input for each each and a word input for each text. Both
-    of these channels have their own path through the network. Which for ease of
-    understanding can be seen as two different siamese networks.
+    space. The difference is however that we also added the word channel
+    used in \gls{rec-sent-NN}. This works in exactly the same way. It uses
+    the pre-trained embeddings mentioned to map each word of the text to a
+    300 dimensional vector space. In \gls{rec-sent-NN} these embeddings were
+    averaged to represent a sentence, but in this network these embeddings
+    are used as is. This is the basic idea of this network, a multi-channeled
+    convolutional approach. Thus the network does not only take 2 inputs, in the
+    form of two texts. It takes 4 inputs, a character input for each and a
+    word input for each text. Both of these channels have their own path through
+    the network, which for ease of understanding can be seen as two different
+    siamese networks.
 
     \item[Feature Extraction:]
 
     The feature extraction done in this network differs between the character
     network and the word network. Like previously, we make use of two different
-    convolutional layers in the character network. They have a sliding windows
-    size of 8 and 4, and a filter size of 200. This combination of window sizes
-    had proven to work quite in the \gls{conv-char-NN}. It was because of this
-    we saw no reason to actually change it, as the creation of this network was
-    done in an additive manner. The addition can of course be found in the word
-    network. The embedded stream of words are given to its own convolutional
-    layer with a sliding window size of 8, and a filter size of 100.
+    convolutional layers in the character network. They have a sliding window
+    size of 8 and 4 respectively, and a filter size of 200. This combination of
+    window sizes had proven to work quite well in the \gls{conv-char-NN}. It was
+    because of this we saw no reason to actually change it, as the creation of
+    this network was done in an additive manner. The addition can of course be
+    found in the word network. The embedded stream of words are given to its own
+    convolutional layer with a sliding window size of 8, and a filter size of
+    100.
 
     \item[Combining:]
 
-    Due to the addition of the extra word network, the combining of step is
-    has an additional step. The network initially combine the output of both
-    the word and the character sub-networks. This is done by concatenating
+    Due to the addition of the extra word network, the combining part of the
+    network has an additional step. The network initially combine the output of
+    both the word and the character sub-networks. This is done by concatenating
     the output of the two convolutional layers in the character network, and
     the single convolutional layer in the word network. This results in two
     concatenated sets, one for each of the two texts. The elementwise absolute
@@ -1022,9 +1027,10 @@ of the network in the different parts was as follows,
 
     \item[Decision:]
 
-    The decision part of this network is simply 2, 500 unit fully connected
-    layers followed by a 0.3 dropout layer. The output of that dropout layer
-    is then given the 2 unit soft-max layer, for the final decision.
+    The decision part of this network is simply 2 fully connected layers
+    consisting of 500 units followed by a 0.3 dropout layer. The output of
+    that dropout layer is then given the 2 unit soft-max layer for the final
+    decision.
 
 \end{description}
 
@@ -1034,7 +1040,7 @@ We have the network structure in Figure \ref{fig:conv-char-NN-model}.
     \centering
     \includegraphics[width=\textwidth]{./pictures/experiments/conv_char_word_nn/model}
     \caption{The structure of network \gls{conv-char-word-NN}. The weights are
-        shared from from the embedding layer all the way down to right before
+        shared from the embedding layer all the way down to right before
         the four paths merge. The texts are given as both a sequence of
         characters and as a sequence of words. That allows the network to look
         at both. Different convolutions are trained for characters and words.}
@@ -1042,29 +1048,28 @@ We have the network structure in Figure \ref{fig:conv-char-NN-model}.
 \end{figure}
 
 The path gone through to reach this design was a rather short one, compared
-to to the two described above. The design of this network was derived based
+to the two described above. The design of this network was derived based
 on a combination of the other two network, the \gls{conv-char-NN}, and
-\gls{rec-sent-NN}. The convolutional approach used on \gls{conv-char-NN},
-showed promise, and this network was an attempt to improve on that.
+\gls{rec-sent-NN}. The convolutional approach used on \gls{conv-char-NN} showed
+promise, and this network was an attempt to improve on that.
 
-Initially these alternations were small. They took the form on a different
-amount of convolutional layers, with a differing amount of sliding window sizes.
-These small changes also included the addition of regularization measures,
-such as dropout layers. The largest change came when we incorporated the
-multi-channel approach used in \gls{rec-sent-NN}. The thought process was,
-that if character were good features for this task, another channel would
-only provide additively better results. This was what yielded the network
-described above, which works on the character level and the word level. 3
-channel convolutional network were also produced during experimentation. Results
-from that seemed to indicate that the linguistic level of sentences were too
-high, thus hurting the model.
+Initially these attempted improvements were small. They took the form of a
+different amount of convolutional layers with a differing amount of sliding
+window sizes. These small changes also included the addition of regularization
+measures, such as dropout layers. The largest change came when we incorporated
+the multi-channel approach used in \gls{rec-sent-NN}. The thought process was
+that if characters was a good features for this task, another channel would
+only provide better results. This was what yielded the network described above,
+which works on the character level and the word level. A 3 channel convolutional
+network was also produced during experimentation. Results from that seemed to
+indicate that the linguistic level of sentences was too high, thus hurting the
+model.
 
-Similarly to the two other networks found the best prediction system and
-tuned the threshold for this network. We try the same prediction systems
-and thresholds as for the other two networks. We have shown the accuracy
-and accusation error for the dataset containing 50\% negatives in Figure
-\ref{fig:conv-char-word-NN-pred-50} and for the dataset containing 4\% negatives
-in Figure \ref{fig:conv-char-word-NN-pred-4}.
+Similarly to the two other networks we found the best prediction system and
+tuned the threshold for this network. We have shown the accuracy and accusation
+error over different thresholds for the dataset containing 50\% negatives in
+Figure \ref{fig:conv-char-word-NN-pred-50} and for the dataset containing 4\%
+negatives in Figure \ref{fig:conv-char-word-NN-pred-4}.
 
 \begin{figure}
     \centering

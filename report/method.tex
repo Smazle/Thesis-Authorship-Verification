@@ -734,17 +734,18 @@ mikolov2013linguistic,JMLR:v15:srivastava14a}.
             \right),
         \end{equation}
 
-        where $x_j^{(t)}$ $\psi_h$ is the activation function of the hidden unit, $I$ is the
-        number of input units, $H$ is the number of hidden units and $w_{hj}$
-        is the weight between neuron $h$ and the $j$'th input to that neuron.
-        The weight $w_{hj}$ and $w_{hh'}$ does not refer to the same weight even
-        when $j = h'$. Instead we abuse notation such that $w_{hj}$ enumerates
-        the weights between the input and hidden layer and $w_{hh'}$ enumerates
-        the weights between the hidden layer neurons. That is the activation of
-        a hidden unit is an activation function applied to a weighted sum of the
-        current inputs and the activation of all hidden units in the previous
-        timestep \citep{DBLP:series/sci/2012-385}. The output of the \gls{RNN}
-        is then computed as,
+        where $x_j^{(t)}$ is the j'th input at timestep t, $\psi_h$ is
+        the activation function of the hidden unit, $I$ is the number of input
+        units, $H$ is the number of hidden units and $w_{hj}$ is the weight
+        between neuron $h$ and the $j$'th input to that neuron. The weight
+        $w_{hj}$ and $w_{hh'}$ does not refer to the same weight even when $j =
+        h'$. Instead we abuse notation such that $w_{hj}$ enumerates the weights
+        between the input and hidden layer and $w_{hh'}$ enumerates the weights
+        between the hidden layer neurons. That is the activation of a hidden
+        unit is an activation function applied to a weighted sum of the current
+        inputs and the activation of all hidden units in the previous timestep
+        \citep{DBLP:series/sci/2012-385}. The output of the \gls{RNN} is then
+        computed as,
 
         \begin{equation}
             y^{(t)}_k = \sum_{h=1}^H w_{hk} a_{h}^{(t)}.
@@ -1930,6 +1931,6 @@ manually extracted feature sets and feature tuning. The networks will be siamese
 extract features from raw text data. The features are compared using a dense
 network. Each of our neural networks will only compare two texts at a time.
 Since an author has multiple texts we will combine the predictions on each of an
-authors texts using a prediction system. We will find the best prediction system
+author's texts using a prediction system. We will find the best prediction system
 and parameters using a validation.
 
