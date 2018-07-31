@@ -39,7 +39,8 @@ def Convert(line, x):
         'back-propagation': 'backpropagation',
         'back-propagate': 'backpropagate',
         'feature-set': 'feature set',
-        'testset': 'test set'
+        'testset': 'test set',
+        'MaComs': "MaCom's"
     }
 
     for key in c:

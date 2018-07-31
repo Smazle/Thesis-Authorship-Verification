@@ -729,12 +729,12 @@ mikolov2013linguistic,JMLR:v15:srivastava14a}.
 
         \begin{equation}
             a^{(t)}_h = \psi_h\left(
-                \sum_{j=1}^I w_{hj} x^{(t)}_i +
+                \sum_{j=1}^I w_{hj} x^{(t)}_j +
                 \sum_{h'=1}^H w_{hh'} a^{(t-1)}_{h'}
             \right),
         \end{equation}
 
-        where $\psi_h$ is the activation function of the hidden unit, $I$ is the
+        where $x_j^{(t)}$ $\psi_h$ is the activation function of the hidden unit, $I$ is the
         number of input units, $H$ is the number of hidden units and $w_{hj}$
         is the weight between neuron $h$ and the $j$'th input to that neuron.
         The weight $w_{hj}$ and $w_{hh'}$ does not refer to the same weight even
