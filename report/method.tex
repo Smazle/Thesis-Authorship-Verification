@@ -1235,13 +1235,13 @@ epoch, rather than after. This means that using batching greatly reduces the
 amount of $\mathcal{E}$ needed for the same amount of convergence provided
 by the non-batching approach, reducing overall run-time.\cite{Bishop} A
 more detailed description of this approach will be addressed in Section
-\ref{sec:optimizers}.
+\ref{subsubsec:optimizers}.
 
 \citet{Bishop} does present other alternatives to batching in his book, but none
 work as well as batching, which is why that is the default approach for \gls{NN}
 frameworks such as Tensorflow/Keras.
 
-\subsubsection{Optimizers}\label{sec:optimizers}
+\subsubsection{Optimizers}\label{subsubsec:optimizers}
 
 Traditional gradient descent has been updated with several different algorithms.
 These algorithms are called \textit{optimizers}. A good optimizer algorithm
