@@ -31,7 +31,7 @@ performed badly on the sentence level. Ideally we would have run an RNN on the
 word level. We suspect it would be able to learn the words and more importantly
 their relation to one another in a sentence. This relation is one that can not
 be found on the sentence level. In order work on the word-level, we would need
-more computational power than was available, to train the model. 
+more computational power than was available, to train the model.
 
 Another \gls{NLP} advantage \glspl{CNN} has in this context, is the
 fact that we are able to more accurately determine what part of the
@@ -231,6 +231,7 @@ students are cheating but are rather meant as a support system for teachers that
 are already suspicious. We have focused on the \gls{conv-char-NN} network since
 it performed best on the test dataset.
 
+
 \subsubsection{Extracting Important Features}
 
 We have previously looked at the output of the feature extraction layer to
@@ -425,6 +426,7 @@ prediction of each paragraph against the collaborators behind the assignment. It
 could also be used to detect what amount of a group assignment was written by
 what member of said group.
 
+
 \subsubsection{Applying Other Machine Learning Methods}
 
 We have also considered using other machine learning methods to give feedback
@@ -464,8 +466,8 @@ be trained with the purpose of pointing towards the cause. From that we would
 be able to conclude which features are the most important for this authorship
 verification task.
 
+
 \subsection{Applicability of Method}\label{sec:app_of_method}
-% TODO: Discuss scaleability.
 
 In this section we will discuss how applicable our approach will be to real
 world situations. We have created our solutions in a lab setting which
@@ -573,31 +575,53 @@ use the same ghost writer with no problem since they have seeded one of his/her
 texts into their library.
 
 
-% TODO: It would be nice to have some data here on how long it takes to predict
-% a text against an author with n texts here for each of our networks. We could
-% then discuss system load in periods where n students turn in assignments at
-% the same time.
-%
-% I also want a discussion of other scalability issues here. I tried rewriting
-% the section but could not come up with a good introduction. So I'm saving it
-% for later.
 \subsubsection{Scalability}
 
-The runtime our methods is also a factor. As mentioned in the beginning of this
-papers, running time was a focus during development. If we had chosen an author
-specific approach, we would have to train each of our methods on the texts of
-each individual author. This would introduce several problems. The methods
-would have to be trained for each author individually, before performing any
-kind of prediction. This would also lead to both varying quality of model, as
-the quantity of samples would very. This would also mean that we would not be
-able to apply them to new student, as they have no assignments associated with
-them. The generalizing approach was used instead. This mean that we only have
-to train the \glspl{NN} once, and then it can be applied text even written by
-new student. Most of our networks reached their max potential with the first
-10 epochs, meaning that max training time would be around 1 day or continuous
-training. This is the most time consuming part, as the actual prediction time is
-negligible. Of course the networks might need retraining some-time, to keep up
-with an evolving education system.
+Scalability of the system is important if it is to be implemented. It has to be
+possible to apply our methods to all turned in assignments in the system. As
+described in an earlier section we chose to implement generalizing models as
+they only have to be trained once. The training time is clearly the most costly
+part of our implemented methods. The networks take several days to train on
+the dataset we currently have and in the future the models might be trained on
+even more data increasing the training time further. However when the network
+is already trained it can be used an arbitrary number of times to classify
+new assignments. The networks might need retraining once in a while to keep
+up with general writing style changes over all students. To see why that is
+needed consider the filter looking at the phrase "F. eks.". Students might
+completely stop using that phrase in the future and it will therefore no longer
+discriminate between the students.
+
+When the network is already trained the classification time for a single new
+assignment is 0.37 seconds for the \gls{conv-char-NN}, 0.16 seconds for the
+\gls{rec-sent-NN} and 0.25 seconds for the \gls{conv-char-word-NN}. That is to
+compare a new assignment to on average 13 other texts and weighing the results
+using the prediction system we need less than half a second on all of our
+networks. Furthermore the task is very parallelizable. An unbounded number of
+machines can be set up with a copy of the network and classify new assignments.
+The classification time experiment were performed on a cheap laptop so it can
+probably also be reduced substantially on a better machine.
+
+For comparison \citet{hansen2014} found that using their author specific
+\gls{SVM} model took 0.78 seconds when restricting each student to 5 assignments
+and 5.4 seconds when using 16 assignments. That is at least twice as long as
+our classification time. \citet{hansen2014} notes that in 2012 roughly 47.000
+students finished their final Danish exam assignments at the same time. Using
+the 5 most recent assignments \citet{hansen2014} estimated that it would take
+$\frac{47,000 \cdot 0.78}{3600} \approx 10.2$ hours to classify all turned in
+assignments. Using our methods the same computation would take $\frac{47,000
+\cdot 0.37}{3600} \approx 4.8$ hours for the \gls{conv-char-NN}, $\frac{47,000
+\cdot 0.16}{3600} \approx 2.1$ hours for the \gls{rec-sent-NN} and $\frac{47,000
+\cdot 0.25}{3600} \approx 3.3$ hours for the \gls{conv-char-word-NN}.
+
+The average classification time of our methods could potentially be reduced
+further by trading memory usage for runtime. The statistics we have presented in
+this section is based on the classification time when predicting only a single
+pair of texts at a time. However the network is able to predict an arbitrary
+number of pairs at a time. Instead of predicting each pair independently batches
+of $n$ comparisons could be set up in a matrix and predicted at the same time
+reducing the runtime substantially. The networks use highly optimized matrix
+libraries for the classification and if performed on a graphics card which is
+optimized for such operations it would be very fast.
 
 
 \subsubsection{Citations}
