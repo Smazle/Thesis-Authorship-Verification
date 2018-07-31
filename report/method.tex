@@ -1216,7 +1216,7 @@ are optimized after each full parse over the training dataset.
 
 The process described above is pretty computationally expensive, with a
 time-complexity of $O(W)$. However, this is only the case when we are using a
-singluar training sample. If this proces is to be done for each training sample,
+singular training sample. If this process is to be done for each training sample,
 the runtime would then be $O(N\cdot W)$, where $N$ denotes the total number of
 training samples. During the normal training process, this is done over a number
 of epochs $\mathcal{E}$, which in turn further increases the time-complexity
@@ -1224,18 +1224,18 @@ to $O(\mathcal{E}\cdot N\cdot W)$. It is because of this runtime, that
 \gls{BP}, and \glspl{NN} might not seem like a viable option at all.
 \cite{Bishop}
 
-In light of this undesired runtime, methods were introuced that attempt
+In light of this undesired runtime, methods were introduced that attempt
 to reduce this runtime. One of these methods is called batching. Batching
 first shuffles, and then splits the training data into smaller batches. Each
 individual batch is then run through the network, after which \gls{BP} is
 applied. Running \gls{BP} on this smaller batch means that the resulting
-gradient is only an aproximation. Each epoch still consists of giving all $N$
+gradient is only an approximation. Each epoch still consists of giving all $N$
 samples to the network, but now \gls{BP} is applied several times during an
 epoch, rather than after. This means that using batching greatly reduces the
 amount of $\mathcal{E}$ needed for the same amount of convergence provided
 by the non-batching approach, reducing overall run-time.\cite{Bishop} A
 more detailed description of this approach will be addressed in Section
-\ref{sec:Optimizers}.
+\ref{sec:optimizers}.
 
 \citet{Bishop} does present other alternatives to batching in his book, but none
 work as well as batching, which is why that is the default approach for \gls{NN}
