@@ -1211,18 +1211,18 @@ As such, we can summarize the weight updating algorithm as,
 
 
 These three steps feed forward, backpropagate and update weights are repeated
-throughout the training cycle of the neural networks. Such that the weights
-are optimized after each full parse over the training dataset. 
+throughout the training cycle of the neural networks. Such that the weights are
+optimized after each full parse over the training dataset.
 
 The process described above is pretty computationally expensive, with a
-time-complexity of $O(W)$. However, this is only the case when we are using a
-singular training sample. If this process is to be done for each training sample,
-the runtime would then be $O(N\cdot W)$, where $N$ denotes the total number of
-training samples. During the normal training process, this is done over a number
-of epochs $\mathcal{E}$, which in turn further increases the time-complexity
-to $O(\mathcal{E}\cdot N\cdot W)$. It is because of this runtime, that
-\gls{BP}, and \glspl{NN} might not seem like a viable option at all.
-\cite{Bishop}
+time-complexity of $O(W)$. However, this is only the case when we are using
+a singular training sample. If this process is to be done for each training
+sample, the runtime would then be $O(N\cdot W)$, where $N$ denotes the total
+number of training samples. During the normal training process, this is done
+over a number of epochs $\mathcal{E}$, which in turn further increases the
+time-complexity to $O(\mathcal{E}\cdot N\cdot W)$. It is because of this
+runtime, that \gls{BP}, and \glspl{NN} might not seem like a viable option at
+all. \cite{Bishop}
 
 In light of this undesired runtime, methods were introduced that attempt
 to reduce this runtime. One of these methods is called batching. Batching
