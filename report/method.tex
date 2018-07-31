@@ -1209,7 +1209,6 @@ As such, we can summarize the weight updating algorithm as,
 
 \end{enumerate}
 
-
 These three steps feed forward, backpropagate and update weights are repeated
 throughout the training cycle of the neural networks. Such that the weights
 are optimized after each full parse over the training dataset. 
@@ -1462,6 +1461,16 @@ $\mathbf{a}^n$ to mean an elementwise power.
         direction of change is chosen by $\mathbf{\hat{m}}^{(t)}$ while the size
         of the step taken is chosen by a combination of the learning rate $\eta$
         and $\mathbf{\hat{v}}^{(t)}$.
+
+        What we perceive to be the main advantage \gls{Adam} has with regard
+        to \gls{NLP} would the properties it inherits from \gls{AdaGrad}. This
+        allows for more focus to be placed upon the less occurring features of
+        a piece of text. We hypothesize that these less occurring features, are
+        the ones that describe a specific author best, as they very well could
+        be some writing quick specific to an author. The running average scaling
+        that \gls{RMSProp} introduces, also does its part. This is however more
+        with regard to the learning in general, rather than specifically being
+        good for NLP.
 
 \end{description}
 
