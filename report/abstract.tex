@@ -1,3 +1,43 @@
 \begin{abstract} \label{sec:abstract}
 
+    In this thesis we investigate authorship verification of texts produced by
+    secondary school students. Authorship verification or \textit{ghost writer
+    detection} is the process of determining whether a text is written by an
+    author given a set of texts written by the same author. We work with the
+    Danish company MaCom that provides a dataset containing assignments from
+    secondary school students. We focus on deep neural networks to perform the
+    authorship verification. We implement two baseline methods representing
+    classic machine learning solutions to the authorship verification problem.
+    After that we present three networks to solve the same problem:
+
+    \begin{itemize}
+
+        \item
+
+            A convolutional neural network working on the character level of the
+            texts,
+
+        \item
+
+            A recurrent neural network working on the sentence level of the
+            texts,
+
+        \item
+
+            A convolutional neural network working on the character and word
+            level of the texts.
+
+    \end{itemize}
+
+    Classic machine learning methods for authorship verification use manually
+    chosen feature configurations. The networks we implement extract features
+    from raw text data. The networks beat both of the baseline methods on all
+    relevant parameters. On a dataset with 50\% ghost written assignments we
+    achieve an accuracy of 86.5\%.
+
+    Our methods are meant to be used in a supporting manner for teachers of
+    secondary schools for detecting ghost written assignments. We are able to
+    give teachers feedback on why the networks makes a decision and we are able
+    to detect specific areas of assignments that might be ghost written.
+
 \end{abstract}
