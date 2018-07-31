@@ -34,10 +34,12 @@ point for our own methods. Similarly future work on the dataset might be based
 on the work in this thesis.
 
 We have shown by beating our baselines and getting slightly better results on
-previous work on MaComs dataset. That it is possible to use neural networks
+previous work on MaComs dataset that it is possible to use neural networks
 on raw text data when performing authorship verification. One of the big
 advantages of our methods is that the input to the network is raw text. There
 is no need for manual feature engineering as classic authorship attribution and
 verification requires. Another big advantage is that our model is generalizing.
-It can be trained once and used many times. Verifying a single text is fast and
-scalable.
+It can be trained once and used many times. As explained before classifying
+a single text is fast and classifying $n$ texts is very parallelizable.
+The classification of a single text contains no dependencies on any other
+classifications and can therefore be performed on arbitrarily many machines.
