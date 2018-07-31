@@ -55,14 +55,23 @@ fns = data.as_matrix(columns=['fns'])
 
 # Generate graph.
 f, axarr = plt.subplots(2, 3)
+f.tight_layout()
 ax = f.add_subplot(111, frameon=False)
 plt.tick_params(
     labelcolor='none', top='off', bottom='off', left='off', right='off')
 
 for weight in np.sort(np.unique(weights)):
-    if weight not in [
-            'Exp λ=0.25', 'Exp λ=0.5', 'Exp λ=0.75', 'Exp λ=1.0', 'Exp λ=0.0'
-    ]:
+    # Different weight configurations
+    # if weight not in [
+    #        'Exp λ=0.25', 'Exp λ=0.5', 'Exp λ=0.75', 'Exp λ=1.0', 'Exp λ=0.0'
+    # ]:
+    # if weight not in [
+    #        'Exp λ=0.0', "Text Length"
+    # ]:
+    # if weight not in [
+    #        'Exp λ=0.0', "Exp λ=0.25 + Text Length"
+    # ]:
+    if weight not in ['Exp λ=0.0', 'Majority Vote']:
         continue
     weight_name = get_weight_report_name(weight)
 
@@ -105,8 +114,7 @@ ax.set_xlabel('θ (Threshold)')
 axarr[0, 0].set_ylabel('Accuracy')
 axarr[1, 0].set_ylabel('Accusation Error')
 
-lgd = axarr[0, 0].legend(
-    bbox_to_anchor=(-0.1, -1.41), loc='upper left', ncol=5)
+lgd = axarr[0, 0].legend(bbox_to_anchor=(0.2, -1.5), loc='upper left', ncol=5)
 
 if args.image_out is None:
     plt.show()
