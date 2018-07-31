@@ -1212,30 +1212,37 @@ As such, we can summarize the weight updating algorithm as,
 % TODO: We should read through this paragraph and rewrite it a bit. It is a bit
 % hard to read.
 
+
 These three steps feed forward, backpropagate and update weights are repeated
 throughout the training cycle of the neural networks. Such that the weights
-are optimized after each full parse over the training dataset. As is to be
-expected this algorithm as very expensive computationally as it runs in $O(W)$.
-This is only for a single training sample though. Thus run-time becomes $O(N
-\cdot W)$, where $N$ is the number of training samples. Additionally, if
-one trains over several epochs, this run-time becomes even more inflated
-with $O(\mathcal{E}\cdot N\cdot W)$ iterations having do be computed, where
-$\mathcal{E}$ is the number of epochs run during training. For that reason
-this run-time might not seem very viable at first, and is indeed the reason
-why neural networks need such a long training time. However an alternative
-described by \citet{Bishop}, which involves perturbing each weight instead, and
-approximating the derivatives. This method does however run in $O(W^2)$ time,
-making the run-time of $O(W)$ backpropagation provides the desired choice.
-However, in order to improve on those that $O(W)$ time-complexity a method
-called batching is used. This method, shuffles and split the training dataset
-up into smaller batches. These batches are then run through the network one at
-a time, performing backpropagation after each run-through. This results in the
-gradient not being as accurate after each batch, but this introduced inaccuracy
-is negligible compared to the computational time won, by reducing the amount of
-$\mathcal{E}$ in $O(\mathcal{E}\cdot N\cdot W)$ needed for the same amount of
-convergence. A mote detailed description of this process can be found in the
-next Section. \citep{Bishop}.
+are optimized after each full parse over the training dataset. 
 
+The process described above is pretty computationally expensive, with a
+time-complexity of $O(W)$. However, this is only the case when we are using a
+singluar training sample. If this proces is to be done for each training sample,
+the runtime would then be $O(N\cdot W)$, where $N$ denotes the total number of
+training samples. During the normal training process, this is done over a number
+of epochs $\mathcal{E}$, which in turn further increases the time-complexity
+to $O(\mathcal{E}\cdot N\cdot W)$. It is because of this runtime, that
+\gls{BP}, and \glspl{NN} might not seem like a viable option at all.
+\cite{Bishop}
+
+In light of this undesired runtime, methods were introuced that attempt
+to reduce this runtime. One of these methods is called batching. Batching
+first shuffles, and then splits the training data into smaller batches. Each
+individual batch is then run through the network, after which \gls{BP} is
+applied. Running \gls{BP} on this smaller batch means that the resulting
+gradient is only an aproximation. Each epoch still consists of giving all $N$
+samples to the network, but now \gls{BP} is applied several times during an
+epoch, rather than after. This means that using batching greatly reduces the
+amount of $\mathcal{E}$ needed for the same amount of convergence provided
+by the non-batching approach, reducing overall run-time.\cite{Bishop} A
+more detailed description of this approach will be addressed in Section
+\ref{sec:Optimizers}.
+
+\citet{Bishop} does present other alternatives to batching in his book, but none
+work as well as batching, which is why that is the default approach for \gls{NN}
+frameworks such as Tensorflow/Keras.
 
 \subsubsection{Optimizers}\label{sec:optimizers}
 
