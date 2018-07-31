@@ -11,29 +11,29 @@
 % interesting facts or quotations)
 
 In this thesis we work on the problem of authorship verification using texts
-written by Danish secondary school pupils. Authorship verification and
-authorship attribution describe the ability to distinguish between authors
-of texts based on a set of extracted textual features. The automation of
-authorship attribution/verification has been an active branch of research ever
-since the beginning of the digital age, giving birth to online digital text
-forensics tasks such as the work by \citet{pan:2015}. Initial attempts at
-quantifying writing style can be seen in \citet{Mendenhall237}, who attempted
-to determine the authorship of several of Shakespeare's texts. A theory exists
-that Shakespeare did not write all of his texts, or that Shakespeare was a
-pseudonym for one or several unknown authors. \citet{Mendenhall237} attempted
-this classification using the frequency distribution of words of different
-lengths. Throughout the years the approaches to this problem have changed
-quite a bit. When authorship attribution initially sparked an interest amongst
-researchers, the approaches were \textit{Stylometric} i.e. they were based on
-the linguistic style of authors. In addition, fully automated systems
-were rare and were mostly used in a supporting manner. It was during the 1990's
-that fully automated systems became more prevalent. The main reason for this was
-the internet. Before the Internet, the data available simply was not suitable
-for authorship attribution tasks. Books were too big resulting in a lack of
-homogeneity, and the amount of authors and bench-marking data was too small.
-The internet paved the way for insurmountable amounts of data and variations of
-that data, impacting areas such as information retrieval, machine learning and
-\gls{NLP}.\cite{stamatos2009}
+written by Danish secondary school pupils (students from roughly age 14-18).
+Authorship verification and authorship attribution describe the ability to
+distinguish between authors of texts based on a set of extracted textual
+features. The automation of authorship attribution/verification has been
+an active branch of research ever since the beginning of the digital age,
+giving birth to online digital text forensics tasks such as the work by
+\citet{pan:2015}. Initial attempts at quantifying writing style can be seen in
+\citet{Mendenhall237}, who attempted to determine the authorship of several
+of Shakespeare's texts. A theory exists that Shakespeare did not write all
+of his texts, or that Shakespeare was a pseudonym for one or several unknown
+authors. \citet{Mendenhall237} attempted this classification using the
+frequency distribution of words of different lengths. Throughout the years the
+approaches to this problem have changed quite a bit. When authorship attribution
+initially sparked an interest amongst researchers, the approaches were
+\textit{Stylometric} i.e. they were based on the linguistic style of authors. In
+addition, fully automated systems were rare and were mostly used in a supporting
+manner. It was during the 1990's that fully automated systems became more
+prevalent. The main reason for this was the internet. Before the Internet, the
+data available simply was not suitable for authorship attribution tasks. Books
+were too big resulting in a lack of homogeneity, and the amount of authors and
+bench-marking data was too small. The internet paved the way for insurmountable
+amounts of data and variations of that data, impacting areas such as information
+retrieval, machine learning and \gls{NLP}.\cite{stamatos2009}
 
 In order for any fully automatic authorship verification to work, stylometric
 features describing the text have to be automatically extracted. These features
@@ -50,29 +50,30 @@ behind the product Lectio \footnote{\url{https://www.lectio.dk/}} which is
 a website that provides student administration, communication, and digital
 teaching aid. Lectio is used in more than 90 \% of Danish secondary schools
 \footnote{\url{https://www.business.dk/digital/df-ordforer-om-pivabent-lectio-de
-t-kan-vaere-farligt-hvis-man-taenker}}. One of the services the website
-offers is the submission and handling of assignments written by students
-throughout their attendance. MaCom has shown interest in determining
-whether or not these assignment are written by someone other than the
-student (a ``ghost writer''). Ghost writing is especially a problem on
-the \gls{SRP} assignment. \gls{SRP} is an interdisciplinary assignment
-all Danish secondary school students turn in during their third year and
-last year. There is no oral examination for the assignment and the grade
-obtained is part of the student's final results from secondary school. The
-combination of the importance of the assignment and no oral examination
+t-kan-vaere-farligt-hvis-man-taenker}}. One of the services the website offers
+is the submission and handling of assignments written by students throughout
+their attendance. MaCom has shown interest in determining whether or not these
+assignment are written by someone other than the student (a ``ghost writer'').
+Ghost writing is especially a problem on the \gls{SRP} assignment. \gls{SRP} is
+an interdisciplinary assignment all Danish secondary school students turn in
+during their last year. There is no oral examination for the assignment and the
+grade obtained is part of the student's final results from secondary school.
+The combination of the importance of the assignment and no oral examination
 leads to some students turning in assignments written by ghost writers. The
 Danish state owned public service radio and television company Danmarks Radio
 (\texttt{DR}) has written an article describing the ghost writer problem
 \footnote{\url{https://www.dr.dk/nyheder/indland/elever-bruger-ghostwritere-til-
 eksamen}}. The article states that out of 2000 students, 58\% got help from
 friends or family, and around 15\% knew someone who had their entire assignment
-written by someone else. 
+written by someone else.
+
+% TODO Cite 4\% figure here.
 
 In this thesis we set up a system for detecting ghost writing using machine
 learning methods. The system is meant to help teachers decide whether or not
 an assignment is written by the student who turned it in or by someone else.
-According to Macom, the number one priority is to catch cheaters without
-wrongfully accusing any student. This should be the case even if the overall
+According to Macom, the number one priority is to catch cheaters while accusing
+as few innocent people as possible. This should be the case even if the overall
 number of student the system catches decreases. As long as the system reliable
 catches but a few students, it will deter the other student from cheating.
 The system should also be able to give evidence for why we think a particular
