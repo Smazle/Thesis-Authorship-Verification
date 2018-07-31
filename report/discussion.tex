@@ -7,6 +7,10 @@
         Look at different filters and discuss what they might look at and
         whether or not that seems like good features to be looking at.
 
+    \item
+
+        Why is conv-char-NN so much better than conv-char-word-NN?
+
 \end{itemize}
 
 
@@ -182,6 +186,7 @@ that we can save a lot of computation time.
 
 
 \subsubsection{Other Authorship Verification Results}
+\label{subsubsec:other_authorship_verification_results}
 
 As described earlier \citet{qian:2018} received excellent authorship
 verification results. They achieved an accuracy of 99.8\%. We based our
@@ -198,6 +203,9 @@ author 50 of his/her 100 texts were in the training dataset and 50 were in
 the testing dataset. Furthermore the texts were all from the same topic
 (corporate/industrial). In contrast our dataset use completely different authors
 between the training and test dataset and we have texts spanning many topics.
+
+% TODO: Here we should have a graph showing the training before and after
+% using different authors.
 
 At one point we trained a network using the \citet{qian:2018} inspired
 architecture on a training and validation dataset using the same authors. There
@@ -351,14 +359,15 @@ substrings from the \gls{C} dataset that generated the highest values.
     \end{tabular}
     \caption{Shows the 10 most different activations of convolutional filters on
         two different texts. Both the 10 most different activations for the
-        filters of size 8 and size 4 are shown. What each filter is looking at is
-        represented by the three greatest activations on any text in the \gls{C}
-        dataset. The strings the filter reacted most strongly to in the texts we
-        are comparing is shown in column \textbf{Text 1} and column \textbf{Text
-        2}. The actual activation values are shown in column \textbf{Difference}
-        where the left number corresponds to text 1 and the right to text 2. The
-        filters are sorted such that the greatest difference activation is at
-        the top and the differences fall as we move down the list.}
+        filters of size 8 and size 4 are shown. What each filter is looking at
+        is represented by the three greatest activations on any text in the
+        \gls{C} dataset. The strings the filter reacted most strongly to in the
+        texts we are comparing is shown in column \textbf{Text 1} and column
+        \textbf{Text 2}. The actual activation values are shown in column
+        \textbf{Difference} where the left number corresponds to text 1 and the
+        right to text 2. The filters are sorted such that the greatest
+        difference activation is at the top and the differences fall as we move
+        down the list.}
     \label{tab:teacher_feedback_output}
 \end{table}
 
@@ -367,10 +376,10 @@ require some parsing. As an example of one of the easier filters consider
 the filter activating to the string "F. eks". That phrase is Danish for "for
 example" or "for instance" and some people write that as "for eksempel" while
 others use the shorthand above. This could indicate that you are not the author
-of an assignment if that suddenly changes. That cannot be the only reasson
-given but if thousands of those reasons are present you can say with some
-confidence that someone else has written the assignment. As an exampe of one of
-the harder to parse filters consider the filter looking at \verb["ke …''."[,
+of an assignment if that suddenly changes. That cannot be the only reason given
+but if thousands of those reasons are present you can say with some confidence
+that someone else has written the assignment. As an example of one of the
+harder to parse filters consider the filter looking at \verb["ke …''."[,
 \verb["a...''\n\n"[ and \verb["n''. '' "[. That filter seems to react to non
 alphanumeric characters but none of the reactions on the two texts we are
 comparing looks anything like what gives the highest numbers. Instead the filter

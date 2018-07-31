@@ -46,3 +46,17 @@ writing style can be seen to change over time. It would be interesting to study
 exactly what changes occur. That might lead to insights into teaching methods.
 We could also look at finding students with little writing style development and
 flagging them as needing extra help from teachers.
+
+In Section \ref{subsubsec:other_authorship_verification_results} we discussed
+using our generalizing models in conjunction with author specific models. The
+generalizing models can then detect potential negatives while the author
+specific models will make sure we do not make to many false accusations. That is
+a good tradeoff between runtime and accusation error. It would be interesting to
+try out more author specific models and see how good results are possible.
+
+A point we also mention in our discussion is that we could have used other
+machine learning methods to try to explain the output of our networks. If a
+teacher asks for feedback for a particular decision we could apply another
+method with worse accuracy but from which it is easier to parse the decision.
+We would then be able to give better feedback to teachers. It could definitely
+be interesting to continue working on expanding the feedback given to teachers.
