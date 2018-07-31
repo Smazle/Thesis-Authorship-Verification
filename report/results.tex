@@ -87,7 +87,7 @@ the best results are shown in bold.}
 \begin{adjustbox}{center}
 \begin{tabular}{|c|l|c|c|c|c|c|c|c|c|}
 \hline
-Constrained                & Method                  & Weight            & $\theta$ & TP  & TN & FP & FN  & Acc             & A-Error         \\ \hline
+Constrained                & Method                  & Prediction System      & $\theta$ & TP  & TN & FP & FN  & Acc             & A-Error         \\ \hline
 \multirow{5}{*}{Yes} & SVM                     & \multicolumn{8}{c|}{N/A}                                                                   \\ \cline{2-10} 
                      & Extended Delta          & \multicolumn{8}{c|}{N/A}                                                                   \\ \cline{2-10} 
                      & \gls{conv-char-NN}      & $P_{MV}$          & 0.057    & 3546 & 13  & 140 & 4    & \textbf{0.9611} & \textbf{0.2352} \\ \cline{2-10} 
@@ -101,8 +101,8 @@ Constrained                & Method                  & Weight            & $\the
 \end{tabular}
 \end{adjustbox}
 \caption{The results on the 4\% negative data set, using the listed methods.
-Constrained refers to wether or not $\theta$ and the Weight which we used,
-was chosen based on their accuracy constrained by a 0.1 accusation error.
+Constrained refers to whether or not $\theta$ and the prediction system which we
+used, was chosen based on their accuracy constrained by a 0.1 accusation error.
 In the case of Yes, it refers to under the 0.1 threshold and No refers to simply
 maximizing accuracy with no regard for accusation error. In both case
 the best results were bolded.}
