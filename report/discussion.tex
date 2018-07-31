@@ -7,6 +7,10 @@
         Look at different filters and discuss what they might look at and
         whether or not that seems like good features to be looking at.
 
+    \item
+
+        Why is conv-char-NN so much better than conv-char-word-NN?
+
 \end{itemize}
 
 
@@ -181,6 +185,7 @@ that we can save a lot of computation time.
 
 
 \subsubsection{Other Authorship Verification Results}
+\label{subsubsec:other_authorship_verification_results}
 
 As described earlier \citet{qian:2018} received excellent authorship
 verification results. They achieved an accuracy of 99.8\%. We based our
@@ -197,6 +202,9 @@ The dataset \citet{qian:2018} used were the Reuter\_50\_50 dataset
 testing dataset. Furthermore the texts were all from the same topic
 (corporate/industrial). In contrast our dataset use completely different authors
 between the training and test dataset and we have texts spanning many topics.
+
+% TODO: Here we should have a graph showing the training before and after
+% using different authors.
 
 At one point we trained a network using the \citet{qian:2018} inspired
 architecture on a training and validation dataset using the same authors. There
