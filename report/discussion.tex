@@ -812,15 +812,19 @@ prediction systems.
             \label{fig:conv_char_prediction_zoom_50_majority_vote}
         \end{figure}
 
-    % TODO: Max and min.
-
-
-    \item[$P_{max}$ \and $P_{min}$]
+    \item[$\mathbf{P_{min}}$]
 
         The $P_{min}$ system is the only prediction system with worse
-        performance than the $P_{\mathcal{U}}$ system. The problem is that the
-        accusation error rise very quickly. Even though the accuracy also rise
-        quickly the accusation error rises so quickly that 
+        performance than the $P_{\mathcal{U}}$ system. The problem is that
+        the accusation error rise very quickly. Even though the accuracy
+        also rise quickly the accusation error rises so quickly that the
+        systems thresholds give to high accusation error to be used. We
+        can also see that the maximum accuracy of the $P_{min}$ system
+        is around 70\% which is also lower than the other systems. We
+        have shown a plot of the $P_{min}$ prediction system in Figure
+        \ref{fig:conv_char_prediction_zoom_50_majority_vote}.
+
+    % TODO: Write about P_max
 
 \end{description}
 
