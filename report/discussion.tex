@@ -685,7 +685,7 @@ prediction systems.
 
 \begin{description}
 
-    \item[$P_\mathrm{U}$]
+    \item[$\mathbf{P_\mathrm{U}}$]
 
         The uniform prediction system $P_\mathcal{U}$ generally has a lower
         accuracy and higher accusation error than the other prediction systems.
@@ -695,7 +695,7 @@ prediction systems.
         to make its predictions. It only use the raw predictions on the texts of
         the networks and simply takes an average of that.
 
-    \item[$P_{exp_\lambda}$]
+    \item[$\mathbf{P_{exp_\lambda}}$]
 
         The exponential dropoff prediction system used the time of an
         assignment to determine the most important text. Recall that
@@ -715,7 +715,7 @@ prediction systems.
 
         \begin{figure}
             \centering
-            \textbf{$P_{exp_\lambda}$ 50\% Negative Samples}\par\medskip
+            \textbf{$\mathbf{P_{exp_\lambda}}$ 50\% Negative Samples}\par\medskip
             \includegraphics[width=0.7\textwidth]{./pictures/discussion/conv_char_nn_prediction_zoom_50_time}
             \caption{Illustrate important intervals for our different
                 $P_{exp_\lambda}$ prediction systems for the \gls{conv-char-NN}
@@ -726,7 +726,7 @@ prediction systems.
             \label{fig:conv_char_prediction_zoom_50}
         \end{figure}
 
-    \item[$P_l$]
+    \item[$\mathbf{P_l}$]
 
         The idea behind the length based prediction system was that
         longer texts would better reflect the writing style of an
@@ -744,7 +744,8 @@ prediction systems.
 
         \begin{figure}
             \centering
-            \textbf{$P_l$ \and $P_{lexp_{\lambda}}$ \and $P_{exp_\lambda}$ 0.5 Split}\par\medskip
+            \textbf{$\mathbf{P_l}$ \& $\mathbf{P_{lexp_{0.25}}}$ \&
+            $\mathbf{P_{exp_{0.25}}}$ 0.5 Split}\par\medskip
             \includegraphics[width=0.7\textwidth]{./pictures/discussion/conv_char_nn_prediction_zoom_length}
             \caption{Illustrate important intervals for our $P_l$,
                 $P_{exp_\lambda}$ and $P_{lexp_{\lambda}}$ prediction systems
@@ -755,7 +756,7 @@ prediction systems.
             \label{fig:conv_char_prediction_zoom_50_text_length}
         \end{figure}
 
-    \item[$P_{lepx_{0.25}}$]
+    \item[$\mathbf{P_{lepx_{0.25}}}$]
 
         This prediction system were a combination of the time based and text
         length based prediction systems. Multiple different networks had this
@@ -780,7 +781,7 @@ prediction systems.
         was best at the extremes and lower $\lambda$ values were better in the
         middle of the graphs.
 
-    \item[$P_{MV}$]
+    \item[$\mathbf{P_{MV}}$]
 
         The majority vote prediction $P_{MV}$ system is similar to the
         uniform prediction system $P_{\mathcal{U}}$. We therefore expect
@@ -800,7 +801,8 @@ prediction systems.
 
         \begin{figure}
             \centering
-            \textbf{$P_{MV}$ 0.5 Split}\par\medskip
+            \textbf{$\mathbf{P_{MV}}$ \& $\mathbf{P_{min}}$ \&
+            $\mathbf{P_{max}}$ 0.5 Split}\par\medskip
             \includegraphics[width=0.7\textwidth]{./pictures/discussion/conv_char_nn_prediction_zoom_min_max}
             \caption{Illustrate important intervals for our $P_{MV}$, $P_{max}$
                 and $P_{min}$ prediction systems for the \gls{conv-char-NN}
