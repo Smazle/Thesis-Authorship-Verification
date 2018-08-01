@@ -17,7 +17,7 @@
 \subsection{Results}
 
 Looking at the results presented in Section \ref{sec:results} it is apparent
-that we have not achieved less the than 10\% accusation error on the test
+that we have not achieved less than the 10\% accusation error on the test
 set that MaCom required. We believe however that some of the methods show
 promising results. While all the networks we applied to the test set beat
 our baselines the best performing network was the \gls{conv-char-NN}. This
@@ -28,53 +28,53 @@ While this network was in fact the best, it was closely followed by network
 performance, lending credence to the increased applicability of \glspl{CNN} to
 \gls{NLP} problems. It is however worth noting that this could very well be
 due to the infeasibility of running any of our \glspl{RNN} on the character or
-word level of the texts supplied to it. We hypothesize that the accuracy of a
+word level of the texts supplied to it. We hypothesize that the accuracy of an
 RNN would be greatly increased had it been run on a lower linguistic level.
 As experiments showed in \ref{subsubsec:conv_char_word_nn}, even \gls{CNN}s
 performed badly on the sentence level. Ideally we would have run an RNN on the
-word level. We suspect it would be able to learn the words and more importantly
+word level. We hypothesize it would be able to learn the words and more importantly
 their relation to one another in a sentence. This relation is one that can not
 be found on the sentence level. In order work on the word-level, we would need
-more computational power than was available, to train the model.
+more computational power than was available to train the model.
 
 Another \gls{NLP} advantage \glspl{CNN} has in this context, is the
 fact that we are able to more accurately determine what part of the
 text contributed to final classification as can be seen in the Section
-\ref{subsec:teacher_feedback_text_comparisons}.
-
-Looking at the performance of the two \glspl{CNN}, it becomes obvious that
-the character level is of great importance when it comes to determining the
-author of a text. The sentence level appears to on a too high linguistic
-level. At least in the way we applied it. Looking at \gls{conv-char-NN}, and
-\gls{conv-char-word-NN}, it would seem that focusing on the word level of the
-texts seems to actually hurt the model a bit. We are a bit uncertain as to the
-reason for this, we do however have some theories. The reason might be similar
-to the problem \gls{rec-sent-NN} had. The level might actually be a bit to
-high for our convolutional networks, the problem might be the image-equivalent
-of having a too large convolutional window. This would result in ignoring all
-the small details that are needed in order to properly determine the author.
-This also highlights a potential reason behind the differing performance of
-networks \gls{conv-char-NN} and \gls{conv-char-word-NN}. \gls{conv-char-NN}
-had a large amount of filters on the character level of the text, whereas
-\gls{conv-char-word-NN} had greatly decreased amount of filters on character
-level, in addition to its word level filters. This might very well have led to
-\gls{conv-char-word-NN} missing some relevant person-specific traits on the
-character level such as typos, dot position, comma positions and the like. It
-would not even be able to find such traits on the word level, as the usage of
-a pre-trained embedding layer means that only correctly spelled word were even
-considered.
+\ref{subsec:teacher_feedback_text_comparisons}. Looking at the performance
+of the two \glspl{CNN}, it is obvious that the character level is of great
+importance when it comes to determining the author of a text. We can however not
+say the same about the sentence level. It seems to be operating on a linguistic
+level which is too high, resulting in noise rather than information. Looking at
+\gls{conv-char-NN}, and \gls{conv-char-word-NN}, it would seem that focusing on
+the word level of the texts seems to actually hurt the model a bit. We are a
+bit uncertain as to the reason for this. We do however have some theories. The
+reason might be similar to the problem \gls{rec-sent-NN} had. The level might
+actually be a bit too high for our convolutional networks - the image-equivalent
+of having a convolutional window which is too large. This would result in
+ignoring all the small details that are needed in order to properly determine
+the author. It would also highlight a potential reason behind the differing
+performances of the networks \gls{conv-char-NN} and \gls{conv-char-word-NN}.
+The \gls{conv-char-NN} had a large amount of filters on the character level
+of the text, whereas the \gls{conv-char-word-NN} had greatly decreased amount
+of filters on character level, in addition to its word level filters. This
+might very well have led to the \gls{conv-char-word-NN} missing some relevant
+person-specific traits on the character level such as typos, dot position,
+comma positions and the like. It would not even be able to find such traits on
+the word level, as the usage of a pre-trained embedding layer means that only
+correctly spelled words were considered.
 
 Looking at our validation set results in Table
-\ref{tab:experiment-validation-results}, we can clearly see a difference, when
-comparing to our tests results. The results from the validation is of course
-under the required accusation error threshold as that was the dataset on which
-we actually found the theta and the weight function to get under that threshold.
-Because of that, it stands to reason that the models would have a somewhat
-lower performance when applied to a fresh untouched test dataset. This lowered
-performance takes the form of an increased accusation error, and a decreased
-accuracy. This generally is the case in machine learning tasks.
+\ref{tab:experiment-validation-results}, we can clearly see a difference,
+when comparing to our tests results. The results from the validation meet the
+requirements for the accusation error, while the test results does not. However,
+this difference is justified as it was on the validation set that we found the
+prediction system and threshold that got us under said requirement. Therefore it
+stands to reason that the models would have a somewhat lower performance when
+applied to a fresh, untouched test dataset. This lowered performance takes form
+of an increased accusation error, and a decreased accuracy. This is the case for
+machine learning tasks in general.
 
-A more general description of a models performance can be computed using the
+A more general description of a model's performance can be computed using the
 \gls{AUC} of the \gls{ROC}-curve of a model, better known as \gls{AUROC}.
 A \gls{ROC} curve is the \gls{FPR} plotted against the \gls{TPR}, both of
 which are defined in Section \ref{sec:method}. \gls{AUROC} is a measure of
