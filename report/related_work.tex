@@ -24,13 +24,10 @@ extracted from the text and determine authorship of the text from them.
 used multiple channels network. Each channel was a different token sequence,
 some of them were word embeddings and some were character embeddings. Some of
 the channels were static while some of the channels were non-static meaning
-that the word/char-embedded vectors would change during training. The point of
-the channels was that the network was able to extract features from multiple
-linguistic layers, all describing a different stylometric feature of text.
-These layers span from character specific features, all the way to application
-specific features, as explained in \citet[Section 2]{stamatos2009}. We will
-elaborate more on these features in Section \ref{subsec:baseline_methods}. They
-specifically used networks with the following channels
+that the word/char-embedded vectors would change during training. The point
+of the multiple channels was that the network was able to extract features
+from multiple linguistic layers, all describing a different stylometric
+feature of text. 
 
 \begin{description}
     \item[CNN-char:] Single non-static character channel.
