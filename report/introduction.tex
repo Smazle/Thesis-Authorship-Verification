@@ -13,34 +13,36 @@
 In this thesis we work on the problem of authorship verification using texts
 written by Danish secondary school pupils (students from roughly age 14-18).
 Authorship verification and authorship attribution describe the ability to
-distinguish between authors of texts based on a set of extracted textual
-features. The automation of authorship attribution/verification has been
-an active branch of research ever since the beginning of the digital age,
-giving birth to online digital text forensics tasks such as the work by
-\citet{pan:2015}. Initial attempts at quantifying writing style can be seen in
-\citet{Mendenhall237}, who attempted to determine the authorship of several
-of Shakespeare's texts. A theory exists that Shakespeare did not write all
-of his texts, or that Shakespeare was a pseudonym for one or several unknown
-authors. \citet{Mendenhall237} attempted this classification using the
-frequency distribution of words of different lengths. Throughout the years the
-approaches to this problem have changed quite a bit. When authorship attribution
-initially sparked an interest amongst researchers, the approaches were
-\textit{Stylometric} i.e. they were based on the linguistic style of authors. In
-addition, fully automated systems were rare and were mostly used in a supporting
-manner. It was during the 1990's that fully automated systems became more
-prevalent. The main reason for this was the internet. Before the Internet, the
-data available simply was not suitable for authorship attribution tasks. Books
-were too big resulting in a lack of homogeneity, and the amount of authors and
-bench-marking data was too small. The internet paved the way for insurmountable
-amounts of data and variations of that data, impacting areas such as information
-retrieval, machine learning and \gls{NLP}.\cite{stamatos2009}
+distinguish between authors of texts such that when given a text of unknown
+authorship it can either be attributed to an author or verified to be written
+by a specific author. The automation of authorship attribution/verification
+has been an active branch of research ever since the beginning of the digital
+age, giving birth to online digital text forensics tasks such as the work
+by \citet{pan:2015}. Initial attempts at quantifying writing style can be
+seen in \citet{Mendenhall237}, who attempted to determine the authorship of
+several of Shakespeare's texts. A theory exists that Shakespeare did not write
+all of his texts, or that Shakespeare was a pseudonym for one or several
+unknown authors. \citet{Mendenhall237} attempted his classification using the
+frequency distribution of words of different lengths. Throughout the years
+the approaches to this problem have changed quite a bit. When authorship
+attribution initially sparked an interest amongst researchers, the approaches
+were \textit{Stylometric} i.e. they were based on the linguistic style of
+authors. In addition, fully automated systems were rare and were mostly used
+in a supporting manner. It was during the 1990's that fully automated systems
+became more prevalent. The main reason for this was the internet. Before the
+Internet, the data available simply was not suitable for authorship attribution
+tasks. Books were too big resulting in a lack of homogeneity, and the amount
+of authors and bench-marking data was too small. The internet paved the way
+for insurmountable amounts of data and variations of that data, impacting
+areas such as \textit{information retrieval}, \textit{machine learning} and
+\gls{NLP}.\cite{stamatos2009}
 
-In order for any fully automatic authorship verification to work, stylometric
-features describing the text have to be automatically extracted. These features
-span multiple \textit{linguistic layers} ranging from low level character
-sequence frequencies to the high level application specific features such as
-text creation date and number of edits. Many of the current day state-of-the-art
-approaches are based on these features \citep{stamatos2009}.
+In order for any fully automatic authorship verification/attribution to work,
+stylometric features describing the text have to be automatically extracted.
+These features can span multiple \textit{linguistic layers} ranging from low
+level character sequence frequencies to the high level application specific
+features such as text creation date and number of edits. Many of the current day
+state-of-the-art approaches are based on these features \citep{stamatos2009}.
 
 % The reason for writing about this topic:
 
@@ -52,10 +54,10 @@ teaching aid. Lectio is used in more than 90 \% of Danish secondary schools
 \footnote{\url{https://www.business.dk/digital/df-ordforer-om-pivabent-lectio-de
 t-kan-vaere-farligt-hvis-man-taenker}}. One of the services the website offers
 is the submission and handling of assignments written by students throughout
-their attendance. MaCom has shown interest in determining whether or not these
+their school years. MaCom has shown interest in determining whether or not these
 assignment are written by someone other than the student (a ``ghost writer'').
-Ghost writing is especially a problem on the \gls{SRP} assignment. \gls{SRP} is
-an interdisciplinary assignment all Danish secondary school students turn in
+Ghost writing is especially a problem on the \gls{SRP} assignment. The \gls{SRP}
+is an interdisciplinary assignment all Danish secondary school students turn in
 during their last year. There is no oral examination for the assignment and the
 grade obtained is part of the student's final results from secondary school.
 The combination of the importance of the assignment and no oral examination
@@ -63,43 +65,48 @@ leads to some students turning in assignments written by ghost writers. The
 Danish state owned public service radio and television company Danmarks Radio
 (\texttt{DR}) has written an article describing the ghost writer problem
 \footnote{\url{https://www.dr.dk/nyheder/indland/elever-bruger-ghostwritere-til-
-eksamen}}. The article states that out of 2000 students, 58\% got help from
-friends or family, and around 15\% knew someone who had their entire assignment
-written by someone else.
-
-% TODO Cite 4\% figure here.
+eksamen}}. The article states that out of 2000 students, 58\% got
+help from friends or family, and around 15\% knew someone who had
+their entire assignment written by someone else. Furthermore it has
+been estimated that 4\% of turned in \glspl{SRP} are ghost written
+\footnote{\url{https://politiken.dk/indland/uddannelse/art5603163/Gymnasieelever-\%C2\%BBSnyderi-beviser-hvor-vanvittig-betydningsfuld-SRP-er-blevet\%C2\%AB}}.
 
 In this thesis we set up a system for detecting ghost writing using machine
 learning methods. The system is meant to help teachers decide whether or not
 an assignment is written by the student who turned it in or by someone else.
 According to Macom, the number one priority is to catch cheaters while accusing
-as few innocent people as possible. This should be the case even if the overall
-number of student the system catches decreases. As long as the system reliable
-catches but a few students, it will deter the other student from cheating.
-The system should also be able to give evidence for why we think a particular
-assignment is written by someone else. Such evidence could for example be
-that the frequency of particular words is significantly different in the new
-assignment compared to previous assignments by the student. This product would
-work in a supplementary manner, providing input for teacher to look over when
-making the final decision.
+as few innocent students as possible. We should focus on minimizing the number
+of falsely accused students even if it means that we catch fewer cheaters. As
+long as the system reliably catches a few students, it will deter the other
+students from cheating. The system should also be able to give evidence for why
+we think a particular assignment is written by someone else. Such evidence could
+for example be that the frequency of particular words is significantly different
+in the new assignment compared to previous assignments by the student. This
+product would work in a supplementary manner, providing input for teacher to
+look over when making the final decision.
 
 \subsection{Notation} \label{subsec:notation}
 
 We work with several different objects. The main ones are texts and authors.
-We generally name texts $t$ and authors $\alpha$. If multiple texts or authors
-are used we generally call them $t'$ and $\alpha'$ or $t_n$ and $\alpha_n$.
-The set $\mathcal{A} = \{\alpha_1, \alpha_2, \dots, \alpha_n\}$ denotes all
-authors, where $T_\alpha$ denotes the set of texts written by the author
-$\alpha$. This leads to the disjunction $\overline{T_\alpha} = \mathcal{T}
-\setminus T_\alpha$, denoting the texts which are not written by $\alpha$,
-where $\mathcal{T} = \bigcup_{\alpha \in \mathcal{A}} T_\alpha$ subject to
-$T_{\alpha} \cap T_{\alpha'} = \emptyset$ for all $\alpha \neq \alpha'$.
-Texts are represented by a sequence of characters. We denote the length
-of that sequence $|t|$, for any text $t$. Each text also has a point of
-time where it was written. This time is given by the function $\tau \colon
+We generally name texts $t$ and authors $\alpha$. If a few texts or authors
+are needed we generally call them $t, t', \dots$ and $\alpha, \alpha', \dots$
+and if many are needed we call them $t_1, \dots, t_n$ and $\alpha_1, \dots,
+\alpha_n$. The set $\mathcal{A} = \{\alpha_1, \alpha_2, \dots, \alpha_n\}$
+denotes all authors, where $T_\alpha$ denotes the set of texts written by
+the author $\alpha$. The set $\mathcal{T} = \bigcup_{\alpha \in \mathcal{A}}
+T_\alpha$ subject to $T_{\alpha} \cap T_{\alpha'} = \emptyset$ for all $\alpha
+\neq \alpha'$ denotes the set of all texts. The set $\overline{T_\alpha} =
+\mathcal{T} \setminus T_\alpha$, denotes the texts which are not written by
+$\alpha$.
+
+Texts are represented by a sequence of characters. We denote the
+length of that sequence $|t|$, for any text $t$. Each text also has a point
+of time where it was written. This time is given by the function $\tau \colon
 \mathcal{T} \rightarrow \mathbb{N}^+$, which returns the point in time where the
 assignment was submitted in months relative to the earliest submitted $t \in
-\mathcal{T_\alpha}$.
+\mathcal{T_\alpha}$. Consider an author $\alpha$ that has written 3 assignments.
+One in April 2018, one in March 2018 and one in December 2017. The function
+$\tau$ would then return for each assignment respectively 0, 1 and 4.
 
 For vectors we use the standard notation of naming them in lower case bold
 letters as $\mathbf{x}$. Matrices will be named in upper case non bold
@@ -112,10 +119,10 @@ Much existing work on authorship verification is based on frequencies of
 sequences of object, \textit{n-grams} \citep{stamatos2009}. For example, the
 object could be characters and the n in n-gram would then refer to the length of
 character sequences in a text. If we take the text to be "hello" the different
-character-3-grams will be ``hel'', ``ell'' and ``llo''. The frequency of each of
-them is $\frac{1}{3}$, and would service as the input for the specific model. We
-will use n-grams in some of our baseline methods and some of our networks will
-use them indirectly.
+character-3-grams will be ``hel'', ``ell'' and ``llo''. The frequency of each
+of them is $\frac{1}{3}$, and would serve as the input for a model. We will use
+n-grams in some of our baseline methods and some of our networks will use them
+indirectly.
 
 % Introduce the main ideas that stem from your topic/title and the order in
 % which you will discuss them?
@@ -137,54 +144,53 @@ below.
 
 \begin{definition}[Authorship Attribution]
 
-    Given a set of authors $A = \{\alpha_1, \alpha_2,\dots,\alpha_n\}$, each
-    with a set of texts $T_{\alpha_i}$, and a text $t$ of unknown authorship,
-    determine which $\alpha_i \in A$ is the author of $t$.
+    Given a universe of authors $A = \{\alpha_1, \alpha_2,\dots,\alpha_n\}$,
+    each with a set of texts $T_{\alpha_i}$, and a text $t$ of unknown
+    authorship, determine which $\alpha_i \in A$ is the author of $t$.
 
 \end{definition}
 
-The problems are closely linked since an answer for authorship attribution
-can be obtained by using authorship verification, and an answer for authorship
+The problems are closely linked since an answer for authorship attribution can
+be obtained by using authorship verification, and an answer for authorship
 verification can be obtained by using authorship attribution. Consider a
 case where we are given an oracle $\mathcal{S}$ answering the authorship
-verification problem as follows. The oracle $\mathcal{S}$ is a mapping from
-an author $\alpha$ and text $t$ to either true or false. Given an instance
-of the authorship attribution problem with authors $A$ and text $t$ we solve
-the problem by using $\mathcal{S}$ on each author $\alpha \in A$. We return
-the author where $\mathcal{S}$ reports true. Now consider a case where we are
-given a solution to the authorship attribution problem $\mathcal{S}'$. The
-solution $\mathcal{S}'$ is now a mapping from a set of authors $A$ and text $t$
-to an author $\alpha \in A$. Given an instance of the authorship verification
-problem with author $\alpha_i \in A$ and text $t$ and a set of texts written by
-different authors $\overline{T}_{\alpha}$ we solve the verification problem by
-applying $\mathcal{S}'$ to the texts $T_{\alpha} \cup \overline{T}_{\alpha}$
-and the text of unknown authorship $t$. We then return $\mathcal{S}'(A, t) =
-\alpha$.
+verification problem. The oracle $\mathcal{S}$ is a mapping from an author
+$\alpha$ and text $t$ to either true or false. Given an instance of the
+authorship attribution problem with authors $A$ and text $t$ we solve the
+problem by using $\mathcal{S}$ on each author $\alpha \in A$. We return
+the author where $\mathcal{S}$ reports true. Now consider a case where we
+are given a solution to the authorship attribution problem $\mathcal{S}'$.
+The solution $\mathcal{S}'$ is now a mapping from a set of authors $A$ and
+text $t$ to an author $\alpha \in A$. Given an instance of the authorship
+verification problem with author $\alpha_i \in A$ and text $t$ and a set
+of texts written by different authors $\overline{T}_{\alpha}$ we solve the
+verification problem by applying $\mathcal{S}'$ to the texts $T_{\alpha} \cup
+\overline{T}_{\alpha}$ and the text of unknown authorship $t$. We then return
+$\mathbbm{1}\left[\mathcal{S}'(A, t) = \alpha\right]$.
 
 \subsection{Roadmap}
 
 In Section \ref{sec:related_work} we go through previous work on authorship
 verification/attribution and previous work performed on MaCom's dataset. We
-specifically focus on neural network based methods as we want to expand on those
+specifically focus on neural network methods as we want to expand on those
 methods.
 
 In Section \ref{sec:method} we describe the theory behind the methods we work
-with. We start out by briefly describing our baseline methods after which
-we describe the methods developed with the intent of beating the baseline
-methods. Specifically we describe the theoretical foundations of \textit{Siamese
-neural networks} that we have focused on.
+with. We start out by briefly describing our baseline methods after which we
+describe the neural network methods. Specifically we describe the theoretical
+foundations of \textit{Siamese neural networks} that we have focused on.
 
 In Section \ref{sec:data} we describe the dataset we have been using throughout
 our experiments. We present statistics about average number of texts and the
-number of authors and so on. We also describe the preprocessing steps we
-performed on the dataset.
+number of authors etc. We also describe the preprocessing steps we performed on
+the dataset.
 
 In Section \ref{sec:experiments} we go through the different network
 architectures we used. We present the results we obtained on a validation
 dataset and how we reached the final architectures we settled on.
 
 In Section \ref{sec:results} we present our test set performances for our
-baseline methods, and our developed methods.
+baseline methods and neural network methods.
 
 In Section \ref{sec:discussion} we discuss the results we presented in the
 previous section. We discuss the applicability of the method we developed to the
