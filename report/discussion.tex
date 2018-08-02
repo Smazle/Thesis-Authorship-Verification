@@ -224,12 +224,12 @@ to train a different model for each author and retrain models when new
 material is turned in by an existing author. However they have the advantage
 of often being more accurate than generalizing models. We could have used
 our generalizing model to find potential ghost writing candidates. Using our
-\gls{conv-char-word-NN} we could catch 32.6\% of the ghost writers on a 4\%
+\gls{conv-char-word-NN} we could catch 32.6\% of the ghostwriters on a 4\%
 negative dataset but we could only do so with an accusation error of 47.7\%. We
 could stop taking the output of the generalizing model as the truth, and then
 use a author specific network to verify the result of the generalizing model.
 Then we would only be required to train a generalized model in the cases where
-we suspect ghost written assignments.
+we suspect ghostwritten assignments.
 
 
 \subsection{Teacher Feedback}\label{subsec:teacher_feedback_text_comparisons}
@@ -393,10 +393,10 @@ start of sentences.
 
 Aside from feedback based on an entire text, we looked at whether or not we
 could say something about which parts of an assignment are the most likely to be
-ghost written. That would allow a suspicious teachers to identify the part of
+ghostwritten. That would allow a suspicious teachers to identify the part of
 the assignment which is least likely to be written by the student and further
 analyze that small subsection of the assignment. To find the parts of a text
-$t$ most likely to be ghost written we split $t$ into a list of paragraphs.
+$t$ most likely to be ghostwritten we split $t$ into a list of paragraphs.
 Each paragraph is separated by at least 2 newline characters. We throw away
 paragraphs of less than 100 characters since it does not make sense to predict
 on such a small amount of text. Hereafter we use one of our networks to compare
@@ -485,19 +485,19 @@ verification task.
 In this section we will discuss how applicable our approach will be to real
 world situations. We have created our solutions in a lab setting which
 simplifies the problem quite a bit. We discuss here how our results can be
-applied to find real ghost writers.
+applied to find real ghostwriters.
 
 
 \subsubsection{Data Deficiencies}
 
-The biggest problem with our approach is that we had no actual ghost written
+The biggest problem with our approach is that we had no actual ghostwritten
 assignments available. We were given a dataset of authors where each author
-had written a set of assignments. To create ghost written assignments we used
+had written a set of assignments. To create ghostwritten assignments we used
 assignments turned in by other authors. It would of course have been better if
 we had had a dataset of authors where each author had a set of assignments known
 to be written by him/her and a set of assignments known to have been written by
-a ghost writer hired by that author. That was not possible however since MaCom
-did not have that data. In a real ghost writer setting the ghost writer might
+a ghostwriter hired by that author. That was not possible however since MaCom
+did not have that data. In a real ghostwriter setting the ghostwriter might
 try to mimic the writing style of a student and in that way might trick our
 algorithm into classifying a \gls{FP}.
 
@@ -505,10 +505,10 @@ We have discussed another problem with our dataset during the experiments we
 performed. We observed multiple times that the network were reacting strongly
 to strings looking like Danish names and school class identifiers. On our
 artificially constructed dataset all of an authors texts will have the correct
-name and most generated ghost written texts will have a different name.
+name and most generated ghostwritten texts will have a different name.
 Therefore names are an excellent feature to look at due to the way our dataset
-was constructed. In a real ghost writer setting however the names attached to an
-assignment is a useless feature as a ghost writer will always put the students
+was constructed. In a real ghostwriter setting however the names attached to an
+assignment is a useless feature as a ghostwriter will always put the students
 name on the assignment. We have tried to work against these deficiencies of
 our dataset by removing as many names as possible and as much other metadata
 information as possible.
@@ -518,7 +518,7 @@ we observed the training and validation accuracy falling after the change. We
 also saw less of the filters looking at text metadata suggesting that it is not
 as important to the networks.
 
-It is hard to predict exactly how well the network will perform on ghost written
+It is hard to predict exactly how well the network will perform on ghostwritten
 assignments when we had no such assignments available during testing. However we
 believe we have handled the deficiencies in the dataset as well as possible.
 
@@ -558,17 +558,17 @@ student did not write an assignment herself but still had the text classified
 as written by her. We have in a previous section described how we can figure
 out what the network convolutional networks is probably looking at by looking
 at the output of the filter extraction layer. If a student could obtain that
-information she could make sure that any ghost written assignments contained
+information she could make sure that any ghostwritten assignments contained
 the same phrases that the network reacted to each time. It would however be
 very hard to make sure that all filters received the same values in a ghost
-written assignment. The student would have to go through the ghost written
+written assignment. The student would have to go through the ghostwritten
 assignment and making sure that each filter is represented by approximately the
 same phrase as he/she usually use in an assignment. And even if the student
 obtains the correct values for most filters the few filters that obtained a
 different value might be very important in the dense layers that followed the
 feature extraction layers. It is very hard to predict what the dense layers
 are doing with the features it is given so it is in our opinion impractical to
-cheat the convolutional networks by engineering the features in a ghost written
+cheat the convolutional networks by engineering the features in a ghostwritten
 assignment.
 
 The problem is even harder in our \gls{RNN} networks. Here the student has even
@@ -580,11 +580,11 @@ What the student could do is exploit our prediction system. Some of the
 prediction systems we have discussed is especially easy to cheat. Lets for
 example consider the $P_{max}$ prediction system. In this prediction system a
 text would have to be similar to only a single other text to be considered not
-ghost written. A student could therefore seed his ``library'' of texts by buying
-a ghost written assignment for a not very important assignment. That would
+ghostwritten. A student could therefore seed his ``library'' of texts by buying
+a ghostwritten assignment for a not very important assignment. That would
 probably not result in a problem since teachers will not be as on guard when
 it is only a small assignment. Then when they turn in their \gls{SRP} they can
-use the same ghost writer with no problem since they have seeded one of his/her
+use the same ghostwriter with no problem since they have seeded one of his/her
 texts into their library.
 
 

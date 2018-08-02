@@ -245,7 +245,7 @@ of these samples $T'_\alpha = T_\alpha \setminus \{t\}$ is extracted from
 the combined set $T'_\alpha \cup \hat{T}_\alpha$, we can train the model in
 question having provided it with both positive and negative examples of author
 $\alpha$ writing style. To include samples that depict a student that used a
-ghost writer we change the text we do our prediction on. For each sample there
+ghostwriter we change the text we do our prediction on. For each sample there
 is a probability that the sample will be regarded as negative. If that is the
 case we pick out a random $t'$ where $t' \in (\overline{T}_\alpha \setminus
 \hat{T}_\alpha)$ and predict on that where a correct prediction would be the
@@ -638,7 +638,7 @@ by a global max pool we knew that the feature a specific filter was looking
 at could be determined by finding the maximum activation of that filter.
 Unfortunately we found that the network were looking at metadata about the
 texts. Specifically the network were looking at names and school class numbers.
-Obviously a real ghost writer would make sure that the correct name and school
+Obviously a real ghostwriter would make sure that the correct name and school
 class were written on the assignment so in the real world those features should
 not be used. The features are a product of the creation of the dataset we are
 training on. Since different students assignments are combined to create the
