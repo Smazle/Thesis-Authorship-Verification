@@ -10,18 +10,19 @@ special focus on deep learning based approaches to \gls{NLP}.
 \subsection{Neural Network Methods}
 
 \citet{DBLP:journals/corr/RuderGB16c} shows a neural network for authorship
-attribution. Their experiment resulted in a network consisting of
-a convolutional layer, followed by a max-over-time pooling layer and then a
-densely connected network on the top of that. Character level features has
-previously been shown to be important for both authorship attribution and in
-turn authorship verification as well. A point which is emphasized when looking
-at the results of \citet{hansen2014}, and \citet{aalykke2016}, who both not only
-achieved good results using character level features, but also did so working on
-data from the same source as we did during the creation of this paper. The hope
-was that the convolutional layer would learn important features from sequences
-of characters. The max-over-time pooling would take the most important value
-from each convolutional filter and would extract a similar number of features
-for each text even though the texts were of differing lengths. The dense network
+attribution. Their experiment resulted in a network consisting of a
+convolutional layer, followed by a max-over-time pooling layer and then a
+densely connected network on the top of that. The input for this network
+was a sequence of characters. Character level features has previously been
+shown to be important for both authorship attribution and in turn authorship
+verification as well. A point which is emphasized when looking at the results
+of \citet{hansen2014}, and \citet{aalykke2016}, who both not only achieved good
+results using character level features, but also did so working on data from
+the same source as we did during the creation of this paper. The hope was that
+the convolutional layer would learn important features from the sequence of
+characters. The max-over-time pooling would take the most important value from
+each convolutional filter and would extract a similar number of features for
+each text even though the texts were of differing lengths. The dense network
 was then supposed to take the features extracted from the text and determine
 authorship of the text from them.
 
