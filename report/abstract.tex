@@ -1,14 +1,15 @@
 \begin{abstract} \label{sec:abstract}
 
-    In this thesis we investigate authorship verification of texts produced by
-    secondary school students. Authorship verification or \textit{ghost writer
-    detection} is the process of determining whether a text is written by an
-    author given a set of texts written by the same author. We work with the
-    Danish company MaCom that provides a dataset containing assignments from
-    secondary school students. We focus on deep neural networks to perform the
-    authorship verification. We implement two baseline methods representing
-    classic machine learning solutions to the authorship verification problem.
-    After that we present three networks to solve the same problem:
+    In this thesis we investigate authorship verification of texts produced
+    by secondary school students. Given a set of texts written by one author,
+    authorship verification (or \textit{ghostwriter} detection) is the process
+    of determining whether a text of unknown authorship is written by said
+    author. We work with the Danish company MaCom that provides a dataset
+    containing assignments from secondary school students. We focus on deep
+    neural networks to perform the authorship verification. We implement two
+    baseline methods representing classic machine learning solutions to the
+    authorship verification problem. After that we present three networks to
+    solve the same problem:
 
     \begin{itemize}
 
@@ -24,20 +25,20 @@
 
         \item
 
-            A convolutional neural network working on the character and word
-            level of the texts.
+            A convolutional neural network working on both the character and
+            the word level of the texts.
 
     \end{itemize}
 
     Classic machine learning methods for authorship verification use manually
-    chosen feature configurations. The networks we implement extract features
-    from raw text data. The networks beat both of the baseline methods on all
-    relevant parameters. On a dataset with 50\% ghost written assignments we
+    chosen feature configurations, but the networks we implement extract
+    features from raw text data. The networks beat both baseline methods on all
+    relevant parameters. On a dataset with 50\% ghostwritten assignments we
     achieve an accuracy of 86.5\%.
 
-    Our methods are meant to be used in a supporting manner for teachers of
-    secondary schools for detecting ghost written assignments. We are able to
-    give teachers feedback on why the networks makes a decision and we are able
-    to detect specific areas of assignments that might be ghost written.
+    Our methods are meant to be used by teachers of secondary schools in a
+    supporting manner to detect ghostwritten assignments. They are able to give
+    teachers feedback on why the networks make a decision and they are able to
+    detect specific areas of assignments that might be ghostwritten.
 
 \end{abstract}
