@@ -37,12 +37,12 @@ illustrated in Figure \ref{fig:profile_based}.
 \end{figure}
 
 \noindent An example of a profile-based authorship attribution approach, which
-is highly regarded by \citet{stamatos2009} use of a compression algorithm.
+is highly regarded by \citet{stamatos2009} makes use of a compression algorithm.
 It works not by representing each author profile as a set of features, but
-rather makes use of compression to do so. In the initial scenario we have
+rather as a set of compressed texts. In the initial scenario we have
 a set of author-profiles for each author $\alpha$, where each profile is
-the concatenation of $\alpha$s work. When a new text is then introduced the
-authorship is determined by looping through each author adding the new text to
+the concatenation of all $t \in T_\alpha$. Authorship of a newly introduced
+text is then determined by looping through each author adding the new text to
 their concatenated profile. The profile is then compressed both with and without
 the new text included. The bit-wise difference is then computed, by subtracting
 them from one another resulting in what is essentially the cross-entropy between
@@ -52,11 +52,11 @@ as the base for this model each giving different results. In the instance that
 \citet{stamatos2009} describes, RAR compression yielded the best results, but
 the choice of compression algorithm depends on the specific scenario.
 
-We will generally use the instance based approach since it allows us to use
-more metadata text information. For example the writing style of an author may
-change over time especially for secondary school pupils that evolve very much
-in a short amount of time. Since we use an instance based approach we are able
-to weight similarity to newer texts higher than similarity to older texts as
+We will generally use the instance based approach since it allows us to use more
+metadata text information. For example the writing style of an author may change
+over time especially for secondary school students that evolve a lot throughout
+their school attendance. Since we use an instance based approach we are able
+to weigh similarity to newer texts higher than similarity to older texts as
 \citet{hansen2014} found worked well. The practical application of this will be
 explained in Section \ref{subsec:combining_neural_network_output}.
 
@@ -66,16 +66,13 @@ model is trained on data from multiple authors and are able to make predictions
 about previously unseen authors. In the author specific model a separate model
 has to be trained for each author and is not able to make predictions for
 previously unseen authors. The generalizing models' main advantage is that it
-only has to be trained once and after that it can be used for everyone and it
-can make use of a large amount data since it can use data from several authors
-for training. The author specific model has the advantage that it can better fit
-to the specific quirks of a particular author since it is trained separately
-for each author. The downside of the author specific approach is that a new
-model has to be trained for each new author. We will focus on the generalizing
-approach since it is easier to implement for MaCom as they only have to train a
-model once.
+only has to be trained once and after that it can be used for everyone. The
+author specific model has the advantage that it can better fit to the specific
+quirks of a particular author since it is trained separately for each author.
+We will focus on the generalizing approach since it is more practical for
+MaCom as they only have to train a model once.
 
-As a unit of measuring the quality of our models, we will also compute the
+In order to measure the quality of our models, we will also compute the
 number of \glspl{TP}, \glspl{TN}, \glspl{FP} and \glspl{FN}, as seen in
 \citet{US}. In these problems we get,
 
@@ -148,13 +145,13 @@ total number of accusations made. This can be described as:
 
 The goal is also to keep this error under a certain threshold specified
 by MaCom, which in this case is $0.1$ or $10\%$. In other words, of the
-accusations we made, only $10\%$ of them are allowed to be wrong. In order
+accusations we make, only $10\%$ of them are allowed to be wrong. In order
 to accommodate this constraint we can take certain actions which depends on
 the model used. Details about these actions will be addressed in Section
 \ref{subsec:combining_neural_network_output}.
 
 In addition to the constraint on the accusation error Macom also wants a
-specificity of above 95\%. Specificity is defined as,
+specificity above 95\%. Specificity is defined as,
 
 \begin{equation}
     \text{Specificity} = \frac{TN}{TN + FP}.
@@ -169,27 +166,25 @@ than 10\% and then see how high we can get the specificity at the same time.
 \subsection{Baseline Methods}
 
 We have implemented two baselines to compare with our neural network methods.
-The methods are based on our preliminary report \citep{US}. The methods were
-developed for English texts and not Danish texts that we work with in this
-assignment. They do however represent classical machine learning methods for
-solving the authorship verification problem. They will therefore serve as
-a great baseline for our neural networks. We believe that by changing the
+The methods were selected based on our previous report \citep{US}. The methods
+were developed for English texts and not Danish texts that we work with in
+this assignment. They do however represent classical machine learning methods
+for solving the authorship verification problem. They will therefore serve
+as a great baseline for our neural networks. We believe that by changing the
 parameters of the models they will work just as well for Danish texts that they
 did on English texts. The Danish and English language is very similar as they
-both derive from the Germanic branch of the indo-European language family.
+both derive from the Germanic branch of the Indo-European language family.
 \citet{konstantin:2000} conducted a study of the similarities and differences
-between different European languages. They found that as expected Danish and
-English were very close.
-
-None of the baseline methods work on raw texts. Rather they require hand
-engineered feature sets extracted from the texts. The features used by
-\citet{US} were all n-gram frequencies as in many classic authorship
-verification methods \citep{stamatos2009}. We use the same features as
-described in our preliminary report. We change the specific n-grams to
-n-grams extracted from Danish texts but the classes of n-grams will stay the
-same. The n-grams come from several linguistic layers. Specifically we use
-frequencies of character-n-grams, special-character-n-grams, word-n-grams and
-\gls{POS}-tag-n-grams.
+between different European languages. Based on a lexical distance computation,
+he determined among other things that English and Danish are very similar. None
+of the baseline methods work on raw texts. Rather they require hand engineered
+feature sets extracted from the texts. The features used by \citet{US} were
+all n-gram frequencies as in many classic authorship verification methods
+\citep{stamatos2009}. We use the same features as described in our preliminary
+report. We change the specific n-grams to n-grams extracted from Danish texts
+but the classes of n-grams will stay the same. The n-grams come from several
+linguistic layers. Specifically we use frequencies of character-n-grams,
+special-character-n-grams, word-n-grams and \gls{POS}-tag-n-grams.
 
 \begin{description}
 
@@ -217,38 +212,30 @@ frequencies of character-n-grams, special-character-n-grams, word-n-grams and
 
 \end{description}
 
-We will now describe shortly the two baseline methods we implemented. For
-details on the methods see \citep{US}.
-
+We will now describe shortly the two baseline methods we implemented.
 
 \subsubsection{Extended Delta Method}
 
 One of the best performing methods of \citet{US} was the extended delta method.
 As the name suggests the method extends the already existing delta method
-\citep{evert2015towards}. The original delta method verifies authorship of
-a text by finding the nearest text to a queried text in a feature set. If
-the nearest text is written by the candidate author the method reports true
-and otherwise false. The features used in the original delta method were the
-frequencies of the 300 most frequent words \citep{evert2015towards}.
+\citep{evert2015towards}. The original delta method verifies authorship of a
+text by using a \gls{KNN} classifier. This \gls{KNN} is applied to the linearly
+transformed word frequencies of the applied texts. The words, of which the
+frequencies are found, are selected based on their frequency as well. So the
+\gls{KNN} is trained using the frequency of a number of the most frequent words.
+The amount of most frequent words to include can differ, the amount chosen by
+\citep{evert2015towards} was 150. The linear transformation he applied was a
+simple 0 mean and unit variance transformation.
 
-The extended delta method is an extension to that method. In this method we are
-allowed to change the distance metric used to compare feature vectors, the
-features used and the number of nearest neighbours to consider. Since we can
-change the number of nearest neighbours to consider we are now using a \gls{KNN}
-classifier with a custom comparison function.
-
-Like \citet{US} we will find the best parameters via cross validation. We will
-try 5 distance metrics. The 5 distance metrics will be the Minkowski distance
-with $p = 1,\dots,5$. When $p = 1$ the distance metric is the manhattan distance
-and when $p = 2$ the euclidian distance. We chose the manhattan distance since
-it has been shown to consistently perform well when compared to other distance
-metrics \citep{evert2015towards}. And we chose the Euclidean metric since it has
-been shown to work well on a small amount of features \citep{evert2015towards}.
-The rest of the $p$ values are there for seeing if we could find something
-better than the classical distance metrics. The different number of nearest
-neighbours we will try will initially be between 1 and 15. However if we find
-that 15 gives the best results we will expand the search to more than 15.
-
+The extension we applied to this methods, is simply option to use features
+that aren't the word frequency. As mentioned we made use of this approach in
+our earlier work \cite{US}. However, due to data-specific circumstances we
+were not able to modify the K in \gls{KNN}. In these circumstances, that is not
+the case. This leaves the extended delta method with 3 configurable parameters.
+The features used, how many neighbor to consider denoted by K, and what distance
+measure to use denoted by $p$. Where $p$ is the argument used when calculating
+the Minkowski distance. The more known values for p is, $p = 1$ which is the
+manhattan distance, and $p=2$ which is the Euclidean distance.
 
 \subsubsection{Author Specific SVM}
 \glsreset{SVM} 
@@ -260,25 +247,26 @@ They used an \gls{SVM} on the Macom dataset as we described in Section
 text $t$ and author $\alpha$ using this method, a two class \gls{SVM} classifier
 has to be trained. The positive class is represented by features of each $t' \in
 T_\alpha$ and the negative class is represented by the features of $t'' \in T$
-where $T \subset \overline{T_\alpha}$ and $|T| = |T_\alpha|$. After training the
-classifier is used to predict the text we are verifying the authorship of $t$.
-Since a separate \gls{SVM} model is trained for each author it can learn the
-specific authors' writing style from $T_\alpha$. In contrast it also learns how
-the author does not write using $T$.
+where $T \subset \overline{T_\alpha}$ and $|T| = |T_\alpha|$. After training,
+the classifier is used to predict if $t \in T_\alpha$ or $t \in T$.
+Since a separate \gls{SVM} model is trained for each author it can learn
+the specific authors' writing style from $T_\alpha$. In contrast it also learns
+how the author does not write using $T$.
 
-The method is based on an \gls{SVM} so we have to experiment with the
-hyperparameters $C$ and $\gamma$.\cite[E-Chapter 8]{Abu-Mostafa:2012:LD:2207825}
-We will find good parameters via cross validation. The parameter search will be
-described in detail in Section \ref{sec:experiments}.
+The method is based on an \gls{SVM} so we have to experiment
+with the hyperparameters $C$ and $\gamma$.\cite[E-Chapter
+8]{Abu-Mostafa:2012:LD:2207825}. We will find the best parameters via cross
+validation. The parameter search will be described in detail in Section
+\ref{sec:experiments}.
 
 
 \subsection{Deep Learning}
 
 In this paper we will approach the authorship verification problem using deep
 learning. The term deep learning was first introduced to machine learning in
-1989, and afterward to neural networks in 2000. The term deep learning quickly
-became synonymous with neural networks as they were some of the more efficient
-and popular deep learning methods \citep{Schmidhuber:2015}.
+1989. The term deep learning quickly became synonymous with neural networks
+as they were some of the more efficient and popular deep learning methods
+\citep{Schmidhuber:2015}.
 
 With the inner workings of the brain used as the basis, a standard simple
 neural network consists of a set interconnected processors, called neurons.
@@ -299,17 +287,18 @@ was indeed one of the first cases of the modern neural network, getting
 the network to learn was still a problem, as the tweaking of individual
 weights attributed to each neuron in the network was not trivial. Little
 did they know that research to solve that problem was already in progress.
-The basics of continuous \gls{BP} was initially described in 1960, by
+The basics of continuous \gls{BP} was initially described by
 \citet{Kelley1960}, quickly followed by a simpler approach which used only
-the chain rule in 1962 by \citet{DREYFUS196230}. It was not until 1970 that
+the chain rule by \citet{DREYFUS196230}. It was not until 1970 that
 the modern version of \gls{BP} was described, using automatic differentiation
 as its basis. This prompted an increase in \gls{BP} related research in
 the following decades. As computational power increased in the 1990s and
 2000s, so did the practical usage of \gls{BP}, and neural network in general
-\citep{Schmidhuber:2015}. The real life application of \gls{BP} will be
+\citep{Schmidhuber:2015}. The application of \gls{BP} will be
 described in Section \ref{subsubsec:training_a_network}.
 
-\glsreset{CNN}
+\glsreset{CNN} 
+
 Like with the history of authorship attribution research in this area of science
 picked up more interest as we entered the modern computational age, and with
 the introduction of the \gls{CNN}. \glspl{CNN} are based on the early work
@@ -317,10 +306,8 @@ described in \citet{TJP:TJP19681951215}. They showed that cats' and monkeys'
 visual cortexes contain a set of neurons, each individually responding to a
 receptive field, or area, of their field of view. Neighboring receptive fields
 all have a certain amount of overlap but in the end a cohesive view is created.
-This is what paved the way for neocognition in 1980 \citep{Fukushima1980}, the
-basis of \glspl{CNN} which works in a very similar manner looking at overlapping
-subsections of data. These convolutional neurons however were rarely used alone
-but together with a down-sampling neuron such as Max Pooling introduced in 1993
+This is what paved the way for neocognition in 1980 \citep{Fukushima1980},
+the basis of \glspl{CNN} which looks at overlapping subsections of data.
 \citep{Schmidhuber:2015}.
 
 
@@ -333,8 +320,8 @@ set of inputs called $x_{j}$ one of which $x_{0}$ is a special bias input set
 to 1 and a single output called $z_i$, where $i$ refers to the neuron and $j$
 refers to the specific input to that neuron. Each neuron computes a weighted sum
 of its inputs and applies an activation function $h$ to the weighted sum. The
-weights are called $w_{ij}$ and the weight of the bias $w_{i0}$, where $x_0 =
-1$. The function each neuron computes is,
+weights are called $w_{ij}$ and the weight of the bias $w_{i0}$. The function
+each neuron computes is,
 
 \begin{equation}\label{eq:neuron}
     z_i = h(a_i) = h\left(
@@ -362,7 +349,7 @@ a neuron can be seen in Figure \ref{fig:neuron}.
 \end{figure}
 
 Neurons are usually arranged in layers in order to achieve a certain desired
-behaviour, more details regarding these specific layers will be explained in
+behaviour. More details regarding these layers will be explained in
 later chapters. The training of a neural network consists of changing the
 weights applied at each neuron, with the goal of modeling the relationships
 present in the data.
@@ -391,31 +378,31 @@ as they allow for the universal function approximation, a point also made by
 \end{figure}
 
 Each activation function has its pros and cons. We mainly made use of the
-\gls{ReLu} activation function in the hidden layers of our networks. The reason
-for this selection is its general purpose use. When selecting an activation
-function for your neurons, the best function would be the one which best
-approximates the underlying data relationship. Without a good idea as to what
-that function might be, \gls{ReLu} is a good starting point. Its simplicity
-provides a quick computation time, and its below zero limitation means that
-a large portion of the network will not be activating, resulting in an even
-smaller computation time. In addition to that, the derivative of the function
-is 1 in the case of a positive input, resulting in the \gls{BP} loss having
-equal influence throughout the network. In the case of other activation
-functions, this might not be the case, resulting in an altering of the error
-as we propagate backwards through the network. This could lead to a big error
-in the deeper layers not reaching the shallow layers of the network. This
-property of the \gls{ReLu} activation function, does however not come without
-its costs. If the learning rate of the network is not configured correctly, a
-\gls{ReLu} activated neuron might be blasted with a gradient so large, that it
-never reaches a point of activation again. In other words, the neuron "dies". As
-such, one can risk a network containing a lot of dead non-activation neurons,
-thus greatly decreasing its learning quality. On the other hand the sigmoid
+\gls{ReLu} activation function in the layers of our networks. The reason for
+this selection is its general purpose use. When selecting an activation function
+for your neurons, the best function would be the one which best approximates
+the underlying data relationship. Without a good idea as to what that function
+might be, \gls{ReLu} is a good starting point. Its simplicity provides a quick
+computation time, and its below zero limitation means that a large portion of
+the network will not be activating, resulting in an even smaller computation
+time. In addition to that, the derivative of the function is 1 in the case
+of a positive input, resulting in the \gls{BP} loss having equal influence
+throughout the network. In the case of other activation functions, this might
+not be the case, resulting in an altering of the error as we propagate backwards
+through the network. This could lead to a big error in the deeper layers not
+reaching the shallow layers of the network. This property of the \gls{ReLu}
+activation function, does however not come without its costs. If the learning
+rate of the network is not configured correctly, a \gls{ReLu} activated neuron
+might be blasted with a gradient so large, that it never reaches a point
+of activation again. In other words, the neuron "dies". As such, one can
+risk a network containing a lot of dead non-activating neurons, thus greatly
+decreasing its learning quality. On the other hand the sigmoid activation
 function does not allow its neurons to die. It can become victim to saturation.
 In the case of a weight being too small or too large, the output values will
 be placed at the far ends of the sigmoid range of values. At this point the
 gradient is incredibly small, meaning that the contribution that neuron now
 has is negligible. This neuron is now only a strain on the network, slowing
-it down through its activation but contributing nothing a problem \gls{ReLu}
+it down through its activation but contributing nothing - a problem \gls{ReLu}
 does not have. Its based on these considerations we chose the \gls{ReLu}
 activation function, leaving us the task of properly selecting our learning rate
 \citep{JiYan, AndrejKarpathy, AvinashSharmaV}.
@@ -433,7 +420,7 @@ $y \in [0, 1]^n$. Where the sum of the output vectors elements will be equal to
 based on an input vector.
 
 Exceptions to usage of the \gls{ReLu} activation function can be found when
-we make use \gls{LSTM} layers during our experimentation. It makes use of the
+we make use \gls{LSTM} layers during our experimentation. It uses the
 tanh activation function,
 
 \begin{equation}\label{eq:tanh}
