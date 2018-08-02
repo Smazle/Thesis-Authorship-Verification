@@ -12,31 +12,25 @@ special focus on deep learning based approaches to \gls{NLP}.
 \citet{DBLP:journals/corr/RuderGB16c} shows a neural network for authorship
 attribution. Their experiment resulted in a network consisting of a
 convolutional layer, followed by a max-over-time pooling layer and then a
-densely connected network on the top of that. The input for this network
-was a sequence of characters. Character level features has previously been
-shown to be important for both authorship attribution and in turn authorship
-verification as well. A point which is emphasized when looking at the results
-of \citet{hansen2014}, and \citet{aalykke2016}, who both not only achieved good
-results using character level features, but also did so working on data from
-the same source as we did during the creation of this paper. The hope was that
-the convolutional layer would learn important features from the sequence of
-characters. The max-over-time pooling would take the most important value from
-each convolutional filter and would extract a similar number of features for
-each text even though the texts were of differing lengths. The dense network
-was then supposed to take the features extracted from the text and determine
-authorship of the text from them.
+densely connected network on the top of that. The input for this network was a
+sequence of characters. The hope was that the convolutional layer would learn
+important features from the sequence of characters. The max-over-time pooling
+would take the most important value from each convolutional filter and would
+extract a similar number of features for each text even though the texts were
+of differing lengths. The dense network was then supposed to take the features
+extracted from the text and determine authorship of the text from them.
 
-\citet{DBLP:journals/corr/RuderGB16c} also used multiple channels in their
-network. Each channel was a different token sequence, some of them were word
-embeddings and some were character embeddings. Some of the channels were static
-while some of the channels were non-static meaning that the word/char-embedded
-vectors would change during training. The point of the channels was that the
-network was able to extract features from multiple linguistic layers, all
-describing a different stylometric feature of text. These layers span from
-character specific features, all the way to application specific features,
-as explained in \citet[Section 2]{stamatos2009}. We will elaborate more on
-these features in Section \ref{subsec:baseline_methods}. They specifically used
-networks with the following channels
+\citet{DBLP:journals/corr/RuderGB16c} also experimented with a network that
+used multiple channels network. Each channel was a different token sequence,
+some of them were word embeddings and some were character embeddings. Some of
+the channels were static while some of the channels were non-static meaning
+that the word/char-embedded vectors would change during training. The point of
+the channels was that the network was able to extract features from multiple
+linguistic layers, all describing a different stylometric feature of text.
+These layers span from character specific features, all the way to application
+specific features, as explained in \citet[Section 2]{stamatos2009}. We will
+elaborate more on these features in Section \ref{subsec:baseline_methods}. They
+specifically used networks with the following channels
 
 \begin{description}
     \item[CNN-char:] Single non-static character channel.
