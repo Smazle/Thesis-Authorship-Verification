@@ -276,36 +276,37 @@ described in detail in Section \ref{sec:experiments}.
 
 In this paper we will approach the authorship verification problem using deep
 learning. The term deep learning was first introduced to machine learning in
-1989, and afterward to \glspl{NN} in 2000. The term deep learning quickly became
-synonymous with \glspl{NN} as they were some of the more efficient and popular
-deep learning methods \citep{Schmidhuber:2015}.
+1989, and afterward to neural networks in 2000. The term deep learning quickly
+became synonymous with neural networks as they were some of the more efficient
+and popular deep learning methods \citep{Schmidhuber:2015}.
 
 With the inner workings of the brain used as the basis, a standard simple
-\gls{NN} consists of a set interconnected processors, called neurons. Each of
-these neurons has a real valued activation associated with it, which activates
-differently depending on the specific neuron. The input neurons activate
-through perceiving the environment, or in other words, when they are fed data
-externally. Other neurons are simply activated through the weighted output of
-previous neurons \citep{DBLP:journals/corr/Schmidhuber14}.
+neural network consists of a set interconnected processors, called neurons.
+Each of these neurons has a real valued activation associated with it, which
+activates differently depending on the specific neuron. The input neurons
+activate through perceiving the environment, or in other words, when they are
+fed data externally. Other neurons are simply activated through the weighted
+output of previous neurons \citep{DBLP:journals/corr/Schmidhuber14}.
 
-\glspl{NN} have been around since the 1940s. However, back then they were
+Neural networks have been around since the 1940s. However, back then they were
 merely variations of the linear regressors used at the time, and were not
 very reminiscent of the networks one can see today. It was not until the late
 1960s, early 1970s, that networks comparable to the more modern approaches
-surfaced. Examples of such early works are \citep{ivakhnenko1973cybernetic} and
-\citep{4308320}, which describe multi-layered feed forward supervised neural
-network architectures. While the work described in \citep{4308320} was indeed
-one of the first cases of the modern \gls{NN}, getting the network to learn was
-still a problem, as the tweaking of individual weights attributed to each neuron
-in the network was not trivial. Little did they know that research to solve that
-problem was already in progress. The basics of continuous \gls{BP} was initially
-described in 1960, by \citet{Kelley1960}, quickly followed by a simpler approach
-which used only the chain rule in 1962 by \citet{DREYFUS196230}. It was not
-until 1970 that the modern version of \gls{BP} was described, using automatic
-differentiation as its basis. This prompted an increase in \gls{BP} related
-research in the following decades. As computational power increased in the
-1990s and 2000s, so did the practical usage of \gls{BP}, and \gls{NN} in
-general \citep{Schmidhuber:2015}. The real life application of \gls{BP} will be
+surfaced. Examples of such early works are \citep{ivakhnenko1973cybernetic}
+and \citep{4308320}, which describe multi-layered feed forward supervised
+neural network architectures. While the work described in \citep{4308320}
+was indeed one of the first cases of the modern neural network, getting
+the network to learn was still a problem, as the tweaking of individual
+weights attributed to each neuron in the network was not trivial. Little
+did they know that research to solve that problem was already in progress.
+The basics of continuous \gls{BP} was initially described in 1960, by
+\citet{Kelley1960}, quickly followed by a simpler approach which used only
+the chain rule in 1962 by \citet{DREYFUS196230}. It was not until 1970 that
+the modern version of \gls{BP} was described, using automatic differentiation
+as its basis. This prompted an increase in \gls{BP} related research in
+the following decades. As computational power increased in the 1990s and
+2000s, so did the practical usage of \gls{BP}, and neural network in general
+\citep{Schmidhuber:2015}. The real life application of \gls{BP} will be
 described in Section \ref{subsubsec:training_a_network}.
 
 \glsreset{CNN}
@@ -325,15 +326,15 @@ but together with a down-sampling neuron such as Max Pooling introduced in 1993
 
 \subsubsection{Neurons}\label{sec:neurons}
 
-As mentioned previously a \gls{NN} consists of a collection of neurons. Each
-neuron is a simplified mathematical model which behaves much like neurons in the
-brain. They receive, process and transmit information. Each neuron has a set of
-inputs called $x_{j}$ one of which $x_{0}$ is a special bias input set to 1 and
-a single output called $z_i$, where $i$ refers to the neuron and $j$ refers to
-the specific input to that neuron. Each neuron computes a weighted sum of its
-inputs and applies an activation function $h$ to the weighted sum. The weights
-are called $w_{ij}$ and the weight of the bias $w_{i0}$, where $x_0 = 1$. The
-function each neuron computes is,
+As mentioned previously a neural network consists of a collection of neurons.
+Each neuron is a simplified mathematical model which behaves much like neurons
+in the brain. They receive, process and transmit information. Each neuron has a
+set of inputs called $x_{j}$ one of which $x_{0}$ is a special bias input set
+to 1 and a single output called $z_i$, where $i$ refers to the neuron and $j$
+refers to the specific input to that neuron. Each neuron computes a weighted sum
+of its inputs and applies an activation function $h$ to the weighted sum. The
+weights are called $w_{ij}$ and the weight of the bias $w_{i0}$, where $x_0 =
+1$. The function each neuron computes is,
 
 \begin{equation}\label{eq:neuron}
     z_i = h(a_i) = h\left(
@@ -362,18 +363,18 @@ a neuron can be seen in Figure \ref{fig:neuron}.
 
 Neurons are usually arranged in layers in order to achieve a certain desired
 behaviour, more details regarding these specific layers will be explained in
-later chapters. The training of a \gls{NN} consists of changing the weights
-applied at each neuron, with the goal of modeling the relationships present in
-the data.
+later chapters. The training of a neural network consists of changing the
+weights applied at each neuron, with the goal of modeling the relationships
+present in the data.
 
 
 \subsubsection{Activation Functions} \label{subsubsec:activation_functions}
 
 The activation function $h$, used at each neuron, defines the output of the
 neuron given a certain input. A simple example of this would be computer chip
-circuit, which can be seen as a series of activation functions outputting 0 or
-1 depending on their input. This activation function would be a linear one.
-When applying activation functions to neurons in \glspl{NN}, they are usually
+circuit, which can be seen as a series of activation functions outputting 0 or 1
+depending on their input. This activation function would be a linear one. When
+applying activation functions to neurons in neural networks, they are usually
 non-linear, as it allows for the computation of more complex problems using a
 smaller amount of neurons, relative to usage of a linear activation function,
 as they allow for the universal function approximation, a point also made by
@@ -450,14 +451,14 @@ learning library. \cite{chollet2015keras}
 
 \subsubsection{Layers} \label{subsubsec:layers}
 
-\glspl{NN} are organized in layers. The first layer is called the input layer
-and is connected directly to the input to the model and the last layer is called
-the output layer and gives the output of the model. All layers in between
-are called hidden layers. A practical example could be where the input layer
-was layer of neurons where each neuron is connected to a pixel in an input
+Neural networks are organized in layers. The first layer is called the input
+layer and is connected directly to the input to the model and the last layer
+is called the output layer and gives the output of the model. All layers in
+between are called hidden layers. A practical example could be where the input
+layer was layer of neurons where each neuron is connected to a pixel in an input
 image. And the output layer could consist of a single neuron that computes the
-probability that the picture contained a cat. An example layered \gls{NN} are
-shown in Figure \ref{fig:example_nn}.
+probability that the picture contained a cat. An example layered neural network
+are shown in Figure \ref{fig:example_nn}.
 
 \begin{figure}
     \centering
@@ -1221,8 +1222,8 @@ sample, the runtime would then be $O(N\cdot W)$, where $N$ denotes the total
 number of training samples. During the normal training process, this is done
 over a number of epochs $\mathcal{E}$, which in turn further increases the
 time-complexity to $O(\mathcal{E}\cdot N\cdot W)$. It is because of this
-runtime, that \gls{BP}, and \glspl{NN} might not seem like a viable option at
-all. \cite{Bishop}
+runtime, that \gls{BP}, and neural networks might not seem like a viable option
+at all. \cite{Bishop}
 
 In light of this undesired runtime, methods were introduced that attempt
 to reduce this runtime. One of these methods is called batching. Batching
@@ -1238,8 +1239,8 @@ more detailed description of this approach will be addressed in Section
 \ref{subsubsec:optimizers}.
 
 \citet{Bishop} does present other alternatives to batching in his book, but none
-work as well as batching, which is why that is the default approach for \gls{NN}
-frameworks such as Tensorflow/Keras.
+work as well as batching, which is why that is the default approach for neural
+network frameworks such as Tensorflow/Keras.
 
 \subsubsection{Optimizers}\label{subsubsec:optimizers}
 
@@ -1470,10 +1471,10 @@ $\mathbf{a}^n$ to mean an elementwise power.
         that \gls{RMSProp} introduces, also does its part. This is however
         more with regard to the learning in general, rather than specifically
         being good for NLP. In recent year \gls{Adam} and \gls{RMSProp} has
-        been the go to \gls{NLP}\gls{NN} optimizers as per a study made on
-        a set of recent significant deep learning models.\footnote{\url{
+        been the go to \gls{NLP} neural network optimizers as per a study made
+        on a set of recent significant deep learning models.\footnote{\url{
         https://bit.ly/2mWTvzZ}}
-        
+
         %TODO: Reread
 
 
@@ -1542,14 +1543,14 @@ making the final prediction based on all the known texts of an author.
 \subsection{Combining Neural Network Output}
 \label{subsec:combining_neural_network_output}
 
-In the generic Siamese \gls{NN} presented in Section
+In the generic Siamese neural network presented in Section
 \ref{subsubsec:siamese_networks} the output of the network is a probability
 that two texts are written by the same author. However in the problem we are
 trying solve defined in Definition \ref{def:authorship_verification} we take
 several texts as input. We therefore need a method of combining the predictions
-on multiple texts to a single prediction on a particular problem instance.
-We do that using a \textit{prediction system}. We let the generic siamese
-\gls{NN} described above be known as a \textit{text comparison function} $f \in
+on multiple texts to a single prediction on a particular problem instance. We
+do that using a \textit{prediction system}. We let the generic siamese neural
+network described above be known as a \textit{text comparison function} $f \in
 \mathcal{F}$.
 
 \begin{definition}[Text Comparison Function]
@@ -1927,9 +1928,9 @@ To summarize we will implement 2 baseline methods and an indeterminate number of
 neural network based methods. The baseline methods will be the extended delta
 method and an author specific \gls{SVM} method. The baselines will both need
 manually extracted feature sets and feature tuning. The networks will be siamese
-\glspl{NN}. They work by using either convolutional or recurrent networks to
-extract features from raw text data. The features are compared using a dense
+neural networks. They work by using either convolutional or recurrent networks
+to extract features from raw text data. The features are compared using a dense
 network. Each of our neural networks will only compare two texts at a time.
-Since an author has multiple texts we will combine the predictions on each of an
-author's texts using a prediction system. We will find the best prediction system
-and parameters using a validation.
+Since an author has multiple texts we will combine the predictions on each of
+an author's texts using a prediction system. We will find the best prediction
+system and parameters using a validation.
