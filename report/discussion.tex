@@ -4,12 +4,11 @@
 
     \item
 
-        Look at different filters and discuss what they might look at and
-        whether or not that seems like good features to be looking at.
+        Why is conv-char-NN so much better than conv-char-word-NN?
 
     \item
 
-        Why is conv-char-NN so much better than conv-char-word-NN?
+        Discuss how the system should be used.
 
 \end{itemize}
 
@@ -879,3 +878,31 @@ often gave the best results.
 The negative curve is a bit weird. We expected it to stay flat below 50\% but
 it seems to be rising towards 50\%. The curve is clearly more flat than the
 positive curve but there does still seem to be a trend towards 50\%.
+
+
+% TODO: Add discussion of different filters based on the following filter
+% activations. We should discuss why the filters makes sense to look at. It is
+% possible to get more filter activations if we need them.
+%
+% \subsection{Filters}
+%
+% [', F.eks.' ', F.eks.' ', F.eks.']
+% [', mens ’' ', mens ’' ', mens ’']
+% [' mandig,' ' mandig,' ' mandig,']
+% ['z, og at' 'z, og at' 't, og fx']
+% [' \\nSelvom' ' \\nSelvom' '\\n\\nSelvdy']
+% ['ag, pga.' 'ag, pga.' '’’, pga.']
+% ['om fx ""' 'om fx ""' 'om fx ""']
+% ['a. bl,a.' 'm; bl.a.' 'm; bl.a.']
+% ['t” dette' 't” dette' 'z, dette']
+% ['é, at ha' 'é, at ha' 'é, at ha']
+% ['bog; ”Vi' 'tår; ”Ve' 'tos; ”Vi']
+% ['r, at ’’' 'r, at ’’' 'r, at ’’']
+% ['r dog kr' 'r dog kr' 'r dog ’d']
+% ['m hvor d' 'm hvor d' 'm hvad ’']
+% [' dum ud,' ' dum ud,' ' dum ud,']
+% ['siger: “' 'siger: “' 'siger: “']
+% ['Fx. ' 'Fx. ' 'Fx. ']
+% ["''Og" "''Og" "''Og"]
+% ['Måsk' 'Måsk' 'Måsk']
+% ["''.." "'''." '"..d']
