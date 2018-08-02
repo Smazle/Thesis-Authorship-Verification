@@ -43,7 +43,8 @@ def Convert(line, x):
         'testset': 'test set',
         'MaComs': "MaCom's",
         'ghost writer': 'ghostwriter',
-        'ghost written': 'ghostwritten'
+        'ghost written': 'ghostwritten',
+        'ghost writing': 'ghostwriting'
     }
 
     for key in c:
