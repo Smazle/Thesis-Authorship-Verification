@@ -1,0 +1,27 @@
+------------------
+System Information
+------------------
+      Time of this report: 8/3/2018, 14:33:40
+             Machine name: DESKTOP-UCE1HGK
+         Operating System: Windows 10 Pro 64-bit (10.0, Build 17134) (17134.rs4_release.180410-1804)
+                 Language: Danish (Regional Setting: Danish)
+      System Manufacturer: Notebook                        
+             System Model: P640RE
+                     BIOS: 1.05.10 (type: UEFI)
+                Processor: Intel(R) Core(TM) i7-6700HQ CPU @ 2.60GHz (8 CPUs), ~2.6GHz
+                   Memory: 16384MB RAM
+      Available OS Memory: 16206MB RAM
+                Page File: 3358MB used, 15279MB available
+              Windows Dir: C:\WINDOWS
+          DirectX Version: DirectX 12
+      DX Setup Parameters: Not found
+         User DPI Setting: 96 DPI (100 percent)
+       System DPI Setting: 144 DPI (150 percent)
+          DWM DPI Scaling: Disabled
+                 Miracast: Available, with HDCP
+           DxDiag Version: 10.00.17134.0001 64bit Unicode
+                 GPU Name: NVIDIA GeForce GTX 970M
+               GPU Memory: 3072 MB
+          GPU Memory Type: GDDR5
+           GPU Memory Bus: 192 bit
+            GPU Bandwidth: 120.3 GB/s

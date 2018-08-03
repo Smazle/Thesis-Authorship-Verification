@@ -3,7 +3,6 @@ System Information
 ------------------
       Time of this report: 4/18/2018, 13:06:03
              Machine name: WPC-VR
-               Machine Id: {AFBA6D9C-8449-478F-8DE2-539D172A518E}
          Operating System: Windows 10 Enterprise 64-bit (10.0, Build 16299) 
                                     (16299.rs3_release.170928-1534)
                  Language: Danish (Regional Setting: Danish)
@@ -21,6 +20,10 @@ System Information
        System DPI Setting: 96 DPI (100 percent)
           DWM DPI Scaling: Disabled
                  Miracast: Available, with HDCP
-Microsoft Graphics Hybrid: Not Supported
            DxDiag Version: 10.00.16299.0015 64bit Unicode
-	  Video Card name: NVIDIA GeForce GTX 980 Ti
+	             GPU Name: NVIDIA GeForce GTX 980 Ti
+               GPU Memory: 6144 MB
+          GPU Memory Type: GDDR5
+           GPU Memory Bus: 384 bit
+            GPU Bandwidth: 336.6 GB/s 
+
