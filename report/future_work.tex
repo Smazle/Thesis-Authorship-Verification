@@ -1,18 +1,28 @@
 \section{Future Work} \label{sec:future_work}
 
-A concern brought up in Section \ref{subsec:applicability_of_method} regard
-the applicability of our current methods to other courses or other types of
-text data like code. It would be interesting to apply our methods to texts from
-other secondary school courses and observe the performance. It would also be
-interesting to apply the methods to other age classes such as primary school
-students or college students. Application to primary school students might be
-hard since assignments are typically shorter and writing style might change even
-more than during secondary school. However application to college students might
-lead to very encouraging results since writing style probably remains more fixed
-and assignments are generally longer.
+A concern brought up in Section \ref{subsec:applicability_of_method} regard the
+applicability of our current methods to other courses or other types of text
+data like code. It would be interesting to apply our methods to texts from other
+secondary school courses, which wasn't part of the training set, and observe
+the performance. It would also be interesting to apply the methods to other age
+classes such as primary school students or college students. Application to
+primary school students might be hard since assignments are typically shorter
+and writing style might change even more than during secondary school. However
+application to college students might lead to very encouraging results since
+writing style probably remains more fixed and assignments are generally longer.
+This leads into an interesting area for further study, which is determining how
+far the generalizing reaches. A big focus during our experiments was keeping the
+model generalizing, and not author specific. Future work could include verifying
+the reach of this generalizability. Our primary concern was the generalizability
+with regard to secondary school students, but what if the generalizability
+extends to a larger group of authors than that. This would mean the model was
+more powerful than originally thought, thus expanding the areas of usability
+quite a bit. Tests of this could include applying the our models to another
+dataset. This could be anything from scientific papers to newspaper articles,
+anything where the author has a substantial amount of work behind him.
 
-Another concern brought in Section \ref{subsec:applicability_of_method}, was
-the inclusion of citation in the texts provided to our models. Citation are
+Another concern brought fourth in Section \ref{subsec:applicability_of_method},
+was the inclusion of citation in the texts provided to our models. Citation are
 mostly a source of noise for our models. This makes the most sensible solution
 when working with these models in future to simply remove the citations before
 training and applying the methods. Doing so successfully might increase the
@@ -22,30 +32,20 @@ There is also the scenario where a group of students do a collective handin of a
 collaborative assignment. As mentioned in Section \ref{subsubsec:group_handin}
 this is not something that our methods would be able to handle out of the box.
 However a future modification of our methods could tackle this using a paragraph
-based approach. As described in Section \ref{subsubsec:ghost_written_areas} one
-could loop through each paragraph in the collaborative text, and then apply
-our methods. The paragraph would be tested against all the students who worked
-on the assignment. The goal would be to attribute each paragraph to one of the
-proposed writers of the assignment. If a certain amount of paragraphs were
-unattributable then the entire text would be considered the product of a ghost
-writer. In this scenario a subset of student in the group might have had their
-parts produced by a third party ghostwriter.
-
-A big focus during our experiments was keeping the model generalizing, and
-not author specific. Future work could include verifying the reach of this
-generalizability. Our primary concern was the generalizability with regard to
-secondary school students, but what if the generalizability extends to a larger
-group of authors than that. This would mean the model was more powerful than
-originally thought, thus expanding the areas of usability quite a bit. Tests
-of this could include applying the our models to another dataset. This could
-be anything from scientific papers to newspaper articles, anything where the
-author has a substantial amount of work behind him.
+based approach. As described in Section \ref{subsubsec:ghost_written_areas}
+one could loop through each paragraph in the collaborative text, and then
+apply our methods. The paragraph would be tested against all the students who
+worked on the assignment. The goal would be to attribute each paragraph to one
+of the proposed writers of the assignment. If a certain amount of paragraphs
+were unattributable then the entire text would be considered the product of a
+ghostwriter. In this scenario a subset of the students in the group might have
+had their parts produced by a ghostwriter.
 
 As we briefly mentioned in Section \ref{subsec:writing_style_changes} students
 writing style can be seen to change over time. It would be interesting to study
 exactly what changes occur. That might lead to insights into teaching methods.
 We could also look at finding students with little writing style development and
-flagging them as needing extra help from teachers.
+flagging them as needing extra help from the teacher.
 
 In Section \ref{subsubsec:other_authorship_verification_results} we discussed
 using our generalizing models in conjunction with author specific models. The

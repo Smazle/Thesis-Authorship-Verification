@@ -3,10 +3,10 @@
 % TODO: Why is conv-char-NN so much better than conv-char-word-NN?
 % TODO: Discuss how the system should be used.
 
-In this section we will discuss the results of our experiments, our expectations
-compared to the actual performance, the applicability of the methods we
-implemented in the real world and we will present the kind of feedback we are
-able to give to teachers of why our networks make certain decisions.
+In this section we discuss the results of our experiments, our expectations
+compared to the actual performance. In addition to that we also address the
+real world applicability of our produced methods. This includes areas such as
+scalability, teacher feed/assistance and model implementation.
 
 
 \subsection{Results}
@@ -20,14 +20,14 @@ error closest to the one required in addition to having the highest overall
 accuracy in all the categories we tested it on. It was closely followed by
 network \gls{conv-char-word-NN}. The \gls{rec-sent-NN} had sub-par performance.
 It is however worth noting that this could very well be due to the infeasibility
-of running any of our \glspl{RNN} on the character or word level of the texts
-supplied to it. We hypothesize that the accuracy of an RNN would be greatly
-increased had it been run on a lower linguistic level. In experiments we found
-that \glspl{CNN} also performed badly on the sentence level in our use case.
-Unfortunately we were not able to train an \gls{RNN} on one of the lower
-linguistic levels due to computational constraints.
+of running any of our \glspl{RNN} on the character or word level. We hypothesize
+that the accuracy of an RNN would be greatly increased had it been run on a
+lower linguistic level. In experiments we found that \glspl{CNN} also performed
+badly on the sentence level in our use case. Unfortunately we were not able to
+train an \gls{RNN} on one of the lower linguistic levels due to computational
+constraints.
 
-Comparing our validation dataset results from Table
+When comparing our validation dataset results from Table
 \ref{tab:experiment-validation-results} to our test results we can clearly see a
 difference. The results from the validation dataset meets the requirements for
 the accusation error, while the test results does not. However, this difference
@@ -35,8 +35,7 @@ is justified as it was on the validation set that we found the prediction system
 and threshold that got us under said requirement. Therefore it stands to reason
 that the models would have a somewhat lower performance when applied to a fresh,
 untouched test dataset. This lowered performance takes form of an increased
-accusation error, and a decreased accuracy. This is the case for machine
-learning tasks in general.
+accusation error, and a decreased accuracy. 
 
 It is worth noting that the number of false accusations on the validation
 dataset were very small. It seems like we have overfitted a lot on the
@@ -47,24 +46,24 @@ not have achieved such a high accusation error on the test dataset.
 
 \subsubsection{AUROC}
 
-A more general description of a model's performance can be computed using the
+A more general metric of a model's performance can be computed using the
 \gls{AUC} of the \gls{ROC}-curve of a model better known as \gls{AUROC}.
 A \gls{ROC} curve is the \gls{FPR} plotted against the \gls{TPR} both of
 which are defined in Section \ref{sec:method}. \gls{AUROC} is a measure of
 discrimination, or a measure of the amount of certainty our model has when it
 makes a decision.
 
-The ROC curves and AUROC results for the different networks we produced can be
-seen in Figure \ref{fig:AUROC}. These figures reinforce the relationship between
-the networks already expressed. The \gls{conv-char-NN} still performed best.
-It was however very closely followed by the \gls{conv-char-word-NN}. At some
-points the two \gls{ROC}-curves overlap when using the dataset with 4\% negative
-samples and with the constrained configuration.
+The ROC curves and AUROC results for the different networks we produced
+can be seen in Figure \ref{fig:AUROC}. These figures reinforce the
+previously stated relationship between the different networks. The
+\gls{conv-char-NN} still performed best. It was however very closely followed
+by the \gls{conv-char-word-NN}. At some points the two \gls{ROC}-curves overlap
+when using the dataset with 4\% negative samples and with the constrained
+configuration.
 
 While the \gls{rec-sent-NN} does have the worst AUROC score it is higher
 than we anticipated when looking back at the results presented in Section
-\ref{sec:results}. This might be attributed to the model working well generally
-but not adapting very well to thresholding compared to the other two networks.
+\ref{sec:results}. 
 
 \begin{figure}
     \centering
@@ -86,7 +85,7 @@ but not adapting very well to thresholding compared to the other two networks.
 \end{figure}
 
 Our \gls{AUROC} scores are generally very good. We can see in the figures that
-as expected the score on the 50\% negative dataset is about the same as on the
+the score on the 50\% negative dataset is about the same as on the
 4\% negative dataset. Our reported results (not \gls{AUROC} score) looks much
 worse on the 4\% dataset but it is also much harder to achieve a good results on
 a dataset with such few negatives. The \gls{AUROC} scores show that we retain a
@@ -96,21 +95,21 @@ data.
 
 \subsubsection{Comparison Between Methods}
 
-Comparing our two convolutional networks we see that \gls{conv-char-NN} has the
-highest accuracy and lowest accusation error. Recalling that \gls{conv-char-NN}
-works on the character level and \gls{conv-char-word-NN} works on both
-the character and word level it would seem as if the word level does not
-contribute much to the classification. However we have to keep in mind that
-\gls{conv-char-NN} generally had more resources available. We used more time
-experimenting on that network and it had more dense layers and more convolutions
-available. We would have liked to have experimented more with different
-linguistic layers. It would have been especially interesting to develop a
-network using both the character, word, sentence and \gls{POS} tag level. It
-would also have been interesting to create a version of \gls{conv-char-word-NN}
-that had as many character level convolutions as \gls{conv-char-NN} and as many
-dense layers but then had a separate word level input channel. Then we would
-have been able to conclusively determine whether or not a word channel were
-worth it in our network architecture.
+When comparing our two convolutional networks we see that the \gls{conv-char-NN}
+has the highest accuracy and lowest accusation error. Recalling that the
+\gls{conv-char-NN} works on the character level and the \gls{conv-char-word-NN}
+works on both the character and word level it would seem as if the word level
+does not contribute much to the classification. However we have to keep in
+mind that the \gls{conv-char-NN} generally had more resources available. We
+used more time experimenting on that network and it had more dense layers and
+more convolutions available. We would have liked to have experimented more
+with different linguistic layers. It would have been especially interesting
+to develop a network using both the character, word, sentence and \gls{POS}
+tag level. It would also have been interesting to create a version of the
+\gls{conv-char-word-NN} that had as many character level convolutions as the
+\gls{conv-char-NN} and as many dense layers but then had a separate word level
+input channel. Then we would have been able to conclusively determine whether or
+not a word channel was worth it in our network architecture.
 
 Comparing our convolutional networks and our recurrent network we see that
 the convolutional networks performs much better. We briefly discussed in
@@ -163,7 +162,7 @@ the \gls{SRP} assignments are generally longer assignments and therefore give a
 better picture of an author's writing style.
 
 To summarize, \citet{aalykke2016} have a lower accusation error than we do
-on 5\% (100\% - 95\%) vs our 9.87\%. At the same time they also have a lower
+with 5\% (100\% - 95\%) vs our 9.87\%. At the same time they also have a lower
 specificity of 71.9\% vs our 82.1\%. So which method to use is a tradeoff
 between how many false accusations to allow vs how large a fraction of cheaters
 they want to catch. We believe that our method would have obtained better results if
@@ -186,8 +185,8 @@ training time of an \gls{SVM}.
 
 \citet{hansen2014} found that recent texts were more important than older
 texts for predicting an author's writing style. During our experimentation
-we came to that same conclusion. Most of the best configurations we found
-used a weight function based on the time in which the assignments were
+we came to that same conclusion. The better configurations we found
+used a prediction system based on the time in which the assignments were
 turned in. We will discuss how students writing styles evolve in Section
 \ref{subsec:writing_style_changes}.
 
@@ -263,15 +262,15 @@ Previously we have looked at the output of the feature extraction layer to
 obtain information on what a specific network was looking at during the
 creation of the networks. We wanted to do something similar for teacher
 feedback. Recall that the \gls{conv-char-NN} started with a convolutional
-layer followed by a max pool layer. For that reason the larger output
-of a convolution is considered the most important one for a particular
-sequence. The output of the feature extraction can be thought of as in Figure
+layer followed by a max pool layer. For that reason the larger output of a
+convolution is considered the most important one for a particular sequence.
+An example of how this feature extraction process works, can be seen in
 \ref{fig:feature_extraction_output_example}. Each filter gives a single output
 that is the maximum output of any filter position. The combining function for
-the third network is the absolute difference. This means that when we compare
-texts $t$ and $t'$, the output of the combination will be high for a particular
-filter iff the maximum output of that filter is significantly different for $t$
-and $t'$.
+the \gls{conv-char-NN} is the absolute difference. This means that when we
+compare texts $t$ and $t'$, the output of the combination will be high for
+a particular filter iff the maximum output of that filter is significantly
+different for $t$ and $t'$.
 
 \begin{figure}
     \centering
@@ -291,14 +290,14 @@ and $t'$.
 \end{figure}
 
 It is hard to know exactly what the following layers do with the absolute
-difference, but we hypothesize that it is a fair assumption that the largest
-filter differences translate to the most important differences. The feedback
-system we implemented for teachers takes an author $\alpha$, text $t$ and $n
-\in \mathbb{N}^+$ and outputs the $n$ largest differences between each $t' \in
-T_\alpha$ and $t$. The idea is that when our system reports a negative, the
-teacher can ask for feedback from the system. The teacher will then receive a
-list of the $n$ greatest differences between each of the texts and can use that
-information to strengthen the claim that a student used a ghostwriter.
+difference, but we hypothesize that the largest filter differences translate to
+the most important differences. The feedback system we implemented for teachers
+takes an author $\alpha$, text $t$ and $n \in \mathbb{N}^+$ and outputs the $n$
+largest differences between each $t' \in T_\alpha$ and $t$. The idea is that
+when our system reports a negative, the teacher can ask for feedback from the
+system. The teacher will then receive a list of the $n$ greatest differences
+between each of the texts and can use that information to strengthen the claim
+that a student used a ghostwriter.
 
 As an example, we ran our system on a random author and a text 
 that author did not write. The whole output can be seen in Appendix
@@ -378,7 +377,7 @@ are used to illustrate what each of the filters are looking at.
     on two different texts. Both the 10 most different activations for the
     filters of size 8 and size 4 are shown. What each filter is looking at is
     represented by the three greatest activations on any text in the \gls{C}
-    dataset. The strings the filter reacted most strongly to are shown in column
+    dataset. The strings the filter reacted most to are shown in column
     \textbf{Text 1} and column \textbf{Text 2}. The actual activation values
     are shown in the column \textbf{Difference} where the left number corresponds
     to text 1 and the right to text 2. The filters are sorted so the
@@ -389,13 +388,13 @@ are used to illustrate what each of the filters are looking at.
 \end{table}
 
 Some of the filters are very clear about what they look at while others require
-some parsing. One of the easier filters considers the filter activating to the
-string "F. eks". That phrase is Danish for "for example" or "for instance" and
-some people write that as "for eksempel" while others use the shorthand above.
-If this suddenly changes it could indicate that you are not the author of an
-assignment. That cannot be the only reason given, but if thousands of those
-reasons are present you can say with some confidence that someone else has
-written the assignment. As an example of one of the harder to parse filters
+some parsing. One of the easier filters considers the filter activation
+triggered by the string "F. eks". That phrase is Danish for "for example" or
+"for instance" and some people write that as "for eksempel" while others use the
+shorthand above. If this suddenly changes it could indicate that you are not the
+author of an assignment. That cannot be the only reason given, but if thousands
+of those reasons are present you can say with some confidence that someone else
+has written the assignment. As an example of one of the harder to parse filters
 consider the filter looking at \verb["ke …''."[, \verb["a...''\n\n"[ and
 \verb["n''. '' "[. That filter seems to react to non-alphanumeric characters,
 but on the two texts we are comparing none of the reactions look anything like
@@ -407,7 +406,7 @@ start of sentences.
 \label{subsubsec:ghost_written_areas}
 
 Aside from feedback based on an entire text, we looked at whether or not we
-could say something about which parts of an assignment are the most likely to be
+could say something about which parts of an assignment is most likely to be
 ghostwritten. That would allow a suspicious teachers to identify the part of
 the assignment which is least likely to be written by the student and further
 analyze that small subsection of the assignment. To find the parts of a text
@@ -427,8 +426,8 @@ a text $t' \not\in T_\alpha$ and chose a random paragraph from that text. We
 then used \gls{conv-char-NN} to predict the 5 paragraphs from $t$ and single
 paragraph from $t'$ against each $t'' \in T_\alpha \setminus \{t\}$. We computed
 the average prediction on each of the 5 first paragraphs in $t$ and the average
-prediction on the paragraph from $t'$. We expect that the average prediction on
-paragraphs from $t$ is higher than the paragraph from $t'$.
+prediction of the one paragraph from $t'$. We expect that the average prediction
+on paragraphs from $t$ is higher than the paragraph from $t'$.
 
 The predictions on the 5 paragraphs from $t$ was 0.42216, 0.43975, 0.44447,
 0.44543 and 0.44425 while the prediction on the paragraph from $t'$ was 0.39524.
@@ -497,7 +496,7 @@ verification task.
 
 \subsection{Applicability of Method}\label{subsec:applicability_of_method}
 
-In this section we will discuss how applicable our approach will be to real
+In this section we discuss how applicable our approach will be to real
 world situations. We have created our solutions in a lab setting which
 simplifies the problem quite a bit. We discuss here how our results can be
 applied to find real ghostwriters.
@@ -507,14 +506,14 @@ applied to find real ghostwriters.
 
 The biggest problem with our approach is that we had no actual ghostwritten
 assignments available. We were given a dataset of students where each student
-had written a set of assignments. To create ghostwritten assignments we
-used assignments turned in by other students. It would of course have been
-better if we had had a dataset of students where each student had a set of
-assignments known to be written by him/her and a set of assignments known to
-have been written by a ghostwriter hired by that student. That was not possible
-however since MaCom did not have that data. In a real ghostwriter setting the
-ghostwriter might try to mimic the writing style of a student and in that way
-might trick our algorithm into classifying a \gls{FP}.
+had written a set of assignments. To create ghostwritten assignments we used
+assignments turned in by other students. It would of course have been better if
+we had had a dataset of students where each student had a set of assignments
+known to be written by him/her and a set of assignments known to have been
+written by a ghostwriter. That was not possible however since MaCom did not have
+that data. In a real ghostwriter setting the ghostwriter might try to mimic
+the writing style of a student and in that way might trick our algorithm into
+classifying a \gls{FP}.
 
 We have discussed another problem with our dataset during the experiments we
 performed. We observed multiple times that the network were reacting strongly
@@ -545,16 +544,17 @@ from the Danish course. Therefore the models almost certainly fitted features
 that are specific to texts from that course. Thus a certain bias towards the
 specific course is to be expected. It would stand to reason, that assignments
 made in the Danish course are more focused on the higher linguistic levels such
-as \gls{POS}-tags and words. Meanwhile courses such as Maths would focus more
-on the individual characters used such as "=", "?" and numbers. One could take
-this even further and apply similar methods to code, which suddenly introduces a
-lot of formatting specific quirks. Thus the applicability of our current methods
+as \gls{POS}-tags and words. Meanwhile courses such as math would focus more on
+the individual characters used such as "=", "?" and numbers. One could take this
+even further and apply similar methods to code, which suddenly introduces a lot
+of formatting specific quirks. Thus the applicability of our current methods
 has a bias towards texts from the Danish course and maybe even the specific
-skill level of a secondary school student. Students at that age might very well
-have a general tendency towards some specific writing style that students on a
-higher level does not. That could result in specific network design decision
-working better on one group than another. In order to verify how generalizing
-our methods are further experimentation into these areas would be needed.
+skill level of a secondary school student. Students at that age might very
+well have a general tendency towards some specific writing style that students
+on a higher educational level does not. That could result in specific network
+design decision working better on one group than another. In order to verify how
+generalizing our methods are further experimentation into these areas would be
+needed.
 
 However we believe that if we trained the same networks on data from other
 courses we could obtain a model that had comparable performance to the models
@@ -565,13 +565,13 @@ results.
 
 \subsubsection{Intentional Cheating of System}
 
-Assuming that a student had obtained information about the inner working of
-the system would he/she be able to cheat the system? Cheating would be if
-the student did not write an assignment him/herself but still had the text
-classified as written by him/her. In a previous section we described how we
-can figure out what the convolutional networks is looking at by looking at
-the output of the filter extraction layer. If a student could obtain that
-information she could make sure that any ghostwritten assignments contained the
+Assuming that a student had obtained information about the inner working of the
+system would they be able to cheat the system? Cheating in this circumstance
+refers the student not writing an assignment themselves but still having the
+text classified as being written by them. In a previous section we described
+how we can figure out what the convolutional networks is looking at by looking
+at the output of the filter extraction layer. If a student could obtain that
+information they could make sure that any ghostwritten assignments contained the
 same phrases that the network reacted to each time. It would however be very
 hard to make sure that all filters received the same values in a ghost written
 assignment. The student would have to go through the ghostwritten assignment and
@@ -668,25 +668,22 @@ texts. It should be noted that there would be cases where citation would add to
 the accuracy of the model. This would be cases where a student for some reason
 uses the same sources consistently for their assignments. In this scenario we
 suspect our models would perceive the contents of the citations as part of the
-student vocabulary.
+students' vocabulary.
 
 
 \subsubsection{Group Handin}\label{subsubsec:group_handin}
 
-There is also the scenario where rather than a single student handing in an
-assignment. For example a collaborative assignment between several students.
-In this scenario writing style would not be consistent throughout the paper,
-seemingly rendering our methods useless. If our methods were to work right
-out of the box, the work of a group of students would have to be represented
-in the training data, as if they were a single student. In this scenario our
-methods ideally would learn how they wrote as a group. This scenario is however
-very unlikely to happen. It presupposes that students only operate in the same
-groups throughout their years in high school. Not only that, but in order to
-train our methods, a substantial portion of the students would have to do this.
-For this reason the above described scenario most likely would not apply in
-practice. This problem does however have a solution, which is described in
-Section \ref{sec:future_work}.
-
+There is also the scenario where a text is not written by a single person. For
+example a collaborative assignment between several students. In this scenario
+writing style would not be consistent throughout the paper, seemingly rendering
+our methods useless. If our methods were to work right out of the box, the work
+of a group of students would have to be represented in the training data, as if
+they were a single student. In this scenario our methods ideally would learn
+how they wrote as a group. This scenario is however very unlikely to happen. It
+presupposes that students only operate in the same groups throughout their years
+in high school. Not only that, but in order to train our methods, a substantial
+portion of the students would have to do this. For this reason the above
+described scenario most likely would not apply in practice. 
 
 % TODO: Read through section seeing if everything makes sense with fewer graphs
 % and a much shortened section with time based weights.
