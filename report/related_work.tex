@@ -100,14 +100,14 @@ of the network. Siamese networks were first introduced by \citet{NIPS1993_769}
 for handwritten signature verification. The idea behind siamese networks is
 that the parts of the networks that share weights will give similar output for
 similar input. That makes Siamese Networks very good at comparing objects.
-\citet{NIPS1993_769} used a device to collect data from the signatures which
+\citet{NIPS1993_769} used a device to collect data from peoples signatures which
 were able to give $x$ and $y$ coordinates for a pen's position in different time
 steps. Their network was set up to take two inputs. Each input was a series
 of feature extractions from 200 timesteps. One such feature could be a binary
 value indicating if the pen was on the board or in the air at a specific time
-step. The time input was given to the siamese network which used convolutions
-to look at multiple timesteps at once. After the convolutions the two inputs
-were reduced to a higher level 18 element long feature vector. The output of the
+step. The time input was given to the siamese network which used convolutions to
+look at multiple timesteps at once. After the convolutions the two inputs were
+reduced to a higher level, 18 element long feature vector. The output of the
 siamese network was therefore 2 feature vectors representing the two signatures
 given as input. \citet{NIPS1993_769} then used a distance function with a
 threshold on the two feature vectors to verify whether or not the signatures
@@ -136,17 +136,17 @@ article-level-Siamese-network. Of those 4 networks the siamese network is of
 special interest to our project, because it solves the authorship verification
 problem and not the authorship attribution problem. The architecture for
 authorship verification chosen by \citet{qian:2018} started by using a \gls{GRU}
-network on the two texts given to it for comparison. On top of the \gls{GRU}
-network they used an average pool. The output of the average pool is then seen
-as features extracted from the two texts. They then used a softmax layer to get
-a distribution over the probability of who has written the two texts. These
-probabilities were then used to see whether or not the same author is predicted
-for both texts. On top of the softmax output they added the cosine similarity
-between the probability distributions outputted by the softmax layer. From that
-cosine similarity they could compute a binary output saying whether or not the
-texts were written by the same author or by different authors. \citet{qian:2018}
-obtained excellent results in the authorship attribution and authorship
-verification case on the siamese network.
+network which would be supplied with the two texts for comparison. On top of
+the \gls{GRU} network they used an average pool. The output of the average pool
+is then seen as features extracted from the two texts. They then used a softmax
+layer to get a distribution over the probability of who has written the two
+texts. These probabilities were then used to see whether or not the same author
+is predicted for both texts. On top of the softmax output they added the cosine
+similarity between the probability distributions outputted by the softmax layer.
+From that cosine similarity they could compute a binary output saying whether
+or not the texts were written by the same author or by different authors.
+\citet{qian:2018} obtained excellent results in the authorship attribution and
+authorship verification case on the siamese network.
 
 
 \subsection{Previous Work Using MaCom's Dataset}
