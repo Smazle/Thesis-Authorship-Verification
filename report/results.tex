@@ -2,38 +2,37 @@
 
 In this section we go through the results we obtained on the test dataset
 \gls{D}. We report the number of \glspl{TP}, \glspl{TN}, \glspl{FP}, \glspl{FN},
-accuracy and accusation error. The methods we evaluate on the datasets are the
-\gls{conv-char-NN}, the \gls{rec-sent-NN}, the \gls{conv-char-word-NN} and the
-two baseline methods. As mentioned in Section \ref{sec:data} the test dataset
-consist of texts from 3558 different authors.
+accuracy and accusation error. The methods we evaluate on the test dataset are
+the \gls{conv-char-NN}, the \gls{rec-sent-NN}, the \gls{conv-char-word-NN}
+and the two baseline methods. As mentioned in Section \ref{sec:data} the test
+dataset consist of texts from 3558 different authors.
 
-Recall that in the real world approximately 4\% of assignments are ghost
-written. Since that is the case we will report our performance to a dataset
-containing 4\% negatives. That result can be used to estimate real world
-performance of our methods. We will also report our results on a dataset
-containing 50\% negatives. Other authorship verification results and other work
-on MaCom's dataset use 50\% negatives. We want to compare our results to those
-other methods. Therefore we also evaluate all methods on a dataset with 50\%
-negatives.
+Recall that in the real world approximately 4\% of assignments are ghostwritten.
+Since that is the case we will report our performance to a dataset containing
+4\% negatives. That result can be used to estimate real world performance of our
+methods. We will also report our results on a dataset containing 50\% negatives.
+Other authorship verification results and other work on MaCom's dataset use 50\%
+negatives. We want to compare our results to those other methods. Therefore we
+also evaluate all methods on a dataset with 50\% negatives.
 
 
 \subsection{Baselines}
 
-The first of our implemented baseline methods were the extended delta method.
+The first of our implemented baseline methods was the extended delta method.
 The hyperparameters that gave the best result for the extended delta method
 was $K = 1$ and $p = 1$. The method requires normalizing to mean 0 and unit
 variance. We computed the transformation required to normalize the training
 data and applied that to the test data. As discussed earlier the delta method
-are a classical solution to the authorship verification problem. The version we
-implemented is not able to threshold the accusation error. We therefore just
+is a classical solution to the authorship verification problem. The version we
+implemented is not able to threshold the accusation error. Therefore we just
 report the results that maximize accuracy and the accusation error associated
 with that result.
 
-The second of our implemented baseline methods were the author specific
+The second of our implemented baseline methods was the author specific
 \gls{SVM}. The hyperparameters that gave the best result on the author specific
-\gls{SVM} were $C = 10$ and $\gamma = 1000$. As with the extended delta method
-we have not thresholded this method to achieve below 10\% accusation error.
-There was again no obvious way to do the thresholding. So we only report the
+\gls{SVM} was $C = 10$ and $\gamma = 1000$. As with the extended delta method we
+have not thresholded this method to achieve below 10\% accusation error. Once
+again there was no obvious way to do the thresholding, so we only report the
 accuracy and accusation error of the method when maximizing accuracy.
 
 
@@ -43,13 +42,12 @@ We retrained our three neural networks using the \gls{B} dataset. The \gls{B}
 dataset is much larger than the dataset they were originally trained on. We used
 the \gls{C} dataset for early stopping. For the networks we report both the
 configurations maximizing accuracy and the configurations maximizing accuracies
-while keeping the accusation error under 10\%. The configurations are shown
-together with the results. It should be noted that the parameters found that
-adhere to the 10\% constraint were found on the training data. As with any
-machine learning approach this does not ensure the same level of adherence on
-the test data.
+while keeping the accusation error under 10\%. The configurations is shown
+together with the results. Note that the parameters found that adhere to the
+10\% constraint were found on the training data. As with any machine learning
+approach this does not ensure the same level of adherence on the test data.
 
-The results for both the baseline methods and the three networks are shown in
+The results for both the baseline methods and the three networks is shown in
 Figure \ref{tab:50_results} for the dataset of 50\% negatives and in Figure
 \ref{tab:04_results} for the 4\% negative dataset. 
 
@@ -72,11 +70,11 @@ Constrained                & Method                  & Prediction System        
                      & \gls{rec-sent-NN}       & $P_{lexp_{0.25}}$ & 0.267    & 1795 & 3076 & 474  & 1755 & 0.6860          & 0.3632          \\ \hline
 \end{tabular}
 \end{adjustbox}
-\caption{The results on the 50\% negative dataset, using the listed methods.
+\caption{The results on the 50\% negative dataset using the listed methods.
 Constrained refers to whether or not $\theta$ and the prediction system which we
-used, was chosen based on their accuracy constrained by a 0.1 accusation error.
-In the case of Yes, it refers to under the 0.1 threshold and No refers to simply
-maximizing accuracy with no regard for accusation error. In both case
+used was chosen based on their accuracy constrained to a 10\% accusation error.
+In case Yes, it refers to under the 10\% threshold, and No refers to simply
+maximizing accuracy with no regard for accusation error. In both cases
 the best results are shown in bold.}
 \label{tab:50_results}
 \end{table}
@@ -100,11 +98,11 @@ Constrained                & Method                  & Prediction System      & 
                      & \gls{rec-sent-NN}       & $P_{lexp_{0.25}}$ & 0.002    & 3505 & 18  & 130 & 45   & 0.9526          & 0.7142          \\ \hline
 \end{tabular}
 \end{adjustbox}
-\caption{The results on the 4\% negative data set, using the listed methods.
+\caption{The results on the 4\% negative data set using the listed methods.
 Constrained refers to whether or not $\theta$ and the prediction system which we
-used, was chosen based on their accuracy constrained by a 0.1 accusation error.
-In the case of Yes, it refers to under the 0.1 threshold and No refers to simply
-maximizing accuracy with no regard for accusation error. In both case
+used was chosen based on their accuracy constrained to a 10\% accusation error.
+In case Yes it refers to under the 10\% threshold, and No refers to simply
+maximizing accuracy with no regard for accusation error. In both cases
 the best results were bolded.}
 \label{tab:04_results}
 \end{table}
