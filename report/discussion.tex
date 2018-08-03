@@ -692,9 +692,10 @@ Section \ref{sec:future_work}.
 % and a much shortened section with time based weights.
 \subsection{Prediction Systems}
 
-As described in Section \ref{subsec:combining_neural_network_output} we
-use several weight functions to weight which of an authors texts are most
-important. Looking at the graphs in Figure \ref{fig:conv-char-NN-pred-50},
+As described in Section \ref{subsec:combining_neural_network_output}
+we use several weight functions to weight which of an authors texts
+are most important. Looking at the graphs of the performance of our
+different prediction systems in Figure \ref{fig:conv-char-NN-pred-50},
 \ref{fig:conv-char-NN-pred-4}, \ref{fig:rec-sent-NN-pred-50},
 \ref{fig:rec-sent-NN-pred-4}, \ref{fig:conv-char-word-NN-pred-50} and
 \ref{fig:conv-char-word-NN-pred-4} we can get an idea of the relative strengths
@@ -725,7 +726,7 @@ prediction systems.
         $P_{exp_\lambda}$ and $P_\mathcal{U}$ prediction system accuracies and
         accusation error with important intervals highlighted. The important
         intervals is when $\theta \approx 0$, when $\theta \approx 1$ and when
-        the accuracy is maximized around $\theta \approx 0.5$. In both Figures
+        the accuracy is maximized around $\theta \approx 0.5$. In the Figure
         we observe that the accuracy is lower and accusation error higher in
         $P_\mathcal{U}$ than all $P_{exp_\lambda}$. We can therefore conclude
         that as expected the newest text is more indicative of the writing style
@@ -784,7 +785,7 @@ prediction systems.
         weight is not whether or not it beats $P_\mathcal{U}$, but rather
         whether or not it is better than $P_l$ and $P_{exp_\lambda}$. In Figure
         \ref{fig:conv_char_prediction_zoom_50_text_length} we have shown the
-        performance of $P_{lexp_\lambda}$.
+        performance of $P_{lexp_\lambda}$ vs some similar prediction systems.
 
         In that Figure we see that $P_{exp_{0.25}}$ has generally better
         performance than $P_{lexp_{0.25}}$ except right at the maximum accuracy.
@@ -793,29 +794,16 @@ prediction systems.
         prediction system as the best prediction system and it must be this
         small difference that causes that.
 
-        It is interesting that the performance of $P_{lexp_{0.25}}$ is only best
-        right at the maximum accuracy. Maybe that is due to something similar to
-        the effect we saw with $P_{exp_{\lambda}}$ where higher $\lambda$ values
-        was best at the extremes and lower $\lambda$ values were better in the
-        middle of the graphs.
-
     \item[$\mathbf{P_{MV}}$]
 
-        The majority vote prediction $P_{MV}$ system is similar to the
-        uniform prediction system $P_{\mathcal{U}}$. We therefore expect
-        about similar performance. What can actually be seen in Figure
-        \ref{fig:conv_char_prediction_zoom_50_majority_vote} is that in the
-        beginning $P_{MV}$ has substantially higher accuracy and accusation
-        error. The picture is similar to the $P_{exp_{1.0}}$ prediction system.
-        In the middle the uniform weight function is clearly better than the
-        majority vote and the accusation error curves cross. At the end of the
-        graph the majority vote again has the highest accuracy but now has the
-        lowest accusation error. The cause behind this behavior is most likely
-        the sane as $P_{exp}$. In the higher and lower ends og $\theta$, more
-        a smaller amount of more extreme predictions is needed to get the best
-        performance. $P_{MV}$ simply allows for to much negative influence from
-        poorly representing texts when using high and low $\theta$ values, much
-        like the uniform weighing.
+        The majority vote prediction system $P_{MV}$ is similar to the uniform
+        prediction system $P_{\mathcal{U}}$. We therefore expected about similar
+        performance. We have shown the $P_{MV}$ prediction systems performance
+        in Figure \ref{fig:conv_char_prediction_zoom_50_majority_vote}. It is
+        clear in that figure that $P_{MV}$ has almost the same performance as
+        the uniform weighing. The curves follow each other closely however the
+        $P_\mathcal{U}$ prediction system has slightly higher performance at the
+        top of the curves.
 
         \begin{figure}
             \centering
@@ -842,9 +830,27 @@ prediction systems.
         have shown a plot of the $P_{min}$ prediction system in Figure
         \ref{fig:conv_char_prediction_zoom_50_majority_vote}.
 
-    % TODO: Write about P_max
+    \item[$\mathbf{P_{max}}$]
+
+        The maximum prediction system reaches maximum accuracy
+        later than any other prediction system. We have shown a
+        Figure comparing the system to other systems in Figure
+        \ref{fig:conv_char_prediction_zoom_50_majority_vote}. The accusation
+        error of the system stays low for higher $\theta$s than any other
+        prediction system. Unfortunately the accuracy also rises slowly. We had
+        expected that the maximum prediction system would have a low accusation
+        error as it only looked at the single text in an authors library most
+        similar to an text of unknown authorship.
 
 \end{description}
+
+To summarize we find that the prediction systems with the best performance are
+generally the time based prediction systems. It was expected from the findings
+of \citet{hansen2014} that the turn in time of an text is an important factor.
+We also find that the length of the text is also an important factor and in most
+cases we see that the best prediction system is the system that is a combination
+of time and text length. More of an authors writing style will be represented in
+longer texts so it makes sense that longer texts should be weighted higher.
 
 
 \subsection{Writing Style Changes}
@@ -875,24 +881,25 @@ that. So the averages of the texts above 20 vary wildly.
     \textbf{Writing Style Changes}\par\medskip
     \includegraphics[width=0.7\textwidth]{./pictures/discussion/writing_style_change}
     \caption{Average predictions of newest to oldest texts for positive samples
-        and negative samples by \gls{conv-char-NN}. The newest text is shown to
-        the left and the oldest to the right. We have also shown a plot of the
-        different time based weight functions we tried using.}
+        and negative samples by the \gls{conv-char-NN}. The newest text is shown
+        to the left and the oldest to the right. We have also shown a plot of
+        the different time based weight functions we tried using.}
     \label{fig:writing_style_changes}
 \end{figure}
 
 In that figure it is very clear that writing style does change over time. The
-positive samples fall from 80\% prediction on the newest assignment to just
-over 50\% on the oldest assignment. That is a very large drop that suggests
+positive samples fall from 80\% average similarity on the newest assignment to
+just over 50\% on the oldest assignment. That is a very large drop that suggests
 that after only 20 turn ins the writing style has changed so drastically that
 our network almost believes it is someone else. It is very interesting that the
 drop in accuracy seem to follow closely our $P_{exp_{0.25}}$ prediction system
-weights. That is probably the reason why that particular $\lambda$ value so
-often gave the best results.
+weights. That is probably the reason why that particular $\lambda$ value for the
+time based prediction systems so often gave the best results.
 
 The negative curve is a bit weird. We expected it to stay flat below 50\% but
-it seems to be rising towards 50\%. The curve is clearly more flat than the
-positive curve but there does still seem to be a trend towards 50\%.
+it seems to be rising towards 50\%. It only rises slowly towards 50\%. Much
+slower than the positive curve falls. While the positive curve drops almost 30
+points the negative curve only rises 5. It might be just a coincidence.
 
 
 % TODO: Add discussion of different filters based on the following filter
