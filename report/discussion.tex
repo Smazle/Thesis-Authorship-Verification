@@ -623,8 +623,8 @@ using the prediction system we need less than half a second on all of our
 networks. Furthermore the task is very parallelizable. An unbounded number of
 machines can be set up with a copy of the network and classify new assignments.
 The classification time experiment were performed on a consumer grade laptop so
-it can probably also be reduced substantially on a better machine. The stats
-of the laptop can be seen in Appendix \ref{sec:time_stats}.
+it can probably also be reduced substantially on a better machine. The hardware
+specifications of the laptop can be seen in Appendix \ref{sec:time_stats}.
 
 For comparison \citet{hansen2014} found that using their author specific
 \gls{SVM} model took 0.78 seconds when restricting each student to 5 assignments
@@ -858,6 +858,17 @@ when doing authorship verification. That suggests that there is some development
 in students writing style which would also be expected. Secondary school is
 probably one of the time periods writing style changes the most.
 
+\begin{figure}
+    \centering
+    \textbf{Writing Style Changes}\par\medskip
+    \includegraphics[width=0.7\textwidth]{./pictures/discussion/writing_style_change}
+    \caption{Average predictions of newest to oldest texts for positive samples
+        and negative samples by the \gls{conv-char-NN}. The newest text is shown
+        to the left and the oldest to the right. We have also shown a plot of
+        the different time based weight functions we tried using.}
+    \label{fig:writing_style_changes}
+\end{figure}
+
 To get an idea of how much the writing style of a student changes over time we
 looped through each author in the \gls{D} dataset. We created a positive and a
 negative sample for each of the authors and used \gls{conv-char-NN} to predict
@@ -871,17 +882,6 @@ for each text. In Figure \ref{fig:writing_style_changes} we have illustrated
 the average positive and negative predictions produced by our network. We only
 predict the newest 20 texts as very few authors in the dataset has more than
 that. So the averages of the texts above 20 vary wildly.
-
-\begin{figure}
-    \centering
-    \textbf{Writing Style Changes}\par\medskip
-    \includegraphics[width=0.7\textwidth]{./pictures/discussion/writing_style_change}
-    \caption{Average predictions of newest to oldest texts for positive samples
-        and negative samples by the \gls{conv-char-NN}. The newest text is shown
-        to the left and the oldest to the right. We have also shown a plot of
-        the different time based weight functions we tried using.}
-    \label{fig:writing_style_changes}
-\end{figure}
 
 In that figure it is very clear that writing style does change over time. The
 positive samples fall from 80\% average similarity on the newest assignment to
@@ -898,29 +898,134 @@ slower than the positive curve falls. While the positive curve drops almost 30
 points the negative curve only rises 5. It might be just a coincidence.
 
 
-% TODO: Add discussion of different filters based on the following filter
-% activations. We should discuss why the filters makes sense to look at. It is
-% possible to get more filter activations if we need them.
-%
-% \subsection{Filters}
-%
-% [', F.eks.' ', F.eks.' ', F.eks.']
-% [', mens ’' ', mens ’' ', mens ’']
-% [' mandig,' ' mandig,' ' mandig,']
-% ['z, og at' 'z, og at' 't, og fx']
-% [' \\nSelvom' ' \\nSelvom' '\\n\\nSelvdy']
-% ['ag, pga.' 'ag, pga.' '’’, pga.']
-% ['om fx ""' 'om fx ""' 'om fx ""']
-% ['a. bl,a.' 'm; bl.a.' 'm; bl.a.']
-% ['t” dette' 't” dette' 'z, dette']
-% ['é, at ha' 'é, at ha' 'é, at ha']
-% ['bog; ”Vi' 'tår; ”Ve' 'tos; ”Vi']
-% ['r, at ’’' 'r, at ’’' 'r, at ’’']
-% ['r dog kr' 'r dog kr' 'r dog ’d']
-% ['m hvor d' 'm hvor d' 'm hvad ’']
-% [' dum ud,' ' dum ud,' ' dum ud,']
-% ['siger: “' 'siger: “' 'siger: “']
-% ['Fx. ' 'Fx. ' 'Fx. ']
-% ["''Og" "''Og" "''Og"]
-% ['Måsk' 'Måsk' 'Måsk']
-% ["''.." "'''." '"..d']
+\subsection{Features}
+
+In this section we will discuss the features our best network
+(\gls{conv-char-NN}) seem to be extracting and using for classification. It is
+interesting which kinds of features the network use to represent the texts. That
+information can be used to design new network architectures or to inspire manual
+feature selections. We have identified several different classes of features the
+network is looking at:
+
+\begin{description}
+    \item[Abbreviations]
+
+        Examples of filters looking for \textit{abbreviation features} are,
+
+        ``\verb|ag, pga.|'', ``\verb|a. bl.a.|'', ``\verb|Fx. |'',
+        ``\verb|om fx ""|'' and ``\verb|, F.eks.|''.
+
+        The first category of features we noticed were features looking for
+        abbreviations. It makes sense for the network to look at the different
+        abbreviations used by an author. An author will probably keep using
+        the same abbreviations and it will therefore be an excellent feature
+        for distinguishing between different authors. Some authors will write
+        out their phrases and will not use abbreviations. The first example
+        above looks for an abbreviations that means ``because of'' and the
+        second means ``among other''. The last three examples is of special
+        interest they all mean the same thing, ``for example'', but represent
+        different ways of abbreviating that. Some authors will use the first
+        style, some the second, some the third and some will write it out as
+        ``for eksempel''.
+
+    \item[Start of Sentences]
+
+        Examples of filters looking for \textit{start of sentence features} are,
+
+        ``\verb|Måsk|'', ``\verb| Hvilket|'', ``\verb|Samtidig|'',
+        ``\verb|x. Men h|'' and ``\verb|. Her ef|''.
+
+        The filters above all look for specific words used in the beginning of
+        a sentence. Different authors has a tendency to start sentences with
+        different words so it makes sense to look at the beginning of sentences
+        when verifying authorship. The filters above means ``Maybe'', ``Which'',
+        ``At the same time'', ``But'' and ``After that'' respectively.
+
+    \item[Style]
+
+        Examples of filters looking for \textit{style features} are,
+
+        ``\verb| 2 af 2"|'', ``\verb|\nPAGE\n\n4|, ``\verb|siger: “|'',
+        ``\verb|såsom ’’|'', ``\verb|t” dette|'', ``\verb|’’ \nSide|'' and
+        ``\verb|at.dk/\n\n|''.
+
+        The first two filters reacts to different footer styles. The first
+        footer style is activated when authors write their page numbering as
+        ``2 of 2'' while the second style is activated when authors write their
+        page numbering as ``PAGE\textbackslash n\textbackslash n2''. It is
+        interesting that the network has been able to learn from the footers
+        of the documents and not just from body text. It is clear to us that
+        authors will generally use he same footer style in all their texts. The
+        footer style is probably dictated mainly by the program they use to
+        write the texts.
+
+        The next two filters reacts to different citation styles. The first
+        one reacts to citations such as ``the author says: "<citation>'' and
+        the second reacts to citations such as ``as "<citation>''. Again it is
+        interesting that the network has learned that some authors will have a
+        tendency to cite in a specific way while others do not.
+
+        The next two filters reacts to styles used after citations. The first
+        of them reacts to styles such as ``<citation>" this shows that'' while
+        the second contains what looks like a reference to a page number of
+        the citation, such as in ``<citation>" \textbackslash nPage 5''. It is
+        probably mostly the teacher that determines whether or not students
+        will write page numbers for their citations. Some teachers will require
+        page numbering while others will not. A ghostwriter might not know the
+        citation style the student normally use and use something else.
+
+        The last filter seems to look at links in footers. It reacts to links
+        followed by two newlines.
+
+    \item[Vocabulary]
+
+        Examples of filters looking for \textit{vocabulary features} are,
+
+        ``\verb| mandig,|'', ``\verb|, mens ’|'', ``\verb|r dog kr|'',
+        ``\verb|forsøger|'', ``\verb|ademisk,|'' and ``\verb|r altså\n|''.
+
+        All these filters react to specific words. The words are translated
+        ``manly'', ``while'', ``however'', ``try'', ``academic'' and ``so''. The
+        texts in the dataset we use are generally short so these words will not
+        occur in all texts. The presence of specific words in an assignment will
+        clearly indicate specific authors. Some of the words above has synonyms
+        so an author can choose between which synonym to use. Others are just
+        words that rarely occurs in a text but might be more likely to be used
+        by certain authors than others.
+
+    \item[Unknown]
+
+        Examples of filters that looks at unknown features are,
+
+        ``\verb|!’’.|'', ``\verb| '” d" '|'' and ``\verb|–\n\nf|''.
+
+        These are examples of features that are hard to parse. It might be
+        the case that these filters look at some sort of punctuation. The
+        reason the maximum activations looks so weird could then be because the
+        maximum activations come from some of the corrupted assignments in the
+        dataset. So it might be that on normal texts these filters are useful to
+        determine the punctuation style of authors.
+
+        Another possibility is that they react to artifacts left over from the
+        text extraction from pdfs. It might be that some students use specific
+        programs that generate pdfs where when text is extracted from them
+        generate weird sequences of characters. That could of course be used to
+        identify students and might even work well since ghostwriters might use
+        another program. However it does not seem like a good thing for the
+        network to look at.
+
+\end{description}
+
+We believe our network has learned interesting and useful features. The
+description above shows that the network has learned several different kinds
+of features and there are probably many more that we missed. Features in
+classical authorship verification are as described earlier often frequencies
+\citep{stamatos2009}. That is in contrast to our features which represents the
+presence of a certain character sequence. That means that our networks are able
+to look at things that would not have been possible with a frequency such as the
+style of footers and style of citations. Classical features has an advantage
+in that they give information not only on presence but how often a character
+sequence is used. It would have been interesting to train a network that
+contained constructs for extracting frequencies (for example by using average
+pooling) and the current constructs for extracting presence. Then the dense
+network could use both of those different kinds of features to make predictions.
