@@ -3,8 +3,9 @@
 We have previously described the theory behind the methods we are implementing
 to solve the authorship verification problem. In this section we will describe
 in detail the experiments we performed to find the optimal hyperparameters and
-network structure. We will test each method implemented against the external
-validation set \gls{C}.
+network structures. We will test each method implemented against the external
+validation set \gls{C}. We will start by describing experiments on our baseline
+methods and after that we will present the Siamese networks we implemented.
 
 \subsection{Baseline Methods} \label{subsec:baseline_methods}
 
@@ -13,22 +14,35 @@ resembles the implementation used by \citet{US}. There is however a big
 difference with the application of the delta method. Contrary to the scenario
 in \citep{US} where PAN data was used there is not an instance where we only
 have 1 text per author. Therefore the original version of the delta method can
-be used as described by \citet{evert2015towards}. This is the method where when
-given a new text $t$ supposedly written by an author $\alpha \in \mathcal{A}$
-his texts $T_\alpha$ are extracted and so is a set of texts not written by
-him $\hat{T}_\alpha$ where $|\hat{T}_\alpha| = |T_\alpha|$. The text $t$ is
-given to a \gls{KNN} classifier which determines if $t \in T_\alpha$ or $t \in
-\hat{T}_\alpha$.
+be used as described by \citet{evert2015towards}. In that method when given
+a new text $t$ supposedly written by an author $\alpha \in \mathcal{A}$ his
+texts $T_\alpha$ and a set of texts $\hat{T}_\alpha$ where $|\hat{T}_\alpha|
+= |T_\alpha|$ are given to a \gls{KNN} classifier. $T_\alpha$ will serve as
+positive examples of the authors writing style while $\hat{T}_\alpha$ will serve
+as negative examples. The text $t$ is then classified by finding the $K$ closest
+texts and taking a majority vote between them.
 
 \subsubsection{Feature Selection}
+
+% TODO by August: In the following section we have written that the random
+% forest method can handle bad/useless features while the extended delta and
+% SVM method cannot. We have explained here why it is that extended delta method
+% cannot handle it. However we still need to explain or cite someone that
+% explain the other two.
+%
+% * We should explain why the SVM _cannot_ handle useless features, and
+% * We should explain why the random forest _can_ handle useless features.
+%
+% The random forest is already described in the discussion section but we should
+% copy that description to here.
 
 The experiments performed on our baseline methods was centered around parameter
 tuning. Not only parameters such as the $K$ in the extended delta method but
 also the set of features supplied to the methods. Other methods such as random
 forest has a built in filter for bad and noisy features. This is not the case
 for both the \gls{SVM} and the extended delta method who does performs any kind
-of quality analysis of the feature they are given. It is worst for the extended
-delta method as that is just a distance metric that has no way of weighing
+of quality analysis of the features they are given. It is worst for the extended
+delta method as that is just a distance metric that has no way of weighing the
 features. Therefore we chose to perform a feature selection for them rather than
 just having them use the entire set available to them. Contrary to what was done
 by \citet{US} this process did not consist of trying out some random selection
@@ -36,13 +50,12 @@ of features but rather a more systematic approach was used.
 
 We started by generating a set of features. The feature set is simply a set of
 n-grams. In order for us to find as good a feature set as possible we created a
-large initial feature set to increase the feature search space. To generate the
+large initial feature set to increase the search space. To generate the
 features we used a corpus of text. Specifically we used the \gls{B} dataset as a
 corpus. From the corpus we enumerated all the different n-grams in the different
 categories and computed the frequency of each n-gram. The corpus had,
 
 \begin{itemize}
-    \item 27,535 different word-1-grams,
     \item 188,472 different word-2-grams,
     \item 2,178 different character-2-grams,
     \item 219 different \gls{POS}-tag-2-grams, and
@@ -52,12 +65,12 @@ categories and computed the frequency of each n-gram. The corpus had,
 The quantities here are large due to the size of the corpus and will continue
 to rise as $n$ increases. Rather than extracting all of those features from
 our texts we chose to focus on the n-grams with highest frequency as those are
-probably the most important features. Specifically consider a case where a very
-infrequent feature were chosen. That feature might only exist in the corpus and
-in none of the texts in the test set. That feature would therefore be useless
-in determining the authorship of those texts. Using the quantities listed above
-as inspiration we generated a candidate feature set of 4950 features. The set
-consisted of,
+the most important features \citep{stamatos2009}. To see why consider a case
+where a very infrequent feature were chosen. That feature might only exist
+in the corpus and in none of the texts in the test set. That feature would
+therefore be useless in determining the authorship of those texts. Using the
+quantities listed above as inspiration we generated a candidate feature set of
+4950 features. The set consisted of,
 
 \begin{itemize}
 
@@ -89,20 +102,20 @@ also be many more different word-n-grams than character-n-grams of the same
 size. We therefore also use more of the most frequent word-n-grams. The sizes
 of the different character n-grams we extracted was based on the amount used by
 \citet{aalykke2016}. They found that character n-grams of size 8 worked very
-well on MaCom's data which is the reason why we chose to include char-n-grams
-with n spanning the values from 1 to 10. \citet{US} showed that the when $n$
-in word-n-grams reach a value of 4, the probability of that sequence actually
-occurring in any given text is drastically reduced. A similar thing can be seen
-with the special-character-n-grams where an increase in n would not contribute
-anything. The reason for the small amount of \gls{POS}-tag-n-grams was that they
-were a computationally expensive, as such a reduction in possible n-values had
-to be made.
+well on MaCom's data which is why we search all the way up past 8. \citet{US}
+showed that the when $n$ in word-n-grams reach a value of 4, the probability of
+that sequence actually occurring in any given text is drastically reduced. A
+similar thing can be seen with the special-character-n-grams where an increase
+in n would not contribute anything. We used so few \gls{POS}-tag-n-grams since
+the number of different \gls{POS} tags are very small. Therefore the number of
+different sequences of \gls{POS} tags are also small compared with the other
+n-gram types.
 
-Having the features we could start doing our feature selection. The process
-proved very computationally expensive. Having to check every combination of 4950
+Having the features we could start our feature selection. The process proved
+very computationally expensive. Having to check every combination of 4950
 different features simply was not feasible. Therefore we implemented a greedy
-algorithm instead in combination with using only a small dataset \gls{I} for the
-feature selection.
+search algorithm instead in combination with using only a small dataset \gls{I}
+of 100 authors for the feature selection.
 
 The greedy algorithm as described by \citet{kanDeng} is a simple forward feature
 selection. Having our previously created feature set we loop through each single
@@ -110,7 +123,7 @@ feature validating its accuracy when applied to each $\alpha \in \mathcal{A}$,
 where $\mathcal{A}$ is the dataset \gls{I}. The validation on each author
 $\alpha$ consists of fetching $T_{\alpha}$ and a set $\hat{T}_{\alpha} \subset
 \overline{T}_\alpha$, where $|\hat{T}_\alpha| = |T_\alpha|$. Using these sets
-of positive and negative cases we use k-fold cross validation to determine
+of positive and negative cases we used k-fold cross validation to determine
 the performance of the feature for that author $\alpha$. This is done for all
 authors and when averaged we have the performance of that single feature. This
 process is then repeated for all features. The best performing feature is then
@@ -122,30 +135,23 @@ score is chosen.
 
 Due to the increased run-time when using leave one out cross validation we had
 to make use of some other model selection approach. Under normal circumstances
-normal X-fold cross validation would work out fine but a complication arose when
-doing this with the extended delta method. The reason for this was that there
-was a scenario where an unlucky split of folds would cause a lot of error. A
-generic example of this would be if we had a 2 class training set consisting
-of 6 values evenly split between the 2 classes. In the case where we split
-those 6 values into 3 folds there is a chance that a fold contains two values
-of the same class which means that if $K = 3$ both of those wont ever be able
-to classified correctly as there is only 1 of that class in the training set.
-As such, stratified K fold cross validation is used instead as it uphold the
-class distribution in its folds. While this is not a proglem for the \gls{SVM}
-classifier we also opted the stratified K fold cross so we would more directly
-compare the feature selection of the two models.
+normal X-fold cross validation would work out fine but since we had so little
+data available for some authors we had to use a stratified X-fold. The average
+assignment count for our authors just above 13. Some authors had as little as
+2 assignments in their library. When so few datapoints are available an unlucky
+split between training and validation in a cross validation might result in a
+uneven split between the positives and negatives in the training dataset. It is
+not a problem when more data points are available since the large numbers
+involved make unlucky splits very rare. The stratified k fold cross validation
+will make sure that a similar number of positives and negatives are in each
+split and we can avoid that problem.
 
-For both the \gls{SVM} and dxtended delta method, we ran this algorithm
+For both the \gls{SVM} and extended delta method we ran this algorithm
 until 450 features were selected. The \gls{SVM} performed its feature selection
 using the default RBF kernel, a C with value of 1, and $\gamma =
 \frac{1}{\text{n\_features}}$. Due to some authors having below 3 texts,
 the default K value of \glspl{KNN} K parameter was set to 3 for the feature
 selection.
-
-The results of both the \gls{SVM} and the extended delta method feature selection can
-be seen in Figure \ref{fig:fs_results}. The best number of selected feature were
-220 for the SVM and 4 for the extended delta Method, scoring an accuracy of
-0.697 and 0.672 respectively.
 
 \begin{figure}
     \centering
@@ -161,17 +167,26 @@ be seen in Figure \ref{fig:fs_results}. The best number of selected feature were
     \label{fig:fs_results}
 \end{figure}
 
+The results of both the \gls{SVM} and the extended delta method feature
+selection can be seen in Figure \ref{fig:fs_results}. The number of selected
+features were 221 for the SVM and 5 for the extended delta Method, scoring an
+accuracy of 0.697 and 0.672 respectively. The features chosen by the \gls{SVM}
+method was: 27 word-4-grams, 22 word-2-grams, 21 char-10-grams, 18 word-3-grams,
+19 char-4-grams, 16 char-3-grams, 15 char-5-grams, 15 char-9-grams, 15
+word-1-grams, 14 char-2-grams, 14 char-6-grams, 10 char-7-grams, 10
+char-8-grams, 3 pos-3-grams and 2 pos-4-grams. The features chosen by the
+extended delta method was 2 char-5-grams, 2 word-3-grams and 1 word-4-gram.
+
 
 \subsubsection{Hyper Parameter Selection}\label{sec:hyp_select}
 
 As mentioned in the previous section due to time constraints we were unable
 to do the hyper parameter selection in parallel with the feature selection.
-For that reason we chose to split it up selecting our features first and then
-tuning the parameters based on those selected features. As before where we
-searched for features in a set of features we now search for parameters in a set
-of parameters. Recall that the \gls{SVM} need the $C$ and $\gamma$ parameters
-and the extended delta method need the $p$ and $K$ parameters. We search for
-parameters in a grid search of the values,
+For that reason we chose select our features first and then tuning the hyper
+parameters based on those selected features. As in the feature search we now
+search for parameters in a set of parameters. Recall that the \gls{SVM} need the
+$C$ and $\gamma$ parameters and the extended delta method need the $p$ and $K$
+parameters. We search for parameters in a grid search,
 
 \begin{align}
     \text{SVM} &:
@@ -187,12 +202,12 @@ parameters in a grid search of the values,
 \end{align}
 
 For each variation of the hyper parameters we average the performance of the
-method over all unique authors in the training set in a manner very similar
-to the feature selection. We make use of the same 3-fold stratified cross
-validation and arrange each author with set of opposing set of texts. The
-accuracy of each parameter configuration can be seen in Table \ref{table:KNN}
-for the extended delta method, and Table \ref{table:SVM} for the \gls{SVM}. The
-parameter search was performed on the \gls{J} dataset.
+method over all unique authors in the training set in a manner similar to the
+feature selection. We use the same 3-fold stratified cross validation and
+arrange each author with set of opposing set of texts. The accuracy of each
+parameter configuration can be seen in Table \ref{table:KNN} for the extended
+delta method, and Table \ref{table:SVM} for the \gls{SVM}. The parameter search
+was performed on the \gls{J} dataset consisting of 5,400 authors.
 
 \begin{table}[h]
     \centering
@@ -234,8 +249,8 @@ parameter search was performed on the \gls{J} dataset.
 
 We performed a validation of the methods on the \gls{C} dataset. While
 applying these methods to a validation set wont change anything in terms of
-the parameters we have selected. It will give us the ability to gauge the
-accuracy of our methods when applied to a new never before seen test-set.
+the parameters we have selected. It will give us the ability to estimate the
+accuracy of our methods when applied to a never before seen test dataset.
 Using this untouched data set as the base the validation determines what text
 from each author is the newest one ending up with a set of samples of the
 form $(t, \alpha)$ where $t$ is a text and $\alpha$ is an author. For each
@@ -245,13 +260,10 @@ of these samples $T'_\alpha = T_\alpha \setminus \{t\}$ is extracted from
 the combined set $T'_\alpha \cup \hat{T}_\alpha$, we can train the model in
 question having provided it with both positive and negative examples of author
 $\alpha$ writing style. To include samples that depict a student that used a
-ghostwriter we change the text we do our prediction on. For each sample there
-is a probability that the sample will be regarded as negative. If that is the
-case we pick out a random $t'$ where $t' \in (\overline{T}_\alpha \setminus
-\hat{T}_\alpha)$ and predict on that where a correct prediction would be the
-model say he did not write it. In the positive case we simply predict on $t$ and
-a correct prediction would be the model saying he did write it. The results of
-this process can be seen in Table \ref{tab:baseline-val-res}.
+ghostwriter we change the text we do our prediction on. As described earlier in
+the real world about 4\% of assignments are ghost written. We therefore evaluate
+the models on both a dataset of 50\% negatives and a dataset of 4\% negatives.
+We have shown the results on both datasets in Table \ref{tab:baseline-val-res}.
 
 \begin{table}[h]
     \begin{adjustbox}{center}
@@ -264,8 +276,9 @@ this process can be seen in Table \ref{tab:baseline-val-res}.
         & ED & \{K:1, p:1\} & 680 & 23 & 23 & 320 & \textbf{0.67208} & \textbf{0.93294} \\ \hline
     \end{tabular}
     \end{adjustbox}
-    \caption{The results of running our two baseline methods the \gls{SVM} and
-        Extended Delta method, on the dataset \gls{C} the validation set.}
+    \caption{The results of running our two baseline methods the author specific
+        \gls{SVM} and Extended Delta method, on the dataset \gls{C} the
+        validation set.}
     \label{tab:baseline-val-res}
 \end{table}
 
@@ -278,15 +291,15 @@ maximizing the accuracy of the methods.
 \subsection{Deep Learning}
 
 In the prediction system from Definition
-\ref{def:weighted_average_prediction_system} we needed a function $f$ that
-takes two texts and returns the probability that those texts are written
-by the same author. As described earlier siamese neural networks are well
-suited for comparing objects. In this Section we describe the experiments
-we performed with different networks architectures and we will present
-three different networks. The three networks are \gls{conv-char-NN} in
-Section \ref{subsubsec:conv_char_nn}, \gls{conv-char-word-NN} in Section
-\ref{subsubsec:conv_char_word_nn}, and \gls{rec-sent-NN} in Section
-\ref{subsubsec:rec_sent_nn}.
+\ref{def:weighted_average_prediction_system} we needed a function $f \in
+\mathcal{F}$ that takes two texts and returns the probability that those
+texts are written by the same author. As described earlier siamese neural
+networks are well suited for comparing objects. In this Section we describe
+the experiments we performed with different network architectures and we will
+present three different networks. The three networks are \gls{conv-char-NN}
+in Section \ref{subsubsec:conv_char_nn}, \gls{rec-sent-NN} in Section
+\ref{subsubsec:rec_sent_nn} and \gls{conv-char-word-NN} in Section
+\ref{subsubsec:conv_char_word_nn}.
 
 The data we trained our networks on is described in Section \ref{sec:data}. We
 trained the networks on the \gls{G} dataset that contains 3,000 authors. We used
@@ -295,7 +308,7 @@ Through experimentation we found that the validation dataset had to contain
 completely different authors than the training dataset. In the beginning of
 our project we had a validation set that contained different problem instances
 (two texts to compare) from the training set but contained some of the same
-authors. That lead to the validation set not being a very good estimate of the
+authors. That lead to the validation set not being a good estimate of the
 networks performance on different authors than the ones seen during training.
 The networks were therefore overfitting on the specific authors and we could not
 see that in the validation datasets accuracy. All accuracy graphs shown in this
@@ -304,11 +317,11 @@ Section are based on a validation dataset with 500 completely unseen authors.
 The general structure of our networks will be that they take two texts as input.
 The texts are first embedded into a format that can be used by the network.
 Then the texts are transformed into two sets of features representing the text
-via a weight sharing network. Then the text representation will be combined
-in some way and a dense network will take the combined representations and
-decide whether or not the texts are written by the same author. We call the
-different parts of the network \textit{Embedding}, \textit{Feature Extraction},
-\textit{Combining} and \textit{Decision}.
+via a weight sharing network (siamese part of the network). Then the text
+representation will be combined in some way and a dense network will take the
+combined representations and decide whether or not the texts are written by the
+same author. We call the different parts of the network \textit{Embedding},
+\textit{Feature Extraction}, \textit{Combining} and \textit{Decision}.
 
 When we show graphs of the networks we have produced we use specific names for
 different layers in the networks. A glossary of the layer names and parameters
@@ -326,8 +339,7 @@ of the layers are shown in Table \ref{tab:glossary}.
             \hline
 
             Input                                                              &
-            Serves as the entrypoint of the network, by receiving a set of
-            texts and feeding it trough the network.                           &
+            Serves as the entrypoint of the network.                           &
             \begin{minipage}[t]{\linewidth}
             \begin{compactdesc}
                 \item[Shape] The dimensions of each sample give to the input.
@@ -336,26 +348,24 @@ of the layers are shown in Table \ref{tab:glossary}.
             \hline
 
             Embedding                                                          &
-            Taking in an encoded sample, it produces a dense vector
-            representation for each different. More details can be found in
-            Section \ref{subsubsec:layers}.                                    &
+            Take a sequence of one hot encoded vectors and produce a dense
+            vector of each element in the sequence. More details can be found
+            in Section \ref{subsubsec:layers}                                  &
             \begin{minipage}[t]{\linewidth}
             \begin{compactdesc}
-                \item[Input Dim] Size of vocabulary.
                 \item[Output Dim] Size of vector used to represent embedding.
             \end{compactdesc}
             \end{minipage}                                                    \\
             \hline
 
             Convolutional                                                      &
-            Applies convolution to the data it recieves according to the
-            decription, found in Section \ref{subsubsec:layers}.               &
+            Applies convolutions to the data it receives according to the
+            description found in Section \ref{subsubsec:layers}.               &
             \begin{minipage}[t]{\linewidth}
             \begin{compactdesc}
                 \item[Filters] Dimensionality of the output, ie. number of
-                    filter from the convolution.
-                \item[Kernel Size] Integer or list describing size of
-                    convolution window.
+                    filter in the convolution.
+                \item[Kernel Size] Size of convolution window.
                 \item[Strides] Stride length of the convolutional window.
                 \item[Activation] The activation function to be applied after
                     the convolution.
@@ -364,18 +374,17 @@ of the layers are shown in Table \ref{tab:glossary}.
             \hline
 
             Global Max Pooling                                                 &
-            Extracts the maximum value from each of the provided data          &
+            Extracts the maximum.                                              &
             No parameters.                                                    \\
             \hline
 
             Concatenation                                                      &
-            As the name suggests, this layers simply concatenates the data it
-            receives from different layers                                     &
+            Concatenates the data it receives from different layers.           &
             No parameters.                                                    \\
             \hline
 
             Merge                                                              &
-            Merges its inputs, using a specified function to generate a single
+            Merges its inputs using a specified function to generate a single
             output.                                                            &
             \begin{minipage}[t]{\linewidth}
             \begin{compactdesc}
@@ -385,7 +394,7 @@ of the layers are shown in Table \ref{tab:glossary}.
             \hline
 
             Dense                                                              &
-            A simple fully connected layer, taking in data and applying the
+            A fully connected layer taking in data and applying the
             function described in Section \ref{sec:neurons}.                   &
             \begin{minipage}[t]{\linewidth}
             \begin{compactdesc}
@@ -396,11 +405,11 @@ of the layers are shown in Table \ref{tab:glossary}.
             \hline
 
             Dropout                                                            &
-            Drops a fraction it receives, with the goal of preventing
-            overfitting.                                                       &
+            Randomly remove a specified fraction of neurons in each weight
+            update.                                                            &
             \begin{minipage}[t]{\linewidth}
             \begin{compactdesc}
-                \item[Rate] The fraction of data it receives dropped.
+                \item[Rate] The fraction of neurons to drop.
             \end{compactdesc}
             \end{minipage}                                                    \\
             \hline
@@ -414,22 +423,12 @@ of the layers are shown in Table \ref{tab:glossary}.
             \end{minipage}                                                    \\
             \hline
 
-            Reshape                                                            &
-            Reshapes the data it receives.                                     &
+            \gls{LSTM}                                                         &
+            An \glsdesc{LSTM} layer which works according to the description in
+            Section \ref{subsubsec:layers}.                                    &
             \begin{minipage}[t]{\linewidth}
             \begin{compactdesc}
-                \item[Dim] Dimensionality to reshape to.
-            \end{compactdesc}
-            \end{minipage}                                                    \\
-            \hline
-
-            LSTM                                                               &
-            A Long Short-Term Memory layer, which works according to the
-            description in Section \ref{subsubsec:layers} is applied to the
-            given data.                                                        &
-            \begin{minipage}[t]{\linewidth}
-            \begin{compactdesc}
-                \item[Unit] Number of neurons in the layer.
+                \item[Unit] Number of hidden units.
             \end{compactdesc}
             \end{minipage}                                                    \\
             \hline
@@ -444,8 +443,8 @@ of the layers are shown in Table \ref{tab:glossary}.
 \subsubsection{Character Level Convolutional Siamese Neural Network}
 \label{subsubsec:conv_char_nn}
 
-The idea behind the \gls{conv-char-NN} is that we wanted to use convolutions
-to look for n-grams in texts. Traditional authorship verification/attribution
+The idea behind the \gls{conv-char-NN} is that we wanted to use convolutions to
+look for n-grams in texts. Traditional authorship verification and attribution
 is based on carefully engineered n-grams that are compared between two texts
 \citep{stamatos2009}. Instead of choosing the n-grams ourselves we wanted the
 network to learn which features are important for the authorship verification
@@ -455,7 +454,7 @@ characters. Assume for example that the network has learned that the character
 sequence "ould " is important for deciding the author of a text. Then we
 expect the network to react strongly to character sequences that looks
 like "ould ". We have illustrated such a convolutional filter in Figure
-\ref{fig:convolution_text_example}.
+\ref{fig:convolution_text_example}. The structure of the network is,
 
 \begin{figure}
     \centering
@@ -466,8 +465,8 @@ like "ould ". We have illustrated such a convolutional filter in Figure
         produced when the characters the filter looks at match the characters it
         is looking for and low values are produced otherwise. We have
         illustrated 3 different filter locations but the filter is similarly
-        placed in all possible locations. We have padded the text with zeros to
-        get the same size output as input.}
+        placed in all possible locations (also overlapping). We have padded the
+        text with zeros to get the same size output as input.}
     \label{fig:convolution_text_example}
 \end{figure}
 
@@ -481,28 +480,27 @@ like "ould ". We have illustrated such a convolutional filter in Figure
         hope is that the layer will learn that similar characters should be
         placed close to each other in the output space and dissimilar characters
         should be placed far apart. The same embedding is performed on both of
-        the input texts and the layer is therefore part of the siamese part of
-        the network.
+        the input texts and the layer is therefore part of the siamese fraction
+        of the network.
 
     \item[Feature Extraction:]
 
         Features are extracted from the two texts via a layer of convolutions
-        with different sizes. We use both convolutions with a window size of
-        8 and convolutions with a window size of 4. We use 700 of size 8 and
-        500 of size 4. We used a window size of 8 since \citet{aalykke2016}
-        found that n-grams of size 8 worked the best for Danish texts and we
-        also added 4 so the network could look at smaller n-grams as well.
-        We used a stride of 1 such that each convolutional filter could
-        observe all parts of the texts and give an output for each one. The
-        convolutional part of the network also shares weights such that the
-        same features are extracted from both the input texts. We use the
-        \gls{ReLu} activation function for the reasons described in Section
-        \ref{subsubsec:activation_functions}.
+        with different sizes. We use both convolutions with a window size of 8
+        and convolutions with a window size of 4. We use 700 of size 8 and 500
+        of size 4. We used a window size of 8 since \citet{aalykke2016} found
+        that n-grams of size 8 worked the best for Danish texts and we also
+        added 4 as we found that that worked well. We used a stride of 1 such
+        that each convolutional filter could observe all parts of the texts and
+        give an output for each one. The convolutional part of the network also
+        shares weights such that the same features are extracted from both the
+        input texts. We use the \gls{ReLu} activation function for the reasons
+        described in Section \ref{subsubsec:activation_functions}.
 
         After the convolutional layer we added a global max pooling layer. The
-        layer takes the maximum output of each convolutional filter. We do that
-        as the output size of the convolutional layer depends on the length of
-        the input text. The output of the max pooling layer is $700 + 500 =
+        layer takes the maximum output over each convolutional filter. We do
+        that as the output size of the convolutional layer depends on the length
+        of the input text. The output of the max pooling layer is $700 + 500 =
         1200$ numbers, one for each convolutional filter. That means that the
         network learns to extract 1200 different features from each text.
 
@@ -511,7 +509,7 @@ like "ould ". We have illustrated such a convolutional filter in Figure
         The features of the texts are combined using the absolute difference
         function. As described each text is represented as a vector of 1200
         features and to combine them we subtract them from each other and take
-        the elementwise absolute difference.
+        the elementwise absolute value.
 
     \item[Decision:]
 
@@ -527,18 +525,18 @@ like "ould ". We have illustrated such a convolutional filter in Figure
 \end{description}
 
 We have shown an illustration of the network in Figure \ref{fig:conv-char-NN}.
-In the Figure we have illustrated the siamese part of the network as a blue box.
-The 4 phases of the network is not illustrated in the Figure but it should be
-possible to find them by reading the description above. We trained the network
-on the dataset described in the Section \ref{sec:data} and in the beginning
-of this Section. We used the \gls{Adam} optimizer during the training of the
-network. We used a learning rate of $\eta = 0.0005$, half of what was suggested
-by \citet{DBLP:journals/corr/KingmaB14}. We did that as we had problems with
-neurons dying during the training of the network. Other than the learning rate
-we used the parameters suggested in the article. That is, the remembering rates
-were set to $\gamma_1 = 0.9$ and $\gamma_2 = 0.999$. As the error function we
-used the binary cross-entropy function whose definition can be seen in Lemma
-\eqref{eq:binary_ce}.
+In the figure we have illustrated the siamese part of the network as a blue
+box. The 4 phases of the network is not illustrated in the figure but it
+should be possible to find them by reading the description above. We trained
+the network on the dataset described in the Section \ref{sec:data} and in
+the beginning of this section. We used the \gls{Adam} optimizer during the
+training of the network. We used a learning rate of $\eta = 0.0005$, half of
+what was suggested by \citet{DBLP:journals/corr/KingmaB14}. We did that as we
+had problems with neurons dying during the training of the network. Other than
+the learning rate we used the parameters suggested in the article. That is, the
+remembering rates were set to $\gamma_1 = 0.9$ and $\gamma_2 = 0.999$. As the
+error function we used the \textit{binary cross-entropy} function defined in
+Lemma \eqref{eq:binary_ce}.
 
 \begin{figure}
     \centering
@@ -555,7 +553,7 @@ used the binary cross-entropy function whose definition can be seen in Lemma
 
 \begin{lemma}[Binary Cross-Entropy]
 
-    Let the loss function binary cross entropy be defined as,
+    The \textit{binary cross-entropy} loss function is defined as,
 
     \begin{equation}\label{eq:binary_ce}
         L(y, p) = -(y \cdot \log(p) + (1- y)\cdot\log(1 - p)),
@@ -573,8 +571,7 @@ a graph of the training and validation accuracies during training in Figure
 learning with a minibatch size of 8. We used a size of 8 as that was the largest
 batch size that could fit in the GPUs memory. During the training we padded
 all texts with zeros such that all texts in each batch had the same length. We
-did that as it is required by keras. We have shown the training and validation
-accuracies during training in Figure \ref{fig:conv-char-NN-accuracies}.
+did that as it is required by keras.
 
 \begin{figure}
     \centering
@@ -583,7 +580,8 @@ accuracies during training in Figure \ref{fig:conv-char-NN-accuracies}.
     \caption{The training and validation accuracy of \gls{conv-char-NN} during
         training. Each epoch contains several thousand minibatches which is why
         the training and validation accuracies rises so much in the first
-        epoch.}
+        epoch. The first data point (x=0) is computed accuracies before any
+        training.}
     \label{fig:conv-char-NN-accuracies}
 \end{figure}
 
@@ -597,12 +595,12 @@ selection of which did not have any proper argument and was selected solely
 to determine the initial performance on the data. In addition to that the
 combination part of the network also differed. Rather than computing the
 absolute difference as was done in the final network, this initial network
-simply concatenated the two siamese branches. If we let $t_f = \{t_1, t_2,
-\dots, t_n\}$ be the extracted features of the text $t$, then the concatenation
+simply concatenated the two siamese branches. If we let $t_f = \{f_1, f_2,
+\dots, f_n\}$ be the extracted features of the text $t$, then the concatenation
 would be computed by,
 
 \begin{equation}
-    combine(t, t') \mapsto (t_1, t_2, \dots, t_n, t'_1, t'_2, \dots t'_n)
+    combine(t_f, t'_f) \mapsto (f_1, f_2, \dots, f_n, f'_1, f'_2, \dots f'_n)
 \end{equation}
 
 Finally the decision part of the network simply consisted of a single 500 neuron
@@ -613,13 +611,16 @@ before the output layer and used 30\% dropout. That regularization allowed the
 training accuracy and validation accuracy to follow each other for more epochs
 making the final validation accuracy better.
 
-We changed the combining function from a concatenation to a absolute difference
-since the network would then not have to learn which features belonged to other
-features. The new combination function is computed as,
+The original combining function had the drawback that the network would have
+to learn the positions of the features compared to each other. Instead of just
+concatenating the vectors we started computing the absolute difference between
+them. Then the network would not have to learn that the first feature in the
+feature vector belonged together with the 1201 feature in the vector. The new
+combination function is computed as,
 
 \begin{equation}\label{eq:abs}
-    combine(t, t') \mapsto \left(
-        |t_0 - t'_0|, |t_1 - t'_1|, \dots, |t_n - t'_n|
+    combine(t_f, t'_f) \mapsto \left(
+        |f_0 - f'_0|, |f_1 - f'_1|, \dots, |f_n - f'_n|
     \right)^T.
 \end{equation}
 
@@ -675,13 +676,13 @@ by deleting names from the texts. When we trained the network again with those
 preprocessing steps we got a substantial hit in network performance. However the
 network were hopefully not looking at metadata anymore.
 
-As described in Section \ref{subsubsec:tuning_parameters} we also have to choose
+As described in Section \ref{subsubsec:tuning_parameters} we also had to choose
 the best prediction system and best threshold $\theta$ for the network. The
 dataset we use to tune the prediction system $P_x$ and threshold $\theta$ are
 the \gls{F} dataset. The set consists of 2,000 previously unseen authors. We
 find parameters for two cases. One where we generate 50\% positive problems and
 50\% negative problems and one where we generate 96\% positive problems and 4\%
-negative problems. In the 50/50 case we end up with 4,000 differeent problems.
+negative problems. In the 50/50 case we end up with 4,000 different problems.
 For each of the authors we generate a positive sample by taking the newest text
 as the unknown text and a negative sample by choosing a random text from some
 other author in the set.
@@ -752,14 +753,14 @@ following,
 
 After having attempted a convolutional approach as was just described we
 proceeded with some recurrent experiments as well. Looking at previous
-experiments described by \cite{qian:2018} which showed promise in terms
-of authorship attribution we considered this a natural extension of our
-convolutional approaches. Every \gls{RNN} experiment was performed on the same
-data as the convolutional networks and the \textit{Embedding}, \textit{Feature
-Extraction}, \textit{Combining} and \textit{Comparing} structure was used as
-well. The best model we generated is called \gls{rec-sent-NN} and can be seen
-depicted in Figure \ref{fig:rec-sent-NN}. After 10 epochs this network peaked
-with a validation accuracy of 0.657. We have shown a plot of the training and
+experiments described by \cite{qian:2018} which showed promising authorship
+attribution results we considered this a natural extension of our convolutional
+approaches. Every \gls{RNN} experiment was performed on the same data as the
+convolutional networks and the \textit{Embedding}, \textit{Feature Extraction},
+\textit{Combining} and \textit{Decision} structure was used as well. The
+best model we generated is called \gls{rec-sent-NN} and can be seen depicted
+in Figure \ref{fig:rec-sent-NN}. After 10 epochs this network peaked with
+a validation accuracy of 0.657. We have shown a plot of the training and
 validation accuracies during training in Figure \ref{fig:rec-sent-NN-training}.
 
 \begin{figure}
@@ -776,17 +777,16 @@ validation accuracies during training in Figure \ref{fig:rec-sent-NN-training}.
 
     \item[Embedding:]
 
-        Like with the previous networks, this network is also a siamese neural
+        Like with the previous networks this network is also a siamese neural
         network. It takes two texts as input and outputs the probability that
-        they are written by the same author. As the title of this section
-        suggests the network works on the sentence level rather than the
-        character level. That clearly has consequences for the embedding part of
-        the network.
+        they are written by the same author. The network works on the sentence
+        level rather than the character level. That clearly has consequences for
+        the embedding part of the network.
 
         The input to the network is given as a sequence of sequences. The
         outer sequence consisting of sentences and the inner sequence
         consisting of the words in each sentence. In order for the
-        dimensionality to work the amount of words in a sequence is padded
+        dimensionality to work the amount of words in a sentence is padded
         or truncated such that they consist of 25 words each. An amount
         which was chosen based on the analysis of the training dataset
         \gls{B}. Contrary to earlier networks the embedded representations
@@ -799,14 +799,19 @@ validation accuracies during training in Figure \ref{fig:rec-sent-NN-training}.
         sentences each containing a sequence of 300 dimensional word-embeddings.
         The network then proceeds to take the average of the word sequence
         contained within each sentence, resulting in each sentence being
-        represented as the average of its words.
+        represented as the average of its words. We loose some information about
+        the sentences when we just average the words but at the same time we get
+        a much more compact definition of each sentence. The information we
+        loose is the individual words used and the position of those words in
+        the sentence. That information might be crucial to the authorship
+        verification task.
 
     \item[Feature Extraction:]
 
         The feature extraction part of this network consisted of recurrent
         layers. Specifically we used \gls{LSTM} layers described in
         Section \ref{layer:LSTM}. Two \glspl{LSTM} are placed right after
-        one another. Both of them consists of 50 units and has the flag
+        one another. Both of them consists of 50 hidden units and has the flag
         \textit{return\_sequences} set to true. This results in the output
         of all time-steps of the \gls{LSTM} being returned rather than just
         the last one giving us a sequence of outputs. We then proceed to
@@ -821,16 +826,15 @@ validation accuracies during training in Figure \ref{fig:rec-sent-NN-training}.
         keras making the only change to the default parameters the number of
         units in the layer.
 
-        The idea behind this feature extraction network was that we would
-        extract 50 features from each sentence. We would then take the average
-        over the whole text to extract 50 features that represented the author.
-        Those features will then be used to combine the two texts. The feature
-        extraction approach is very similar to what is done by
+        The idea behind this feature extraction was that we would extract
+        50 features from each sentence. We would then take the average over
+        the whole text to extract 50 features that represented the author.
+        The feature extraction approach is very similar to what is done by
         \citet{qian:2018} who got very good results.
 
     \item[Combining:]
 
-        Like the networks described in the earlier sections the combinations
+        Like the networks described in the earlier sections the combination
         of our two siamese paths are done by taking the absolute difference
         of their two max-pooling outputs.
 
@@ -862,42 +866,40 @@ validation accuracies during training in Figure \ref{fig:rec-sent-NN-training}.
     \label{fig:rec-sent-NN}}
 \end{figure}
 
-The path to this final design was a long one. The initial network designs
-for our recurrent networks was based on a combination of the work done by
-\citet{qian:2018} and our \gls{conv-char-NN} network described in Section
-\ref{subsubsec:conv_char_nn}. We simply replaced the feature extraction
-component in the network from convolutional layers to recurrent layers. In
-addition that the first \gls{RNN} network also used the cosine similarity as its
-method of combination on decision. It was when running this network, that the
-main hindrance when using a character level recurrent network became apparent,
-computation time. This first iteration of the network needed an estimated 140
-hours to run through a single epoch. That was a very long time to train a
-network and it was not feasible for us to try that in our limited time.
+The initial network designs for our recurrent networks was based on a
+combination of the work done by \citet{qian:2018} and our \gls{conv-char-NN}
+network described in Section \ref{subsubsec:conv_char_nn}. We simply replaced
+the feature extraction component in the network from convolutional layers to
+\gls{GRU} layers. In addition that the first \gls{RNN} network also used the
+cosine similarity as its method of combination. Like the previous network this
+network also worked on the character level. However it was unfortunately not
+possible for us to train this network. The first iteration of the training
+needed an estimated 140 hours to run through a single epoch. That was a very
+long time to train a network and it was not feasible for us to try that in our
+limited time.
 
 An attempt at saving training time was the inclusion of a convolutional layer
 in the feature extraction part of the network. This would be placed before the
-recurrent layers in an attempt to minimize the amount of data that was given to
-the recurrent layers. The convolution used a window size of 8 and a stride of 8
-meaning that each text would be 8 times smaller after the convolutional layer.
-This did decrease the runtime but only resulted in an accuracy of 0.532 at its
-peak. This was slightly increased when replacing the cosine similarity with a
-series of dense layers instead and using a bidirectional \gls{LSTM} layer rather
-than a single \gls{GRU} layer.
+recurrent layers in an attempt to minimize the amount of data that was given
+to the recurrent layers. The convolution used a window size of 8 and a stride
+of 8 meaning that each text would be 8 times smaller after the convolutional
+layer. This did decrease the runtime but only resulted in a validation accuracy
+of 0.532 at its peak. This was slightly increased when replacing the cosine
+similarity with a series of dense layers instead and using a bidirectional
+\gls{LSTM} layer rather than a single \gls{GRU} layer.
 
 Instead of using convolutions to limit the text size we also tried changing
 the linguistic level our network worked at. Again inspired by \cite{qian:2018}
 we elevated our network from using the characters of the texts to using the
-sentences. This sentence representation was achieved by doing as was described
-in the \textbf{Embedding} part above. This approach significantly decreased
-the runtime to around $1.5$ hours. But it also revealed the reason why a
-recurrent network might not be the best choice for a task like this. The
-validation error throughout training the network was not very high compared to
-our earlier convolutional networks. The training accuracy also increased much
+sentences. This sentence representation was described in the \textbf{Embedding}
+part above. This approach significantly decreased the runtime to around $1.5$
+hours. But it also revealed the reason why a recurrent network might not be
+the best choice for a task like this. The training accuracy increased much
 more than for the convolutional networks while the validation accuracy quickly
 stalled. It therefore seemed like this approach was very prone to overfitting on
 particular authors. This lead to the final network described above. This network
-included an extra bidirectional \gls{LSTM} layer, and the 0.3 dropout for extra
-generalization.
+included an extra bidirectional \gls{LSTM} layer, and the 30\% dropout for extra
+regularization.
 
 We also chose the best prediction system $P_x$ and best threshold $\theta$ for
 this network. We tried the same thresholds and prediction systems as before.
@@ -987,50 +989,51 @@ parts was as follows.
 
     \item[Embedding:]
 
-    Like in \gls{conv-char-NN} the embedding layers takes in a text as a
-    stream of characters, where they are then mapped to a 5 dimensional vector
-    space. The difference is however that we also added the word channel
-    used in \gls{rec-sent-NN}. This works in exactly the same way. It uses
-    the pre-trained embeddings mentioned to map each word of the text to a
-    300 dimensional vector space. In \gls{rec-sent-NN} these embeddings were
-    averaged to represent a sentence, but in this network these embeddings
-    are used as is. This is the basic idea of this network, a multi-channeled
-    convolutional approach. Thus the network does not only take 2 inputs, in the
-    form of two texts. It takes 4 inputs, a character input for each and a
-    word input for each text. Both of these channels have their own path through
-    the network, which for ease of understanding can be seen as two different
-    siamese networks.
+        Like in the \gls{conv-char-NN} the embedding layers takes in a text as
+        a stream of characters where they are then mapped to a 5 dimensional
+        vector. The difference is however that we also added a word channel. It
+        uses the pre-trained Facebook word embeddings mentioned earlier to map
+        each word of the text to a 300 dimensional vector. In \gls{rec-sent-NN}
+        these embeddings were averaged to represent a sentence but in this
+        network the embeddings are used as is. This is the basic idea of this
+        network a multi-channeled convolutional approach. Thus the network
+        does not take 2 inputs in the form of two texts, it takes 4 inputs, a
+        character input for each text and a word input for each text. Both of
+        these channels have their own path through the network with their own
+        convolutional layers.
 
     \item[Feature Extraction:]
 
-    The feature extraction done in this network differs between the character
-    network and the word network. Like previously, we make use of two different
-    convolutional layers in the character network. They have a sliding window
-    size of 8 and 4 respectively, and a filter size of 200. This combination of
-    window sizes had proven to work quite well in the \gls{conv-char-NN}. It was
-    because of this we saw no reason to actually change it, as the creation of
-    this network was done in an additive manner. The addition can of course be
-    found in the word network. The embedded stream of words are given to its own
-    convolutional layer with a sliding window size of 8, and a filter size of
-    100.
+        The feature extraction in this network differs between the character
+        network and the word network. Like previously, we make use of two
+        different convolutional layers in the character network. They have a
+        sliding window size of 8 and 4 respectively, and a filter size of 200.
+        This combination of window sizes had proven to work quite well in the
+        \gls{conv-char-NN}. Therefore we saw no reason to change it as the
+        creation of this network was done in an additive manner. The embedded
+        stream of words are given to its own convolutional layer with a sliding
+        window size of 8, and a filter size of 100. The idea with the new word
+        channel is that the network will be able to learn which words and author
+        use and if an author has a prevalence for certain word sequences.
 
     \item[Combining:]
 
-    Due to the addition of the extra word network, the combining part of the
-    network has an additional step. The network initially combine the output of
-    both the word and the character sub-networks. This is done by concatenating
-    the output of the two convolutional layers in the character network, and
-    the single convolutional layer in the word network. This results in two
-    concatenated sets, one for each of the two texts. The elementwise absolute
-    difference of the two sets are then computed, and passed along to the
-    decision part of the network.
+        Due to the addition of the extra word input the combining part of
+        the network has an additional step. The network initially combine
+        the output of both the word and the character sub-networks. This is
+        done by concatenating the output of the two convolutional layers in
+        the character network, and the single convolutional layer in the word
+        network. This results in two concatenated sets one for each of the two
+        texts. The elementwise absolute difference of the two sets are then
+        computed as in the other networks, and passed along to the decision part
+        of the network.
 
     \item[Decision:]
 
-    The decision part of this network is simply 2 fully connected layers
-    consisting of 500 units followed by a 0.3 dropout layer. The output of
-    that dropout layer is then given the 2 unit soft-max layer for the final
-    decision.
+        The decision part of this network is simply 2 fully connected layers
+        consisting of 500 units followed by a 0.3 dropout layer. The output of
+        that dropout layer is then given to a 2 unit soft-max layer for the
+        final decision.
 
 \end{description}
 
@@ -1047,23 +1050,22 @@ We have the network structure in Figure \ref{fig:conv-char-NN-model}.
     \label{fig:conv-char-NN-model}
 \end{figure}
 
-The path gone through to reach this design was a rather short one, compared
-to the two described above. The design of this network was derived based
-on a combination of the other two network, the \gls{conv-char-NN}, and
-\gls{rec-sent-NN}. The convolutional approach used on \gls{conv-char-NN} showed
-promise, and this network was an attempt to improve on that.
+The design of this network was derived based on the \gls{conv-char-NN}. The
+convolutional approach used on \gls{conv-char-NN} showed promise and this
+network was an attempt to improve on that.
 
 Initially these attempted improvements were small. They took the form of a
 different amount of convolutional layers with a differing amount of sliding
 window sizes. These small changes also included the addition of regularization
 measures, such as dropout layers. The largest change came when we incorporated
-the multi-channel approach used in \gls{rec-sent-NN}. The thought process was
-that if characters was a good features for this task, another channel would
-only provide better results. This was what yielded the network described above,
-which works on the character level and the word level. A 3 channel convolutional
-network was also produced during experimentation. Results from that seemed to
-indicate that the linguistic level of sentences was too high, thus hurting the
-model.
+the multi-channel approach as seen in \cite{DBLP:journals/corr/RuderGB16c}. The
+thought process was that if characters was a good features for this task another
+channel could maybe provide better results. This was what yielded the network
+described above which works on the character level and the word level. A 3
+channel convolutional network was also produced during experimentation. Results
+from that seemed to indicate that the linguistic level of sentences was too high
+thus hurting the model. We also experimented with using stacked convolutional
+layers for the feature extraction also with bad results.
 
 Similarly to the two other networks we found the best prediction system and
 tuned the threshold for this network. We have shown the accuracy and accusation
@@ -1133,10 +1135,10 @@ recurrent. The networks worked on different linguistic layers,
 \begin{description}
     \item[\gls{conv-char-NN}] The character level,
     \item[\gls{rec-sent-NN}] The sentence level,
-    \item[\gls{conv-char-word-NN}] Word and character level.
+    \item[\gls{conv-char-word-NN}] The word and the character level.
 \end{description}
 
-For each of the networks we used a validation set to determine the best
+For each of the networks we used a validation dataset to determine the best
 configurations for the prediction system. A summarizing view of the
 validation performance of the different networks can be seen in Table
 \ref{tab:experiment-validation-results}.
