@@ -969,13 +969,12 @@ mikolov2013linguistic,JMLR:v15:srivastava14a}.
             \label{fig:dropout}
         \end{figure}
 
-        \citet{JMLR:v15:srivastava14a} investigated the use of dropout
-        layers in different problem settings. They found that dropout layers
-        reduced overfitting in all problems they looked at. In particular
-        they found that document classification, which is similar to what we
-        are doing was also improved. The main drawback of a dropout layer
-        is that it increase the training time of the networks its used on
-        \citep{JMLR:v15:srivastava14a}.
+        \citet{JMLR:v15:srivastava14a} investigated the use of dropout layers
+        in different problem settings. They found that dropout layers reduced
+        overfitting in all problems they looked at. In particular they found
+        that document classification was also improved. The main drawback of a
+        dropout layer is that it increase the training time of the networks its
+        used on \citep{JMLR:v15:srivastava14a}.
 
 \end{description}
 
@@ -986,7 +985,7 @@ A neural network learns by updating the weights in the network. The weights are
 updated using \textit{gradient descent} \citep{Bishop}. Gradient descent is
 a method that can minimize any differentiable function by taking small steps
 towards a local minimum. The function we minimize in a neural network is an
-error function. The error function describes a quantity that when minimized
+error function. The error function describes a quantity which when minimized
 gives the network the best performance possible. Since gradient descent works
 for any differentiable function the error function can be any function that is
 differentiable. As an example consider the error function,
@@ -1012,15 +1011,15 @@ local minimum,
 
 where $\eta$ is a small number that makes sure we do not overstep the local
 minimum. An example of the gradient descent process can be seen in Figure
-\ref{fig:gradient_descent}. In terms of minimizing an error function in a neural
-network by changing its weights $\mathbf{w}$ the gradient descent update rule
-looks like,
+\ref{fig:gradient_descent}. Our only real parameter we can change in order
+to minimize an function are the weights $\mathbf{w}$. These can be changed
+by using the gradient descent update rule,
 
 \begin{figure}
     \centering
     \includegraphics[width=0.8\textwidth]{./pictures/method/gradient_descend}
     \caption{An illustration of how gradient descent works. Each iteration steps
-        in the direction of the global minimum of the specific function used,
+        in the direction of the local minimum of the specific function used,
         which in this case is signified by a black ring. The Figure is generated
         using code from
         \url{https://scipython.com/blog/visualizing-the-gradient-descent-method/}.}
@@ -1044,13 +1043,13 @@ relative to the specific weight vector $\mathbf{w}^{(t)}$, or rewritten,
     \nabla E|_{\mathbf{w}^{(t)}} = \frac{\partial E}{\partial \mathbf{w}^{(t)}}.
 \end{equation}
 
-Now we have an update rule for the weights of the network that will minimize
-an error function $E$ chosen by us. We can choose $E$ as any function we want
-that represent our target and is differentiable. The only problem left is how
-to compute the gradient of the network. The computation of the gradient can be
-done via the \gls{BP} algorithm \cite{Bishop}. \Gls{BP} depends on the
-activation of all neurons to a specific sample. That gives us a three step
-algorithm for updating the weights of the network.
+Now we have an update rule for the weights of the network that will minimize an
+error function $E$ chosen by us. We can choose $E$ as any function we and our
+network desires as long as it is differentiable. The only problem left is how to
+compute the gradient of the network. The computation of the gradient can be done
+via the \gls{BP} algorithm \cite{Bishop}. \Gls{BP} depends on the activation
+of all neurons to a specific sample. That gives us a three step algorithm for
+updating the weights of the network.
 
 \begin{description}
     \item[Feed Forward] Give input to first layer in network computing the
@@ -1061,8 +1060,8 @@ algorithm for updating the weights of the network.
         network.
 \end{description}
 
-The computation of the gradient starts at the error function $E$. If we for
-simplicities sake focus on only a single training sample and fix $E$ as,
+The computation of the gradient starts at the error function $E$. For
+simplicities sake we focus on only a single training sample and fix $E$ as,
 
 \begin{equation}
     E = \frac{1}{2}(\hat{y} - y)^2.
@@ -1091,7 +1090,8 @@ Equation \eqref{eq:neuron}. Then we known that $E$ only depends on $w_{ij}$
 through the call of $a_i$, and it is for that reason what we can apply the chain
 rule to get the following,
 
-\begin{equation} \label{eq:bp_start}
+\begin{equation}
+    \label{eq:bp_start}
     \frac{\partial E}{\partial \mathbf{w}_{ij}} = \frac{\partial E}{\partial a_i}
     \frac{\partial a_i}{\partial \mathbf{w}_{ij}}.
 \end{equation}
@@ -1109,15 +1109,15 @@ From Equation \eqref{eq:neuron} we get that,
 \begin{align}
     \frac{\partial a_i}{\partial \mathbf{w}_{ij}}
         &= \frac{\partial}{\partial \mathbf{w}_{ij}}
-            \sum_{k=1}^d \mathbf{w}_{ik} x_k + \mathbf{w}_{i0}\\
-        &= \frac{\partial}{\partial \mathbf{w}_{ij}} \sum_{k = 0}^d
-            \mathbf{w}_{ik} x_k\\
+            \sum_{m=1}^d \mathbf{w}_{im} x_m + \mathbf{w}_{i0}\\
+        &= \frac{\partial}{\partial \mathbf{w}_{ij}} \sum_{m = 0}^d
+            \mathbf{w}_{im} x_m\\
         &= x_j.
 \end{align}
 
-Notice that we exchanged the $j$ counter in Equation \eqref{eq:neuron} with $k$
+Notice that we exchanged the $j$ counter in Equation \eqref{eq:neuron} with $m$
 since we would otherwise have a name clash. That equation when combined with
-Equation \ref{eq:bp_start} gives us,
+Equation \eqref{eq:bp_start} gives us,
 
 \begin{equation} \label{eq:deriv}
     \frac{\partial E}{\partial \mathbf{w}_{ij}} = \delta_i x_j.
@@ -1143,7 +1143,7 @@ rule has to be used again,
     \sum_k \frac{\partial E}{\partial a_k} \frac{\partial a_k}{\partial a_i},
 \end{equation}
 
-Where the sum runs over all $k$ output units from unit $i$. The Equation can be
+Where the sum runs over all $k$ units $i$ outputs to. The Equation can be
 rewritten using the prior established equalities and the chain rule,
 
 
@@ -1213,24 +1213,29 @@ number of training samples. During the normal training process, this is done
 over a number of epochs $\mathcal{E}$, which in turn further increases the
 time-complexity to $O(\mathcal{E}\cdot N\cdot W)$. It is because of this
 runtime, that \gls{BP}, and neural networks might not seem like a viable option
-at all. \cite{Bishop}
+at all \cite{Bishop}. 
 
-In light of this undesired runtime, methods were introduced that attempt
-to reduce this runtime. One of these methods is called batching. Batching
-first shuffles, and then splits the training data into smaller batches. Each
-individual batch is then run through the network, after which \gls{BP} is
-applied. Running \gls{BP} on this smaller batch means that the resulting
-gradient is only an approximation. Each epoch still consists of giving all $N$
-samples to the network, but now \gls{BP} is applied several times during an
-epoch, rather than after. This means that using batching greatly reduces the
-amount of $\mathcal{E}$ needed for the same amount of convergence provided
-by the non-batching approach, reducing overall run-time.\cite{Bishop} A
-more detailed description of this approach will be addressed in Section
-\ref{subsubsec:optimizers}.
+There is however ways to improve the runtime. Both \textit{stochastic gradient
+descent} and its' variation \textit{stochastic minibatch gradient descent},
+attempt to alleviate this problem by reducing the size of \mathcal{E}. A more
+detailed description can be found in the next Section. \citet{Bishop} does
+present other alternatives in his book, but none work as well as these two
+methods, which is why that is the default approach for neural network frameworks
+such as Tensorflow/Keras.
 
-\citet{Bishop} does present other alternatives to batching in his book, but none
-work as well as batching, which is why that is the default approach for neural
-network frameworks such as Tensorflow/Keras.
+%In light of this undesired runtime, methods were introduced that attempt
+%to reduce this runtime. One of these methods is called batching. Batching
+%first shuffles, and then splits the training data into smaller batches. Each
+%individual batch is then run through the network, after which \gls{BP} is
+%applied. Running \gls{BP} on this smaller batch means that the resulting
+%gradient is only an approximation. Each epoch still consists of giving all $N$
+%samples to the network, but now \gls{BP} is applied several times during an
+%epoch, rather than after. This means that using batching greatly reduces the
+%amount of $\mathcal{E}$ needed for the same amount of convergence provided
+%by the non-batching approach, reducing overall run-time.\cite{Bishop} A
+%more detailed description of this approach will be addressed in Section
+%\ref{subsubsec:optimizers}.
+
 
 \subsubsection{Optimizers}\label{subsubsec:optimizers}
 
