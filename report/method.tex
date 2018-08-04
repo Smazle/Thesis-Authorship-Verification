@@ -1787,18 +1787,17 @@ texts are greater than $\theta$ than lower.
 \label{subsubsec:tuning_parameters}
 
 The prediction systems defined above has several hyperparameters we have to
-choose to get the best results. We recall that MaCom wanted a system that had an
-accusation error of less than 10\%. We can use the shared threshold parameter
-$\theta$ in the prediction systems to control how many people we accuse. The
-best parameters for the prediction systems is those parameters that gives the
-highest accuracy subject to the constraint that the accusation error should be
-less than 10\%. To tune the parameters we use a validation dataset not seen
-during training. From that dataset we construct a set of tuples $(\alpha, t_u)$
-where $\alpha$ is a candidate author and $t_u$ is a text of unknown authorship.
-We let the set of tuples be known as $V$. The parameters that maximize the
-accuracy subject to the bounded accusation error is the same as the parameters
-that minimize the error rate subject to the bounded accusation error. That
-optimization problem is,
+choose to get the best results. We recall that MaCom wanted a system that
+had an accusation error of less than 10\%. We can use the shared threshold
+parameter $\theta$ in the prediction systems to control how many people we
+accuse. The best parameters for the prediction systems is those parameters that
+gives the highest accuracy subject to the 10\% accusation error constraint. To
+tune the parameters we use a validation dataset not seen during training. From
+that dataset we construct a set of tuples $(\alpha, t_u)$ where $\alpha$ is a
+candidate author and $t_u$ is a text of unknown authorship. We let the set of
+tuples be known as $V$. The parameters that maximize the accuracy subject to the
+bounded accusation error is the same as the parameters that minimize the error
+rate subject to the bounded accusation error. That optimization problem is,
 
 \begin{equation}
     \label{eq:prediction_system_minimization}
