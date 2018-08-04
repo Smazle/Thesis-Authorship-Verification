@@ -13,27 +13,27 @@ set of texts written in Danish where each text is associated with an author ID.
 All the texts are from Danish class (corresponding to English class in English
 speaking countries). Throughout the development process we have been given
 several data extracts. We will only discuss the last dataset as the other are
-irrelevant. The texts in the dataset is extracted from pdf files meaning that
+irrelevant. The texts in the dataset are extracted from pdf files meaning that
 sometimes the texts extracted will just contain random binary data. The final
-extract consisted of a set of 10,058 authors where a maximum of 100 authors were
-extracted from each school. In total the dataset contains 133,749 texts. We
-needed to split the dataset into pieces as we needed several different datasets
-for different purposes in our experiments. The split is illustrated in Figure
-\ref{fig:data_split}. Each split is performed on the author level such that
-if a single text $t \in T_\alpha$ is in a particular dataset then all $t' \in
-T_\alpha$ is in that same dataset. The splits are performed randomly such that
-each dataset contains a random set of authors. We have named our datasets as
-upper case letters. The different datasets we use are,
+extract provided consists of 10,058 authors where a maximum of 100 authors
+were extracted from each school. In total the dataset contains 133,749 texts.
+We split the dataset into pieces as we need several different datasets for
+different purposes in our experiments. The splits we make are illustrated in
+Figure \ref{fig:data_split}. Each split is performed on the author level such
+that if a single text $t \in T_\alpha$ is in a particular dataset then all $t'
+\in T_\alpha$ are in that same dataset. The splits are performed randomly such
+that each dataset contains a random set of authors. We name our datasets using
+upper case letters enclosed in parenthesis. The different datasets we use are,
 
 \begin{figure}
     \centering
     \textbf{Dataset Partition}\par\medskip
     \includegraphics[width=.6\textwidth]{./pictures/data/data_split}
-    \caption{Shows how we have split the dataset we are given. The splits are
-        performed on the number of authors in each set. That means that all of
-        an authors texts are contained in the same dataset. In particular that
-        means that the test dataset contains completely unseen authors that has
-        not been used in any training and hyper-parameter selection.}
+    \caption{Shows how we split the dataset the provided dataset. The splits are
+    performed on the number of authors in each set. That means that all of an
+    authors texts are contained in the same dataset. In particular that means
+    that the test dataset contains completely unseen authors that has not been
+    used in any training and hyper-parameter selection.}
     \label{fig:data_split}
 \end{figure}
 
@@ -167,20 +167,20 @@ require us to hold a text in memory and perform operations on it. Some of the
 very long texts caused our programs to crash so we also had to restrict the
 length of the texts.
 
-We initially removed the first 200 characters of each text as the beginning
+We initially remove the first 200 characters of each text as the beginning
 of each text contains metadata such as author name, school of origin, and
 author class. We did not discover that we needed to remove the first 200
 characters based on the statistics above. Rather we discovered during our
 experiments that the networks were using the metadata to make decisions as
 described later in Section \ref{subsubsec:conv_char_nn}. In addition to the
-200 characters we removed initially we also removed texts that had below 200
-characters left after the removal. We did that as we believe they do not provide
-enough information about that specific author to be useful. This constraint
-resulted in 2.49\% of the texts. Furthermore we applied an upper character count
+200 characters we remove we also remove texts that have below 200
+characters left after the removal. We do that as we believe they do not provide
+enough information about the author to be useful. This constraint
+results in 2.49\% of the texts being removed. Furthermore we apply an upper character count
 constraint for computational reasons. We found that limiting the number of
 characters to 30.000 gave good results by removing the troublesome texts without
-affecting the data-quality too much. This constraint resulted in the removal of
-0.16\% of the texts being removed. We have illustrated the cutoffs in Figure
+affecting the data-quality too much. This constraint results in the removal of
+0.16\% of the texts. We have illustrated the cutoffs in Figure
 \ref{fig:cutoff_thresholds}. There it can be seen that the cutoff points removes
 only the outliers and leaves the vast majority of texts.
 
@@ -189,13 +189,13 @@ the maximum number of sentences. We chose to impose an upper limit of
 500 sentences which is well above the average sentence count. In Figure
 \ref{fig:cutoff_thresholds} we have shown the fraction of texts removed by this
 upper limit. It can be seen that almost no texts are removed. Specifically 0.35
-\textperthousand\ of the texts were removed.
+\textperthousand\ of the texts are removed.
 
 The last constraint regards the number unique characters in each text. Looking
 at the statistics we can see that there is a text containing 219 unique
 characters. Such a high unique character count implies that a non-Danish
 alphabet might have been used and for that reason that text is not useful for
-our purposes. We dealt with the many different unique characters by replacing
+our purposes. We deal with the many different unique characters by replacing
 all characters with a frequency less than $10^{-5}$ with a special garbage
 character. Our neural networks were then supposed to learn that that garbage
 character should be ignored. We chose the threshold based on the frequencies
@@ -208,10 +208,10 @@ of frequency of the characters drops dramatically. Which suggests that we chose
 a correct threshold.
 
 After applying all of the constraints and taking into account overlap between
-them only 2.65 \% of the texts were removed. The amount is negligible amount
+them only 2.65 \% of the texts are removed. This amount is negligible
 compared to the computational and generalization advantages it gives. We also
-applied the preprocessing steps to the other datasets meaning that from now on
-all datasets has been preprocessed.
+apply the preprocessing steps to the other datasets meaning that from now on
+all datasets have been preprocessed.
 
 \begin{figure}[htb]
     \centering
@@ -252,16 +252,17 @@ all datasets has been preprocessed.
 
 All of the neural networks we trained were siamese neural networks that
 compared two texts. We therefore had to generate problem instances that
-contained two texts from either the same or different authors and a class
-that reflected that. A problem with the dataset we are given is that it
-contains no labelled ghostwritten assignments. We created such an assignment
-by pairing assignments from different students For each author $\alpha$ in
-the training dataset \gls{G} we generate all possible combinations of two
-of the texts in $T_\alpha$ as positive samples. We also generate the same
-number of negative samples by taking a random text in $T_\alpha$ and a random
-text in $\overline{T_\alpha}$. The total number of problems we generate for
-each author is $2\frac{\left|T_\alpha\right|!}{2!(\left|T_\alpha\right|-2)!}
+contained two texts from either the same or different authors and a class that
+reflected that. A problem with the dataset we are given is that it contains
+no labelled ghostwritten assignments. So we create such them ourselves by
+pairing assignments with different students. For each author $\alpha$ in the
+training dataset \gls{G} we generate all possible combinations of two of the
+texts in $T_\alpha$ as positive samples. We also generate the same number
+of negative samples by taking a random text in $T_\alpha$ and a random text
+in $\overline{T_\alpha}$. The total number of problems we generate for each
+author is $2\frac{\left|T_\alpha\right|!}{2!(\left|T_\alpha\right|-2)!}
 = \frac{\left|T_\alpha\right|!}{(\left|T_\alpha\right|-2)!} =
 \left|T_\alpha\right| \cdot (\left|T_\alpha\right| - 1) $. The neural networks
 were trained on these problem instances. We generated problems in the same way
 for the network validation dataset $H$.
+
