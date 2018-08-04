@@ -438,14 +438,14 @@ learning library. \cite{chollet2015keras}
 
 \subsubsection{Layers} \label{subsubsec:layers}
 
-Neural networks are organized in layers. The first layer is called the input
-layer and is connected directly to the input to the model and the last layer
-is called the output layer and gives the output of the model. All layers in
-between are called hidden layers. A practical example could be where the input
-layer was layer of neurons where each neuron is connected to a pixel in an input
-image. And the output layer could consist of a single neuron that computes the
-probability that the picture contained a cat. An example layered neural network
-are shown in Figure \ref{fig:example_nn}.
+Neural networks are organized in layers of neurons. The first layer is called
+the input layer and is connected directly to the input of the model and the last
+layer is called the output layer. The output of this layer is considered the
+output of the entire network. All layers in between are called hidden layers.
+A practical example could be where the input layer where each neuron took the
+pixel of an image as the input. The output layer could then consist of a single
+neuron that computes the probability that the picture contained a cat. An
+example of a layered neural network are shown in Figure \ref{fig:example_nn}.
 
 \begin{figure}
     \centering
@@ -612,12 +612,13 @@ mikolov2013linguistic,JMLR:v15:srivastava14a}.
             \end{pmatrix}.
         \end{equation}
 
-        The sliding length can be different than one and is usually referred
-        to as stride. The weights the convolutional window uses are learnable
-        by the network. Certain convolutional filters can be used for
-        edge detection and blurring the input. Some examples of different
-        convolutional kernels applied to a grayscale image are shown in Figure
-        \ref{fig:convolution_example}.
+        This would also make sure that edge values has the same amount of
+        influence as the rest of the values. The sliding length can be
+        different than one and is usually referred to as stride. The weights
+        the convolutional window uses are learnable by the network. Certain
+        convolutional filters can be used for edge detection and blurring the
+        input. Some examples of different convolutional kernels applied to a
+        grayscale image are shown in Figure \ref{fig:convolution_example}.
 
         \begin{figure}
             \centering
@@ -674,8 +675,8 @@ mikolov2013linguistic,JMLR:v15:srivastava14a}.
 
         Convolutional layers for text analysis works slightly differently.
         Text is not two dimensional but one dimensional data. A convolution
-        on text therefore does not use a two dimensional weight matrix but a
-        weight vector. The process is the same as before. The weights vector
+        on text therefore does not use a two dimensional sliding window but
+        a one dimensional one. The process is the same as before. The window
         slides over the text looking at a sequence of characters at a time. Each
         character is multiplied by the weight in that positition and a sum is
         computed. The output of the layer is a one dimensional sequence of these
@@ -741,20 +742,20 @@ mikolov2013linguistic,JMLR:v15:srivastava14a}.
 
         That is the output of an \gls{RNN} layer is a weighted sum of its
         hidden units. The complete sequence of hidden activations are computed
-        by starting at time $t=1$ and calling the functions above
-        until the end of the sequence is reached incrementing $t$ by one in
-        each recursive call. The initial weight at of the hidden units can be
-        any initialization value. The obvious choice is 0, however better
-        results have been found using non zero initial hidden unit weight values
+        by starting at time $t=1$ and calling the functions above until
+        the end of the sequence is reached incrementing $t$ by one in each
+        recursive call. The initial weight at of the hidden units can be any
+        initialization value. The obvious choice is 0, however better results
+        have been found using non zero initial hidden unit weight values
         \citep{DBLP:series/sci/2012-385}.
 
-        A \gls{RNN} network are normally trained using the \emph{backpropagation
-        through time} algorithm. For data where the usage of time does not make
-        sense and where the context from both sides of each timesteps is usefull
-        such as for text it is normal to use bidirectional \glspl{RNN}. Then
-        both a forward and a backward pass are made through the sequence. The
-        output of each network at each time step can then depend both on the
-        context before and after the input.
+        A \gls{RNN} is normally trained using the \emph{backpropagation through
+        time} algorithm. For data where the usage of time does not make sense
+        and where the context from both sides of each timesteps is useful such
+        as for text it is normal to use bidirectional \glspl{RNN}. Then both a
+        forward and a backward pass are made through the sequence. The output
+        of each network at each time step can then depend both on the context
+        before and after the input.
 
     \glsreset{LSTM}
     \item[\gls{LSTM} Layer:]
@@ -788,7 +789,7 @@ mikolov2013linguistic,JMLR:v15:srivastava14a}.
         current input and the previous activation as described before. They have
         an \gls{RNN} responsible for deciding what part of the input to ignore.
         They have an \gls{RNN} responsible for deciding what to forget from the
-        current memory. And they have an \gls{RNN} responsible for deciding
+        current memory. Finally they have an \gls{RNN} responsible for deciding
         what part of the output to select as the current output of the unit
         \citep{DBLP:series/sci/2012-385}. We have showed the structure of an
         \gls{LSTM} in Figure \ref{fig:lstm}.
@@ -807,7 +808,7 @@ mikolov2013linguistic,JMLR:v15:srivastava14a}.
 
         The input to the \gls{LSTM} is fed into 4 \gls{RNN} networks that also
         receives the output from the previous timesteps. From bottom to top in
-        the Figure the networks are:
+        the figure the \glspl{RNN} are:
 
         First: A network combining the current input and the previous output
         into an activation in the current timestep.
@@ -842,17 +843,24 @@ mikolov2013linguistic,JMLR:v15:srivastava14a}.
 
     \item[Embedding:]
 
-        The embedding layer is a layer that maps a value into a continuous
-        vector space. Given a sequence of integers, it uses the weights
-        associated with the layer to map that singular value to a vector of
-        predetermined size. This can be done on any sort of data, as longs as it
-        is encoded as a sequence of integers. In \gls{NLP} circumstances, this
-        can be applied to characters or words for example, where each element in
-        the sequence is first encoded as an integer value, and then fed to the
-        embedding layer, which maps it to the continuous vector space. The hope
-        with using a layer such as this, that characters for example, get mapped
-        to a point close to other similar characters. In addition it also adds
-        another trainable layer to optimize on.
+        The embedding layer maps a value into a continuous vector space. Given
+        a sequence of integers, it uses the weights associated with the layer
+        to map that each value to a vector of predetermined size. This can
+        be done on any sort of data, as longs as it is encoded as a sequence
+        of integers. In \gls{NLP} circumstances, this could be applied to
+        characters or words for example, where each element in the sequence is
+        first encoded as an integer value, and then fed to the embedding layer,
+        which maps it to the continuous vector space. 
+        Embedding layers are widely used in \gls{NLP}.
+
+        The hope with using a layer such as this on characters, would be that
+        each character got mapped to a point close to other similar characters,
+        when the layer is properly trained. They are however mainly used
+        to embed words. \citet{mikolov2013linguistic} found that embedding
+        layers are able to learn more that just word similarities. They for
+        example found that $vec("king") - vec("man") + vec("woman") \approx
+        vec("queen")$ that is the embeddings learned the relation between the
+        words king and queen and not just that they are similar words.
 
         \begin{figure}
             \centering
@@ -872,36 +880,28 @@ mikolov2013linguistic,JMLR:v15:srivastava14a}.
         That means that the network has learned that those characters are
         interchangeable.
 
-        Embedding layers are widely used in \gls{NLP}. They are mainly used
-        to embed words in some vector space. \citet{mikolov2013linguistic}
-        found that embedding layers are able to learn more that just word
-        similarities. They for example found that $vec("king") - vec("man") +
-        vec("woman") \approx vec("queen")$ that is the embeddings learned the
-        relation between the words king and queen and not just that they are
-        similar words.
-
     \item[Pooling Layer:]
 
         The purpose of a pooling layer, or down-sampling layer, is as the name
         suggest, to pool the data it receives. It does so with the goal of
-        reducing the data down to a number a number of key features found within
-        that same data. This of course decreases the computation time of the
-        network as a whole, and with a smaller amount of parameters, comes a
-        smaller chance of overfitting.
+        distilling the data down to a number of key features found within said
+        data. This of course decreases the computation time of the network as a
+        whole, and with a smaller amount of parameters, comes a smaller chance
+        of overfitting and a reduction in training time.
 
         Working in similar fashion as the convolutional layer, the max pooling
         layer also uses a sliding window. This sliding window of a certain
         dimensionality, is moved over the data given to it. The maximum value
-        inside that window is then extracted, and determined to be the output
-        for that specific placement of the window. The window then moved a
-        specified stride size, and the process is repeated. The result is a
-        dataset which is down-sampled in proportion with the sliding windows
-        dimensions, and the stride. An example of this max pooling process can
-        be seen in Figure \ref{fig:max_pool}.
+        inside that window is then extracted, and set as the output for that
+        specific window placement.  The window then moved a specified
+        stride size, and the process is repeated. The result is a dataset which
+        is down-sampled in proportion with the sliding windows dimensions, and
+        the stride. An example of this max pooling process can be seen in Figure
+        \ref{fig:max_pool}.
 
-        Pooling layers are however, not restricted to only the max pooling
-        layer. The average pooling layers, works in a very similar fashion,
-        but instead of extracting the max value, it simply averages values
+        Pooling layers are however not restricted to only the max pooling
+        layer. The average pooling layers works in a very similar fashion,
+        but instead of extracting the max value it simply averages values
         currently in the window. The Global Max Pooling Layer, which we use
         quite frequently in our networks does not use a window like the other
         ones described, but instead simply extracts the maximum value across
@@ -943,20 +943,23 @@ mikolov2013linguistic,JMLR:v15:srivastava14a}.
 
     \item[Dropout Layer:]
 
-        The layer is used for regularization of neural networks. A good
-        optimizer of a network will slowly fit more and more to the training
-        data it is provided. This might seem like a bad thing at first, but if
-        the validation error follows the training error as the network learns
-        the training data, then the network is successfully learning some
-        general commonality that can be used to describe both the data. It is
-        the two errors do not follow on another that one has to be alarmed, as
-        the network does not generalize properly. This is where the dropout
-        layer is useful. By deactivating a certain amount of randomly selected
-        neurons in a particular layer, the network is forced to learn from a
-        larger sparse set of neurons, rather than focusing on a small amount
-        of very informative ones. That typically results in a potential better
-        understanding of the data as a whole rather than small amount of key
-        features. An example of this can be seen in Figure \ref{fig:dropout}.
+        This layer is used for regularization of neural networks. A well
+        designed network combined with a good optimizer will, when given time,
+        slowly become more and more fit on the training data it is provided.
+        This is all dine, as long as what it learns is not specific to that,
+        and only that, training data. If that is the case, then the network
+        would be considered overfitted on the training data. In this case,
+        the network does not properly generalize. This the problem that the
+        dropout layer attempts to combat. It does so by deactivating a certain
+        fraction of randomly selected neurons in a specified layer, for each
+        training sample. This forces the model to learn from a larger set of
+        sparse neurons, rather than a very small amount of neurons that only
+        contribute dataset specific information. Since the network suddenly
+        can not rely on the existence of these very informative data specific
+        neurons, it has to learn based from less informative but more general
+        neurons instead. The hope is that learning on more general data, results
+        in a more generalizing model. An example of this can be seen in Figure
+        \ref{fig:dropout}.
 
         \begin{figure}
             \centering
