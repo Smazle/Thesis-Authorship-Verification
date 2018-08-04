@@ -1280,7 +1280,7 @@ each weight update still takes the same amount of time \citep{Bishop}.
 
 Another advantage of the stochastic method is that the optimizer might escape
 from a non optimal local minima and reach a better local minima. To see why that
-might happen consider the fact that each minibatch consist of a different sample
+might happen consider the fact that each minibatch consist of a different subset
 of training samples. Even though when computed on all training samples the
 gradient points towards the non-optimal local minima the gradient of a single
 batch might point towards a better local minima. Therefore the optimizer has the
@@ -1348,9 +1348,9 @@ $\mathbf{a}^n$ to mean an elementwise power.
                 \Delta E|_{\mathbf{w}_i^{(t)}}.
         \end{equation}
 
-        $G_{i,i}$ works as a scaling factor for weight $\mathbf{w}_i$.
+        $G_{ii}$ works as a scaling factor for weight $\mathbf{w}_i$.
         Since $\sqrt{G_{ii}} = \sqrt{\sum_{t'=1}^t \left(\Delta
-        E|_{\mathbf{w}^{(t')}_i}\right)^2}$, $G_{i,i}$ is the L2 norm
+        E|_{\mathbf{w}^{(t')}_i}\right)^2}$, $G_{ii}$ is the L2 norm
         of the gradient in the previous timesteps. That means that if the
         gradient has generally been large for a particular weight the norm
         will be large and the updating of the weight will be scaled down
@@ -1432,10 +1432,10 @@ $\mathbf{a}^n$ to mean an elementwise power.
         squared gradient. They keep a running average of the gradient and the
         size of the gradient. By using the running average of the gradient
         \gls{Adam} is able to move more smoothly in a direction since the
-        direction chosen is no longer just the current gradient but previous
-        gradients influence the choice of direction. That means that a single
-        weird gradient will not drastically change the direction \gls{Adam}
-        moves \citep{DBLP:journals/corr/KingmaB14}. Similarly to \gls{RMSProp}
+        direction chosen is no longer based on just the current gradient
+        but on previous gradients as well. That means that a single weird
+        gradient will not drastically change the direction \gls{Adam} moves
+        \citep{DBLP:journals/corr/KingmaB14}. Similarly to \gls{RMSProp},
         \gls{Adam} use the running average of the squared gradient to scale how
         large steps are taken. The two bottom equations are scaling the internal
         state based on the time step $t$. As $t$ increases the denominators
@@ -1460,18 +1460,15 @@ $\mathbf{a}^n$ to mean an elementwise power.
         What we perceive to be the main advantage \gls{Adam} has with regard
         to \gls{NLP} would the properties it inherits from \gls{AdaGrad}. This
         allows for more focus to be placed upon the less occurring features of
-        a piece of text. We hypothesize that these less occurring features, are
-        the ones that describe a specific author best, as they very well could
-        be some writing quick specific to an author. The running average scaling
-        that \gls{RMSProp} introduces, also does its part. This is however
-        more with regard to the learning in general, rather than specifically
-        being good for NLP. In recent year \gls{Adam} and \gls{RMSProp} has
-        been the go to \gls{NLP} neural network optimizers as per a study made
-        on a set of recent significant deep learning models.\footnote{\url{
+        a piece of text. We hypothesize that these less occurring features,
+        are the ones that describe a student best, as they very well could be
+        some writing quirk specific to a student. The running average scaling
+        that \gls{RMSProp} introduces, also does its part. This is however more
+        with regard to the learning in general, rather than specifically being
+        good for NLP. In recent year \gls{Adam} and \gls{RMSProp} has been the
+        go to \gls{NLP} neural network optimizers as per a study made on a set
+        of recent significant deep learning \gls{NLP} papers.\footnote{\url{
         https://bit.ly/2mWTvzZ}}
-
-        %TODO: Reread
-
 
 \end{description}
 
