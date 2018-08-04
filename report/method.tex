@@ -1478,8 +1478,8 @@ $\mathbf{a}^n$ to mean an elementwise power.
 Classical machine learning approaches for text analysis and all our baseline
 methods are based on handcrafted feature sets. Deep learning has shown
 promising results in extracting features from raw images and raw text
-\citep{hongxiaosunyuan}. We wanted to use deep learning to automatically
-learn features from a large amount of data. At the same time we want to solve
+\citep{hongxiaosunyuan}. We wanted to use deep learning to automatically learn
+features from a large amount of raw data. At the same time we want to solve
 the MaCom problem. Siamese neural networks are as described earlier networks
 that compares two inputs. They have been used for comparing texts, images and
 signatures \citep{Koch2015SiameseNN,NIPS1993_769,qian:2018}. \citet{qian:2018}
@@ -1506,12 +1506,11 @@ of this architecture can be seen in Figure \ref{fig:siamese_example}.
 
 The network will take two inputs, a text $t \in T_\alpha$ and a text $t' \in
 T_{\alpha'}$. The network will then try to determine whether $\alpha = \alpha'$
-by comparing $t$ and $t'$. The texts will be represented in some format such as
-a sequence of characters or a sequence of words. The siamese part of the network
-will extract features from the texts using convolutions or \gls{RNN} layers.
-These features will serve as a \textit{representation} of the texts $t$ and
-$t'$. This representation will be given to some dense layers which will learn
-how to compare the feature sets extracted.
+by comparing $t$ and $t'$. The siamese part of the network will extract features
+from the texts using convolutions or \gls{RNN} layers. These features will serve
+as a \textit{representation} of the texts $t$ and $t'$. This representation will
+be given to some dense layers which will learn how to compare the feature sets
+extracted.
 
 \citet{DBLP:journals/corr/0001KYS17} presented a comparative study of
 \glspl{CNN} and \glspl{RNN} in common \gls{NLP} tasks. They found that
@@ -1521,10 +1520,10 @@ secondary and the goal was mainly about finding key phrases or statistical
 information from a text. In authorship verification the understanding of the
 text is generally irrelevant since we do not have to say anything about what a
 text is about but only whether or not it is written by the same author as some
-other text. Furthermore classical authorship verification methods have relied
-on statistical information from the texts and not on an actual understanding of
-the texts. We have therefore chosen to start out with using convolutional neural
-networks.
+other text. Furthermore classical authorship verification methods have relied on
+statistical information from the texts and not on an actual understanding of the
+texts. It is for that reason we start chose to base our initial experiments on
+\glspl{CNN}.
 
 The final output of the networks we train will be the probability that $\alpha =
 \alpha'$. Since the MaCom dataset consist of multiple texts per author and this
