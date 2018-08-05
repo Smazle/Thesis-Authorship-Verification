@@ -1255,10 +1255,10 @@ stochastic gradient descent is computed as,
         \eta\Delta E_n|_{\mathbf{w}^{(t)}}.
 \end{equation}
 
-In practise each weight update in stochastic gradient descent are computed
-not based on a single training sample but on some small number of training
-samples. That allows the computation to take advantage of highly optimized
-matrix libraries and making each update on a slightly less noisy target
+In practise each weight update in are computed not based on a single
+training sample but on some small number of training samples. That
+allows the computation to take advantage of highly optimized matrix
+libraries and making each update on a slightly less noisy target
 \footnote{\url{http://ufldl.stanford.edu/tutorial/supervised/OptimizationStochas
 ticGradientDescent/}}. The version of stochastic gradient descent that use more
 than one sample per weight update is known as stochastic minibatch gradient
@@ -1339,20 +1339,20 @@ $\mathbf{a}^n$ to mean an elementwise power.
         \begin{equation}
             \label{eq:individual_adagrad}
             \mathbf{w}_i^{(t+1)} =
-                \mathbf{w}_i^{(t)} - \frac{\eta}{\sqrt{G^{(t)}_{ii}}} \otimes
+                \mathbf{w}_i^{(t)} - \frac{\eta}{\sqrt{G^{(t)}_{ii}}}
                 \Delta E|_{\mathbf{w}_i^{(t)}}.
         \end{equation}
 
         $G_{ii}$ works as a scaling factor for weight $\mathbf{w}_i$.
         Since $\sqrt{G_{ii}} = \sqrt{\sum_{t'=1}^t \left(\Delta
-        E|_{\mathbf{w}^{(t')}_i}\right)^2}$, $G_{ii}$ is the L2 norm
-        of the gradient in the previous timesteps. That means that if the
-        gradient has generally been large for a particular weight the norm
-        will be large and the updating of the weight will be scaled down
-        (slower) which can be seen in Equation \eqref{eq:individual_adagrad}.
-        Similarly when the gradients of a weight has been small or 0 the
-        weight is scaled less down and the upgrade will be larger. That has
-        the effect of having infrequent parameters of the model train faster
+        E|_{\mathbf{w}^{(t')}_i}\right)^2}$, $G_{ii}$ is the L2 norm of the
+        gradient in the previous timesteps. That means that if the gradient
+        has generally been large for a particular weight the norm will be
+        large and the updating of the weight will be scaled down (slower)
+        which can be seen in Equation \eqref{eq:individual_adagrad}. Similarly
+        when the gradients of a weight has been small or 0 the weight is
+        scaled less down and the upgrade will be larger. That has the effect
+        of having infrequently activated parameters of the model train faster
         \citep{Duchi:2011:ASM:1953048.2021068}.
 
     \item[\gls{RMSProp}:]
@@ -1371,8 +1371,8 @@ $\mathbf{a}^n$ to mean an elementwise power.
         volatile area. In the steep areas we are likely to overshoot the target
         if the learning rate is to high while in flat areas we do not have that
         problem. The internal state of the algorithm is a vector $\mathbf{v}$
-        of the running average of gradient magnitudes. It is updated with the
-        equation,
+        containing the running average of gradient magnitudes. It is updated
+        with the equation,
 
         \begin{equation}
             \label{eq:rms_prop_state}
@@ -1409,11 +1409,11 @@ $\mathbf{a}^n$ to mean an elementwise power.
         \begin{align}
             \mathbf{m}^{(t+1)} &=
                 \gamma_1\mathbf{m}^{(t)} +
-                (1 - \gamma_1) \Delta E|_{\mathbf{w}^{(t+1)}}, \\
+                (1 - \gamma_1) \Delta E|_{\mathbf{w}^{(t)}}, \\
             \mathbf{v}^{(t+1)} &=
                 \gamma_2\mathbf{v}^{(t)} +
                 (1 - \gamma_2) \left(
-                    \Delta E|_{\mathbf{w}^{(t+1)}} \otimes \Delta E|_{\mathbf{w}^{(t+1)}}
+                    \Delta E|_{\mathbf{w}^{(t)}} \otimes \Delta E|_{\mathbf{w}^{(t)}}
                 \right), \\
             \mathbf{\hat{m}}^{(t+1)} &=
                 \frac{\mathbf{m}^{(t+1)}}{1 - \gamma_1^{t + 1}}, \\
@@ -1423,14 +1423,14 @@ $\mathbf{a}^n$ to mean an elementwise power.
 
         The first two equations are very similar to Equation
         \eqref{eq:rms_prop_state} for \gls{RMSProp}. In those equations
-        $\gamma_1$ and $\gamma_2$ are the decay rates of the gradient and the
-        squared gradient. They keep a running average of the gradient and the
-        size of the gradient. By using the running average of the gradient
-        \gls{Adam} is able to move more smoothly in a direction since the
-        direction chosen is no longer based on just the current gradient
-        but on previous gradients as well. That means that a single weird
-        gradient will not drastically change the direction \gls{Adam} moves
-        \citep{DBLP:journals/corr/KingmaB14}. Similarly to \gls{RMSProp},
+        $\gamma_1$ and $\gamma_2$ are the remembering rates of the gradient
+        and the squared gradient. They keep a running average of the gradient
+        and the magnitude of the gradient. By using the running average of
+        the gradient \gls{Adam} is able to move more smoothly in a direction
+        since the direction chosen is no longer based on just the current
+        gradient but on previous gradients as well. That means that a single
+        weird gradient will not drastically change the direction \gls{Adam}
+        moves \citep{DBLP:journals/corr/KingmaB14}. Similar to \gls{RMSProp},
         \gls{Adam} use the running average of the squared gradient to scale how
         large steps are taken. The two bottom equations are scaling the internal
         state based on the time step $t$. As $t$ increases the denominators
@@ -1452,34 +1452,32 @@ $\mathbf{a}^n$ to mean an elementwise power.
         of the step taken is chosen by a combination of the learning rate $\eta$
         and $\mathbf{\hat{v}}^{(t)}$.
 
-        What we perceive to be the main advantage \gls{Adam} has with regard
-        to \gls{NLP} would the properties it inherits from \gls{AdaGrad}. This
-        allows for more focus to be placed upon the less occurring features of
-        a piece of text. We hypothesize that these less occurring features,
-        are the ones that describe a student best, as they very well could be
-        some writing quirk specific to a student. The running average scaling
-        that \gls{RMSProp} introduces, also does its part. This is however more
-        with regard to the learning in general, rather than specifically being
-        good for NLP. In recent year \gls{Adam} and \gls{RMSProp} has been the
-        go to \gls{NLP} neural network optimizers as per a study made on a set
-        of recent significant deep learning \gls{NLP} papers.\footnote{\url{
-        https://bit.ly/2mWTvzZ}}
+        \gls{Adam} has been found to work great for \gls{NLP} tasks
+        \cite{Pompey2016TheAO}. The main advantage \gls{Adam} has with regard
+        to \gls{NLP} would be the properties it inherits from \gls{AdaGrad}.
+        This allows for more focus to be placed upon the less activated
+        parameters. Text data generally have many features that are rarely seen
+        but when they are they are great indicators of authorship. Therefore
+        separate learning rates are important. The running average scaling that
+        \gls{RMSProp} introduces makes sure that \gls{Adam} can quickly adopt to
+        new situations.
 
 \end{description}
 
 
 \subsubsection{Siamese Networks}\label{subsubsec:siamese_networks}
 
-Classical machine learning approaches for text analysis and all our baseline
-methods are based on handcrafted feature sets. Deep learning has shown
-promising results in extracting features from raw images and raw text
-\citep{hongxiaosunyuan}. We wanted to use deep learning to automatically learn
-features from a large amount of raw data. At the same time we want to solve
-the MaCom problem. Siamese neural networks are as described earlier networks
-that compares two inputs. They have been used for comparing texts, images and
-signatures \citep{Koch2015SiameseNN,NIPS1993_769,qian:2018}. \citet{qian:2018}
-use a Siamese network but with no convolutions and a distance function on top
-for text analysis while \citet{Koch2015SiameseNN} used a siamese network with
+Classical machine learning approaches for text analysis and all our
+baseline methods are based on handcrafted feature sets. Deep learning
+has shown promising results in extracting features from raw images and
+raw text \citep{hongxiaosunyuan}. We wanted to use deep learning to
+automatically learn features from a large amount of raw data. At the
+same time we wanted to solve the MaCom authorship verification problem.
+Siamese neural networks are as described earlier networks that compares
+two inputs. They have been used for comparing texts, images and signatures
+\citep{Koch2015SiameseNN,NIPS1993_769,qian:2018}. \citet{qian:2018} use a
+Siamese network but with no convolutions and a distance function on top for
+text analysis while \citet{Koch2015SiameseNN} used a siamese network with
 convolutions and fully connected network on top for image analysis. Our approach
 is to use convolutions or \gls{RNN}s in the siamese network to learn important
 features from the texts. We also use a fully connected network on top of the
@@ -1504,7 +1502,7 @@ T_{\alpha'}$. The network will then try to determine whether $\alpha = \alpha'$
 by comparing $t$ and $t'$. The siamese part of the network will extract features
 from the texts using convolutions or \gls{RNN} layers. These features will serve
 as a \textit{representation} of the texts $t$ and $t'$. This representation will
-be given to some dense layers which will learn how to compare the feature sets
+be given to a dense network which will learn how to compare the feature sets
 extracted.
 
 \citet{DBLP:journals/corr/0001KYS17} presented a comparative study of
@@ -1517,13 +1515,12 @@ text is generally irrelevant since we do not have to say anything about what a
 text is about but only whether or not it is written by the same author as some
 other text. Furthermore classical authorship verification methods have relied on
 statistical information from the texts and not on an actual understanding of the
-texts. It is for that reason we start chose to base our initial experiments on
-\glspl{CNN}.
+texts. Therefore we started experiments by using \glspl{CNN}.
 
 The final output of the networks we train will be the probability that $\alpha =
 \alpha'$. Since the MaCom dataset consist of multiple texts per author and this
 network architecture only compares two texts we define a separate system for
-making the final prediction based on all the known texts of an author.
+making the final prediction based on all $t \in T_\alpha$.
 
 
 \subsection{Combining Neural Network Output}
@@ -1578,22 +1575,17 @@ The $\theta$ parameter in $P_w$ determines when we consider an unknown text
 to be written by an author. The $\theta$ parameter can be used to enforce how
 sure we have to be of a decision to accuse an author of not having written
 an assignment. As described earlier MaCom does not want to accuse innocent
-students of cheating. That means that it is very important to MaCom to minimize
-the accusation error. We can use the $\theta$ parameter to control that error.
-Hopefully the \glspl{FN} will generally end up with a value closer to 1 than
-the \glspl{TN}. If that is the case then lowering $\theta$ value will lower the
-fraction since there will be fewer \glspl{FN}. That might lower the overall
-accuracy of the prediction system but will make sure that at few students as
-possible are falsely accused.
+students of cheating. That means that it is very important to minimize the
+accusation error. We can use the $\theta$ parameter to control that error.
 
-The $w$ parameter in the prediction system can be used to weigh the known
-texts differently. We are going to try several different weight functions
-that weigh texts based on metadata such as the time they were written and the
-length of the texts. In the following definition of different weight functions
-we will ignore the constraint that the weight functions has to sum to 1 for
-each author. We ignore that constraint since for any weight function $w \colon
-\mathcal{T} \rightarrow \mathbb{R}$ we can define a new weight function $w^*
-\colon \mathcal{T} \rightarrow [0, 1]$ as,
+The $w$ parameter in the prediction system can be used to weigh the texts
+a claimed author has written. We are going to try several different weight
+functions that weigh texts based on metadata such as the time they were written
+and the length of the texts. In the following definition of different weight
+functions we will ignore the constraint that the weight functions has to sum to
+1 for each author. We ignore that constraint since for any weight function $w
+\colon \mathcal{T} \rightarrow \mathbb{R}$ we can define a new weight function
+$w^* \colon \mathcal{T} \rightarrow [0, 1]$ as,
 
 \begin{equation}\label{eq:normalize}
     w^*(t) = \frac{w(t)}{\sum_{t' \in T_\alpha} w(t')}.
@@ -1621,9 +1613,9 @@ texts an author has written.
 The \textit{uniform weight} function does not use any information we know about
 the texts. We define it as a baseline to make sure we do not make any weight
 functions that are worse than a simple uniform weighing. Our other weight
-functions makes use of metadata we know about the texts. We start by defining a
-weight function \textit{exponential dropoff weight} that use the time a text was
-turned in to MaCom's servers to weight the texts. We assume that newer texts will
+functions use metadata we know about the texts. We start by defining a weight
+function \textit{exponential dropoff weight} that use the time a text was turned
+in to MaCom's servers to weight the texts. We assume that newer texts will
 better reflect the current writing style of a student than older texts. Recall
 that $\tau$ denotes the function that returns the relative time of a text as
 described in Section \ref{subsec:notation}.
@@ -1643,8 +1635,8 @@ described in Section \ref{subsec:notation}.
 
 The $\lambda$ parameter can be used to control how important newer texts are.
 When $\lambda = 0$ the exponential dropoff weight is equivalent to the Uniform
-Weight function and as $\lambda \rightarrow \infty$ more weight is given to the
-most recent text. We have shown the weights given to different assignments for
+Weight function and as $\lambda \rightarrow \infty$ more weight is given to
+the most recent texts. We have shown the weights given to different texts for
 different $\lambda$ values in Figure \ref{fig:weights}.
 
 \begin{figure}
@@ -1656,8 +1648,8 @@ different $\lambda$ values in Figure \ref{fig:weights}.
     values of $\lambda$. We apply the weight function to the numbers $0, 1,
     \dots, 35$ since a typical student will attend secondary school for 3 years
     (36 months). On the left the pure output of the weight function $w_e$ is
-    shown and on the right the normalized weights $w_e^*$. We wary $\lambda$
-    from 0 to 1 with step size 0.05.}
+    shown and on the right the normalized weights $w_e^*$. The value of
+    $\lambda$ varies from 0 to 1 with step size 0.05.}
     \label{fig:weights}
 \end{figure}
 
@@ -1683,8 +1675,8 @@ text length.
 Thus this weight function gives more weight the longer a text is but where only
 differences on the order of thousands of characters are considered significant.
 We used the exponential dropoff weight and length weight functions to implement
-another weight function that use both text length and time to give weights to an
-assignment. The combined weight function is shown below.
+another weight function that use both text length and time to give weights to
+texts.
 
 \begin{definition}[Exponential Dropoff and Length Weight]
 
@@ -1726,10 +1718,10 @@ writing.
 
 \end{definition}
 
-For completeness we also defined a $P_{min}$ that use only the least similar
-text for the prediction. We expect that such a function will be quick to accuse
-authors of ghostwriting since it only looks at the one text that seem to
-indicate ghostwriting.
+For completeness we also defined a $P_{min}$ prediction system that use only the
+least similar text for the prediction. We expect that such a function will be
+quick to accuse authors of ghostwriting since it only looks at the one text that
+seem to indicate ghostwriting.
 
 \begin{definition}[Minimum Prediction System]
     \label{def:minimum_prediction_system}
@@ -1747,18 +1739,18 @@ indicate ghostwriting.
 
 \end{definition}
 
-Finally we also defined prediction system that takes a majority vote. The
+Finally we also defined a prediction system that takes a majority vote. The
 majority vote is similar to a uniform weight function. The difference is that
 the majority vote does not use the actual value of a prediction but only how
 many are on each side of a threshold. As an example assume that an author
 $\alpha$ has written three texts $\{t_1, t_2, t_3\} = T_\alpha$ and we are
-comparing to text $t$ with $\theta = 0.5$. Let us then assume that $f(t, t_1) =
-0.0$, $f(t, t_2) = 0.51$ and $f(t, t_3) = 0.51$. Then the uniform weight
+comparing to text $t$ with $\theta = 0.5$. Let us then assume that $f(t, t_1)
+= 0.0$, $f(t, t_2) = 0.51$ and $f(t, t_3) = 0.51$. Then the uniform weight
 function would compute $\mathbbm{1} \left[ \frac{1}{3} 0.0 + \frac{1}{3} 0.51 +
-\frac{1}{3} 0.51 > 0.5 \right] = 0$. Meaning that the author would be accused of
-using a ghostwriter even though two of his assignments are more similar than
-dissimilar. Contrary to that a majority vote would report 1 since more
-texts are greater than $\theta$ than lower.
+\frac{1}{3} 0.51 > 0.5 \right] = 0$. Meaning that the author would be accused
+of using a ghostwriter even though two of his assignments are more similar than
+dissimilar. Contrary to that a majority vote would report 1 since more texts are
+greater than $\theta$ than lower.
 
 \begin{definition}[Majority Vote Prediction System]
     \label{def:majority_vote_prediction_system}
@@ -1890,12 +1882,12 @@ and if $P$ is incorrect and returns 0 we have,
 \end{equation}
 
 Similarly for a $(\alpha, t_u) \in V$ where $t_u \in T_\alpha$ we have that
-$\mathbbm{1}\left[t_u \in T_\alpha\right] = 0$ and therefore the expression is always
-0. Therefore the expression is 1 whenever we have a false accusation and 0
-otherwise. The right hand side of the inequality simply counts the number of
-accusations by inverting the output of $P_x$ and divides that by 10. So the
-condition makes sure that only 10\% of the accusations we make are false
-accusations.
+$\mathbbm{1}\left[t_u \in T_\alpha\right] = 0$ and therefore the expression is
+always 0. Therefore the expression is 1 whenever we have a false accusation
+and 0 otherwise. The denominator of the fraction simply counts the number of
+accusations by inverting the output of $P_x$. Since that fraction has to be
+below $\frac{1}{10}$ we make sure that only 10\% of the accusations we make are
+false accusations.
 
 In the real world it has been estimated that 4\% of turn
 ins for the \gls{SRP} are written by "ghostwriters"
@@ -1918,4 +1910,4 @@ to extract features from raw text data. The features are compared using a dense
 network. Each of our neural networks will only compare two texts at a time.
 Since an author has multiple texts we will combine the predictions on each of
 an author's texts using a prediction system. We will find the best prediction
-system and parameters using a validation.
+system and parameters using a validation set.
