@@ -1,6 +1,6 @@
 \section{Method} \label{sec:method}
 
-In this Section we will describe the method we have used to solve the authorship
+In this section we will describe the method we have used to solve the authorship
 verification problem presented in Definition \ref{def:authorship_verification}.
 In general there are two methods for representing each author. There is the
 \textit{instance based approach} and the \textit{profile based approach}. In
@@ -16,10 +16,10 @@ illustrated in Figure \ref{fig:profile_based}.
     \textbf{Instance Based Authorship Verification}\par\medskip
     \includegraphics[width=\textwidth]{./pictures/method/instance_based}
     \caption{Illustrate the typical instance based authorship verification
-    solution setup. Inspired by \citet{stamatos2009} a set of authors are given
+    setup inspired by \citet{stamatos2009}. A set of authors are given
     as input each with a set of texts. Some machine learning model is trained on
-    the input texts and the model is used to predict an unknown text. $\alpha_u$
-    denotes the proposed author the model checks $t_u$ against.}
+    the input texts and the model is used to predict an unknown text $t_u$
+    against a claimed author $\alpha_u$.}
     \label{fig:instance_based}
 \end{figure}
 
@@ -27,32 +27,31 @@ illustrated in Figure \ref{fig:profile_based}.
     \centering
     \textbf{Profile Based Authorship Verification}\par\medskip
     \includegraphics[width=\textwidth]{./pictures/method/profile_based}
-    \caption{Illustrate the typical profile based authorship verification setup.
-    Inspired by \citet{stamatos2009} the texts of each author are combined using
-    some combination function such as an average or a concatenation. Those
+    \caption{Illustrate the typical profile based authorship verification setup
+    inspired by \citet{stamatos2009}. The texts of each author are combined
+    using some combination function such as an average or a concatenation. Those
     \textit{profiles} are then given to a Machine Learning model to train. The
-    output is a model which is used to predict unknown texts. $\alpha_u$ denotes
-    the proposed author the model checks $t_u$ against.}
+    output is a model which is used to predict unknown texts $t_u$ against
+    claimed authors $\alpha_u$.}
     \label{fig:profile_based}
 \end{figure}
 
-\noindent An example of a profile-based authorship attribution approach, which
-is highly regarded by \citet{stamatos2009} makes use of a compression algorithm.
-It works not by representing each author profile as a set of features, but
-rather as a set of compressed texts. In the initial scenario we have
-a set of author-profiles for each author $\alpha$, where each profile is
-the concatenation of all $t \in T_\alpha$. Authorship of a newly introduced
-text is then determined by looping through each author adding the new text to
-their concatenated profile. The profile is then compressed both with and without
-the new text included. The bit-wise difference is then computed, by subtracting
-them from one another resulting in what is essentially the cross-entropy between
-the two sets. The author with the lowest cross-entropy is then considered to
-be the author of this new text. Different methods of compression can be used
-as the base for this model each giving different results. In the instance that
-\citet{stamatos2009} describes, RAR compression yielded the best results, but
-the choice of compression algorithm depends on the specific scenario.
+An example of a profile-based authorship attribution approach which is highly
+regarded by \citet{stamatos2009} use a compression algorithm. It works by
+representing each author as a concatenation of all of his/her texts. The profile
+of an author $\alpha$ is then the concatenation of all $t \in T_\alpha$.
+Authorship of a newly introduced text is then determined by looping through each
+author adding the new text to their concatenated profile. The profile is then
+compressed both with and without the new text included. The bit-wise difference
+is then computed by subtracting them from one another resulting in what is
+essentially the cross-entropy between the two sets. The author with the lowest
+cross-entropy is then considered to be the author of this new text. Different
+methods of compression can be used as the base for this model each giving
+different results. In the instance that \citet{stamatos2009} describes RAR
+compression yielded the best results, but the choice of compression algorithm
+depends on the specific scenario.
 
-We will generally use the instance based approach since it allows us to use more
+We generally use the instance based approach since it allows us to use more
 metadata text information. For example the writing style of an author may change
 over time especially for secondary school students that evolve a lot throughout
 their school attendance. Since we use an instance based approach we are able
@@ -63,68 +62,84 @@ explained in Section \ref{subsec:combining_neural_network_output}.
 There are also another split between methods that we consider. There are
 generalizing and author specific models. In a generalizing model only a single
 model is trained on data from multiple authors and are able to make predictions
-about previously unseen authors. In the author specific model a separate model
-has to be trained for each author and is not able to make predictions for
-previously unseen authors. The generalizing models' main advantage is that it
-only has to be trained once and after that it can be used for everyone. The
-author specific model has the advantage that it can better fit to the specific
-quirks of a particular author since it is trained separately for each author.
-We will focus on the generalizing approach since it is more practical for
-MaCom as they only have to train a model once.
+for previously unseen authors. In the author specific model a separate model has
+to be trained for each author and is not able to make predictions for previously
+unseen authors. The generalizing models' main advantage is that it only has to
+be trained once and after that it can be used for everyone. The author specific
+model has the advantage that it can better fit to the specific quirks of a
+particular author since it is trained separately for each author. We will focus
+on the generalizing approach since it is more practical for MaCom as they only
+have to train the model once.
 
-In order to measure the quality of our models, we will also compute the
-number of \glspl{TP}, \glspl{TN}, \glspl{FP} and \glspl{FN}, as seen in
-\citet{US}. In these problems we get,
+In order to measure the quality of our models we will compute the number
+of \glspl{TP}, \glspl{TN}, \glspl{FP} and \glspl{FN}. In the authorship
+verification problem we determine whether or not a \textit{claimed} (or
+\textit{candidate}) author has written a text $t$. If we determine that the
+claimed author \textbf{has} written the assignment we report \textit{True} and
+if we determine that the claimed author has \textbf{not} written the assignment
+we report \textit{False}. Therefore we get,
 
 \begin{itemize}
-    \item a \gls{TP} whenever we answer \textit{True} and the text is written
-        by the claimed author,
-    \item a \gls{TN} whenever we answer \textit{False} and the text is
+    \item a \gls{TP} whenever we answer \textbf{True} and the text \textbf{is}
+        written by the claimed author,
+    \item a \gls{TN} whenever we answer \textbf{False} and the text is
         \textbf{not} written by the claimed author,
-    \item a \gls{FP} whenever we answer \textit{True} and the text is
-        \textbf{not} written by the claimed author,
-    \item a \gls{FN} whenever we answer \textit{False} and the texts is written
-        by the claimed author.
+    \item a \gls{FP} whenever we answer \textbf{True} and the text is
+        \textbf{not} written by the claimed author, and
+    \item a \gls{FN} whenever we answer \textbf{False} and the texts \textbf{is}
+        written by the claimed author.
 \end{itemize}
 
 Given those definitions the \gls{TPR}, \gls{FPR}, \gls{TNR} and \gls{FNR}
 are defined as follows.
 
-\begin{description}
-    \item[\gls{TPR}: ]
+\begin{definition}[\glsdesc{TPR}]
 
-        The fraction of positives that we reported \textit{True} on i.e.~the
-        fraction of texts written by the same author that we say are written by
-        the same author.
+    The fraction of positives that we reported \textit{True} on i.e. the
+    fraction of texts written by the claimed author that we say are written by
+    the claimed author. The \gls{TPR} is computed as,
 
-    \item[\gls{TNR}: ]
+    \begin{equation}
+        TPR = \frac{TP}{TP + FN}.
+    \end{equation}
 
-        The fraction of negatives that we reported \textit{False} on i.e.~the
-        fraction of texts written by different authors that we say are written
-        by different authors.
+\end{definition}
 
-    \item[\gls{FPR}: ]
+\begin{definition}[\glsdesc{TNR}]
 
-        The fraction of negatives that we reported \textit{True} on i.e.~the
-        fraction of texts written by different authors that we say are written
-        by the same author.
+    The fraction of negatives that we reported \textit{False} on i.e. the
+    fraction of texts not written by the claimed author that we say are not
+    written by the claimed author. The \gls{TNR} is computed as,
 
-    \item[\gls{FNR}: ]
+    \begin{equation}
+        TNR = \frac{TN}{TN + FP}.
+    \end{equation}
 
-        The fraction of positives that we reported \textit{False} on i.e.~the
-        fraction of texts written by the same author that we say are written by
-        different authors.
+\end{definition}
 
-\end{description}
+\begin{definition}[\glsdesc{FPR}]
 
-And they can be computed as,
+        The fraction of negatives that we reported \textit{True} on i.e. the
+        fraction of texts not written by the claimed author that we say are
+        written by the claimed author. The \gls{FPR} is computed as,
 
-\begin{align}
-    TPR &= \frac{TP}{TP + FN}, \\
-    FPR &= \frac{FP}{FP + TN}, \\
-    TNR &= \frac{TN}{TN + FP}, \\
-    FNR &= \frac{FN}{FN + TP}.
-\end{align}
+        \begin{equation}
+            FPR = \frac{FP}{FP + TN}.
+        \end{equation}
+
+\end{definition}
+
+\begin{definition}[\glsdesc{FNR}]
+
+    The fraction of positives that we reported \textit{False} on i.e. the
+    fraction of texts written by the claimed author that we say are not written
+    by the claimed author. The \gls{FNR} is computed as,
+
+    \begin{equation}
+        FNR = \frac{FN}{FN + TP}.
+    \end{equation}
+
+\end{definition}
 
 Using these definitions we can also describe the accuracy measure we will be
 reporting on throughout our experiments,
@@ -133,22 +148,18 @@ reporting on throughout our experiments,
     \text{Accuracy} = \frac{TP + TN}{TP + FP + TN + FN}.
 \end{equation}
 
-In the case of MaCom, we want to minimize the \gls{FNR} as much as possible,
-so as to not wrongfully accuse anyone of handing in a ghostwritten assignment.
-This however leaves out an equally important metric. While a low \gls{FNR} is
-the goal, MaCom also wants to minimize the number of \glspl{FN} compared to the
-total number of accusations made. This can be described as:
+Another important measurement is the accusation error. The accusation error is
+given by,
 
 \begin{equation}
     \text{Accusation Error} = \frac{FN}{FN + TN}.
 \end{equation}
 
-The goal is also to keep this error under a certain threshold specified
-by MaCom, which in this case is $0.1$ or $10\%$. In other words, of the
-accusations we make, only $10\%$ of them are allowed to be wrong. In order
-to accommodate this constraint we can take certain actions which depends on
-the model used. Details about these actions will be addressed in Section
-\ref{subsec:combining_neural_network_output}.
+The goal is to keep this error under a certain threshold specified by MaCom
+which is $0.1$ or $10\%$. In other words only 10\% of the accusations we make
+are allowed to be wrong. In order to accommodate this constraint we can take
+certain actions which depends on the model used. Details about these actions
+will be addressed in Section \ref{subsec:combining_neural_network_output}.
 
 In addition to the constraint on the accusation error Macom also wants a
 specificity above 95\%. Specificity is defined as,
@@ -158,33 +169,36 @@ specificity above 95\%. Specificity is defined as,
 \end{equation}
 
 Specificity therefore represents the fraction of the total negatives we catch.
-To catch 95\% of ghostwriters is a very ambitious goal. As described earlier it
-is more important to keep the accusation error low than to catch many ghost
-writers. We will therefore primarily focus on keeping the accusation error lower
-than 10\% and then see how high we can get the specificity at the same time.
+To catch 95\% of ghostwriters is a very ambitious goal. As described earlier
+it is more important to keep the accusation error low than to catch many
+ghostwriters. We will therefore primarily focus on keeping the accusation error
+lower than 10\% and then see how high we can get the specificity at the same
+time.
 
 \subsection{Baseline Methods}
 
 We have implemented two baselines to compare with our neural network methods.
-The methods were selected based on our previous report \citep{US}. The methods
+The methods were selected based on our previous work \citep{US}. The methods
 were developed for English texts and not Danish texts that we work with in
 this assignment. They do however represent classical machine learning methods
-for solving the authorship verification problem. They will therefore serve
-as a great baseline for our neural networks. We believe that by changing the
-parameters of the models they will work just as well for Danish texts that they
-did on English texts. The Danish and English language is very similar as they
-both derive from the Germanic branch of the Indo-European language family.
-\citet{konstantin:2000} conducted a study of the similarities and differences
-between different European languages. Based on a lexical distance computation,
-he determined among other things that English and Danish are very similar. None
-of the baseline methods work on raw texts. Rather they require hand engineered
-feature sets extracted from the texts. The features used by \citet{US} were
-all n-gram frequencies as in many classic authorship verification methods
-\citep{stamatos2009}. We use the same features as described in our preliminary
-report. We change the specific n-grams to n-grams extracted from Danish texts
-but the classes of n-grams will stay the same. The n-grams come from several
-linguistic layers. Specifically we use frequencies of character-n-grams,
-special-character-n-grams, word-n-grams and \gls{POS}-tag-n-grams.
+for solving the authorship verification problem \citep{stamatos2009}. They
+will therefore serve as a great baseline for our neural networks. We believe
+that by changing the parameters of the models they will work just as well for
+Danish texts as they did on English texts. The Danish and English language is
+very similar as they both derive from the Germanic branch of the Indo-European
+language family. \citet{konstantin:2000} conducted a study of the similarities
+and differences between various European languages. Based on a lexical distance
+computation he determined that English and Danish are very similar.
+
+None of the baseline methods work on raw texts. Rather they require hand
+engineered feature sets extracted from the texts. The features used by
+\citet{US} were all n-gram frequencies as in many classic authorship
+verification methods \citep{stamatos2009}. We use the same features as
+described in our previous report. We change the specific n-grams to n-grams
+extracted from Danish texts but the classes of n-grams will stay the same.
+The n-grams come from several linguistic layers. Specifically we use
+frequencies of character-n-grams, special-character-n-grams, word-n-grams and
+\gls{POS}-tag-n-grams.
 
 \begin{description}
 
@@ -212,30 +226,30 @@ special-character-n-grams, word-n-grams and \gls{POS}-tag-n-grams.
 
 \end{description}
 
-We will now describe shortly the two baseline methods we implemented.
+We now shortly describe the two baseline methods we implemented.
 
 \subsubsection{Extended Delta Method}
 
-One of the best performing methods of \citet{US} was the extended delta method.
-As the name suggests the method extends the already existing delta method
-\citep{evert2015towards}. The original delta method verifies authorship of a
-text by using a \gls{KNN} classifier. This \gls{KNN} is applied to the linearly
-transformed word frequencies of the applied texts. The words, of which the
-frequencies are found, are selected based on their frequency as well. So the
-\gls{KNN} is trained using the frequency of a number of the most frequent words.
-The amount of most frequent words to include can differ, the amount chosen by
-\citep{evert2015towards} was 150. The linear transformation he applied was a
-simple 0 mean and unit variance transformation.
+One of the best performing methods of \citet{US} was the extended delta
+method. As the name suggests the method extends the classic delta method
+\citep{evert2015towards}. The classic delta method verifies authorship of a text
+by using a \gls{KNN} classifier. This \gls{KNN} is applied to a set of linearly
+transformed word frequencies. The word frequencies used are the frequencies of
+the $n$ most frequent words. So the \gls{KNN} is trained using the frequency
+of a number of the most frequent words. The amount of most frequent words to
+include can differ the amount chosen by \citep{evert2015towards} was 150.
+The linear transformation he applied was a simple 0 mean and unit variance
+transformation.
 
-The extension we applied to this methods, is simply option to use features
-that aren't the word frequency. As mentioned we made use of this approach in
-our earlier work \cite{US}. However, due to data-specific circumstances we
-were not able to modify the K in \gls{KNN}. In these circumstances, that is not
-the case. This leaves the extended delta method with 3 configurable parameters.
-The features used, how many neighbor to consider denoted by K, and what distance
-measure to use denoted by $p$. Where $p$ is the argument used when calculating
-the Minkowski distance. The more known values for p is, $p = 1$ which is the
-manhattan distance, and $p=2$ which is the Euclidean distance.
+The extension we applied to this method, is simply to use features that are
+not word frequencies. As mentioned we used this approach in our earlier work
+\citep{US}. However, due to data-specific circumstances we were not able to
+modify the K in \gls{KNN}. In these circumstances that is not the case. This
+leaves the extended delta method with 3 configurable parameters. The features
+used, how many neighbor to consider (denoted $K$), and what distance measure to
+use (denoted $p$). Where $p$ is the argument used when calculating the Minkowski
+distance. when $p = 1$ the Minkowski distance corresponds to the Manhattan
+distance and when $p=2$ it corresponds to the the Euclidean distance.
 
 \subsubsection{Author Specific SVM}
 \glsreset{SVM} 
@@ -250,64 +264,62 @@ T_\alpha$ and the negative class is represented by the features of $t'' \in T$
 where $T \subset \overline{T_\alpha}$ and $|T| = |T_\alpha|$. After training,
 the classifier is used to predict if $t \in T_\alpha$ or $t \in T$.
 Since a separate \gls{SVM} model is trained for each author it can learn
-the specific authors' writing style from $T_\alpha$. In contrast it also learns
+the specific author's writing style from $T_\alpha$. In contrast it also learns
 how the author does not write using $T$.
 
 The method is based on an \gls{SVM} so we have to experiment
-with the hyperparameters $C$ and $\gamma$.\cite[E-Chapter
-8]{Abu-Mostafa:2012:LD:2207825}. We will find the best parameters via cross
-validation. The parameter search will be described in detail in Section
+with the hyperparameters $C$ and $\gamma$ \citep[E-Chapter
+8]{Abu-Mostafa:2012:LD:2207825}. We find the best parameters via cross
+validation. The parameter search be described in detail in Section
 \ref{sec:experiments}.
 
 
 \subsection{Deep Learning}
 
-In this paper we will approach the authorship verification problem using deep
-learning. The term deep learning was first introduced to machine learning in
-1989. The term deep learning quickly became synonymous with neural networks
-as they were some of the more efficient and popular deep learning methods
+In this paper we approach the authorship verification problem using deep
+learning. The term was first introduced to machine learning in 1989. The
+term deep learning quickly became synonymous with neural networks as
+they were some of the more efficient and popular deep learning methods
 \citep{Schmidhuber:2015}.
 
-With the inner workings of the brain used as the basis, a standard simple
-neural network consists of a set interconnected processors, called neurons.
-Each of these neurons has a real valued activation associated with it, which
-activates differently depending on the specific neuron. The input neurons
-activate through perceiving the environment, or in other words, when they are
-fed data externally. Other neurons are simply activated through the weighted
-output of previous neurons \citep{DBLP:journals/corr/Schmidhuber14}.
+With the inner workings of the brain used as the basis. A standard simple neural
+network consists of a set interconnected processors, \textit{neurons}. Each of
+these neurons has a real valued activation associated with it which activates
+differently depending on the specific neuron and input. A special set of neurons
+known as input neurons activate through perceiving the environment. Other
+neurons are simply activated through the weighted output of previous neurons
+\citep{DBLP:journals/corr/Schmidhuber14}.
 
-Neural networks have been around since the 1940s. However, back then they were
-merely variations of the linear regressors used at the time, and were not
-very reminiscent of the networks one can see today. It was not until the late
-1960s, early 1970s, that networks comparable to the more modern approaches
+Neural networks have been around since the 1940s. However, back then they
+were merely variations of the linear regressors used at the time and were
+not very similar to the networks we see today. It was not until the late
+1960s and early 1970s, that networks comparable to the more modern approaches
 surfaced. Examples of such early works are \citep{ivakhnenko1973cybernetic}
-and \citep{4308320}, which describe multi-layered feed forward supervised
-neural network architectures. While the work described in \citep{4308320}
-was indeed one of the first cases of the modern neural network, getting
-the network to learn was still a problem, as the tweaking of individual
-weights attributed to each neuron in the network was not trivial. Little
-did they know that research to solve that problem was already in progress.
-The basics of continuous \gls{BP} was initially described by
-\citet{Kelley1960}, quickly followed by a simpler approach which used only
-the chain rule by \citet{DREYFUS196230}. It was not until 1970 that
-the modern version of \gls{BP} was described, using automatic differentiation
-as its basis. This prompted an increase in \gls{BP} related research in
-the following decades. As computational power increased in the 1990s and
-2000s, so did the practical usage of \gls{BP}, and neural network in general
-\citep{Schmidhuber:2015}. The application of \gls{BP} will be
-described in Section \ref{subsubsec:training_a_network}.
+and \citep{4308320} which describe multi-layered feed forward supervised
+neural network architectures. While the work described by those two authors
+looked like modern neural networks architecture wise they had large problems
+with updating the weights in the network efficiently. The basics of continuous
+\textit{backpropagation} was initially described by \citet{Kelley1960}
+quickly followed by a simpler approach which used only the chain rule
+by \citet{DREYFUS196230}. It was not until 1970 that the modern version
+of backpropagation was described using automatic differentiation. This
+prompted an increase in backpropagation related research in the following
+decades. As computational power increased in the 1990s and 2000s, so did
+the practical usage of backpropagation and neural network in general
+\citep{Schmidhuber:2015}. The theory behind backpropagation will be described in
+Section \ref{subsubsec:training_a_network}.
 
 \glsreset{CNN} 
 
-Like with the history of authorship attribution research in this area of science
-picked up more interest as we entered the modern computational age, and with
-the introduction of the \gls{CNN}. \glspl{CNN} are based on the early work
+Like with the history of authorship verification, research in this area of
+science picked up more interest as we entered the modern computational age and
+with the introduction of the \gls{CNN}. \glspl{CNN} are based on the early work
 described in \citet{TJP:TJP19681951215}. They showed that cats' and monkeys'
-visual cortexes contain a set of neurons, each individually responding to a
-receptive field, or area, of their field of view. Neighboring receptive fields
+visual cortices contain a set of neurons each individually responding to a
+receptive field (area) of their field of view. Neightboring receptive fields
 all have a certain amount of overlap but in the end a cohesive view is created.
 This is what paved the way for neocognition in 1980 \citep{Fukushima1980},
-the basis of \glspl{CNN} which looks at overlapping subsections of data.
+the basis of \glspl{CNN} which looks at overlapping subsections of data
 \citep{Schmidhuber:2015}.
 
 
@@ -316,9 +328,9 @@ the basis of \glspl{CNN} which looks at overlapping subsections of data.
 As mentioned previously a neural network consists of a collection of neurons.
 Each neuron is a simplified mathematical model which behaves much like neurons
 in the brain. They receive, process and transmit information. Each neuron has a
-set of inputs called $x_{j}$ one of which $x_{0}$ is a special bias input set
+set of inputs called $x_{j}$ one of which, $x_{0}$, is a special bias input set
 to 1 and a single output called $z_i$, where $i$ refers to the neuron and $j$
-refers to the specific input to that neuron. Each neuron computes a weighted sum
+refers to a specific input to that neuron. Each neuron computes a weighted sum
 of its inputs and applies an activation function $h$ to the weighted sum. The
 weights are called $w_{ij}$ and the weight of the bias $w_{i0}$. The function
 each neuron computes is,
@@ -349,23 +361,18 @@ a neuron can be seen in Figure \ref{fig:neuron}.
 \end{figure}
 
 Neurons are usually arranged in layers in order to achieve a certain desired
-behaviour. More details regarding these layers will be explained in
-later chapters. The training of a neural network consists of changing the
-weights applied at each neuron, with the goal of modeling the relationships
+behaviour. More details regarding these layers will be explained in Section
+\ref{subsubsec:layers}. The training of a neural network consists of changing
+the weights applied at each neuron, with the goal of modeling the relationships
 present in the data.
 
 
 \subsubsection{Activation Functions} \label{subsubsec:activation_functions}
 
-The activation function $h$, used at each neuron, defines the output of the
-neuron given a certain input. A simple example of this would be computer chip
-circuit, which can be seen as a series of activation functions outputting 0 or 1
-depending on their input. This activation function would be a linear one. When
-applying activation functions to neurons in neural networks, they are usually
-non-linear, as it allows for the computation of more complex problems using a
-smaller amount of neurons, relative to usage of a linear activation function,
-as they allow for the universal function approximation, a point also made by
-\citet{6797088} A plot of different activation functions is shown in Figure
+The activation function $h$ of a neuron is applied to the output of the
+neuron. Activation functions are typically non linear functions as that allows
+for the network to compute more complex functions \citep{6797088}. A plot
+of classic activation functions used in neural networks is shown in Figure
 \ref{fig:activation_functions}.
 
 \begin{figure}
@@ -377,38 +384,55 @@ as they allow for the universal function approximation, a point also made by
     \label{fig:activation_functions}
 \end{figure}
 
-Each activation function has its pros and cons. We mainly made use of the
-\gls{ReLu} activation function in the layers of our networks. The reason for
-this selection is its general purpose use. When selecting an activation function
-for your neurons, the best function would be the one which best approximates
-the underlying data relationship. Without a good idea as to what that function
-might be, \gls{ReLu} is a good starting point. Its simplicity provides a quick
-computation time, and its below zero limitation means that a large portion of
-the network will not be activating, resulting in an even smaller computation
-time. In addition to that, the derivative of the function is 1 in the case
-of a positive input, resulting in the \gls{BP} loss having equal influence
-throughout the network. In the case of other activation functions, this might
-not be the case, resulting in an altering of the error as we propagate backwards
-through the network. This could lead to a big error in the deeper layers not
-reaching the shallow layers of the network. This property of the \gls{ReLu}
-activation function, does however not come without its costs. If the learning
-rate of the network is not configured correctly, a \gls{ReLu} activated neuron
-might be blasted with a gradient so large, that it never reaches a point
-of activation again. In other words, the neuron "dies". As such, one can
-risk a network containing a lot of dead non-activating neurons, thus greatly
-decreasing its learning quality. On the other hand the sigmoid activation
-function does not allow its neurons to die. It can become victim to saturation.
-In the case of a weight being too small or too large, the output values will
-be placed at the far ends of the sigmoid range of values. At this point the
-gradient is incredibly small, meaning that the contribution that neuron now
-has is negligible. This neuron is now only a strain on the network, slowing
-it down through its activation but contributing nothing - a problem \gls{ReLu}
-does not have. Its based on these considerations we chose the \gls{ReLu}
-activation function, leaving us the task of properly selecting our learning rate
-\citep{JiYan, AndrejKarpathy, AvinashSharmaV}.
+Each activation function has advantages and disadvantages. We mainly used the
+\gls{ReLu} activation function in the layers of our networks. \gls{ReLu} is
+generally considered a general purpose activation function. When selecting
+an activation function for your neurons, the best function would be the one
+which best approximates the underlying data relationship. Without a good idea
+as to what that function might be \gls{ReLu} is a good starting point. Its
+simplicity, quick computation time and its below zero limitation means that
+a large portion of the network will not be activating, resulting in an even
+smaller computation time. In addition to that, the derivative of the function
+is 1 in the case of a positive input resulting in the backpropagation loss
+having equal influence throughout the network. In the case of other activation
+functions that might not be the case resulting in an altering of the error as
+we propagate backwards through the network. This can lead to a big error in the
+deeper layers not reaching the shallow layers of the network. This property of
+the \gls{ReLu} activation function does not come without costs. If the learning
+rate of the network is not configured correctly a \gls{ReLu} activated neuron
+might be blasted with a gradient so large that it never reaches a point of
+activation again. In other words, the neuron "dies". As such, one can risk a
+network containing a lot of dead non-activating neurons greatly decreasing its
+learning power. On the other hand the sigmoid activation function does not allow
+its neurons to die. It can become victim to saturation. In the case of a weight
+being too small or too large, the output values will be placed at the far ends
+of the sigmoid range of values. At this point the gradient is incredibly small
+meaning that the contribution that neuron now has is negligible. This neuron
+is now only a strain on the network, slowing it down through its activation
+but contributing nothing - a problem \gls{ReLu} does not have. Its based on
+these considerations we chose the \gls{ReLu} activation function, leaving us
+the task of properly selecting our learning rate \citep{JiYan, AndrejKarpathy,
+AvinashSharmaV}.
+
+% TODO: The argument for why we use these two functions are very weak.
+
+Exceptions to usage of the \gls{ReLu} activation function can be found when
+we use \gls{LSTM} layers during our experimentation. There we used the tanh
+activation function,
+
+\begin{equation}\label{eq:tanh}
+    h(x) = \tanh(x) = \frac{(e^x - e^{-x})}{(e^x + e^{-x})},
+\end{equation}
+
+and the hard sigmoid activation function,
+
+\begin{equation}\label{eq:h_sig}
+    h(x) = \max(0, \min(1, x \cdot 0.2 + 0.5)).
+\end{equation}
 
 As the activation function of our output neurons we have used the softmax
-function. The function is defined as
+function. The function is defined as These both serve as the default activations
+functions when using the keras deep learning library \cite{chollet2015keras}.
 
 \begin{equation}
     h(x_i) = \frac{e^{x_i}}{\sum_{k=1}^n e^{x_k}}, \text{for $i = 1,\dots,n$}.
@@ -419,33 +443,16 @@ $y \in [0, 1]^n$. Where the sum of the output vectors elements will be equal to
 1. The function is therefore great at constructing a probability distribution
 based on an input vector.
 
-Exceptions to usage of the \gls{ReLu} activation function can be found when
-we make use \gls{LSTM} layers during our experimentation. It uses the
-tanh activation function,
-
-\begin{equation}\label{eq:tanh}
-h(x) = \tanh(x) = \frac{(e^x - e^{-x})}{(e^x + e^{-x})}
-\end{equation}
-
-and the hard sigmoid activation function
-
-\begin{equation}\label{eq:h_sig}
-h(x) = \max(0, \min(1, x \cdot 0.2 + 0.5))
-\end{equation}
-
-These both serve as the default activations functions when using the keras deep
-learning library. \cite{chollet2015keras}
-
 \subsubsection{Layers} \label{subsubsec:layers}
 
 Neural networks are organized in layers of neurons. The first layer is called
 the input layer and is connected directly to the input of the model and the last
 layer is called the output layer. The output of this layer is considered the
-output of the entire network. All layers in between are called hidden layers.
-A practical example could be where the input layer where each neuron took the
-pixel of an image as the input. The output layer could then consist of a single
-neuron that computes the probability that the picture contained a cat. An
-example of a layered neural network are shown in Figure \ref{fig:example_nn}.
+output of the entire network. All layers in between are called hidden layers. A
+practical example could be an the input layer where each neuron were connected
+to a pixel of an image. The output layer could then consist of a single neuron
+that computes the probability that the picture contained a cat. An example of
+such a layered neural network are shown in Figure \ref{fig:example_nn}.
 
 \begin{figure}
     \centering
@@ -462,7 +469,7 @@ example of a layered neural network are shown in Figure \ref{fig:example_nn}.
 There are different kinds of layers. Below is a
 non-exhaustive description of different layers, based on
 \citep{oshea2015,DBLP:series/sci/2012-385,Goodfellow-et-al-2016,
-mikolov2013linguistic,JMLR:v15:srivastava14a}.
+mikolov2013linguistic,JMLR:v15:srivastava14a}:
 
 \begin{description}
 
@@ -474,15 +481,15 @@ mikolov2013linguistic,JMLR:v15:srivastava14a}.
         neurons and applies an activation function. The weights for each of
         the neurons in the layer are different allowing each neuron to learn a
         different combination of the previous layer. An example of this can be
-        seen in Figure \ref{fig:example_nn}, where the hidden layers are Dense.
+        seen in Figure \ref{fig:example_nn}, where the hidden layers are dense.
 
     \item[Convolutional Layer:]
 
         A convolutional layer is mainly used to extract position independent
         features from data. The convolution consist of a sliding window that
         slides over some input data and gives an output for each possible
-        position in the input image. The sliding window uses the same weights
-        in all the input and will therefore extract the same features from
+        position in the input. The sliding window use the same weights
+        in all the positions and will therefore extract the same features from
         different locations if it is presented with the same input. The
         convolution computes a single output for each window position. The
         output is computed as the sum of the elementwise multiplication of
@@ -613,9 +620,9 @@ mikolov2013linguistic,JMLR:v15:srivastava14a}.
         \end{equation}
 
         This would also make sure that edge values has the same amount of
-        influence as the rest of the values. The sliding length can be
-        different than one and is usually referred to as stride. The weights
-        the convolutional window uses are learnable by the network. Certain
+        influence as the rest of the values. The sliding length can be different
+        than one and is usually referred to as \textit{stride}. The weights
+        the convolutional window use are learnable by the network. Certain
         convolutional filters can be used for edge detection and blurring the
         input. Some examples of different convolutional kernels applied to a
         grayscale image are shown in Figure \ref{fig:convolution_example}.
@@ -691,10 +698,10 @@ mikolov2013linguistic,JMLR:v15:srivastava14a}.
         to remember previous inputs and an \gls{RNN} therefore has a sense of
         history of previous input and output. Classical feed forward neural
         networks can be viewed as mappings from and to vectors while \glspl{RNN}
-        can be viewed as mappings from and to sequences. An \gls{RNN} does not
-        view its input as a vector but as a sequence of inputs in different
-        timesteps. We have shown an example of an \gls{RNN} network in Figure
-        \ref{fig:rnn_illustration}.
+        can be viewed as mappings from and to sequences of vectors. An \gls{RNN}
+        does not view its input as a vector but as a sequence of input vectors
+        in different timesteps. We have shown an example of an \gls{RNN} network
+        in Figure \ref{fig:rnn_illustration}.
 
         \begin{figure}
             \centering
@@ -705,7 +712,8 @@ mikolov2013linguistic,JMLR:v15:srivastava14a}.
                 output layer. The \gls{RNN} shown consist of $I$ input units,
                 $H$ hidden units and $K$ output units. In the hidden layer each
                 neuron is connected to every other neuron in the layer including
-                itself.}
+                itself and to every input neuron. In the output layer each
+                neuron is connected too all hidden units.}
             \label{fig:rnn_illustration}
         \end{figure}
 
@@ -744,12 +752,12 @@ mikolov2013linguistic,JMLR:v15:srivastava14a}.
         hidden units. The complete sequence of hidden activations are computed
         by starting at time $t=1$ and calling the functions above until
         the end of the sequence is reached incrementing $t$ by one in each
-        recursive call. The initial weight at of the hidden units can be any
+        recursive call. The initial weights of the hidden units can be any
         initialization value. The obvious choice is 0, however better results
         have been found using non zero initial hidden unit weight values
         \citep{DBLP:series/sci/2012-385}.
 
-        A \gls{RNN} is normally trained using the \emph{backpropagation through
+        An \gls{RNN} is normally trained using the \emph{backpropagation through
         time} algorithm. For data where the usage of time does not make sense
         and where the context from both sides of each timesteps is useful such
         as for text it is normal to use bidirectional \glspl{RNN}. Then both a
@@ -769,8 +777,8 @@ mikolov2013linguistic,JMLR:v15:srivastava14a}.
         \gls{RNN} network each timestep corresponds to a separate layer in a
         normal feed forward neural network. So for sequences of several thousand
         timesteps, backpropagation has to go through several thousand layers.
-        The magnitude of the gradient will at each layer either increase up or
-        decrease and through the hundreds or thousands of layers that leads to
+        The magnitude of the gradient will at each layer either increase or
+        decrease and through the hundreds or thousands of layers that results to
         the gradient either blowing up exponentially or vanishing to nothing.
         In practise the main problem is the vanishing gradient and not the
         exploding gradient. The vanishing gradient means that weights early
@@ -798,8 +806,8 @@ mikolov2013linguistic,JMLR:v15:srivastava14a}.
             \centering
             \textbf{Structure of an \gls{LSTM}}\par\medskip
             \includegraphics[scale=0.5]{./pictures/method/LSTM}
-            \caption{The structure of an \gls{LSTM} network. $\bigoplus$ means
-                an elementwise addition and $\bigotimes$ means an elementwise
+            \caption{The structure of an \gls{LSTM} network. $\bigoplus$ denotes
+                an elementwise addition and $\bigotimes$ denotes an elementwise
                 multiplication. Dotted lines show the movement of activations in
                 the previous timestep while full lines show movement of the
                 input in the current timestep.}
@@ -835,7 +843,7 @@ mikolov2013linguistic,JMLR:v15:srivastava14a}.
         Fourth: A network combining the current input and the previous output
         to choose which values of the current output to select as the actual
         output. The output of the fourth network will be combined with the
-        current model with an elementwise multiplication. So again the network
+        current output with an elementwise multiplication. So again the network
         can select which values to keep by outputting large numbers and which
         values to throw away by outputting small numbers. This network is the
         last applied to the output and can therefore select which values should
@@ -844,23 +852,20 @@ mikolov2013linguistic,JMLR:v15:srivastava14a}.
     \item[Embedding:]
 
         The embedding layer maps a value into a continuous vector space. Given
-        a sequence of integers, it uses the weights associated with the layer
-        to map that each value to a vector of predetermined size. This can
-        be done on any sort of data, as longs as it is encoded as a sequence
-        of integers. In \gls{NLP} circumstances, this could be applied to
-        characters or words for example, where each element in the sequence is
-        first encoded as an integer value, and then fed to the embedding layer,
-        which maps it to the continuous vector space. 
-        Embedding layers are widely used in \gls{NLP}.
+        a sequence of one-hot encoded vectors it use the weights associated
+        with the layer to map that each one-hot vector to a dense vector of
+        predetermined size. This can be done on any sort of data as longs as it
+        is one-hot encoded. Embedding layers are are widely used in \gls{NLP}
+        for mapping characters or words to dense vectors.
 
-        The hope with using a layer such as this on characters, would be that
-        each character got mapped to a point close to other similar characters,
-        when the layer is properly trained. They are however mainly used
-        to embed words. \citet{mikolov2013linguistic} found that embedding
-        layers are able to learn more that just word similarities. They for
-        example found that $vec("king") - vec("man") + vec("woman") \approx
-        vec("queen")$ that is the embeddings learned the relation between the
-        words king and queen and not just that they are similar words.
+        The hope with using a layer such as this on characters would be that
+        each character got mapped to a point close to similar characters. They
+        are however mainly used to embed words. \citet{mikolov2013linguistic}
+        found that embedding layers are able to learn more that just word
+        similarities. They for example found that $vec("king") - vec("man") +
+        vec("woman") \approx vec("queen")$ that is the embeddings learned the
+        relation between the words king and queen and not just that they are
+        similar words.
 
         \begin{figure}
             \centering
@@ -873,7 +878,7 @@ mikolov2013linguistic,JMLR:v15:srivastava14a}.
             \label{fig:embeddings}
         \end{figure}
 
-        In Figure \ref{fig:embeddings} we have shown an embedding of one of our
+        In Figure \ref{fig:embeddings} we have shown the embedding one of our
         networks produces. The characters are embedded in 5 dimensions so the
         plot shows the first two principal components only. We can see that
         several lower and upper case letters have ended up close to each other.
@@ -882,31 +887,29 @@ mikolov2013linguistic,JMLR:v15:srivastava14a}.
 
     \item[Pooling Layer:]
 
-        The purpose of a pooling layer, or down-sampling layer, is as the name
-        suggest, to pool the data it receives. It does so with the goal of
-        distilling the data down to a number of key features found within said
-        data. This of course decreases the computation time of the network as a
-        whole, and with a smaller amount of parameters, comes a smaller chance
-        of overfitting and a reduction in training time.
+        The purpose of a pooling layer, or down-sampling layer to pool the
+        data it receives. It does so with the goal of distilling the data down
+        to a number of key features found within said data. This of course
+        decreases the computation time of the network as a whole, and with a
+        smaller amount of parameters, comes a smaller chance of overfitting and
+        a reduction in training time.
 
-        Working in similar fashion as the convolutional layer, the max pooling
-        layer also uses a sliding window. This sliding window of a certain
-        dimensionality, is moved over the data given to it. The maximum value
-        inside that window is then extracted, and set as the output for that
-        specific window placement.  The window then moved a specified
-        stride size, and the process is repeated. The result is a dataset which
-        is down-sampled in proportion with the sliding windows dimensions, and
-        the stride. An example of this max pooling process can be seen in Figure
-        \ref{fig:max_pool}.
+        One of the most used pooling layers are the max pooling layer. It works
+        in similar fashion as the convolutional layer and also use a sliding
+        window. This sliding window is moved over the data given to it. The
+        maximum value inside each window position is then extracted and set as
+        the output for that specific window placement. The window is then moved
+        a specified stride size and the process is repeated. The result is a
+        dataset which is down-sampled in proportion with the sliding windows
+        dimensions and the stride. An example of this max pooling process can
+        be seen in Figure \ref{fig:max_pool}.
 
-        Pooling layers are however not restricted to only the max pooling
-        layer. The average pooling layers works in a very similar fashion,
-        but instead of extracting the max value it simply averages values
-        currently in the window. The Global Max Pooling Layer, which we use
-        quite frequently in our networks does not use a window like the other
-        ones described, but instead simply extracts the maximum value across
-        the data the layer is provided, thus eliminating the need for a sliding
-        window.
+        Pooling layers are however not restricted to only the max pooling layer.
+        The average pooling layers works in a similar fashion but instead of
+        extracting the max value it simply averages values currently in the
+        window. The Global Max Pooling Layer, which we use quite frequently in
+        our networks, does not use a window but instead simply extracts the
+        maximum value across the data the layer is provided.
 
         \begin{figure}
         \centering
@@ -935,8 +938,8 @@ mikolov2013linguistic,JMLR:v15:srivastava14a}.
             \hline
             \end{tabular}
         \end{equation}
-        \caption{An example of a max pooling performing using a 2x2 kernel and
-            stride 2.}
+        \caption{An example of max pooling performed using a 2x2 kernel and a
+            stride of 2.}
         \label{fig:max_pool}
         \end{figure}
 
@@ -945,36 +948,38 @@ mikolov2013linguistic,JMLR:v15:srivastava14a}.
 
         This layer is used for regularization of neural networks. A well
         designed network combined with a good optimizer will, when given time,
-        slowly become more and more fit on the training data it is provided.
-        This is all dine, as long as what it learns is not specific to that,
-        and only that, training data. If that is the case, then the network
-        would be considered overfitted on the training data. In this case,
-        the network does not properly generalize. This the problem that the
-        dropout layer attempts to combat. It does so by deactivating a certain
-        fraction of randomly selected neurons in a specified layer, for each
-        training sample. This forces the model to learn from a larger set of
-        sparse neurons, rather than a very small amount of neurons that only
+        slowly learn more and more of the training data and will tend towards
+        an accuracy of 100\%. Sometimes that accuracy does not translate to
+        a similar accuracy on other data. If that is the case we consider
+        the network to be \textit{overfitted} on the training data. In other
+        words the network does not properly generalize. This the problem that
+        the dropout layer attempts to combat. It does so by deactivating a
+        certain fraction of randomly selected neurons in a specified layer for
+        each training sample. This forces the model to learn from a larger
+        set of sparse neurons rather than a small amount of neurons that only
         contribute dataset specific information. Since the network suddenly
-        can not rely on the existence of these very informative data specific
+        cannot rely on the existence of these very informative data specific
         neurons, it has to learn based from less informative but more general
-        neurons instead. The hope is that learning on more general data, results
-        in a more generalizing model. An example of this can be seen in Figure
+        neurons. The hope is that learning on more general data results in
+        a more generalizing model. An example of this can be seen in Figure
         \ref{fig:dropout}.
 
         \begin{figure}
             \centering
             \includegraphics[width=0.5\textwidth]{./pictures/method/dropout}
-            \caption{An example of the application of a dropouts being performed
-                on different layers.}
+            \caption{An example of dropout being performed on different layers
+                in a network. Some neurons are left out during the forwards and
+                backwards pass. To the left the network is shown before dropout
+                and to the right after dropout.}
             \label{fig:dropout}
         \end{figure}
 
         \citet{JMLR:v15:srivastava14a} investigated the use of dropout layers
         in different problem settings. They found that dropout layers reduced
-        overfitting in all problems they looked at. In particular they found
-        that document classification was also improved. The main drawback of a
-        dropout layer is that it increase the training time of the networks its
-        used on \citep{JMLR:v15:srivastava14a}.
+        overfitting in all problems they looked at. In particular interest for
+        this thesis, they found that text classification was also improved. The
+        main drawback of a dropout layer is that it increase the training time
+        of the networks its used on \citep{JMLR:v15:srivastava14a}.
 
 \end{description}
 
@@ -996,8 +1001,8 @@ differentiable. As an example consider the error function,
 \end{align}
 
 where $N$ is the number of training samples, $\hat{y}_n$ is the predicted
-results, $y_n$ is the target, and $W$ is a set of weights. The gradient is
-a multi-variable generalization of the derivative of a function. It is a
+results, $y_n$ is the target result, and $W$ is a set of weights. The gradient
+is a multi-variable generalization of the derivative of a function. It is a
 vector that points in the direction of steepest ascend in value for a function
 at a specific point. Gradient descent is based on the observation that a
 differentiable function $f$ in point $\mathbf{x}$ decrease fastest in the
@@ -1011,17 +1016,17 @@ local minimum,
 
 where $\eta$ is a small number that makes sure we do not overstep the local
 minimum. An example of the gradient descent process can be seen in Figure
-\ref{fig:gradient_descent}. Our only real parameter we can change in order
-to minimize an function are the weights $\mathbf{w}$. These can be changed
-by using the gradient descent update rule,
+\ref{fig:gradient_descent}. The only parameters we can change in order to
+minimize an error function are the weights $\mathbf{w}$. These can be changed by
+using the gradient descent update rule,
 
 \begin{figure}
     \centering
     \includegraphics[width=0.8\textwidth]{./pictures/method/gradient_descend}
-    \caption{An illustration of how gradient descent works. Each iteration steps
-        in the direction of the local minimum of the specific function used,
-        which in this case is signified by a black ring. The Figure is generated
-        using code from
+    \caption{An illustration of how gradient descent works. Each iteration takes
+        a step in the direction of the local minimum of the specific function
+        used, which in this case is signified by a black ring. The Figure is
+        generated using code from
         \url{https://scipython.com/blog/visualizing-the-gradient-descent-method/}.}
     \label{fig:gradient_descent}
 \end{figure}
@@ -1044,18 +1049,18 @@ relative to the specific weight vector $\mathbf{w}^{(t)}$, or rewritten,
 \end{equation}
 
 Now we have an update rule for the weights of the network that will minimize an
-error function $E$ chosen by us. We can choose $E$ as any function we and our
-network desires as long as it is differentiable. The only problem left is how to
-compute the gradient of the network. The computation of the gradient can be done
-via the \gls{BP} algorithm \cite{Bishop}. \Gls{BP} depends on the activation
-of all neurons to a specific sample. That gives us a three step algorithm for
-updating the weights of the network.
+error function $E$ chosen by us. We can choose $E$ as any function we desire
+as long as it is differentiable. The only problem left is how to compute the
+gradient of the network. The computation of the gradient can be done via the
+backpropagation algorithm \citep{Bishop}. Backpropagation depends on the
+activation of all neurons in the network. That gives us a three step algorithm
+for updating the weights of the network.
 
 \begin{description}
     \item[Feed Forward] Give input to first layer in network computing the
         activation of all neurons to that specific input.
-    \item[Back Propagate] Use the \gls{BP} algorithm to compute the gradient of
-        the network.
+    \item[Back Propagate] Use the backpropagation algorithm to compute the
+        gradient of the network.
     \item[Update Weights] Use gradient descent to update the weights of the
         network.
 \end{description}
@@ -1086,9 +1091,9 @@ a chain of function calls that spans the entire network. This fact becomes
 apparent when we attempt to evaluate our single sample error function $E$ with
 respect to a weight $w_{ij}$. If we keep in mind that the neurons in feed
 forward neural networks computes a weighted sum of its inputs as per $a_i$ in
-Equation \eqref{eq:neuron}. Then we known that $E$ only depends on $w_{ij}$
-through the call of $a_i$, and it is for that reason what we can apply the chain
-rule to get the following,
+Equation \eqref{eq:neuron}. We know that $E$ only depends on $w_{ij}$ through
+the call of $a_i$, and it is for that reason what we can apply the chain rule to
+get the following,
 
 \begin{equation}
     \label{eq:bp_start}
@@ -1123,11 +1128,14 @@ Equation \eqref{eq:bp_start} gives us,
     \frac{\partial E}{\partial \mathbf{w}_{ij}} = \delta_i x_j.
 \end{equation}
 
-That reveals that the derivative of the cost function with respect to the weight
+% TODO: Rewrite following sentence. I cannot understand what it means.
+
+So the derivative of the cost function with respect to the weight
 $\mathbf{w}_{ij}$ is simply the value of $\delta$ for the neuron at the output
 end and $x$ for the input end of the weight for that same neuron. This leaves us
 with calculating $\delta_i$ for the hidden units, and the output units of the
-network. We already know that for output units $\delta$ is computed as,
+network. By differentiating the error function we know that for output units
+$\delta$ is computed as,
 
 \begin{equation}
     \label{eq:output}
@@ -1175,7 +1183,7 @@ As such, we can summarize the weight updating algorithm as,
 \begin{enumerate}
     \item
 
-        Provide the network with some input data $x_n$, and compute the
+        Provide the network with some input data $\mathbf{x}_n$, and compute the
         activations of each hidden and output neuron using Equation
         \eqref{eq:neuron},
 
@@ -1191,7 +1199,7 @@ As such, we can summarize the weight updating algorithm as,
 
     \item
 
-        Use Equation \eqref{eq:deriv} to evaluate the required derivatives.
+        Use Equation \eqref{eq:deriv} to evaluate the required derivatives, and
 
     \item
 
@@ -1201,40 +1209,27 @@ As such, we can summarize the weight updating algorithm as,
 
 \end{enumerate}
 
-These three steps feed forward, backpropagate and update weights are repeated
-throughout the training cycle of the neural networks. Such that the weights are
-optimized after each full parse over the training dataset.
+These five steps are repeated throughout the training cycle of the neural
+networks. Such that the weights are optimized after each full parse over the
+training dataset.
 
-The process described above is pretty computationally expensive, with a
-time-complexity of $O(W)$. However, this is only the case when we are using
-a singular training sample. If this process is to be done for each training
-sample, the runtime would then be $O(N\cdot W)$, where $N$ denotes the total
-number of training samples. During the normal training process, this is done
-over a number of epochs $\mathcal{E}$, which in turn further increases the
-time-complexity to $O(\mathcal{E}\cdot N\cdot W)$. It is because of this
-runtime, that \gls{BP}, and neural networks might not seem like a viable option
-at all \cite{Bishop}. 
+The process described above can be computed in linear time ($O(W)$). However,
+this is only the case when we are using a singular training sample. The process
+has to be repeated for each training sample. The runtime then becomes $O(N\cdot
+W)$ where $N$ denotes the total number of training samples. During the normal
+training process that is further repeated in a number of epochs $\mathcal{E}$
+which in turn further increases the time-complexity to $O(\mathcal{E}\cdot
+N\cdot W)$. Even though the runtime is still linear the number of weights might
+be huge leading to very long weight update times. Therefore backpropagation and
+neural networks might not seem like a viable option \cite{Bishop}.
 
 There is however ways to improve the runtime. Both \textit{stochastic gradient
-descent} and its' variation \textit{stochastic minibatch gradient descent},
-attempt to alleviate this problem by reducing the size of $\mathcal{E}$. A more
-detailed description can be found in the next Section. \citet{Bishop} does
-present other alternatives in his book, but none work as well as these two
-methods, which is why that is the default approach for neural network frameworks
+descent} and its variation \textit{stochastic minibatch gradient descent}
+attempt to alleviate this problem by reducing the number of needed epochs
+$\mathcal{E}$. A more detailed description can be found in the next Section.
+\citet{Bishop} does present other alternatives in his book but none working as
+well which is why that is the default approach for neural network frameworks
 such as Tensorflow/Keras.
-
-%In light of this undesired runtime, methods were introduced that attempt
-%to reduce this runtime. One of these methods is called batching. Batching
-%first shuffles, and then splits the training data into smaller batches. Each
-%individual batch is then run through the network, after which \gls{BP} is
-%applied. Running \gls{BP} on this smaller batch means that the resulting
-%gradient is only an approximation. Each epoch still consists of giving all $N$
-%samples to the network, but now \gls{BP} is applied several times during an
-%epoch, rather than after. This means that using batching greatly reduces the
-%amount of $\mathcal{E}$ needed for the same amount of convergence provided
-%by the non-batching approach, reducing overall run-time.\cite{Bishop} A
-%more detailed description of this approach will be addressed in Section
-%\ref{subsubsec:optimizers}.
 
 
 \subsubsection{Optimizers}\label{subsubsec:optimizers}
