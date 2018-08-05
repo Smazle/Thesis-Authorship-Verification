@@ -385,11 +385,17 @@ of classic activation functions used in neural networks is shown in Figure
 \end{figure}
 
 Each activation function has advantages and disadvantages. We mainly used the
-\gls{ReLu} activation function in the layers of our networks. \gls{ReLu} is
-generally considered a general purpose activation function. When selecting
-an activation function for your neurons, the best function would be the one
-which best approximates the underlying data relationship. Without a good idea
-as to what that function might be \gls{ReLu} is a good starting point. Its
+\gls{ReLu} activation function in the layers of our networks - it is defined
+as such,
+
+\begin{equation}
+    h(x) = \max(0, x)
+\end{equation}
+
+\gls{ReLu} is generally considered a general purpose activation function. When
+selecting an activation function for your neurons, the best function would be
+the one which best approximates the underlying data relationship. Without a good
+idea as to what that function might be \gls{ReLu} is a good starting point. Its
 simplicity, quick computation time and its below zero limitation means that
 a large portion of the network will not be activating, resulting in an even
 smaller computation time. In addition to that, the derivative of the function
@@ -403,18 +409,22 @@ rate of the network is not configured correctly a \gls{ReLu} activated neuron
 might be blasted with a gradient so large that it never reaches a point of
 activation again. In other words, the neuron "dies". As such, one can risk a
 network containing a lot of dead non-activating neurons greatly decreasing its
-learning power. On the other hand the sigmoid activation function does not allow
-its neurons to die. It can become victim to saturation. In the case of a weight
-being too small or too large, the output values will be placed at the far ends
-of the sigmoid range of values. At this point the gradient is incredibly small
-meaning that the contribution that neuron now has is negligible. This neuron
-is now only a strain on the network, slowing it down through its activation
-but contributing nothing - a problem \gls{ReLu} does not have. Its based on
-these considerations we chose the \gls{ReLu} activation function, leaving us
-the task of properly selecting our learning rate \citep{JiYan, AndrejKarpathy,
-AvinashSharmaV}.
+learning power. On the other hand there is sigmoid activation function,
+which is defined as follows, 
 
-% TODO: The argument for why we use these two functions are very weak.
+\begin{equation}
+    h(x) = \frac{1}{1 + e^{-x}}
+\end{equation}
+
+This activation function does not allow its neurons to die. It can become
+victim to saturation. In the case of a weight being too small or too large, the
+output values will be placed at the far ends of the sigmoid range of values.
+At this point the gradient is incredibly small meaning that the contribution
+that neuron now has is negligible. This neuron is now only a strain on the
+network, slowing it down through its activation but contributing nothing - a
+problem \gls{ReLu} does not have. Its based on these considerations we chose the
+\gls{ReLu} activation function, leaving us the task of properly selecting our
+learning rate \citep{JiYan, AndrejKarpathy, AvinashSharmaV}.
 
 Exceptions to usage of the \gls{ReLu} activation function can be found when
 we use \gls{LSTM} layers during our experimentation. There we used the tanh
@@ -430,9 +440,12 @@ and the hard sigmoid activation function,
     h(x) = \max(0, \min(1, x \cdot 0.2 + 0.5)).
 \end{equation}
 
+These both serve as the default activations functions when using the Keras
+deep learning library, which is what we used to produce this system.
+\cite{chollet2015keras}.
+
 As the activation function of our output neurons we have used the softmax
-function. The function is defined as These both serve as the default activations
-functions when using the keras deep learning library \cite{chollet2015keras}.
+function. The function is defined as
 
 \begin{equation}
     h(x_i) = \frac{e^{x_i}}{\sum_{k=1}^n e^{x_k}}, \text{for $i = 1,\dots,n$}.
