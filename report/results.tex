@@ -55,19 +55,20 @@ Figure \ref{tab:50_results} for the dataset of 50\% negatives and in Figure
 \centering
 \textbf{The results of running our methods on a 50\% negative test dataset}\par\medskip
 \begin{adjustbox}{center}
-\begin{tabular}{|c|l|c|c|c|c|c|c|c|c|}
+\scriptsize
+\begin{tabular}{|c|l|c|c|c|c|c|}
 \hline
-Constrained                & Method                  & Prediction System            & $\theta$ & TP  & TN  & FP  & FN  & Acc             & A-Error         \\ \hline
-\multirow{5}{*}{Yes} & SVM                     & \multicolumn{8}{c|}{N/A}                                                                     \\ \cline{2-10} 
-                     & Extended Delta          & \multicolumn{8}{c|}{N/A}                                                                     \\ \cline{2-10} 
-                     & \gls{conv-char-NN}      & $P_{lexp_{0.25}}$ & 0.390    & 3392 & 2344 & 1206 & 158  & \textbf{0.8078} & \textbf{0.0631} \\ \cline{2-10} 
-                     & \gls{conv-char-word-NN} & $P_{lexp_{0.25}}$ & 0.433    & 3185 & 2512 & 1038 & 36   & 0.8023          & 0.1268          \\ \cline{2-10} 
-                     & \gls{rec-sent-NN}       & $P_{lexp_{0.25}}$ & 0.033    & 3182 & 1470 & 2080 & 368  & 0.6552          & 0.2002          \\ \hline\hline
-\multirow{5}{*}{No}  & SVM                     & N/A               & N/A      & 2667 & 2442 & 1100 & 883  & 0.7195          & 0.2656          \\ \cline{2-10} 
-                     & Extended Delta          & N/A               & N/A      & 2349 & 2064 & 1486 & 1201 & 0.6215          & 0.3678          \\ \cline{2-10} 
-                     & \gls{conv-char-NN}      & $P_{lexp_{0.25}}$ & 0.486    & 3231 & 2913 & 637  & 319  & \textbf{0.8653} & \textbf{0.0987} \\ \cline{2-10} 
-                     & \gls{conv-char-word-NN} & $P_{lexp_{0.25}}$ & 0.544    & 2810 & 3088 & 462  & 740  & 0.8307          & 0.1933          \\ \cline{2-10} 
-                     & \gls{rec-sent-NN}       & $P_{lexp_{0.25}}$ & 0.267    & 1795 & 3076 & 474  & 1755 & 0.6860          & 0.3632          \\ \hline
+    \textbf{Constrained} & \textbf{Method} & \textbf{Prediction System} & $\mathbf{\theta}$ & \textbf{Accuracy} & \textbf{Accusation Error} & \textbf{Specificity} \\ \hline
+    \multirow{5}{*}{Yes} & \gls{SVM} & \multicolumn{5}{c|}{N/A} \\ \cline{2-7}
+    & Extended Delta & \multicolumn{5}{c|}{N/A} \\ \cline{2-7}
+    & \gls{conv-char-NN} & $P_{lexp_{0.25}}$ & 0.390 & \textbf{0.80780} & \textbf{0.06310} & 0.66028 \\ \cline{2-7}
+    & \gls{conv-char-word-NN} & $P_{lexp_{0.25}}$ & 0.433 & 0.80230 & 0.12680 & \textbf{0.70761} \\ \cline{2-7}
+    & \gls{rec-sent-NN} & $P_{lexp_{0.25}}$ & 0.033 & 0.65520 & 0.20020 & 0.41408 \\ \hline\hline
+    \multirow{5}{*}{No} & SVM & N/A & N/A & 0.71950 & 0.26560 & 0.68944 \\ \cline{2-7}
+    & Extended Delta & N/A & N/A & 0.62150 & 0.36780 & 0.58141 \\ \cline{2-7}
+    & \gls{conv-char-NN} & $P_{lexp_{0.25}}$ & 0.486 & \textbf{0.86530} & \textbf{0.09870} & 0.82056 \\ \cline{2-7}
+    & \gls{conv-char-word-NN} & $P_{lexp_{0.25}}$ & 0.544 & 0.83070 & 0.19330 & \textbf{0.86986} \\ \cline{2-7}
+    & \gls{rec-sent-NN} & $P_{lexp_{0.25}}$ & 0.267 & 0.68600 & 0.36320 & 0.86648 \\ \hline
 \end{tabular}
 \end{adjustbox}
 \caption{The results on the 50\% negative dataset using the listed methods.
@@ -75,7 +76,9 @@ Constrained refers to whether or not $\theta$ and the prediction system which we
 used was chosen based on their accuracy constrained to a 10\% accusation error.
 In case Yes, it refers to under the 10\% threshold, and No refers to simply
 maximizing accuracy with no regard for accusation error. In both cases
-the best results are shown in bold.}
+the best results are shown in bold. We have shown the raw \glspl{TP},
+\glspl{TN}, \glspl{FP} and \glspl{FN} in Appendix
+\ref{subsec:neural-network-50-test-results}.}
 \label{tab:50_results}
 \end{table}
 
@@ -83,19 +86,20 @@ the best results are shown in bold.}
 \centering
 \textbf{The results of running our methods on a 4\% negative test dataset}\par\medskip
 \begin{adjustbox}{center}
-\begin{tabular}{|c|l|c|c|c|c|c|c|c|c|}
+\scriptsize
+\begin{tabular}{|c|l|c|c|c|c|c|}
 \hline
-Constrained                & Method                  & Prediction System      & $\theta$ & TP  & TN & FP & FN  & Acc             & A-Error         \\ \hline
-\multirow{5}{*}{Yes} & SVM                     & \multicolumn{8}{c|}{N/A}                                                                   \\ \cline{2-10} 
-                     & Extended Delta          & \multicolumn{8}{c|}{N/A}                                                                   \\ \cline{2-10} 
-                     & \gls{conv-char-NN}      & $P_{MV}$          & 0.057    & 3546 & 13  & 140 & 4    & \textbf{0.9611} & \textbf{0.2352} \\ \cline{2-10} 
-                     & \gls{conv-char-word-NN} & $P_{exp_{0.25}}$  & 0.127    & 3516 & 32  & 112 & 34   & 0.9604          & 0.5151          \\ \cline{2-10} 
-                     & \gls{rec-sent-NN}       & $P_{lexp_{0.25}}$ & 0.002    & 3505 & 18  & 130 & 45   & 0.9526          & 0.7142          \\ \hline\hline
-\multirow{5}{*}{No}  & SVM                     & N/A               & N/A      & 2629 & 98  & 57  & 921  & 0.7372          & 0.9038          \\ \cline{2-10} 
-                     & Extended Delta          & N/A               & N/A      & 2369 & 92  & 56  & 1181 & 0.66549         & 0.9277          \\ \cline{2-10} 
-                     & \gls{conv-char-NN}      & $P_{lexp_{0.25}}$ & 0.137    & 3540 & 28  & 125 & 10   & \textbf{0.9635} & \textbf{0.2631} \\ \cline{2-10} 
-                     & \gls{conv-char-word-NN} & $P_{lexp_{0.25}}$ & 0.192    & 3507 & 47  & 97  & 43   & 0.9621          & 0.4777          \\ \cline{2-10} 
-                     & \gls{rec-sent-NN}       & $P_{lexp_{0.25}}$ & 0.002    & 3505 & 18  & 130 & 45   & 0.9526          & 0.7142          \\ \hline
+    \textbf{Constrained} & \textbf{Method} & \textbf{Prediction System} & $\mathbf{\theta}$ & \textbf{Accuracy} & \textbf{Accusation Error} & \textbf{Specificity} \\ \hline
+    \multirow{5}{*}{Yes} & \gls{SVM} & \multicolumn{5}{c|}{N/A} \\ \cline{2-7}
+    & Extended Delta & \multicolumn{5}{c|}{N/A} \\ \cline{2-7}
+    & \gls{conv-char-NN} & $P_{MV}$ & 0.057 & \textbf{0.96110} & \textbf{0.23520} & 0.08497 \\ \cline{2-7}
+    & \gls{conv-char-word-NN} & $P_{exp_{0.25}}$ & 0.127 & 0.96040 & 0.51510 & \textbf{0.22222} \\ \cline{2-7}
+    & \gls{rec-sent-NN} & $P_{lexp_{0.25}}$ & 0.002 & 0.95260 & 0.71420 & 0.12162 \\ \hline\hline
+    \multirow{5}{*}{No} & \gls{SVM} & N/A & N/A & 0.73720 & 0.90380 & \textbf{0.63226} \\ \cline{2-7}
+    & Extended Delta & N/A & N/A & 0.66549 & 0.92770 & 0.62162 \\ \cline{2-7}
+    & \gls{conv-char-NN} & $P_{lexp_{0.25}}$ & 0.137 & \textbf{0.96350} & \textbf{0.26310} & 0.18301 \\ \cline{2-7}
+    & \gls{conv-char-word-NN} & $P_{lexp_{0.25}}$ & 0.192 & 0.96210 & 0.47770 & 0.32639 \\ \cline{2-7}
+    & \gls{rec-sent-NN} & $P_{lexp_{0.25}}$ & 0.002 & 0.95260 & 0.7142 & 0.12162 \\ \hline
 \end{tabular}
 \end{adjustbox}
 \caption{The results on the 4\% negative data set using the listed methods.
@@ -103,6 +107,8 @@ Constrained refers to whether or not $\theta$ and the prediction system which we
 used was chosen based on their accuracy constrained to a 10\% accusation error.
 In case Yes it refers to under the 10\% threshold, and No refers to simply
 maximizing accuracy with no regard for accusation error. In both cases
-the best results were bolded.}
+the best results were bolded. We have shown the raw \glspl{TP}, \glspl{TN},
+\glspl{FP} and \glspl{FN} results in Appendix
+\ref{subsec:neural-network-4-test-results}.}
 \label{tab:04_results}
 \end{table}
