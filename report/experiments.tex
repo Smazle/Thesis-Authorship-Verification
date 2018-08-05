@@ -28,23 +28,12 @@ The experiments performed on our baseline methods was centered around parameter
 tuning. Not only parameters such as the $K$ in the extended delta method
 but also the set of features supplied to the methods. Other methods such as
 random forest has a built in filter for bad and noisy features (see Section
-\ref{subsubsec:applying-other-machine-learning-methods}).
-
-This is not the case for both the \gls{SVM} and the extended delta method that
-does not perform any kind of quality analysis of the features they are given.
-It is worst for the extended delta method as that is just a distance metric
-that has no way of weighing the features. An \gls{SVM} finds the best linearly
-separating hyperplane in some dimension by using support vectors and the kernel
-trick. The inclusion of non-descriptive features could potentially decrease the
-quality of the found hyperplane as they could cause some samples to be misplaced
-thus making finding a good linear separation harder. However using the $C$ and
-$\gamma$ parameter this can be combated as $\gamma$ denote samples influence
-relative to distance, and $C$ denotes the tradeoff between miss-classification
-and a smooth class-separator. Therefore we chose to perform a feature selection
-for them rather than just having them use the entire set available to them.
-Contrary to what was done by \citet{US} this process did not consist of trying
-out some random selection of features but rather a more systematic approach was
-used.
+\ref{subsubsec:applying-other-machine-learning-methods}). This is not the case
+for the extended delta method which is just a distance metric that has no way
+of weighing the features. Therefore we chose to perform a feature selection for
+rather than just having them use the entire set available to them. Contrary to
+what was done by \citet{US} this process did not consist of trying out some
+random selection of features but rather a more systematic approach was used.
 
 We started by generating a set of features. The feature set is simply a set of
 n-grams. In order for us to find as good a feature set as possible we created
@@ -857,7 +846,7 @@ validation accuracies during training in Figure \ref{fig:rec-sent-NN-training}.
     300 columns to a column vector with 300 elements. The LSTM layers are
     bidirectional meaning its runs through the layer from both directions
     resulting in an output dimensionality twice the unit count of 50.}
-    \label{fig:rec-sent-NN}}
+    \label{fig:rec-sent-NN}
 \end{figure}
 
 The initial network designs for our recurrent networks was based on a
