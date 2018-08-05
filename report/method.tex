@@ -327,13 +327,13 @@ the basis of \glspl{CNN} which looks at overlapping subsections of data
 
 As mentioned previously a neural network consists of a collection of neurons.
 Each neuron is a simplified mathematical model which behaves much like neurons
-in the brain. They receive, process and transmit information. Each neuron has a
-set of inputs called $x_{j}$ one of which, $x_{0}$, is a special bias input set
-to 1 and a single output called $z_i$, where $i$ refers to the neuron and $j$
-refers to a specific input to that neuron. Each neuron computes a weighted sum
-of its inputs and applies an activation function $h$ to the weighted sum. The
-weights are called $w_{ij}$ and the weight of the bias $w_{i0}$. The function
-each neuron computes is,
+in the brain. They receive, process and transmit information. Each neuron has
+a set of inputs called $x_{j}$ one of which, $x_{0}$, is a special bias input
+set to 1 and a single output called $z_i$, where $i$ refers to the neuron and
+$j$ refers to a specific input to that neuron. Each neuron computes a weighted
+sum of its inputs and applies an activation function $h$ to the weighted sum.
+\citep{Igel, Bishop} The weights are called $w_{ij}$ and the weight of the bias
+$w_{i0}$. The function each neuron computes is,
 
 \begin{equation}\label{eq:neuron}
     z_i = h(a_i) = h\left(
