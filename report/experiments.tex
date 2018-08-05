@@ -573,7 +573,7 @@ did that because equal dimensionality was required by Keras.
 
 \begin{figure}
     \centering
-    \textbf{Training and Validation Accuracies for Network \gls{conv-char-NN}}\par\medskip
+    \textbf{Training and Validation Accuracy, \gls{conv-char-NN}}\par\medskip
     \includegraphics[width=0.5\textwidth]{./pictures/experiments/conv_char_nn/training_accuracy}
     \caption{The training and validation accuracy of the \gls{conv-char-NN}
     during training. Each epoch contains several thousand minibatches which is
@@ -850,46 +850,44 @@ validation accuracies during training in Figure \ref{fig:rec-sent-NN-training}.
 \begin{figure}
     \centering
     \includegraphics[width=\textwidth]{./pictures/experiments/rec_sent_nn/model}
-    \caption{The structure of network \gls{rec-sent-NN}. The weights are shared
-        from the embedding layer all the way down to right before the two
-        paths merge. The lambda layer takes each sentence and averages along
-        the first axis causing the dimensionality to change from a matrix with
-        25 rows and 300 columns to a column vector with 300 elements. The LSTM
-        layers are bidirectional meaning its runs through the layer from both
-        directions resulting in an output dimensionality twice the unit count
-        of 50.
+    \caption{The structure of the \gls{rec-sent-NN}. The weights are shared
+    from the embedding layer all the way down to right before the two paths
+    merge. The lambda layer takes each sentence and averages along the first
+    axis causing the dimensionality to change from a matrix with 25 rows and
+    300 columns to a column vector with 300 elements. The LSTM layers are
+    bidirectional meaning its runs through the layer from both directions
+    resulting in an output dimensionality twice the unit count of 50.}
     \label{fig:rec-sent-NN}}
 \end{figure}
 
 The initial network designs for our recurrent networks was based on a
-combination of the work done by \citet{qian:2018} and our \gls{conv-char-NN}
+combination of the work done by \citet{qian:2018} and the \gls{conv-char-NN}
 network described in Section \ref{subsubsec:conv_char_nn}. We simply replaced
-the feature extraction component in the network from convolutional layers to
-\gls{GRU} layers. In addition that the first \gls{RNN} network also used the
-cosine similarity as its method of combination. Like the previous network this
-network also worked on the character level. However it was unfortunately not
-possible for us to train this network. The first iteration of the training
-needed an estimated 140 hours to run through a single epoch. That was a very
-long time to train a network and it was not feasible for us to try that in our
-limited time.
+the feature extraction component in the \gls{conv-char-NN} from convolutional
+layers to \gls{GRU} layers. In addition that the first \gls{RNN} network
+also used the cosine similarity as its method of combination. Like the
+previous network this one also worked on the character level. However it was
+unfortunately not possible for us to train this network. The first iteration of
+the training needed an estimated 140 hours to run through a single epoch. That
+was too long to and simply not feasible for us to try in our limited time.
 
 An attempt at saving training time was the inclusion of a convolutional layer
 in the feature extraction part of the network. This would be placed before the
-recurrent layers in an attempt to minimize the amount of data that was given
-to the recurrent layers. The convolution used a window size of 8 and a stride
-of 8 meaning that each text would be 8 times smaller after the convolutional
-layer. This did decrease the runtime but only resulted in a validation accuracy
-of 0.532 at its peak. This was slightly increased when replacing the cosine
-similarity with a series of dense layers instead and using a bidirectional
-\gls{LSTM} layer rather than a single \gls{GRU} layer.
+recurrent layers in an attempt to minimize the amount of data that was given to
+the recurrent layers. The convolution used a window size of 8 and a stride of 8
+meaning that each text would be 8 times smaller after the convolutional layer.
+This did decrease the runtime but resulted in a validation accuracy of 0.532
+at its peak. This was slightly increased when replacing the cosine similarity
+with a series of dense layers instead and using a bidirectional \gls{LSTM} layer
+rather than a single \gls{GRU} layer.
 
-Instead of using convolutions to limit the text size we also tried changing
-the linguistic level our network worked at. Again inspired by \cite{qian:2018}
+Instead of using convolutions to limit the text size we also tried changing the
+linguistic level our network operated at. Again inspired by \cite{qian:2018}
 we elevated our network from using the characters of the texts to using the
 sentences. This sentence representation was described in the \textbf{Embedding}
-part above. This approach significantly decreased the runtime to around $1.5$
-hours. But it also revealed the reason why a recurrent network might not be
-the best choice for a task like this. The training accuracy increased much
+part above. This approach significantly decreased the training time to around
+$1.5$ hours. But it also revealed the reason why a recurrent network might not
+be the best choice for a task like this. The training accuracy increased much
 more than for the convolutional networks while the validation accuracy quickly
 stalled. It therefore seemed like this approach was very prone to overfitting on
 particular authors. This lead to the final network described above. This network
@@ -905,34 +903,32 @@ The results can be seen in the Figures, \ref{fig:rec-sent-NN-pred-50} and
     \centering
     \textbf{Prediction system results for 50\% negative dataset, \gls{rec-sent-NN}}\par\medskip
     \includegraphics[scale=0.33]{./pictures/experiments/rec_sent_nn/prediction_system_50}
-    \caption{Results of running the prediction system with \gls{rec-sent-NN} on
-        a validation dataset with 50\% positive samples and 50\% negative
-        samples. In the upper graph we show the accuracies obtained as a
-        function of $\theta$ for different prediction systems. At the bottom we
-        have shown the accusation error as a function $\theta$ again with one
-        line for each prediction system. We can see that as the threshold
-        increases and we accuse more people of cheating the accusation error
-        rises.}
+    \caption{Results of running the prediction system with the \gls{rec-sent-NN}
+    on a validation dataset with 50\% positive samples and 50\% negative
+    samples. In the upper graph we show the accuracies obtained as a function
+    of $\theta$ for different prediction systems. At the bottom we have shown
+    the accusation error as a function $\theta$ again with one line for each
+    prediction system. We can see that as the threshold increases and we accuse
+    more people of cheating the accusation error rises.}
     \label{fig:rec-sent-NN-pred-50}
 \end{figure}
 
 \begin{figure}
     \centering
-    \textbf{Prediction system results for 4\% negative dataset,\gls{rec-sent-NN}}\par\medskip
+    \textbf{Prediction system results for 4\% negative dataset, \gls{rec-sent-NN}}\par\medskip
     \includegraphics[scale=0.33]{./pictures/experiments/rec_sent_nn/prediction_system_04}
-    \caption{Results of running the prediction system with \gls{rec-sent-NN} on
-        a validation dataset with 96\% positive samples and 4\% negative
-        samples. In the upper graph we show the accuracies obtained as a
-        function of $\theta$ for different prediction systems. At the bottom we
-        have shown the accusation error as a function $\theta$ again with one
-        line for each prediction system. We can see that as the threshold
-        increases and we accuse more people of cheating the accusation error
-        rises.}
+    \caption{Results of running the prediction system with the \gls{rec-sent-NN}
+    on a validation dataset with 96\% positive samples and 4\% negative samples.
+    In the upper graph we show the accuracies obtained as a function of $\theta$
+    for different prediction systems. At the bottom we have shown the accusation
+    error as a function $\theta$ again with one line for each prediction system.
+    We can see that as the threshold increases and we accuse more people of
+    cheating the accusation error rises.}
     \label{fig:rec-sent-NN-pred-4}
 \end{figure}
 
-The best configurations for \gls{rec-sent-NN}, using both the 50\% and
-4\% negative dataset was the following,
+The best configurations for the \gls{rec-sent-NN}, using both the 50\% and 4\%
+negative dataset was the following,
 
 \begin{center}
     \begin{adjustbox}{center}
@@ -961,9 +957,9 @@ the network does.
 \subsubsection{Character and Word Level Convolutional Siamese Neural Network}
 \label{subsubsec:conv_char_word_nn}
 
-The last network we produced is what we call \gls{conv-char-word-NN}. This
-network is similar to \gls{conv-char-NN} as it is also convolutional. This
-network was an attempt at expanding on the successful architecture of
+The last network we produced is what we call the \gls{conv-char-word-NN}. This
+network is similar to the \gls{conv-char-NN} as it is also convolutional. This
+network was an attempt at expanding on the successful architecture of the
 \gls{conv-char-NN} by using looking at words in addition to characters. Applied
 to the same data as the previous networks, we got a maximum accuracy of 0.697 on
 the second epoch. We have shown the training and validation accuracies in Figure
@@ -972,9 +968,9 @@ parts was as follows.
 
 \begin{figure}
     \centering
-    \textbf{Training and Validation Accuracies for Network \gls{conv-char-word-NN}}\par\medskip
+    \textbf{Training and Validation Accuracy, \gls{conv-char-word-NN}}\par\medskip
     \includegraphics[width=0.5\textwidth]{./pictures/experiments/conv_char_word_nn/training}
-    \caption{Training and validation accuracies of \gls{conv-char-word-NN}
+    \caption{Training and validation accuracies of the \gls{conv-char-word-NN}
         during training. We stop training when the validation accuracy no longer
         follow the training accuracy.}
     \label{fig:conv-char-word-NN-training}
@@ -986,16 +982,16 @@ parts was as follows.
 
         Like in the \gls{conv-char-NN} the embedding layers takes in a text as
         a stream of characters where they are then mapped to a 5 dimensional
-        vector. The difference is however that we also added a word channel. It
-        uses the pre-trained Facebook word embeddings mentioned earlier to map
-        each word of the text to a 300 dimensional vector. In \gls{rec-sent-NN}
-        these embeddings were averaged to represent a sentence but in this
-        network the embeddings are used as is. This is the basic idea of this
-        network a multi-channeled convolutional approach. Thus the network
-        does not take 2 inputs in the form of two texts, it takes 4 inputs, a
-        character input for each text and a word input for each text. Both of
-        these channels have their own path through the network with their own
-        convolutional layers.
+        vector. The difference is however that we also added a word channel.
+        It uses the pre-trained Facebook word embeddings mentioned earlier
+        to map each word of the text to a 300 dimensional vector. In the
+        \gls{rec-sent-NN} these embeddings were averaged to represent a sentence
+        but in this network the embeddings are used as is. This is the basic
+        idea of this network a multi-channeled convolutional approach. Thus the
+        network does not take 2 inputs in the form of two texts, it takes 4
+        inputs, a character input for each text and a word input for each text.
+        Both of these channels have their own path through the network with
+        their own convolutional layers.
 
     \item[Feature Extraction:]
 
@@ -1037,7 +1033,7 @@ We have the network structure in Figure \ref{fig:conv-char-NN-model}.
 \begin{figure}
     \centering
     \includegraphics[width=\textwidth]{./pictures/experiments/conv_char_word_nn/model}
-    \caption{The structure of network \gls{conv-char-word-NN}. The weights are
+    \caption{The structure of network the \gls{conv-char-word-NN}. The weights are
         shared from the embedding layer all the way down to right before
         the four paths merge. The texts are given as both a sequence of
         characters and as a sequence of words. That allows the network to look
@@ -1045,15 +1041,15 @@ We have the network structure in Figure \ref{fig:conv-char-NN-model}.
     \label{fig:conv-char-NN-model}
 \end{figure}
 
-The design of this network was derived based on the \gls{conv-char-NN}. The
-convolutional approach used on \gls{conv-char-NN} showed promise and this
+The design of this network was derived from the \gls{conv-char-NN}. The
+convolutional approach used in the \gls{conv-char-NN} showed promise and this
 network was an attempt to improve on that.
 
 Initially these attempted improvements were small. They took the form of a
 different amount of convolutional layers with a differing amount of sliding
 window sizes. These small changes also included the addition of regularization
 measures, such as dropout layers. The largest change came when we incorporated
-the multi-channel approach as seen in \cite{DBLP:journals/corr/RuderGB16c}. The
+the multi-channel approach seen in \cite{DBLP:journals/corr/RuderGB16c}. The
 thought process was that if characters was a good features for this task another
 channel could maybe provide better results. This was what yielded the network
 described above which works on the character level and the word level. A 3
@@ -1072,7 +1068,7 @@ negatives in Figure \ref{fig:conv-char-word-NN-pred-4}.
     \centering
     \textbf{Prediction system results for 50\% negative dataset, \gls{conv-char-word-NN}}\par\medskip
     \includegraphics[scale=0.33]{./pictures/experiments/conv_char_word_nn/prediction_system_50}
-    \caption{Results of running the prediction system with
+    \caption{Results of running the prediction system with the
         \gls{conv-char-word-NN} on a validation dataset with 50\% positive
         samples and 50\% negative samples. In the upper graph we show the
         accuracies obtained as a function of $\theta$ for different prediction
@@ -1087,7 +1083,7 @@ negatives in Figure \ref{fig:conv-char-word-NN-pred-4}.
     \centering
     \textbf{Prediction system results for 4\% negative dataset, \gls{conv-char-word-NN}}\par\medskip
     \includegraphics[scale=0.33]{./pictures/experiments/conv_char_word_nn/prediction_system_04}
-    \caption{Results of running the prediction system with
+    \caption{Results of running the prediction system with the
         \gls{conv-char-word-NN} on a validation dataset with 96\% positive
         samples and 4\% negative samples. In the upper graph we show the
         accuracies obtained as a function of $\theta$ for different prediction
