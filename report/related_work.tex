@@ -60,41 +60,6 @@ only with 35 authors used, and 1000 Tweets per author. In the case where either
 the number of authors were increased or the number of Tweets were decreased the
 accuracy fell.
 
-% TODO This has to be rewritten if we are to include it.
-
-%The approach proposed by \citet{ding2016} was somewhat more complex. While they
-%too made use of a \gls{CNN}, the application of the network was split into
-%four different modalities. They described their approach as \textit{Mining
-%stylometric representations for authorship analysis}. They used four different
-%\glspl{CNN}, each one focusing on 1-2 stylometric levels of the text. The point
-%of splitting it up, was so they could pick and choose which modality they wanted
-%to use on the specific example. The first network looked at the word level,
-%and topical modalities of the text. In doing so it made use of 3 different
-%author word biases. The topical bias described a text's tendency towards words
-%that were specific to the topic of the entire text. The local contextual
-%bias described the text's tendency towards specific words based on the topic
-%of a specific part of the text, as the overall topic was rarely consistent
-%throughout the text. Finally the lexical bias described the author's bias
-%towards words with a similar meaning, such as "nice day" vs "wonderfull
-%day". Using these thee biases, where the local contextual bias is derived
-%from a numerical representation of a sequence of words, the network predicted
-%the word most likely to fit into the local context. The second network looked
-%at the character modality, and worked in a somewhat similar fashion, but
-%on the character level. It represented each word in the text as a set of
-%character bigrams. After converting each of these bigrams to the numerical
-%representation, it was fed through a fully connected sigmoid layer, establishing
-%the relation between the bigrams and the word they came together to represent.
-%The third and last network addressed the syntactic modality. This focused on
-%the \gls{POS}-tags of the text. By looking at the N neighboring \gls{POS}-tag
-%bigrams, the network determined the most likely \gls{POS} of that word. All
-%these three modality-networks attempted to optimize the forward log probability
-%of their prediction. After training each of these models on the texts of a
-%specific author, they were applied to two texts. The similarity of each of these
-%two texts was then computed using a simple cosine distance. When applying this
-%to a set of long English novels and essays, they got the best results
-%using only the combined lexical topical network, which produced an average
-%accuracy of 0.7950.
-
 Siamese neural networks are networks that share weights across multiple parts
 of the network. Siamese networks were first introduced by \citet{NIPS1993_769}
 for handwritten signature verification. The idea behind siamese networks is
