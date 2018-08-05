@@ -8,21 +8,31 @@ scalability, teacher feed/assistance and model implementation.
 
 \subsection{Results}
 
-We presented our results in Section \ref{sec:results}. We did not succeed in
-achieving an accusation error of less than 10\% while catching 95\% of cheaters.
-However, we believe that some of the methods show promising results. While
-all the networks we applied to the test dataset beat our baselines the best
-performing network was the \gls{conv-char-NN}. This network had an accusation
-error closest to the one required in addition to having the highest overall
-accuracy in all the categories we tested it on. It was closely followed by
-network \gls{conv-char-word-NN}. The \gls{rec-sent-NN} had sub-par performance.
-It is however worth noting that this could very well be due to the infeasibility
-of running any of our \glspl{RNN} on the character or word level. We hypothesize
-that the accuracy of an RNN would be greatly increased had it been run on a
-lower linguistic level. In experiments we found that \glspl{CNN} also performed
-badly on the sentence level in our use case. Unfortunately we were not able to
-train an \gls{RNN} on one of the lower linguistic levels due to computational
-constraints.
+We presented the results of our experiments on the test dataset in Section
+\ref{sec:results}. Here we discuss those results. We will focus on the results
+on a dataset with 4\% negatives as that reflects the real world. For the
+networks we use the constrained results while for the baselines we use the
+unconstrained results. We reported three properties for each method, accuracy,
+accusation error and specificity. None of our methods achieved an accusation
+error of below 10\% as MaCom required. The closest method to achieve such
+a low accusation error was the \gls{conv-char-NN} network. The baselines
+both had higher accusation error than any of the networks on more than 90\%.
+The highest specificity was achieved by the baseline methods and of the
+networks the \gls{conv-char-word-NN} achieved the highest specificity. As the
+accusation error was the most important measure for MaCom we conclude that the
+\gls{conv-char-NN} was the best network even though it did not have the highest
+specificity.
+
+We believe that some of the methods show promising results. The
+\gls{conv-char-NN} had the highest overall accuracy in all the categories we
+tested it on. It was closely followed by network \gls{conv-char-word-NN}. The
+\gls{rec-sent-NN} had sub-par performance. It is however worth noting that this
+could very well be due to the infeasibility of running any of our \glspl{RNN} on
+the character or word level. We hypothesize that the accuracy of an \gls{RNN}
+would be greatly increased had it been run on a lower linguistic level. In
+experiments we found that \glspl{CNN} also performed badly on the sentence level
+in our use case. Unfortunately we were not able to train an \gls{RNN} on one of
+the lower linguistic levels due to computational constraints.
 
 When comparing our validation dataset results from Table
 \ref{tab:experiment-validation-results} to our test results we can clearly see a
@@ -32,7 +42,7 @@ is justified as it was on the validation set that we found the prediction system
 and threshold that got us under said requirement. Therefore it stands to reason
 that the models would have a somewhat lower performance when applied to a fresh,
 untouched test dataset. This lowered performance takes form of an increased
-accusation error, and a decreased accuracy. 
+accusation error, and a decreased accuracy.
 
 It is worth noting that the number of false accusations on the validation
 dataset were very small. It seems like we have overfitted a lot on the
