@@ -3,7 +3,8 @@ System Information
 ------------------
       Time of this report: 8/3/2018, 14:33:40
              Machine name: DESKTOP-UCE1HGK
-         Operating System: Windows 10 Pro 64-bit (10.0, Build 17134) (17134.rs4_release.180410-1804)
+         Operating System: Windows 10 Pro 64-bit (10.0, Build 17134)
+                           (17134.rs4_release.180410-1804)
                  Language: Danish (Regional Setting: Danish)
       System Manufacturer: Notebook                        
              System Model: P640RE
