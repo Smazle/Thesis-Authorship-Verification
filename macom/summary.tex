@@ -1,7 +1,6 @@
 \documentclass[11pt]{article}
 \usepackage[a4paper, hmargin={2.8cm, 2.8cm}, vmargin={2.5cm, 2.5cm}]{geometry}
-\usepackage[table, dvipsnames]{xcolor}
-\usepackage{eso-pic}
+\usepackage[table, dvipsnames]{xcolor} \usepackage{eso-pic}
 \usepackage{graphicx}
 \usepackage{placeins}
 \usepackage{amsmath}
@@ -88,21 +87,69 @@
     meaning that it would be acceptable if sacrificed the amount of students we
     caught if resulted in a low amount of false accusations.
 
-    \section{Data}
-    The data used for the creation of this system was provided by MaCom.
-    We made use a set consisting of 10.000 authors, spread across several
-    different schools, and school courses.
+    The system we created was intended to be supplementary, by aiding teachers
+    in their decision, not making it for them.
 
+    This summary will go through the major points of our master thesis.
+    If any more information is desired, please refer to the full thesis.
+
+
+    \section{Data}
+
+    The data used for the creation of this system was provided by MaCom. We made
+    use a set consisting of 10.000 authors, spread across several different
+    schools.
 
      
     \section{The System}
-    
+
+    The system we produced consists of two parts. A neural network
+    and a prediction system.
+
     The way the our system works is when a student hands in an assignment,
     the assignment ($t$) and the student ID ($\alpha$) is given to our system.
     The assignment $t$ is then compared to each of the assignment previously
     created by $\alpha$, each producing a score indicating how alike the two
     assignments are.
 
-    It then takes a weighted average over these likeness scores. 
-    The best way to perform this weighing was determined on a subset of
-    the 10.000 authors we were provided.
+    It then takes a weighted average over these likeness scores. The weight
+    of assignment is based on the time the assignment was submitted in months
+    relative to the assignment $t$, and how long each text is, as smaller text
+    are less indicative of a students' writing style. A simple model of the proces
+    can be seen in Figure \ref{fig:model}.
+
+    \begin{figure}
+    \centering
+    \includegraphics[width=0.5\textwidth]{./pictures/Model}
+    \caption{A simply illustration of the likeness computation performed
+            when our system receives a text for analysis}
+    \label{fig:model}
+    \end{figure}
+
+
+    In other words previous assignments that were submitted at a point
+    in time near $t$ will be weighed higher. Additionally texts
+    that are longer will also be rated higher.
+
+    This weighing scheme was decided after performing a multiplicity of
+    experimenting with different weighing functions, using a subset of the
+    10.000 authors we were provided.
+
+    If this weighted average likeness exceeds a certain threshold, the
+    assignment is considered non-ghostwritten. This threshold
+    is what we use to control the accusation error of our system,
+    as it allows us to control how certain our system has to be in
+    its' decision making
+
+    \section{Teacher Feedback}
+
+    What the system looks for is the usage of certain combinations of
+    characters. After our neural network has learned by looking a many thousands
+    of student assignments, it has learned how the typical student writes.
+    It is using this, that when the system decides a student isn't the author
+    of a text, it will be able to provide evidence to back up its claims.
+
+    % TODO: How to explain this? :O 
+    
+
+\end{document}
