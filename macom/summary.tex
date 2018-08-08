@@ -7,8 +7,7 @@
 \author{
     \begin{tabular}{ccc}
     \Large{August V. S\o rensen} & \& & \Large{Magnus N. Stavngaard} \\
-    august.vinkel@gmail.com      &    & magnus@stavngaard.dk         \\
-    NCB360                       &    & MZC887
+    august.vinkel@gmail.com      &    & magnus@stavngaard.dk
     \end{tabular}
 }
 
@@ -29,7 +28,7 @@
 
     During the last 6 months, we have created a system designed to determine if
     a secondary school student has used a ghostwriter on a text he/she turned in
-    via Lectio. This system we developed is intended to be a tool that assists
+    via Lectio. The system we developed is intended to be a tool that assists
     teachers in more accurately determining the authenticity of an assignment,
     while also providing a description of what factors contributed to the
     decision the system made.
@@ -49,24 +48,20 @@
 
     \section{The System}
 
-    The best network we developed is trained to compare two texts. The network
-    will report the probability that the two texts are written by the same
-    author. Since students have normally written more than one text, we also
-    developed a method for combining the output of the networks on multiple
-    texts.
+    The networks we developed is trained to compare two texts. The network will
+    report the probability that the two texts are written by the same author.
+    Since students have normally written more than one text, we also developed a
+    method for combining the output of the networks on multiple texts.
 
     When we are testing whether a text is ghost written or not, we compare it to
     all texts we know to be written by the student (his/her previous turned in
     texts). We then combine the probabilities the network gives for each text.
     We found by experimentation that the best way of scoring the probabilities
     is to consider the length of the texts and when the texts were turned in.
-
     Newer texts gives a better estimate of an authors writing style than older
     texts. Similarly longer texts gives a better estimate of an authors writing
-    style than shorter texts.
-
-    We have illustrated how our implemented methods works in Figure
-    \ref{fig:model}.
+    style than shorter texts. We have illustrated how our implemented methods
+    works in Figure \ref{fig:model}.
 
     \begin{figure}
         \centering
@@ -116,10 +111,10 @@
 
     We looked at what kind of feedback we can give to teachers on why we
     consider a text ghostwritten. We only performed these experiments on the
-    network that performed best. It was trough these experiments we found that
-    we were able determine which parts of a text is most likely ghostwritten.
-    This would allow a teacher suspicious of a student to argue their case base
-    on these potentially ghostwritten parts.
+    network that performed best. It was through these experiments we found
+    that we were able determine which paragraphs of a text is most likely
+    ghostwritten. This would allow a teacher suspicious of a student to identify
+    paragraphs of assignment to focus on.
 
     What the network looks at when making a decision is the presence or absence
     of certain phrases in the texts it is comparing. An example of such a phrase
@@ -129,8 +124,10 @@
     assignments by the presence and absence of hundreds of such strings.
 
     Individually they are useless in explaining why an assignment is
-    ghostwritten but if hundreds of them suddenly changes that is a clear sign
-    that a ghostwriter might have been used.
+    ghostwritten but if hundreds of them suddenly changes that is a clear
+    sign that a ghostwriter might have been used. A teacher can get access to
+    the phrases that changed between two assignments and possibly use that
+    information for explaining why an assignment is ghost written.
 
 
     \section{Conclusion}
@@ -143,7 +140,7 @@
     texts). We don't believe that it is possible to both achieve an accusation
     error of less than 10\% while also catching 95\% of cheaters. However, we
     do believe that with further work it would probably be possible to catch
-    10\% to 20\% of the cheaters while keeping the accusation error below the
+    10 to 20\% of the cheaters while keeping the accusation error below the
     threshold.
 
     \newpage
