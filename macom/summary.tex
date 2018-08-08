@@ -27,16 +27,16 @@
 
     \maketitle
 
-    During the last 6 months we have created a system designed to determine if a
-    secondary school student used a ghostwriter on a text he/she turned in via
-    Lectio. This system we develop is intended be a tool that assists teacher in
-    more accurately determining the authenticity of an assignment, while also
-    providing a description of what factors contributed to the decision the
-    system made.
+    During the last 6 months, we have created a system designed to determine if
+    a secondary school student has used a ghostwriter on a text he/she turned in
+    via Lectio. This system we developed is intended to be a tool that assists
+    teachers in more accurately determining the authenticity of an assignment,
+    while also providing a description of what factors contributed to the
+    decision the system made.
 
-    We were given two goals. To keep the number of false accusations the system
+    We were given two goals: To keep the number of false accusations the system
     made below 10\% and to catch 95\% of the ghostwriters. Keeping a low amount
-    of false accusation was the primary goal of the two, meaning that the focus
+    of false accusations was the primary goal of the two, meaning that the focus
     of the experiments were on keeping false accusations below 10\% while
     catching as many ghost writers as possible.
 
@@ -49,13 +49,15 @@
 
     \section{The System}
 
-    The networks we developed are trained to compare two texts. The network will
-    report the probability that the two texts are written by the same author.
-    Since students has normally written more than one text we also developed a
-    method for combining the output of the networks on multiple texts.
+    We developed several networks throughout our experimentation, but this
+    summary focuses on the best performing one. The network we developed is
+    trained to compare two texts. The network will report the probability that
+    the two texts are written by the same author. Since students have normally
+    written more than one text, we also developed a method for combining the
+    output of the networks on multiple texts.
 
-    When we are testing whether an text is ghost written we compare it to all
-    texts we know to be written by the student (his/her previous turned in
+    When we are testing whether a text is ghost written or not, we compare it to
+    all texts we know to be written by the student (his/her previous turned in
     texts). We then combine the probabilities the network gives for each text.
     We found by experimentation that the best way of scoring the probabilities
     is to consider the length of the texts and when the texts were turned in.
@@ -115,10 +117,10 @@
 
     We looked at what kind of feedback we can give to teachers on why we
     consider a text ghostwritten. We only performed these experiments on the
-    network that performed best. We found via experimentation that we are able
-    to find the parts of an assignment that are most likely to be ghostwritten.
-    That could allow a teacher suspicious of a student to narrow down which part
-    of the text is least likely to be written by a ghostwriter.
+    network that performed best. It was trough these experiments we found that
+    we were able determine which parts of a text is most likely ghostwritten.
+    This would allow a teacher suspicious of a student to argue their case base
+    on these potentially ghostwritten parts.
 
     What the network looks at when making a decision is the presence or absence
     of certain phrases in the texts it is comparing. An example of such a phrase
@@ -140,11 +142,12 @@
     we also believe that our methods require more work before they are ready for
     implementation (based on the results on the dataset with 4\% ghostwritten
     texts). We don't believe that it is possible to both achieve an accusation
-    error on less than 10\% while catching 95\% of cheaters. What is probably
-    possible is to continue developing the network to minimize the accusation
-    error. Then it would probably be possible to catch 10\% to 20\% of the
-    cheaters while keeping the accusation error below the threshold.
+    error of less than 10\% while also catching 95\% of cheaters. However, we
+    do believe that with further work it would probably be possible to catch
+    10\% to 20\% of the cheaters while keeping the accusation error below the
+    threshold.
 
+    \newpage
     \bibliographystyle{apalike}
     \bibliography{literature}
 
