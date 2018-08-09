@@ -1,0 +1,243 @@
+\documentclass[10pt]{beamer}
+
+\usetheme[progressbar=frametitle]{metropolis}
+
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{appendixnumberbeamer}
+\usepackage{booktabs}
+\usepackage[scale=2]{ccicons}
+\usepackage{pgfplots}
+\usepgfplotslibrary{dateplot}
+\usepackage{xspace}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{bbm}
+
+\newcommand{\themename}{\textbf{\textsc{metropolis}}\xspace}
+
+\title{Authorship Verification}
+\subtitle{Masters Thesis}
+\date{}
+\author{Magnus Stavngaard}
+\institute{University of Copenhagen}
+
+\defbeamertemplate{description item}{align left}{\insertdescriptionitem\hfill}
+
+\begin{document}
+
+\maketitle
+
+\begin{frame}[fragile]{Problem Statement}
+    \begin{definition}[Authorship Verification]
+        \label{def:authorship_verification}
+
+        Given a set of texts $T_\alpha$ written by author $\alpha$ and a
+        single text $t$ of unknown authorship, determine if $\alpha$ is
+        the author of $t$.
+
+    \end{definition}
+
+    \begin{itemize}
+        \item Use data from MaCom (Lectio) used by more than 90\% of Danish
+            Secondary Schools.
+        \item 4\% of SRP assignments are ghostwritten.
+        \item Accusation error less than 10\% while catching 95\% of
+            ghostwriters.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Baselines}
+    \begin{itemize}
+        \item Classical machine learning authorship verification methods use
+            hand engineered feature sets.
+        \item Delta method are a distance function between vectors of feature
+            frequencies. Closest author is considered the author of the text.
+        \item SVM classifier are trained on feature vector of $T_\alpha$ and
+            $\overline{T_\alpha}$.
+        \item Features are frequencies of
+            \begin{itemize}
+                \item character-n-grams ([h, e, l, l, o]),
+                \item special-character-n-grams ([!, ., ?]),
+                \item word-n-grams ([Hello, World]) and
+                \item pos-tag-n-grams ([noun, verb, verb, adjective]).
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Siamese Networks}
+    \begin{itemize}
+        \item Siamese Neural Networks compares two objects.
+
+            \begin{description}
+                \item[Input] Two objects,
+                \item[Output] Probability that objects belong to same class.
+            \end{description}
+    \end{itemize}
+
+    \begin{center}
+        \includegraphics[width=0.6\textwidth]{../../report/pictures/method/siamese}
+    \end{center}
+\end{frame}
+
+\begin{frame}[fragile]{Networks}
+    \setbeamertemplate{description item}[align left]
+    \begin{itemize}
+        \item Networks consist of 4 parts:
+
+            \begin{description}
+                \item[Embedding] Encode raw text in format to be used by
+                    networks.
+                \item[Feature Extraction] Extract feature vectors from the
+                    encoded texts.
+                \item[Combining] Combine extracted feature vectors using some
+                    function.
+                \item[Decision] Define whether or not the combined feature
+                    vectors are similar or dissimilar.
+            \end{description}
+
+        \item Weight sharing is in embedding, feature extraction and combining.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Char-CNN}
+    \begin{center}
+        \includegraphics[width=0.6\textwidth]{../../report/pictures/experiments/conv_char_nn/model}
+    \end{center}
+\end{frame}
+
+\begin{frame}[fragile]{Sent-RNN}
+    \begin{center}
+        \includegraphics[width=0.6\textwidth]{../../report/pictures/experiments/rec_sent_nn/model}
+    \end{center}
+\end{frame}
+
+\begin{frame}[fragile]{Char-word-CNN}
+    \begin{center}
+        \includegraphics[width=0.7\textwidth]{../../report/pictures/experiments/conv_char_word_nn/model}
+    \end{center}
+\end{frame}
+
+\begin{frame}[fragile]{Combining Network Output}
+    \begin{itemize}
+        \item Students have on average turned in 13 assignments.
+        \item We combine the output of the network on texts using prediction
+            systems,
+
+        \begin{align*}
+            &P_w \colon \mathcal{A} \times \mathcal{T} \times [0, 1] \rightarrow
+                \{0, 1\} \\
+            &P_w(\alpha, t, \theta) \mapsto \mathbbm{1}\left[
+                    \sum_{t' \in T_\alpha} w(t') f(t, t') > \theta
+                \right].
+        \end{align*}
+
+        \item We find best prediction system configuration via,
+
+        \begin{equation*}
+            \begin{aligned}
+                & \underset{\theta, x}{\text{minimize}}
+                & & \sum_{(\alpha, t_u) \in V} \left|
+                    P_x(T_\alpha \setminus \{t_u\}, t_u, \theta) -
+                    \mathbbm{1}\left[t_u \in T_\alpha\right]
+                \right| \\
+                & \text{subject to}
+                & & \frac{\sum_{(\alpha, t_u) \in V} \mathbbm{1}\left[t_u \in T_\alpha\right] \cdot
+                    \left(1 - P_x(T_\alpha \setminus \{t_u\}, t_u, \theta)\right)}
+        {\sum_{(\alpha, t_u) \in V} (1 - P_x(T_\alpha \setminus \{t_u\}, t_u, \theta)} <
+                    \frac{1}{10}.
+            \end{aligned}
+        \end{equation*}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Prediction Systems}
+    \begin{center}
+        \includegraphics[width=\textwidth]{../../report/pictures/experiments/conv_char_nn/prediction_system_50}
+    \end{center}
+\end{frame}
+
+\begin{frame}[fragile]{Baseline Comparison}
+    \begin{itemize}
+        \item Unconstrained 4\% results.
+            \begin{center}
+                \begin{tabular}{c|ccc}
+                    \textbf{Method}      & \textbf{Accusation Error} &
+                    \textbf{Specificity} & \textbf{Accuracy}
+                    \\ \hline
+                    Extended Delta       & 92.8\%                    &
+                    62.0\%               & 66.5\%
+                    \\
+                    SVM                  & 90.4\%                    &
+                    63.2\%               & 73.7\%
+                    \\
+                    Char-CNN             & 26.3\%                    &
+                    18.3\%               & 96.4\%
+                    \\
+                    Sent-RNN             & 71.4\%                    &
+                    12.2\%               & 95.3\%
+                    \\
+                    Char-word-CNN        & 47.8\%                    &
+                    32.6\%               & 96.2\%
+                \end{tabular}
+            \end{center}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Comparison to Previous Work}
+    \begin{itemize}
+        \item Unconstrained 50\% results.
+            \begin{center}
+                \begin{tabular}{c|ccc}
+                    \textbf{Method}      & \textbf{Accusation Error} &
+                    \textbf{Specificity} & \textbf{Accuracy}
+                    \\ \hline
+                    Char-CNN             & 9.9\%                     &
+                    82.1\%               & 86.5\%
+                    \\
+                    Sent-RNN             & 36.3\%                    &
+                    86.6\%               & 68.6\%
+                    \\
+                    Char-word-CNN        & 19.3\%                    &
+                    87.0\%               & 83.1\%
+                    \\
+                    Hansen et al.        &                           &
+                                         & 84.0\%
+                    \\
+                    Aalykke              & 5.0\%                     &
+                    71.9\%               & 83.5\%
+                    \\
+                \end{tabular}
+            \end{center}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Results}
+    \begin{itemize}
+        \item Constrained 4\% results.
+            \begin{center}
+                \begin{tabular}{c|ccc}
+                    \textbf{Method}      & \textbf{Accusation Error} &
+                    \textbf{Specificity} & \textbf{Accuracy}
+                    \\ \hline
+                    Char-CNN             & 23.5\%                    &
+                    8.5\%                & 96.1\%
+                    \\
+                    Sent-RNN             & 71.4\%                    &
+                    12.2\%               & 95.3\%
+                    \\
+                    Char-word-CNN        & 51.5\%                    &
+                    22.2\%               & 96.0\%
+                \end{tabular}
+            \end{center}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Teacher Feedback}
+    \begin{center}
+        \includegraphics[width=\textwidth]{../../report/pictures/discussion/teacher_feedback_example}
+    \end{center}
+\end{frame}
+
+\end{document}
