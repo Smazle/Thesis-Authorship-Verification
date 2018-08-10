@@ -56,12 +56,12 @@
             frequencies. Closest author is considered the author of the text.
         \item SVM classifier are trained on feature vector of $T_\alpha$ and
             $\overline{T_\alpha}$.
-        \item Features are frequencies of
+        \item Features are frequencies of:
             \begin{itemize}
-                \item character-n-grams ([h, e, l, l, o]),
-                \item special-character-n-grams ([!, ., ?]),
-                \item word-n-grams ([Hello, World]) and
-                \item pos-tag-n-grams ([noun, verb, verb, adjective]).
+                \item Character-n-grams ([h, e, l, l, o]),
+                \item Special-character-n-grams ([!, ., ?]),
+                \item Word-n-grams ([Hello, World]) and
+                \item Pos-tag-n-grams ([noun, verb, verb, adjective]).
             \end{itemize}
     \end{itemize}
 \end{frame}
@@ -87,14 +87,13 @@
         \item Networks consist of 4 parts:
 
             \begin{description}
-                \item[Embedding] Encode raw text in format to be used by
-                    networks.
+                \item[Embedding] Encode raw texts in format suiting networks.
                 \item[Feature Extraction] Extract feature vectors from the
                     encoded texts.
                 \item[Combining] Combine extracted feature vectors using some
                     function.
-                \item[Decision] Define whether or not the combined feature
-                    vectors are similar or dissimilar.
+                \item[Decision] Decide the probability that two texts are from
+                    the same author.
             \end{description}
 
         \item Weight sharing is in embedding and feature extraction.
