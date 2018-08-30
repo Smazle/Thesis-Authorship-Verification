@@ -85,13 +85,30 @@
 
 \begin{frame}[fragile]{Combining Network Output}
     \begin{itemize}
+        \item Networks compare two texts at a time but an author has several
+            texts.
         \item We combine the output of the network using a weighted average.
-        % TODO: Continue.
+        \item Recent assignments are weighted as more important than older
+            assignments.
+        \item Longer assignments are weighted higher than shorter assignments.
     \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]{Results}
-    % TODO
+    \begin{itemize}
+        \item Evaluated on a dataset of 50\% negatives and a dataset with 4\%
+            negatives.
+
+            \begin{center}
+                \begin{tabular}{l|ll}
+                                              & \textbf{4\%} & \textbf{50\%} \\
+                    \hline
+                    \textbf{Accusation Error} & 23.52\%      & 9.87\%        \\
+                    \textbf{Specificicity}    & 8.50\%       & 82.06\%       \\
+                    \textbf{Accuracy}         & 96.11\%      & 86.53\%       \\
+                \end{tabular}
+            \end{center}
+    \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]{Teacher Feedback}
