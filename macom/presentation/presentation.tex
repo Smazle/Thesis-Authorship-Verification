@@ -35,6 +35,7 @@
         \item The system should accuse as few innocent students as possible.
         \item The system should catch as many ghostwriters as possible.
         \item The system should be able to give feedback to teachers.
+        \item Less than 10\% accusation error and more than 95\% specificity.
     \end{itemize}
 \end{frame}
 
@@ -188,12 +189,10 @@
 \begin{frame}[fragile]{Conclusion}
     \begin{itemize}
         \item Did not perform as well as MaCom wanted.
-        \item Best network achieved accusation error of 23.5\% while catching
-            8.5\% of ghostwriters.
         \item Better results than previous work on MaCom dataset.
         \item We believe that with further work we would be able to get below
             the 10\% accusation error while catching 10-20\% of cheaters.
-        \item Almost suceeded on a 50\% ghostwritten dataset with an accusation
+        \item Almost succeeded on a 50\% ghostwritten dataset with an accusation
             error of 9.9\% while catching 82.1\% of the ghostwriters.
         \item Able to give teachers feedback.
     \end{itemize}
@@ -201,10 +200,9 @@
 
 \begin{frame}[fragile]{Future Work}
     \begin{itemize}
+        \item Acquire some ground truth data.
         \item Combine with other machine learning methods for increased
             performance.
-        \item Acquire some ground truth data.
-        \item Adapt to more easily integrate with Macom's internal systems.
         \item Determine method generalizability by applying it to assignments
             from other classes.
     \end{itemize}
