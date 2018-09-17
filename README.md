@@ -1,5 +1,7 @@
 # Authorship Verification
 
+TODO: Add short description of project.
+
 ## Training a network
 
 To train a network you need two datafiles. A training file and a validation
@@ -106,7 +108,28 @@ positives (which is a bit confusing).
 
 ## Data format
 
-TODO: Describe
+The format of the data files our programs expect is a variant of a CSV format.
+The delimiter between fields is a semicolon (;) and the encoding of the file is
+expected to be utf-8. The fields expected are:
+
+ * *ID*, the ID of the author having written the assignment on this line,
+ * *Date*, the date the assignment was turned in in the format <dd>-<mm>-<yyyy>
+   for example 31-06-2018,
+ * *Text*, the text turned in where the authors name is replaced with the
+   character sequence $NAME$, newline characters are replaced with $NL$ and
+   semi colon characters are replaced with $SC$.
+
+An short example CSV file is:
+
+```
+ID;Date;Text
+1388192;06-09-2018;This text is from author $NAME$.$NL$
+8727388;14-12-2017;This text contains a $SC$.$NL$And a second line.$NL$
+```
+
+The ordering of the fields are unfortunately significant as we in multiple
+places parse the CSV file simply by splitting each line by the semi colon
+character. The fields can therefore not be swapped around!
 
 ## Adding a network
 
