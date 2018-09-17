@@ -21,7 +21,7 @@ program will save several files in the directory it is run in. The files are:
  * *reader.p*, which contains information used to map characters to integers.
    If the network is to be used after training that file has to be saved.
 
- * *weights.<e>-<vl>.hdf5*, where <e> is an epoch number and <vl> is the
+ * *weights.\<e\>-\<vl\>.hdf5*, where \<e\> is an epoch number and \<vl\> is the
    validation loss in that epoch. One of these files will be generated at the
    end of each epoch. They contain the weights that have been computed at the
    end of that epoch. The weights can then be loaded by the network later to
@@ -113,8 +113,8 @@ The delimiter between fields is a semicolon (;) and the encoding of the file is
 expected to be utf-8. The fields expected are:
 
  * *ID*, the ID of the author having written the assignment on this line,
- * *Date*, the date the assignment was turned in in the format <dd>-<mm>-<yyyy>
-   for example 31-06-2018,
+ * *Date*, the date the assignment was turned in in the format
+   \<dd\>-\<mm\>-\<yyyy\> for example 31-06-2018,
  * *Text*, the text turned in where the authors name is replaced with the
    character sequence $NAME$, newline characters are replaced with $NL$ and
    semi colon characters are replaced with $SC$.
