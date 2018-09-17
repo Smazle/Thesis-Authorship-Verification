@@ -76,9 +76,33 @@ python -m src.networks.generic_network network_name --weights best_weights.hdf5\
 
 The `--epochs 0` option make sure that we train 0 epochs. Instead the command
 will load the weights from the weights file and generate a *final_model.hdf5*
-using those weights. It is that model that we want to evaluate.
+using those weights. It is that model that we want to evaluate. To evaluate a
+model on a test dataset *testing_file* using the model *final_model.hdf5* and
+reader *reader.p* execute the command:
 
-TODO: Continue.
+```
+python -m src.prediction.prediction final_model.hdf5 reader.p testing_file
+```
+
+The stdout of that command will be a csv file with the fields:
+
+ * *weight*, the weight function tried,
+ * *threshold*, the threshold tried,
+ * *accuracy*, the accuracy obtained,
+ * *accusation_error*, the accusation error obtained,
+ * *tps*, the number of true positives obtained,
+ * *tns*, the number of true negatives obtained,
+ * *fps*, the number of false positives obtained,
+ * *fns*, the number of false negatives obtained.
+
+From that information the best configuration of weight and threshold can be
+easily found. By default 50% negative samples are generated to test on. To
+generate some other number of negative samples the option `--negative-chance`
+can be set. The negative chance is a number between 0 and 1 which is the
+probability for each positive sample generated that a negative sample is also
+generated. By default it is 1.0 which gives the 50/50 split between positives
+and negatives. If it is set to 0.5 we can expect around 1/3 negatives and 2/3
+positives (which is a bit confusing).
 
 ## Data format
 
