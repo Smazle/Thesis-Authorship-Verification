@@ -139,4 +139,61 @@ character. The fields can therefore not be swapped around!
 
 ## Adding a network
 
-TODO: Describe
+In order to add a new network to the solution, you first need to navigate 
+to the network folder located in [src/networks/](src/networks/).
+From here we can split the creation the creation process into 3 steps.
+
+* Create python file containing script
+* Reference in *network_factory.py*
+* Create default config file
+
+Step one, creating the network consists of first creating a new python script. 
+The file name of this script is the *network_name* parameter previously.
+The script contain a single method called *model*, which in turn takes a single argument, *reader*, which
+is an object derived from the loaded *reader.p* file mentioned earlier.
+This method should return the final keras model produced. Thus the design must be as follows
+
+
+```python
+def model(reader):
+
+    ######################
+    ### Network design ###
+    ######################
+
+    model = keras.models.Model(inputs=input, outputs=output)
+    return model
+```
+
+Now that the network design is done, it need to be references to in 
+the *network_factory.py* file, which is as the name suggests a factory
+producing the different networks available. When looking at the *network_factory.py* 
+it should be somewhat obvious what additions would need to be made, when adding a new network.
+
+The last step is adding a config file associated with the newly created network. 
+The config files associated with reach network can be found in [src/networks/config/](src/networks/config/).
+In here a new file need to be created using the naming filename {network_name}_config.json
+This file should simply contained the desired default argument value the network has. This allows
+the user to omit certain arguments if they see themselves using the 
+same value for a command line argument repeatedly.
+An example of such a json file would be 
+
+```json
+{
+"validation_split":0.95,
+"batch_size":8,
+"vocabulary_frequency_cutoff":[0.00001],
+"batch_normalization":"pad",
+"pad":false,
+"binary":false,
+"channels":["char"],
+"sentence_length":null
+}
+```
+
+It should be noted that the existance of this config file is required, 
+and so is the assignment of each of the arguments like in the presented example.
+
+If these instructions were followed, you should be able to run the code just as described earlier.
+
+
