@@ -1,6 +1,11 @@
 # Authorship Verification
 
-TODO: Add short description of project.
+This is the code produced in connection a masters thesis in computer science.
+The goal of the thesis was to verify whether or not a certain text was produced
+by a target author, hence authorship verification.
+This process is done using a series neural networks of differing designs, with the goal
+of determining viable deep learning approaches to the authorship verification problem.
+
 
 ## Training a network
 
